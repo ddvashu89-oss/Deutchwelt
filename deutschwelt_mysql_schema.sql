@@ -12,11 +12,13 @@
 --    Click 'Import' tab -> Select deutschwelt_mysql_schema.sql -> Execute
 -- ==============================================================================
 
-CREATE DATABASE IF NOT EXISTS `deutschwelt`
+-- Target Database: vecosiss_DeutchWelt
+-- In cPanel phpMyAdmin: Click 'vecosiss_DeutchWelt' in the left sidebar, then click 'Import'.
+CREATE DATABASE IF NOT EXISTS `vecosiss_DeutchWelt`
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_unicode_ci;
 
-USE `deutschwelt`;
+USE `vecosiss_DeutchWelt`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
