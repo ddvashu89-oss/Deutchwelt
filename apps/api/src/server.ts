@@ -1,9 +1,13 @@
 import app from './app.js';
 import { env } from './config/env.js';
 import { checkDatabaseConnection } from './services/prisma.js';
+import { checkMySQLConnection } from './services/mysql.js';
 
 async function bootstrap() {
-  await checkDatabaseConnection();
+  await Promise.allSettled([
+    checkDatabaseConnection(),
+    checkMySQLConnection()
+  ]);
 
   const server = app.listen(env.PORT, () => {
     console.log(`=================================================`);
