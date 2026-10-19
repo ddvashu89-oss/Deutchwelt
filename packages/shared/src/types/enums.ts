@@ -1,0 +1,86 @@
+export enum UserRole {
+  STUDENT = 'STUDENT',
+  TEACHER = 'TEACHER',
+  ADMIN = 'ADMIN'
+}
+
+export enum GermanLevel {
+  BEGINNER = 'BEGINNER',
+  A1 = 'A1',
+  A2 = 'A2',
+  B1 = 'B1',
+  B2 = 'B2',
+  UNSURE = 'UNSURE'
+}
+
+export enum PublicationStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  ARCHIVED = 'ARCHIVED'
+}
+
+export enum GermanArticle {
+  DER = 'der', // Masculine (blue)
+  DIE = 'die', // Feminine (red)
+  DAS = 'das', // Neuter (green)
+  PLURAL = 'die (pl)',
+  NONE = 'none'
+}
+
+export enum PartOfSpeech {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PREPOSITION = 'PREPOSITION',
+  PRONOUN = 'PRONOUN',
+  CONJUNCTION = 'CONJUNCTION',
+  PHRASE = 'PHRASE',
+  IDIOM = 'IDIOM'
+}
+
+export enum ExerciseType {
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  TRUE_FALSE = 'TRUE_FALSE',
+  FILL_IN_BLANK = 'FILL_IN_BLANK',
+  SENTENCE_ORDERING = 'SENTENCE_ORDERING',
+  MATCHING = 'MATCHING',
+  TRANSLATION = 'TRANSLATION',
+  GRAMMAR_CORRECTION = 'GRAMMAR_CORRECTION',
+  READING_COMPREHENSION = 'READING_COMPREHENSION',
+  LISTENING_COMPREHENSION = 'LISTENING_COMPREHENSION',
+  WRITING = 'WRITING'
+}
+
+export enum LessonContentType {
+  TEXT = 'TEXT',
+  VOCABULARY = 'VOCABULARY',
+  GRAMMAR = 'GRAMMAR',
+  READING = 'READING',
+  LISTENING = 'LISTENING',
+  EXERCISE = 'EXERCISE',
+  WRITING_PROMPT = 'WRITING_PROMPT',
+  SPEAKING_PROMPT = 'SPEAKING_PROMPT'
+}
+
+export enum SubmissionStatus {
+  DRAFT = 'DRAFT',
+  SUBMITTED = 'SUBMITTED',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  GRADED = 'GRADED',
+  REVISION_REQUESTED = 'REVISION_REQUESTED'
+}
+
+export enum EnquiryStatus {
+  NEW = 'NEW',
+  CONTACTED = 'CONTACTED',
+  RESOLVED = 'RESOLVED',
+  CLOSED = 'CLOSED'
+}
+
+export enum VocabMasteryStatus {
+  NEW = 'NEW',
+  LEARNING = 'LEARNING',
+  REVIEWING = 'REVIEWING',
+  MASTERED = 'MASTERED'
+}
