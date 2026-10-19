@@ -8,8 +8,12 @@ import { AppError } from './errorHandler.js';
 const uploadDir = env.UPLOAD_DIR;
 const audioDir = path.join(uploadDir, 'audio');
 
-if (!fs.existsSync(audioDir)) {
-  fs.mkdirSync(audioDir, { recursive: true });
+try {
+  if (!fs.existsSync(audioDir)) {
+    fs.mkdirSync(audioDir, { recursive: true });
+  }
+} catch (e) {
+  console.warn('[Upload Directory Warning] Could not create audio upload directory:', e);
 }
 
 const storage = multer.diskStorage({

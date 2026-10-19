@@ -12,9 +12,9 @@ export const env = {
   COOKIE_SECRET: process.env.COOKIE_SECRET || 'deutschwelt-insecure-dev-cookie-key-32chars',
   SESSION_MAX_AGE_DAYS: parseInt(process.env.SESSION_MAX_AGE_DAYS || '14', 10),
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
-  UPLOAD_DIR: process.env.UPLOAD_DIR || path.resolve(process.cwd(), 'uploads'),
+  UPLOAD_DIR: process.env.UPLOAD_DIR || (process.env.VERCEL ? path.join('/tmp', 'uploads') : path.resolve(process.cwd(), 'uploads')),
   MAX_FILE_SIZE_MB: parseInt(process.env.MAX_FILE_SIZE_MB || '10', 10),
-  isDev: (process.env.NODE_ENV || 'development') === 'development',
+  isDev: (process.env.NODE_ENV || 'development') === 'development' && !process.env.VERCEL,
   isTest: (process.env.NODE_ENV || 'development') === 'test',
-  isProd: process.env.NODE_ENV === 'production'
+  isProd: process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
 };
