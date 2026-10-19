@@ -34,3 +34,5 @@ bootstrap().catch((err) => {
   console.error('[Server Bootstrap Error]', err);
   process.exit(1);
 });
+
+export default app;
