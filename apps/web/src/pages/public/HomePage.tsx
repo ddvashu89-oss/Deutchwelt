@@ -21,7 +21,10 @@ import {
   Users
 } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext.js';
+
 export function HomePage() {
+  const { t } = useLanguage();
   // Interactive Vocab Card State for Hero Preview
   const [isFlipped, setIsFlipped] = useState(false);
   const [activeTab, setActiveTab] = useState<'A1' | 'A2' | 'B1' | 'B2'>('A1');
@@ -105,29 +108,29 @@ export function HomePage() {
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-navy-50 border border-navy-200 text-navy text-xs font-bold tracking-wide">
                 <span className="w-2 h-2 rounded-full bg-germanRed animate-pulse" />
-                Goethe-Institut & telc Aligned Curriculum
+                {t('hero.badge')}
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-navy tracking-tight leading-[1.15]">
-                Your Journey to <br />
+                {t('hero.title').split(' ').slice(0, 3).join(' ')} <br />
                 <span className="text-germanRed underline decoration-navy-200 decoration-wavy underline-offset-8">
-                  German Fluency.
+                  {t('hero.title').split(' ').slice(3).join(' ')}
                 </span>
               </h1>
 
               <p className="text-lg sm:text-xl text-dark-muted max-w-2xl leading-relaxed">
-                Master German from <strong>A1 to B2</strong> with the academic depth of a certified German coaching institute and the convenience of a modern interactive platform.
+                {t('hero.subtitle')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                 <Link to="/register" className="w-full sm:w-auto">
                   <Button variant="secondary" size="lg" className="w-full sm:w-auto font-bold shadow-md">
-                    Start Learning Free <ArrowRight className="w-5 h-5 ml-1" />
+                    {t('hero.cta.start')} <ArrowRight className="w-5 h-5 ml-1" />
                   </Button>
                 </Link>
                 <Link to="/courses" className="w-full sm:w-auto">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto font-semibold">
-                    <BookOpen className="w-5 h-5 mr-1" /> Explore Courses
+                    <BookOpen className="w-5 h-5 mr-1" /> {t('hero.cta.courses')}
                   </Button>
                 </Link>
               </div>

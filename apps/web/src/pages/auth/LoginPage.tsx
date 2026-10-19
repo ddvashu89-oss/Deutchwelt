@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
+import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
 import { ArrowRight, Lock, KeyRound, Sparkles } from 'lucide-react';
 
 export function LoginPage() {
@@ -40,7 +41,10 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ivory flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-ivory flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      <div className="absolute top-6 right-6">
+        <LanguageToggle />
+      </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <Logo size="lg" showTagline />
         <h2 className="text-3xl font-extrabold text-navy tracking-tight pt-2">

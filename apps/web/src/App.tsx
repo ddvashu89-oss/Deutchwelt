@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
+import { LanguageProvider } from './context/LanguageContext.js';
 
 // Layouts
 import { PublicLayout } from './layouts/PublicLayout.js';
@@ -70,25 +71,66 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
   return <>{children}</>;
 }
 
+// Content Access Gate (Requires registered user)
+function RequireAuthForContent({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-ivory">
+        <div className="w-8 h-8 rounded-full border-4 border-navy border-t-germanRed animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/register?reason=content_access" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/courses" element={<CoursesPage />} />
-              <Route path="/courses/:slug" element={<CourseDetailPage />} />
-              <Route path="/vocabulary" element={<VocabularyTrainerPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              <Route path="/privacy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms" element={<TermsOfServicePage />} />
-              <Route path="/cookies" element={<CookieNoticePage />} />
-            </Route>
+      <LanguageProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public & Gated Routes */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route
+                  path="/courses"
+                  element={
+                    <RequireAuthForContent>
+                      <CoursesPage />
+                    </RequireAuthForContent>
+                  }
+                />
+                <Route
+                  path="/courses/:slug"
+                  element={
+                    <RequireAuthForContent>
+                      <CourseDetailPage />
+                    </RequireAuthForContent>
+                  }
+                />
+                <Route
+                  path="/vocabulary"
+                  element={
+                    <RequireAuthForContent>
+                      <VocabularyTrainerPage />
+                    </RequireAuthForContent>
+                  }
+                />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/faq" element={<FAQPage />} />
+                <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms" element={<TermsOfServicePage />} />
+                <Route path="/cookies" element={<CookieNoticePage />} />
+              </Route>
 
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
@@ -164,8 +206,9 @@ export function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-    </QueryClientProvider>
-  );
+    </LanguageProvider>
+  </QueryClientProvider>
+);
 }
 
 export default App;

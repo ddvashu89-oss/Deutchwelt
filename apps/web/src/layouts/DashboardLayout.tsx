@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.js';
 import { Logo } from '../components/brand/Logo.js';
 import { Button } from '../components/ui/Button.js';
 import { Badge } from '../components/ui/Badge.js';
+import { LanguageToggle } from '../components/ui/LanguageToggle.js';
 import {
   LayoutDashboard,
   BookOpen,
@@ -225,6 +226,8 @@ export function DashboardLayout() {
                 </div>
               )}
             </div>
+
+            <LanguageToggle />
 
             <Link to="/courses">
               <Button variant="outline" size="sm" className="hidden sm:inline-flex">

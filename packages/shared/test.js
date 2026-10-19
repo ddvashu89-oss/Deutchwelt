@@ -32,6 +32,8 @@ const validReg = registerSchema.safeParse({
   firstName: 'Max',
   lastName: 'Mustermann',
   email: 'max@example.com',
+  phone: '+49 151 12345678',
+  address: 'Friedrichstraße 123, 10117 Berlin, Germany',
   password: 'Password123!',
   currentLevel: GermanLevel.A1,
   learningGoal: 'Prepare for Goethe A1 Exam',

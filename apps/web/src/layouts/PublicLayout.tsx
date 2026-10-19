@@ -3,19 +3,22 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Logo } from '../components/brand/Logo.js';
 import { Button } from '../components/ui/Button.js';
 import { useAuth } from '../context/AuthContext.js';
+import { useLanguage } from '../context/LanguageContext.js';
+import { LanguageToggle } from '../components/ui/LanguageToggle.js';
 import { Menu, X, ArrowRight, BookOpen, GraduationCap, Globe, ShieldCheck, Heart } from 'lucide-react';
 
 export function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+  const { t } = useLanguage();
   const location = useLocation();
 
   const navLinks = [
-    { label: 'Courses', href: '/courses' },
-    { label: 'Vocabulary', href: '/vocabulary' },
-    { label: 'Methodology', href: '/about' },
+    { label: t('nav.courses'), href: '/courses' },
+    { label: t('nav.vocabulary'), href: '/vocabulary' },
+    { label: t('nav.about'), href: '/about' },
     { label: 'FAQ', href: '/faq' },
-    { label: 'Contact', href: '/contact' }
+    { label: t('nav.contact'), href: '/contact' }
   ];
 
   const getDashboardLink = () => {
@@ -63,30 +66,33 @@ export function PublicLayout() {
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-3">
+            <LanguageToggle />
+
             {user ? (
               <Link to={getDashboardLink()}>
                 <Button variant="primary" size="md">
-                  Go to Dashboard <ArrowRight className="w-4 h-4" />
+                  {t('nav.dashboard')} <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             ) : (
               <>
                 <Link to="/login">
                   <Button variant="ghost" size="md">
-                    Log in
+                    {t('nav.login')}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button variant="secondary" size="md">
-                    Start Learning Free
+                    {t('nav.register')}
                   </Button>
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden">
+          {/* Mobile Menu & Language Button */}
+          <div className="flex items-center gap-2 md:hidden">
+            <LanguageToggle />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-dark hover:bg-gray-100 focus:outline-none"

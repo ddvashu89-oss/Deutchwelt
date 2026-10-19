@@ -5,7 +5,8 @@ export const registerSchema = z.object({
   firstName: z.string().trim().min(1, 'First name is required').max(50),
   lastName: z.string().trim().min(1, 'Last name is required').max(50),
   email: z.string().trim().email('Invalid email address').toLowerCase(),
-  phone: z.string().trim().optional().nullable(),
+  phone: z.string().trim().min(5, 'Mobile number is required').max(30),
+  address: z.string().trim().min(3, 'Address is required').max(300),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters long')
@@ -45,6 +46,7 @@ export const updateProfileSchema = z.object({
   firstName: z.string().trim().min(1).max(50).optional(),
   lastName: z.string().trim().min(1).max(50).optional(),
   phone: z.string().trim().max(30).optional().nullable(),
+  address: z.string().trim().max(300).optional().nullable(),
   currentLevel: z.nativeEnum(GermanLevel).optional(),
   learningGoal: z.string().trim().max(250).optional().nullable(),
   dailyGoalMinutes: z.number().int().min(5).max(180).optional(),

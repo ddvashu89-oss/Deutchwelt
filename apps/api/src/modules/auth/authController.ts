@@ -26,9 +26,11 @@ function clearSessionCookie(res: Response) {
 
 export async function register(req: Request, res: Response, next: NextFunction) {
   try {
-    const { firstName, lastName, email, phone, password, currentLevel, learningGoal, preferredLanguage } = req.body;
+    const { firstName, lastName, email, phone, address, password, currentLevel, learningGoal, preferredLanguage } = req.body;
 
     const normalizedEmail = email.toLowerCase().trim();
+    const clientIp = req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || req.socket.remoteAddress || req.ip || '127.0.0.1';
+    const userAgent = req.headers['user-agent'] || 'Unknown Browser';
 
     if (isDatabaseConnected) {
       const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
@@ -70,8 +72,8 @@ export async function register(req: Request, res: Response, next: NextFunction) 
           userId: user.id,
           token,
           expiresAt,
-          userAgent: req.headers['user-agent'] || null,
-          ipAddress: req.ip || null
+          userAgent,
+          ipAddress: clientIp
         }
       });
 
@@ -85,6 +87,9 @@ export async function register(req: Request, res: Response, next: NextFunction) 
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          phone: user.phone,
+          address: address || null,
+          registrationIp: clientIp,
           role: user.role,
           studentProfile: user.studentProfile
         },
@@ -107,6 +112,10 @@ export async function register(req: Request, res: Response, next: NextFunction) 
         firstName,
         lastName,
         phone: phone || null,
+        address: address || null,
+        registrationIp: clientIp,
+        lastLoginIp: clientIp,
+        userAgent,
         role: UserRole.STUDENT,
         isActive: true,
         isEmailVerified: false,
@@ -138,8 +147,8 @@ export async function register(req: Request, res: Response, next: NextFunction) 
         userId,
         token,
         expiresAt,
-        userAgent: req.headers['user-agent'] || null,
-        ipAddress: req.ip || null,
+        userAgent,
+        ipAddress: clientIp,
         createdAt: new Date().toISOString()
       });
 
@@ -153,6 +162,9 @@ export async function register(req: Request, res: Response, next: NextFunction) 
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          phone: user.phone,
+          address: user.address,
+          registrationIp: user.registrationIp,
           role: user.role,
           studentProfile
         },
@@ -190,13 +202,16 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       const token = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000);
 
+      const clientIp = req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || req.socket.remoteAddress || req.ip || '127.0.0.1';
+      const userAgent = req.headers['user-agent'] || 'Unknown Browser';
+
       await prisma.session.create({
         data: {
           userId: user.id,
           token,
           expiresAt,
-          userAgent: req.headers['user-agent'] || null,
-          ipAddress: req.ip || null
+          userAgent,
+          ipAddress: clientIp
         }
       });
 
@@ -234,13 +249,19 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       const token = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
+      const clientIp = req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || req.socket.remoteAddress || req.ip || '127.0.0.1';
+      const userAgent = req.headers['user-agent'] || 'Unknown Browser';
+
+      user.lastLoginIp = clientIp;
+      user.userAgent = userAgent;
+
       store.sessions.push({
         id: `session-${Date.now()}`,
         userId: user.id,
         token,
         expiresAt,
-        userAgent: req.headers['user-agent'] || null,
-        ipAddress: req.ip || null,
+        userAgent,
+        ipAddress: clientIp,
         createdAt: new Date().toISOString()
       });
 
