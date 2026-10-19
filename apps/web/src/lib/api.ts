@@ -17,10 +17,28 @@ export class ApiError extends Error {
 async function handleResponse<T>(res: Response): Promise<T> {
   const contentType = res.headers.get('content-type');
   const isJson = contentType && contentType.includes('application/json');
-  const data = isJson ? await res.json() : null;
+  let data: any = null;
+  try {
+    data = isJson ? await res.json() : null;
+  } catch (e) {
+    data = null;
+  }
 
   if (!res.ok) {
-    const errorMsg = data?.error || data?.message || `Request failed with status ${res.status}`;
+    let errorMsg = 'An error occurred. Please try again.';
+    if (typeof data?.error === 'string') {
+      errorMsg = data.error;
+    } else if (typeof data?.message === 'string') {
+      errorMsg = data.message;
+    } else if (data?.details && Array.isArray(data.details)) {
+      errorMsg = data.details.map((d: any) => typeof d === 'string' ? d : d.message || JSON.stringify(d)).join(', ');
+    } else if (typeof data?.error === 'object' && data.error !== null) {
+      errorMsg = data.error.message || JSON.stringify(data.error);
+    } else if (typeof data === 'string') {
+      errorMsg = data;
+    } else {
+      errorMsg = `Request failed with status ${res.status}`;
+    }
     throw new ApiError(errorMsg, res.status, data?.code, data?.details);
   }
 

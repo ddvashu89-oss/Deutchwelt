@@ -17,8 +17,8 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
-  register: (data: any) => Promise<void>;
+  login: (credentials: { email: string; password: string }) => Promise<any>;
+  register: (data: any) => Promise<any>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   isStudent: boolean;
@@ -55,7 +55,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const res: any = await api.post('/auth/login', credentials);
     if (res.success && res.user) {
       setUser(res.user);
+      return res.user;
     }
+    return null;
   };
 
   const register = async (data: any) => {

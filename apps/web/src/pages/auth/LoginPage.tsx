@@ -8,7 +8,7 @@ import { Logo } from '../../components/brand/Logo.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
-import { ArrowRight, Lock, KeyRound, Sparkles } from 'lucide-react';
+import { ArrowRight, Lock, KeyRound } from 'lucide-react';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -18,7 +18,6 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting }
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema)
@@ -27,17 +26,27 @@ export function LoginPage() {
   const onSubmit = async (data: LoginInput) => {
     try {
       setServerError(null);
-      await login(data);
-      // Let AuthProvider state settle, then navigate to dashboard
-      navigate('/student/dashboard');
+      const loggedUser = await login(data);
+      if (loggedUser?.role === 'ADMIN') {
+        navigate('/admin');
+      } else if (loggedUser?.role === 'TEACHER') {
+        navigate('/teacher');
+      } else {
+        navigate('/student/dashboard');
+      }
     } catch (err: any) {
-      setServerError(err.message || 'Invalid email or password.');
+      let msg = 'Invalid email or password.';
+      if (typeof err === 'string') {
+        msg = err;
+      } else if (typeof err?.message === 'string') {
+        msg = err.message;
+      } else if (typeof err?.error === 'string') {
+        msg = err.error;
+      } else if (err?.message && typeof err.message === 'object') {
+        msg = err.message.message || JSON.stringify(err.message);
+      }
+      setServerError(msg);
     }
-  };
-
-  const fillDemoAccount = (email: string, pass: string) => {
-    setValue('email', email, { shouldValidate: true });
-    setValue('password', pass, { shouldValidate: true });
   };
 
   return (
@@ -93,35 +102,6 @@ export function LoginPage() {
             </Button>
           </form>
 
-          {/* Quick Demo Credentials */}
-          <div className="pt-4 border-t border-gray-100 space-y-2">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-dark-muted flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-germanRed" /> Quick Demo Fill
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('student@deutschwelt.de', 'StudentDeutschWelt2026!')}
-                className="px-2 py-1.5 rounded-lg bg-gray-50 border border-gray-200 hover:bg-navy hover:text-white text-[11px] font-bold text-dark transition-colors"
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('teacher@deutschwelt.de', 'TeacherDeutschWelt2026!')}
-                className="px-2 py-1.5 rounded-lg bg-gray-50 border border-gray-200 hover:bg-navy hover:text-white text-[11px] font-bold text-dark transition-colors"
-              >
-                Teacher
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('admin@deutschwelt.de', 'AdminDeutschWelt2026!')}
-                className="px-2 py-1.5 rounded-lg bg-gray-50 border border-gray-200 hover:bg-navy hover:text-white text-[11px] font-bold text-dark transition-colors"
-              >
-                Admin
-              </button>
-            </div>
-          </div>
 
           <div className="text-center text-xs text-dark-muted pt-2">
             Don't have an account yet?{' '}
