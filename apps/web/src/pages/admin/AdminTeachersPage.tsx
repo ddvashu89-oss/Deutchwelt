@@ -5,7 +5,20 @@ import { Badge } from '../../components/ui/Badge.js';
 import { Input } from '../../components/ui/Input.js';
 import { Modal } from '../../components/ui/Modal.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
-import { GraduationCap, Plus, Mail, Users, BookOpen, ShieldCheck, CheckCircle2, Lock, Trash2 } from 'lucide-react';
+import {
+  GraduationCap,
+  Plus,
+  Mail,
+  Users,
+  BookOpen,
+  ShieldCheck,
+  CheckCircle2,
+  Lock,
+  Trash2,
+  Edit2,
+  Phone,
+  Power
+} from 'lucide-react';
 
 export function AdminTeachersPage() {
   const [teachers, setTeachers] = useState<any[]>([]);
@@ -25,10 +38,24 @@ export function AdminTeachersPage() {
   const [selectedBatchIds, setSelectedBatchIds] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
+  // Edit Teacher Modal State
+  const [editingTeacher, setEditingTeacher] = useState<any | null>(null);
+  const [editFirstName, setEditFirstName] = useState('');
+  const [editLastName, setEditLastName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [editQualifications, setEditQualifications] = useState('');
+  const [editSpecialization, setEditSpecialization] = useState('');
+  const [editBio, setEditBio] = useState('');
+  const [editActive, setEditActive] = useState(true);
+  const [savingEdit, setSavingEdit] = useState(false);
+
   // Assign Batch Modal State
   const [manageTeacher, setManageTeacher] = useState<any | null>(null);
   const [batchToAssign, setBatchToAssign] = useState('');
   const [assigning, setAssigning] = useState(false);
+
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchTeachersAndBatches = async () => {
     try {
@@ -54,6 +81,7 @@ export function AdminTeachersPage() {
     fetchTeachersAndBatches();
   }, []);
 
+  // 1. CREATE TEACHER
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -84,13 +112,84 @@ export function AdminTeachersPage() {
         setSelectedBatchIds([]);
         fetchTeachersAndBatches();
       }
-    } catch (e) {
-      console.error('Error creating teacher:', e);
+    } catch (e: any) {
+      alert(e.message || 'Error creating teacher.');
     } finally {
       setSaving(false);
     }
   };
 
+  // 2. OPEN EDIT MODAL
+  const openEditModal = (teacher: any) => {
+    setEditingTeacher(teacher);
+    setEditFirstName(teacher.firstName || '');
+    setEditLastName(teacher.lastName || '');
+    setEditEmail(teacher.email || '');
+    setEditPhone(teacher.phone || '');
+    setEditQualifications(teacher.teacherProfile?.qualifications || '');
+    setEditSpecialization(teacher.teacherProfile?.specialization || '');
+    setEditBio(teacher.teacherProfile?.bio || '');
+    setEditActive(teacher.isActive !== undefined ? teacher.isActive : true);
+  };
+
+  // 3. SAVE EDIT TEACHER
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTeacher) return;
+    setSavingEdit(true);
+
+    try {
+      const res: any = await api.put(`/admin/teachers/${editingTeacher.id}`, {
+        firstName: editFirstName,
+        lastName: editLastName,
+        email: editEmail,
+        phone: editPhone,
+        qualifications: editQualifications,
+        specialization: editSpecialization,
+        bio: editBio,
+        isActive: editActive
+      });
+
+      if (res.success) {
+        setEditingTeacher(null);
+        fetchTeachersAndBatches();
+      }
+    } catch (e: any) {
+      alert(e.message || 'Error updating teacher.');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  // 4. DELETE TEACHER
+  const handleDeleteTeacher = async (teacherId: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to permanently remove instructor "${name}"? This will unassign all batches.`)) {
+      return;
+    }
+    setDeletingId(teacherId);
+    try {
+      const res: any = await api.delete(`/admin/teachers/${teacherId}`);
+      if (res.success) {
+        fetchTeachersAndBatches();
+      }
+    } catch (e: any) {
+      alert(e.message || 'Error deleting teacher.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // 5. TOGGLE STATUS
+  const handleToggleStatus = async (teacherId: string) => {
+    try {
+      const res: any = await api.post(`/admin/users/${teacherId}/toggle-status`);
+      if (res.success) fetchTeachersAndBatches();
+    } catch (e: any) {
+      alert(e.message || 'Error toggling status.');
+    }
+  };
+
+  // 6. ASSIGN BATCH
   const handleAssignBatch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!manageTeacher || !batchToAssign) return;
@@ -104,13 +203,14 @@ export function AdminTeachersPage() {
         setManageTeacher(null);
         fetchTeachersAndBatches();
       }
-    } catch (e) {
-      console.error('Error assigning batch:', e);
+    } catch (e: any) {
+      alert(e.message || 'Error assigning batch.');
     } finally {
       setAssigning(false);
     }
   };
 
+  // 7. UNASSIGN BATCH
   const handleUnassignBatch = async (teacherId: string, batchId: string) => {
     if (!window.confirm('Remove teacher from this batch?')) return;
     try {
@@ -139,7 +239,7 @@ export function AdminTeachersPage() {
             </Badge>
           </div>
           <p className="text-xs text-dark-muted">
-            Only administrators can authorize new instructors, configure credentials, and allocate cohort batches.
+            Authorize new instructors, edit qualifications, assign cohorts, suspend access, or delete records.
           </p>
         </div>
 
@@ -165,9 +265,24 @@ export function AdminTeachersPage() {
                       <p className="text-xs text-dark-muted flex items-center gap-1">
                         <Mail className="w-3.5 h-3.5" /> {t.email}
                       </p>
+                      {t.phone && (
+                        <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                          <Phone className="w-3.5 h-3.5" /> {t.phone}
+                        </p>
+                      )}
                     </div>
                   </div>
-                  <Badge variant="success" className="text-[10px]">Authorized Faculty</Badge>
+                  <button
+                    onClick={() => handleToggleStatus(t.id)}
+                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+                      t.isActive
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                        : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+                    }`}
+                    title="Click to toggle teacher access"
+                  >
+                    {t.isActive ? 'Active Faculty' : 'Suspended'}
+                  </button>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 text-xs space-y-1">
@@ -212,7 +327,26 @@ export function AdminTeachersPage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-gray-100 flex justify-end">
+              {/* Action Buttons: Edit, Delete, Allocate */}
+              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => openEditModal(t)}
+                    className="p-2 rounded-xl border border-gray-200 text-navy hover:bg-navy hover:text-white transition-colors"
+                    title="Edit Teacher Profile"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTeacher(t.id, `${t.firstName} ${t.lastName}`)}
+                    disabled={deletingId === t.id}
+                    className="p-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-600 hover:text-white transition-colors"
+                    title="Delete Teacher"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -257,32 +391,37 @@ export function AdminTeachersPage() {
             <Input
               label="Email Address"
               type="email"
-              placeholder="k.weber@deutschwelt.de"
+              placeholder="teacher@deutschwelt.de"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <Input
-              label="Initial Password"
-              type="text"
-              placeholder="Secure password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              label="Phone Number"
+              placeholder="+49 151 87654321"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
+
+          <Input
+            label="Initial Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Academic Qualifications"
-              placeholder="e.g. MA Germanistik, DaF Certificate"
+              placeholder="MA in Germanistik (LMU Munich)"
               value={qualifications}
               onChange={(e) => setQualifications(e.target.value)}
-              required
             />
             <Input
-              label="Specialization Focus"
-              placeholder="e.g. A1-B2 Exam Prep, Phonetics"
+              label="Pedagogical Specialization"
+              placeholder="Goethe B1/B2 Exam Prep, Phonetics"
               value={specialization}
               onChange={(e) => setSpecialization(e.target.value)}
             />
@@ -290,94 +429,182 @@ export function AdminTeachersPage() {
 
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-              Instructor Bio
+              Faculty Biography
             </label>
             <textarea
               rows={3}
-              placeholder="Brief professional background and teaching approach..."
+              placeholder="Brief professional background, teaching philosophy, and academic certifications..."
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-xl border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
             />
           </div>
 
-          {/* Initial Batch Allocations */}
-          {batches.length > 0 && (
-            <div className="space-y-2 pt-2 border-t border-gray-100">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-                Assign to Initial Cohort Batches (Optional)
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {batches.map(b => (
-                  <label
-                    key={b.id}
-                    className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer text-xs transition-colors ${
-                      selectedBatchIds.includes(b.id)
-                        ? 'border-navy bg-navy-50 font-bold text-navy'
-                        : 'border-gray-200 hover:bg-gray-50'
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedBatchIds.includes(b.id)}
-                      onChange={() => toggleBatchSelection(b.id)}
-                      className="w-4 h-4 text-navy rounded focus:ring-navy"
-                    />
-                    <span>{b.name} ({b.level})</span>
-                  </label>
-                ))}
-              </div>
+          {/* Optional Initial Batch Allocation */}
+          <div className="space-y-2 pt-2 border-t border-gray-100">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Allocate Initial Student Batches (Multi-Teacher Access)
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-36 overflow-y-auto p-1">
+              {batches.map(b => (
+                <label
+                  key={b.id}
+                  className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer transition-colors ${
+                    selectedBatchIds.includes(b.id)
+                      ? 'border-navy bg-navy/5 font-bold text-navy'
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedBatchIds.includes(b.id)}
+                    onChange={() => toggleBatchSelection(b.id)}
+                    className="rounded text-navy focus:ring-navy"
+                  />
+                  <span>{b.name} ({b.level})</span>
+                </label>
+              ))}
             </div>
-          )}
+          </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
-            <Button variant="outline" size="sm" type="button" onClick={() => setIsModalOpen(false)}>
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit" isLoading={saving}>
-              Create Faculty Account
+            <Button type="submit" variant="secondary" className="font-bold shadow-md" isLoading={saving}>
+              Authorize & Create Teacher
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* EDIT TEACHER MODAL */}
+      <Modal
+        isOpen={Boolean(editingTeacher)}
+        onClose={() => setEditingTeacher(null)}
+        title="Edit Faculty Instructor"
+        description="Update instructor credentials, bio, and authorization status."
+        maxWidth="lg"
+      >
+        <form onSubmit={handleSaveEdit} className="space-y-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="First Name"
+              value={editFirstName}
+              onChange={(e) => setEditFirstName(e.target.value)}
+              required
+            />
+            <Input
+              label="Last Name"
+              value={editLastName}
+              onChange={(e) => setEditLastName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Email Address"
+              type="email"
+              value={editEmail}
+              onChange={(e) => setEditEmail(e.target.value)}
+              required
+            />
+            <Input
+              label="Phone Number"
+              value={editPhone}
+              onChange={(e) => setEditPhone(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Academic Qualifications"
+              value={editQualifications}
+              onChange={(e) => setEditQualifications(e.target.value)}
+            />
+            <Input
+              label="Pedagogical Specialization"
+              value={editSpecialization}
+              onChange={(e) => setEditSpecialization(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Faculty Biography
+            </label>
+            <textarea
+              rows={3}
+              value={editBio}
+              onChange={(e) => setEditBio(e.target.value)}
+              className="w-full rounded-xl border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Faculty Access Status
+            </label>
+            <select
+              value={editActive ? 'active' : 'suspended'}
+              onChange={(e) => setEditActive(e.target.value === 'active')}
+              className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+            >
+              <option value="active">Active Faculty (Access Permitted)</option>
+              <option value="suspended">Suspended (Access Revoked)</option>
+            </select>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <Button type="button" variant="outline" onClick={() => setEditingTeacher(null)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" className="font-bold shadow-md" isLoading={savingEdit}>
+              Save Teacher Changes
             </Button>
           </div>
         </form>
       </Modal>
 
       {/* ALLOCATE BATCH MODAL */}
-      {manageTeacher && (
-        <Modal
-          isOpen={Boolean(manageTeacher)}
-          onClose={() => setManageTeacher(null)}
-          title={`Allocate Cohort to ${manageTeacher.firstName} ${manageTeacher.lastName}`}
-          description="Grant this teacher authorization to manage and teach an additional batch."
-          maxWidth="md"
-        >
-          <form onSubmit={handleAssignBatch} className="space-y-4 pt-2">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-                Select Cohort Batch
-              </label>
-              <select
-                value={batchToAssign}
-                onChange={(e) => setBatchToAssign(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
-                required
-              >
-                {batches.map(b => (
-                  <option key={b.id} value={b.id}>{b.name} ({b.level})</option>
-                ))}
-              </select>
-            </div>
+      <Modal
+        isOpen={Boolean(manageTeacher)}
+        onClose={() => setManageTeacher(null)}
+        title={`Allocate Batch to ${manageTeacher?.firstName} ${manageTeacher?.lastName}`}
+        description="Select an active cohort to assign to this instructor."
+        maxWidth="md"
+      >
+        <form onSubmit={handleAssignBatch} className="space-y-4 pt-2">
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Select Batch / Cohort
+            </label>
+            <select
+              value={batchToAssign}
+              onChange={(e) => setBatchToAssign(e.target.value)}
+              className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+            >
+              {batches.map(b => (
+                <option key={b.id} value={b.id}>
+                  {b.name} ({b.level}) — Max {b.maxStudents} Students
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
-              <Button variant="outline" size="sm" type="button" onClick={() => setManageTeacher(null)}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" type="submit" isLoading={assigning}>
-                Allocate Batch
-              </Button>
-            </div>
-          </form>
-        </Modal>
-      )}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <Button type="button" variant="outline" onClick={() => setManageTeacher(null)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" className="font-bold" isLoading={assigning}>
+              Confirm Allocation
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
+
+export default AdminTeachersPage;

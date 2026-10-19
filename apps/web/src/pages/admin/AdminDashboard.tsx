@@ -82,7 +82,40 @@ export function AdminDashboard() {
           <p className="text-xs text-gray-300">Live operational telemetry derived from real database records.</p>
         </div>
         <div className="text-xs text-emerald-400 font-bold flex items-center gap-1.5 bg-navy-900/60 px-3 py-1.5 rounded-xl border border-navy-700">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" /> PostgreSQL Connection Active
+          <ShieldCheck className="w-4 h-4 text-emerald-400" /> Database Connection Active
+        </div>
+      </div>
+
+      {/* Quick Admin Actions Bar */}
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <span className="text-xs font-extrabold uppercase tracking-wider text-navy flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 text-germanRed" /> Admin Quick Actions:
+        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/admin/students"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-navy text-white text-xs font-bold hover:bg-navy-800 transition-colors shadow-sm"
+          >
+            <Users className="w-3.5 h-3.5" /> Manage / Add Students
+          </a>
+          <a
+            href="/admin/teachers"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-germanRed text-white text-xs font-bold hover:bg-red-700 transition-colors shadow-sm"
+          >
+            <GraduationCap className="w-3.5 h-3.5" /> Manage / Add Faculty
+          </a>
+          <a
+            href="/admin/courses"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-navy border border-navy-200 text-xs font-bold hover:bg-navy-50 transition-colors shadow-sm"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-navy" /> Manage Courses
+          </a>
+          <a
+            href="/admin/enquiries"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-dark-muted border border-gray-200 text-xs font-bold hover:bg-gray-50 transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5" /> Enquiries ({enquiriesCount || 0})
+          </a>
         </div>
       </div>
 

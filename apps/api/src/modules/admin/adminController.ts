@@ -168,6 +168,172 @@ export async function getStudents(req: Request, res: Response, next: NextFunctio
   }
 }
 
+export async function createStudent(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { firstName, lastName, email, phone, address, password, currentLevel, learningGoal } = req.body;
+    if (!firstName || !lastName || !email || !password) {
+      return next(new AppError('First name, last name, email, and password are required.', 400));
+    }
+    const normalizedEmail = email.toLowerCase().trim();
+    const existing = isDatabaseConnected
+      ? await prisma.user.findUnique({ where: { email: normalizedEmail } })
+      : store.users.find(u => u.email.toLowerCase() === normalizedEmail);
+
+    if (existing) {
+      return next(new AppError('A user with this email already exists.', 400));
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    if (isDatabaseConnected) {
+      const student = await prisma.user.create({
+        data: {
+          email: normalizedEmail,
+          passwordHash,
+          firstName,
+          lastName,
+          phone: phone || null,
+          role: UserRole.STUDENT,
+          isActive: true,
+          isEmailVerified: true,
+          studentProfile: {
+            create: {
+              currentLevel: currentLevel || GermanLevel.A1,
+              learningGoal: learningGoal || null,
+              preferredLanguage: 'en'
+            }
+          }
+        },
+        include: { studentProfile: true }
+      });
+
+      await recordAuditLog({
+        userId: req.user?.id,
+        action: 'CREATE_STUDENT',
+        entityType: 'User',
+        entityId: student.id,
+        details: { email: student.email }
+      });
+
+      return res.status(201).json({ success: true, message: 'Student created successfully.', student });
+    } else {
+      const student = {
+        id: `student-${Date.now()}`,
+        email: normalizedEmail,
+        passwordHash,
+        firstName,
+        lastName,
+        phone: phone || '',
+        address: address || '',
+        role: UserRole.STUDENT,
+        isActive: true,
+        isEmailVerified: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      const sp = {
+        id: `profile-${Date.now()}`,
+        userId: student.id,
+        currentLevel: currentLevel || GermanLevel.A1,
+        learningGoal: learningGoal || '',
+        preferredLanguage: 'en',
+        dailyGoalMinutes: 20,
+        streakCount: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      store.users.unshift(student);
+      store.studentProfiles.unshift(sp);
+      return res.status(201).json({ success: true, message: 'Student created successfully.', student: { ...student, studentProfile: sp } });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateStudent(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { studentId } = req.params;
+    const { firstName, lastName, email, phone, address, currentLevel, learningGoal, isActive } = req.body;
+
+    if (isDatabaseConnected) {
+      const updated = await prisma.user.update({
+        where: { id: studentId },
+        data: {
+          firstName: firstName !== undefined ? firstName : undefined,
+          lastName: lastName !== undefined ? lastName : undefined,
+          email: email ? email.toLowerCase().trim() : undefined,
+          phone: phone !== undefined ? phone : undefined,
+          isActive: isActive !== undefined ? Boolean(isActive) : undefined,
+          studentProfile: {
+            upsert: {
+              create: { currentLevel: currentLevel || GermanLevel.A1, learningGoal: learningGoal || null },
+              update: { currentLevel: currentLevel || undefined, learningGoal: learningGoal !== undefined ? learningGoal : undefined }
+            }
+          }
+        },
+        include: { studentProfile: true }
+      });
+      return res.json({ success: true, message: 'Student updated successfully.', student: updated });
+    } else {
+      const student = store.users.find(u => u.id === studentId);
+      if (!student) return next(new AppError('Student not found.', 404));
+
+      if (firstName !== undefined) student.firstName = firstName;
+      if (lastName !== undefined) student.lastName = lastName;
+      if (email !== undefined) student.email = email.toLowerCase().trim();
+      if (phone !== undefined) student.phone = phone;
+      if (address !== undefined) student.address = address;
+      if (isActive !== undefined) student.isActive = Boolean(isActive);
+      student.updatedAt = new Date().toISOString();
+
+      let sp = store.studentProfiles.find(p => p.userId === studentId);
+      if (sp) {
+        if (currentLevel !== undefined) sp.currentLevel = currentLevel;
+        if (learningGoal !== undefined) sp.learningGoal = learningGoal;
+        sp.updatedAt = new Date().toISOString();
+      } else {
+        sp = {
+          id: `profile-${Date.now()}`,
+          userId: studentId,
+          currentLevel: currentLevel || GermanLevel.A1,
+          learningGoal: learningGoal || '',
+          preferredLanguage: 'en',
+          dailyGoalMinutes: 20,
+          streakCount: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        store.studentProfiles.push(sp);
+      }
+      return res.json({ success: true, message: 'Student updated successfully.', student: { ...student, studentProfile: sp } });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteStudent(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { studentId } = req.params;
+
+    if (isDatabaseConnected) {
+      await prisma.user.delete({ where: { id: studentId } });
+      return res.json({ success: true, message: 'Student deleted successfully.' });
+    } else {
+      const idx = store.users.findIndex(u => u.id === studentId);
+      if (idx === -1) return next(new AppError('Student not found.', 404));
+      store.users.splice(idx, 1);
+      store.studentProfiles = store.studentProfiles.filter(p => p.userId !== studentId);
+      store.enrollments = store.enrollments.filter(e => e.userId !== studentId);
+      store.batchMemberships = store.batchMemberships.filter(bm => bm.userId !== studentId);
+      return res.json({ success: true, message: 'Student deleted successfully.' });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getTeachers(req: Request, res: Response, next: NextFunction) {
   try {
     if (isDatabaseConnected) {
@@ -348,6 +514,92 @@ export async function unassignTeacherFromBatch(req: Request, res: Response, next
   }
 }
 
+export async function updateTeacher(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { teacherId } = req.params;
+    const { firstName, lastName, email, phone, bio, qualifications, specialization, isActive, batchIds } = req.body;
+
+    if (isDatabaseConnected) {
+      const updated = await prisma.user.update({
+        where: { id: teacherId },
+        data: {
+          firstName: firstName !== undefined ? firstName : undefined,
+          lastName: lastName !== undefined ? lastName : undefined,
+          email: email ? email.toLowerCase().trim() : undefined,
+          phone: phone !== undefined ? phone : undefined,
+          isActive: isActive !== undefined ? Boolean(isActive) : undefined,
+          teacherProfile: {
+            upsert: {
+              create: { bio, qualifications, specialization, maxBatches: 5 },
+              update: { bio, qualifications, specialization }
+            }
+          }
+        },
+        include: { teacherProfile: true }
+      });
+      return res.json({ success: true, message: 'Teacher updated successfully.', teacher: updated });
+    } else {
+      const teacher = store.users.find(u => u.id === teacherId);
+      if (!teacher) return next(new AppError('Teacher not found.', 404));
+
+      if (firstName !== undefined) teacher.firstName = firstName;
+      if (lastName !== undefined) teacher.lastName = lastName;
+      if (email !== undefined) teacher.email = email.toLowerCase().trim();
+      if (phone !== undefined) teacher.phone = phone;
+      if (isActive !== undefined) teacher.isActive = Boolean(isActive);
+      teacher.updatedAt = new Date().toISOString();
+
+      let tp = store.teacherProfiles.find(p => p.userId === teacherId);
+      if (tp) {
+        if (bio !== undefined) tp.bio = bio;
+        if (qualifications !== undefined) tp.qualifications = qualifications;
+        if (specialization !== undefined) tp.specialization = specialization;
+        tp.updatedAt = new Date().toISOString();
+      }
+
+      if (batchIds && Array.isArray(batchIds)) {
+        store.teacherBatchAssignments = store.teacherBatchAssignments.filter(tba => tba.teacherId !== tp?.id);
+        for (const bId of batchIds) {
+          store.teacherBatchAssignments.push({
+            id: `tba-${Date.now()}-${bId}`,
+            batchId: bId,
+            teacherId: tp?.id || teacherId,
+            isPrimary: true,
+            assignedAt: new Date().toISOString()
+          });
+        }
+      }
+
+      return res.json({ success: true, message: 'Teacher updated successfully.', teacher: { ...teacher, teacherProfile: tp } });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteTeacher(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { teacherId } = req.params;
+
+    if (isDatabaseConnected) {
+      await prisma.user.delete({ where: { id: teacherId } });
+      return res.json({ success: true, message: 'Teacher deleted successfully.' });
+    } else {
+      const idx = store.users.findIndex(u => u.id === teacherId);
+      if (idx === -1) return next(new AppError('Teacher not found.', 404));
+      const tp = store.teacherProfiles.find(p => p.userId === teacherId);
+      store.users.splice(idx, 1);
+      if (tp) {
+        store.teacherProfiles = store.teacherProfiles.filter(p => p.id !== tp.id);
+        store.teacherBatchAssignments = store.teacherBatchAssignments.filter(t => t.teacherId !== tp.id);
+      }
+      return res.json({ success: true, message: 'Teacher deleted successfully.' });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getAdminCourses(req: Request, res: Response, next: NextFunction) {
   try {
     if (isDatabaseConnected) {
@@ -420,6 +672,87 @@ export async function createCourse(req: Request, res: Response, next: NextFuncti
       };
       store.courses.push(course);
       return res.status(201).json({ success: true, course });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateCourse(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { courseId } = req.params;
+    const { title, slug, description, level, estimatedHours, status, order } = req.body;
+
+    if (isDatabaseConnected) {
+      const course = await prisma.course.update({
+        where: { id: courseId },
+        data: {
+          title,
+          slug,
+          description,
+          level,
+          estimatedHours: estimatedHours !== undefined ? Number(estimatedHours) : undefined,
+          status,
+          order: order !== undefined ? Number(order) : undefined
+        }
+      });
+      return res.json({ success: true, message: 'Course updated successfully.', course });
+    } else {
+      const course = store.courses.find(c => c.id === courseId);
+      if (!course) return next(new AppError('Course not found.', 404));
+
+      if (title !== undefined) course.title = title;
+      if (slug !== undefined) course.slug = slug;
+      if (description !== undefined) course.description = description;
+      if (level !== undefined) course.level = level;
+      if (estimatedHours !== undefined) course.estimatedHours = Number(estimatedHours);
+      if (status !== undefined) course.status = status;
+      if (order !== undefined) course.order = Number(order);
+      course.updatedAt = new Date().toISOString();
+
+      return res.json({ success: true, message: 'Course updated successfully.', course });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteCourse(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { courseId } = req.params;
+
+    if (isDatabaseConnected) {
+      await prisma.course.delete({ where: { id: courseId } });
+      return res.json({ success: true, message: 'Course deleted successfully.' });
+    } else {
+      const idx = store.courses.findIndex(c => c.id === courseId);
+      if (idx === -1) return next(new AppError('Course not found.', 404));
+      store.courses.splice(idx, 1);
+      return res.json({ success: true, message: 'Course deleted successfully.' });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function toggleUserActiveStatus(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { userId } = req.params;
+
+    if (isDatabaseConnected) {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) return next(new AppError('User not found.', 404));
+      const updated = await prisma.user.update({
+        where: { id: userId },
+        data: { isActive: !user.isActive }
+      });
+      return res.json({ success: true, message: `User status changed to ${updated.isActive ? 'Active' : 'Suspended'}.`, isActive: updated.isActive });
+    } else {
+      const user = store.users.find(u => u.id === userId);
+      if (!user) return next(new AppError('User not found.', 404));
+      user.isActive = !user.isActive;
+      user.updatedAt = new Date().toISOString();
+      return res.json({ success: true, message: `User status changed to ${user.isActive ? 'Active' : 'Suspended'}.`, isActive: user.isActive });
     }
   } catch (error) {
     next(error);

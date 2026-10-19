@@ -66,6 +66,20 @@ export const api = {
     return handleResponse<T>(res);
   },
 
+  async put<T>(endpoint: string, body?: any): Promise<T> {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: body ? JSON.stringify(body) : undefined
+    });
+
+    return handleResponse<T>(res);
+  },
+
   async patch<T>(endpoint: string, body?: any): Promise<T> {
     const res = await fetch(`${API_BASE}${endpoint}`, {
       method: 'PATCH',
