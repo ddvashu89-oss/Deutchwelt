@@ -51,7 +51,7 @@ export async function getLessonById(req: Request, res: Response, next: NextFunct
       const nextLesson = currentIndex < siblingLessons.length - 1 ? siblingLessons[currentIndex + 1] : null;
 
       let isCompleted = false;
-      let userScore = null;
+      let userScore: number | null = null;
 
       if (req.user) {
         const progress = await prisma.lessonProgress.findUnique({

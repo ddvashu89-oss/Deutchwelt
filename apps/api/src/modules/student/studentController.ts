@@ -57,7 +57,7 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
 
       // Recommended / Continue learning lesson
       const activeEnrollment = enrollments[0];
-      let continueLesson = null;
+      let continueLesson: any = null;
       if (activeEnrollment && activeEnrollment.course.units.length > 0) {
         const completedIds = new Set(completedLessons.map(cl => cl.lessonId));
         for (const unit of activeEnrollment.course.units) {
