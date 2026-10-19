@@ -292,3 +292,82 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
     next(error);
   }
 }
+
+/**
+ * Get study materials and announcements assigned to the student's batch
+ */
+export async function getStudentBatchMaterials(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) return next(new AppError('Unauthorized', 401));
+
+    const myBatchIds = store.batchMemberships
+      .filter(bm => bm.userId === req.user!.id)
+      .map(bm => bm.batchId);
+
+    // If student isn't explicitly enrolled in a batch yet, default to batch-1 for demo
+    const effectiveBatchIds = myBatchIds.length > 0 ? myBatchIds : ['batch-1'];
+
+    const materials = store.teacherMaterials
+      .filter(m => effectiveBatchIds.includes(m.batchId))
+      .map(m => {
+        const batch = store.batches.find(b => b.id === m.batchId);
+        const teacherProfile = store.teacherProfiles.find(tp => tp.id === m.teacherId);
+        const teacherUser = teacherProfile ? store.users.find(u => u.id === teacherProfile.userId) : null;
+        return {
+          ...m,
+          batchName: batch?.name || 'Class Materials',
+          teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : 'Course Instructor'
+        };
+      });
+
+    const announcements = store.batchAnnouncements
+      .filter(a => effectiveBatchIds.includes(a.batchId))
+      .map(a => {
+        const batch = store.batches.find(b => b.id === a.batchId);
+        const teacherProfile = store.teacherProfiles.find(tp => tp.id === a.teacherId);
+        const teacherUser = teacherProfile ? store.users.find(u => u.id === teacherProfile.userId) : null;
+        return {
+          ...a,
+          batchName: batch?.name || 'Batch Announcement',
+          teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : 'Course Instructor'
+        };
+      });
+
+    return res.json({ success: true, materials, announcements });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Get lectures and live video sessions for the student's batch
+ */
+export async function getStudentBatchLectures(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) return next(new AppError('Unauthorized', 401));
+
+    const myBatchIds = store.batchMemberships
+      .filter(bm => bm.userId === req.user!.id)
+      .map(bm => bm.batchId);
+
+    const effectiveBatchIds = myBatchIds.length > 0 ? myBatchIds : ['batch-1'];
+
+    const lectures = store.teacherLectures
+      .filter(l => effectiveBatchIds.includes(l.batchId))
+      .map(l => {
+        const batch = store.batches.find(b => b.id === l.batchId);
+        const teacherProfile = store.teacherProfiles.find(tp => tp.id === l.teacherId);
+        const teacherUser = teacherProfile ? store.users.find(u => u.id === teacherProfile.userId) : null;
+        return {
+          ...l,
+          batchName: batch?.name || 'Class Lecture',
+          teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : 'Course Instructor'
+        };
+      });
+
+    return res.json({ success: true, lectures });
+  } catch (error) {
+    next(error);
+  }
+}
+

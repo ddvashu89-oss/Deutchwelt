@@ -184,10 +184,23 @@ export async function getTeachers(req: Request, res: Response, next: NextFunctio
       });
       return res.json({ success: true, teachers });
     } else {
-      const teachers = store.users.filter(u => u.role === UserRole.TEACHER).map(u => ({
-        ...u,
-        teacherProfile: store.teacherProfiles.find(tp => tp.userId === u.id)
-      }));
+      const teachers = store.users.filter(u => u.role === UserRole.TEACHER).map(u => {
+        const tp = store.teacherProfiles.find(p => p.userId === u.id);
+        const myTbas = store.teacherBatchAssignments.filter(tba => tba.teacherId === tp?.id);
+        const myBatches = store.batches.filter(b => myTbas.some(t => t.batchId === b.id));
+        const studentUserIds = new Set(
+          store.batchMemberships
+            .filter(bm => myBatches.some(b => b.id === bm.batchId))
+            .map(bm => bm.userId)
+        );
+
+        return {
+          ...u,
+          teacherProfile: tp,
+          batches: myBatches,
+          totalStudents: studentUserIds.size
+        };
+      });
       return res.json({ success: true, teachers });
     }
   } catch (error) {
@@ -197,7 +210,7 @@ export async function getTeachers(req: Request, res: Response, next: NextFunctio
 
 export async function createTeacher(req: Request, res: Response, next: NextFunction) {
   try {
-    const { firstName, lastName, email, phone, password, bio, qualifications, specialization } = req.body;
+    const { firstName, lastName, email, phone, password, bio, qualifications, specialization, batchIds = [] } = req.body;
     const normalizedEmail = email.toLowerCase().trim();
 
     const passwordHash = await bcrypt.hash(password || 'TeacherDefault2026!', 10);
@@ -225,12 +238,24 @@ export async function createTeacher(req: Request, res: Response, next: NextFunct
         include: { teacherProfile: true }
       });
 
+      if (batchIds && batchIds.length > 0 && teacher.teacherProfile) {
+        for (const bId of batchIds) {
+          await prisma.teacherBatchAssignment.create({
+            data: {
+              batchId: bId,
+              teacherId: teacher.teacherProfile.id,
+              isPrimary: true
+            }
+          });
+        }
+      }
+
       await recordAuditLog({
         userId: req.user?.id,
         action: 'CREATE_TEACHER',
         entityType: 'User',
         entityId: teacher.id,
-        details: { email: teacher.email }
+        details: { email: teacher.email, assignedBatches: batchIds }
       });
 
       return res.status(201).json({ success: true, message: 'Teacher created successfully.', teacher });
@@ -261,8 +286,63 @@ export async function createTeacher(req: Request, res: Response, next: NextFunct
       store.users.push(teacher);
       store.teacherProfiles.push(tp);
 
+      if (batchIds && batchIds.length > 0) {
+        for (const bId of batchIds) {
+          store.teacherBatchAssignments.push({
+            id: `tba-${Date.now()}-${bId}`,
+            batchId: bId,
+            teacherId: tp.id,
+            isPrimary: true,
+            assignedAt: new Date().toISOString()
+          });
+        }
+      }
+
       return res.status(201).json({ success: true, message: 'Teacher created successfully.', teacher: { ...teacher, teacherProfile: tp } });
     }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function assignTeacherToBatch(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { teacherId } = req.params;
+    const { batchId } = req.body;
+
+    const teacher = store.users.find(u => u.id === teacherId);
+    const tp = store.teacherProfiles.find(p => p.userId === teacherId || p.id === teacherId);
+    if (!tp) return next(new AppError('Teacher profile not found.', 404));
+
+    const existing = store.teacherBatchAssignments.find(tba => tba.teacherId === tp.id && tba.batchId === batchId);
+    if (!existing) {
+      store.teacherBatchAssignments.push({
+        id: `tba-${Date.now()}`,
+        batchId,
+        teacherId: tp.id,
+        isPrimary: true,
+        assignedAt: new Date().toISOString()
+      });
+    }
+
+    return res.json({ success: true, message: 'Teacher assigned to batch successfully.' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function unassignTeacherFromBatch(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { teacherId, batchId } = req.params;
+    const tp = store.teacherProfiles.find(p => p.userId === teacherId || p.id === teacherId);
+    if (!tp) return next(new AppError('Teacher profile not found.', 404));
+
+    const idx = store.teacherBatchAssignments.findIndex(tba => tba.teacherId === tp.id && tba.batchId === batchId);
+    if (idx !== -1) {
+      store.teacherBatchAssignments.splice(idx, 1);
+    }
+
+    return res.json({ success: true, message: 'Teacher unassigned from batch.' });
   } catch (error) {
     next(error);
   }

@@ -28,12 +28,14 @@ import { VocabularyTrainerPage } from './pages/student/VocabularyTrainerPage.js'
 import { SpeakingLabPage } from './pages/student/SpeakingLabPage.js';
 import { AssignmentsPage } from './pages/student/AssignmentsPage.js';
 import { StudentProfilePage } from './pages/student/StudentProfilePage.js';
+import { StudentMaterialsPage } from './pages/student/StudentMaterialsPage.js';
 
 // Teacher Pages
 import { TeacherDashboard } from './pages/teacher/TeacherDashboard.js';
 import { TeacherSubmissionsPage } from './pages/teacher/TeacherSubmissionsPage.js';
 import { TeacherBatchesPage } from './pages/teacher/TeacherBatchesPage.js';
 import { TeacherAssignmentCreator } from './pages/teacher/TeacherAssignmentCreator.js';
+import { TeacherMaterialsPage } from './pages/teacher/TeacherMaterialsPage.js';
 
 // Admin Pages
 import { AdminDashboard } from './pages/admin/AdminDashboard.js';
@@ -104,6 +106,7 @@ export function App() {
               }
             >
               <Route path="dashboard" element={<StudentDashboard />} />
+              <Route path="materials" element={<StudentMaterialsPage />} />
               <Route path="vocabulary" element={<VocabularyTrainerPage />} />
               <Route path="speaking" element={<SpeakingLabPage />} />
               <Route path="assignments" element={<AssignmentsPage />} />
@@ -133,6 +136,7 @@ export function App() {
               <Route path="dashboard" element={<TeacherDashboard />} />
               <Route path="submissions" element={<TeacherSubmissionsPage />} />
               <Route path="batches" element={<TeacherBatchesPage />} />
+              <Route path="materials" element={<TeacherMaterialsPage />} />
               <Route path="assignments/new" element={<TeacherAssignmentCreator />} />
             </Route>
 

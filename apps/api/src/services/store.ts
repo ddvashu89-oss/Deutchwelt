@@ -25,6 +25,10 @@ export class DataStore {
   submissions: any[] = [];
   batches: any[] = [];
   batchMemberships: any[] = [];
+  teacherBatchAssignments: any[] = [];
+  teacherLectures: any[] = [];
+  teacherMaterials: any[] = [];
+  batchAnnouncements: any[] = [];
   enrollments: any[] = [];
   lessonProgress: any[] = [];
   enquiries: any[] = [];
@@ -83,31 +87,85 @@ export class DataStore {
       updatedAt: new Date().toISOString()
     };
 
-    this.users = [admin, teacher, student];
-
-    this.studentProfiles = [{
-      id: 'profile-student-1',
-      userId: student.id,
-      currentLevel: GermanLevel.A1,
-      learningGoal: 'Pass Goethe-Zertifikat A1 with 90%+ for German university visa',
-      preferredLanguage: 'en',
-      dailyGoalMinutes: 25,
-      streakCount: 7,
-      lastActiveDate: new Date().toISOString(),
+    const teacher2 = {
+      id: 'user-teacher-2',
+      email: 'florian@deutschwelt.de',
+      passwordHash: teacherPasswordHash,
+      firstName: 'Florian',
+      lastName: 'Becker',
+      phone: '+49 152 98765432',
+      role: UserRole.TEACHER,
+      isActive: true,
+      isEmailVerified: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    }];
+    };
 
-    this.teacherProfiles = [{
-      id: 'profile-teacher-1',
-      userId: teacher.id,
-      bio: 'Goethe-Institut certified DaF specialist with 12+ years of experience training students from A1 to TestDaF.',
-      qualifications: 'MA Germanistik (LMU Munich)',
-      specialization: 'Phonetics & Exam Preparation',
-      maxBatches: 5,
+    const student2 = {
+      id: 'user-student-2',
+      email: 'lukas@example.com',
+      passwordHash: studentPasswordHash,
+      firstName: 'Lukas',
+      lastName: 'Meyer',
+      phone: '+49 170 11223344',
+      role: UserRole.STUDENT,
+      isActive: true,
+      isEmailVerified: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    }];
+    };
+
+    this.users = [admin, teacher, teacher2, student, student2];
+
+    this.studentProfiles = [
+      {
+        id: 'profile-student-1',
+        userId: student.id,
+        currentLevel: GermanLevel.A1,
+        learningGoal: 'Pass Goethe-Zertifikat A1 with 90%+ for German university visa',
+        preferredLanguage: 'en',
+        dailyGoalMinutes: 25,
+        streakCount: 7,
+        lastActiveDate: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: 'profile-student-2',
+        userId: student2.id,
+        currentLevel: GermanLevel.B1,
+        learningGoal: 'Pass Goethe-Zertifikat B1 for job application',
+        preferredLanguage: 'en',
+        dailyGoalMinutes: 40,
+        streakCount: 12,
+        lastActiveDate: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ];
+
+    this.teacherProfiles = [
+      {
+        id: 'profile-teacher-1',
+        userId: teacher.id,
+        bio: 'Goethe-Institut certified DaF specialist with 12+ years of experience training students from A1 to TestDaF.',
+        qualifications: 'MA Germanistik (LMU Munich)',
+        specialization: 'Phonetics & A1-A2 Foundation',
+        maxBatches: 5,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: 'profile-teacher-2',
+        userId: teacher2.id,
+        bio: 'Senior DaF Lecturer and TestDaF official examiner specializing in advanced grammar and business German.',
+        qualifications: 'PhD Applied Linguistics (FU Berlin)',
+        specialization: 'B1-B2 Exam Preparation & Advanced Writing',
+        maxBatches: 5,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ];
 
     // Courses A1, A2, B1, B2
     this.courses = [
@@ -621,6 +679,35 @@ In German, regular verbs in the present tense take consistent endings based on t
         isActive: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
+      },
+      {
+        id: 'batch-2',
+        name: 'Goethe B1/B2 Mastery — Abendkurs',
+        level: GermanLevel.B1,
+        description: 'Evening advanced batch meeting Tue & Thu 19:00-20:30 CET focusing on complex grammar and exam simulations.',
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 90 * 86400000).toISOString(),
+        maxStudents: 12,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ];
+
+    this.teacherBatchAssignments = [
+      {
+        id: 'tba-1',
+        batchId: 'batch-1',
+        teacherId: 'profile-teacher-1',
+        isPrimary: true,
+        assignedAt: new Date().toISOString()
+      },
+      {
+        id: 'tba-2',
+        batchId: 'batch-2',
+        teacherId: 'profile-teacher-2',
+        isPrimary: true,
+        assignedAt: new Date().toISOString()
       }
     ];
 
@@ -631,6 +718,117 @@ In German, regular verbs in the present tense take consistent endings based on t
         userId: student.id,
         status: 'ACTIVE',
         joinedAt: new Date().toISOString()
+      },
+      {
+        id: 'bm-2',
+        batchId: 'batch-2',
+        userId: student2.id,
+        status: 'ACTIVE',
+        joinedAt: new Date().toISOString()
+      }
+    ];
+
+    // Teacher Uploaded Lectures & Live Video Sessions
+    this.teacherLectures = [
+      {
+        id: 'lec-1',
+        teacherId: 'profile-teacher-1',
+        batchId: 'batch-1',
+        title: 'A1.1 Aussprache & Alphabet Meisterklasse',
+        description: 'Core phonetic rules in German: Umlauts (ä, ö, ü), diphthongs (ei, ie, eu), and the soft/hard ch sound.',
+        level: GermanLevel.A1,
+        videoUrl: 'https://www.youtube.com/embed/sample-german-phonetics',
+        durationMinutes: 45,
+        scheduledFor: new Date().toISOString(),
+        isLive: false,
+        meetingUrl: 'https://meet.google.com/dw-a1-live',
+        status: 'PUBLISHED',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'lec-2',
+        teacherId: 'profile-teacher-1',
+        batchId: 'batch-1',
+        title: 'A1.2 Nominativ vs. Akkusativ Satzbau',
+        description: 'Understanding how direct objects transform der -> den, with interactive sentence breakdown examples.',
+        level: GermanLevel.A1,
+        videoUrl: 'https://www.youtube.com/embed/sample-german-akkusativ',
+        durationMinutes: 50,
+        scheduledFor: new Date(Date.now() + 86400000).toISOString(),
+        isLive: true,
+        meetingUrl: 'https://meet.google.com/dw-a1-live',
+        status: 'PUBLISHED',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'lec-3',
+        teacherId: 'profile-teacher-2',
+        batchId: 'batch-2',
+        title: 'B1 Konjunktiv II: Wünsche & Höfliche Bitten',
+        description: 'Advanced hypotheticals using wäre, hätte, and würde + Infinitiv for official Goethe B1 speaking exam.',
+        level: GermanLevel.B1,
+        videoUrl: 'https://www.youtube.com/embed/sample-german-b1',
+        durationMinutes: 60,
+        scheduledFor: new Date().toISOString(),
+        isLive: false,
+        meetingUrl: 'https://meet.google.com/dw-b1-live',
+        status: 'PUBLISHED',
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    // Teacher Uploaded Study Materials & Worksheets
+    this.teacherMaterials = [
+      {
+        id: 'mat-1',
+        teacherId: 'profile-teacher-1',
+        batchId: 'batch-1',
+        title: 'A1 Grammatik-Übersicht: Bestimmte & Unbestimmte Artikel',
+        category: 'GRAMMAR_CHEAT_SHEET',
+        description: 'Complete 2-page color-coded reference guide for der/die/das in Nominativ and Akkusativ.',
+        fileUrl: '/uploads/materials/A1_Grammatik_Artikel.pdf',
+        fileType: 'PDF',
+        fileSize: '1.2 MB',
+        level: GermanLevel.A1,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'mat-2',
+        teacherId: 'profile-teacher-1',
+        batchId: 'batch-1',
+        title: 'A1 Übungsblatt: Begrüßungen & Höflichkeitsformen',
+        category: 'WORKSHEET',
+        description: 'Fill-in-the-blank practice worksheet for formal Sie vs. informal du in everyday German.',
+        fileUrl: '/uploads/materials/A1_Begruessungen_Uebungen.pdf',
+        fileType: 'PDF',
+        fileSize: '850 KB',
+        level: GermanLevel.A1,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'mat-3',
+        teacherId: 'profile-teacher-2',
+        batchId: 'batch-2',
+        title: 'B1 Nebensätze: weil, dass, obwohl, wenn Satzstruktur',
+        category: 'GRAMMAR_CHEAT_SHEET',
+        description: 'Summary table of subordinating conjunctions and verb kick rules at the end of the clause.',
+        fileUrl: '/uploads/materials/B1_Nebensaetze_Regeln.pdf',
+        fileType: 'PDF',
+        fileSize: '1.5 MB',
+        level: GermanLevel.B1,
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    // Batch Noticeboard Announcements
+    this.batchAnnouncements = [
+      {
+        id: 'anc-1',
+        teacherId: 'profile-teacher-1',
+        batchId: 'batch-1',
+        title: 'Morgen: Live-Sprechtraining um 10:00 Uhr',
+        content: 'Liebe Kursteilnehmer, morgen üben wir die Dialoge aus Einheit 1 live auf Google Meet. Bitte bereiten Sie Ihre 60-Sekunden Selbstvorstellung vor!',
+        createdAt: new Date().toISOString()
       }
     ];
 

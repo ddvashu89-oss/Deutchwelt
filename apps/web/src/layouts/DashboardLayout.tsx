@@ -23,7 +23,8 @@ import {
   FileCheck,
   ShieldCheck,
   Flame,
-  ChevronRight
+  ChevronRight,
+  Video
 } from 'lucide-react';
 
 export function DashboardLayout() {
@@ -41,6 +42,7 @@ export function DashboardLayout() {
   const studentLinks = [
     { label: 'Overview', href: '/student/dashboard', icon: LayoutDashboard },
     { label: 'My Courses', href: '/courses', icon: BookOpen },
+    { label: 'Class Lectures & Files', href: '/student/materials', icon: Video },
     { label: 'Vocabulary Trainer', href: '/student/vocabulary', icon: Layers },
     { label: 'Speaking Lab', href: '/student/speaking', icon: Mic },
     { label: 'Assignments', href: '/student/assignments', icon: PenTool },
@@ -50,6 +52,7 @@ export function DashboardLayout() {
   const teacherLinks = [
     { label: 'Overview', href: '/teacher', icon: LayoutDashboard },
     { label: 'Batches & Students', href: '/teacher/batches', icon: Users },
+    { label: 'Lectures & Materials', href: '/teacher/materials', icon: Video },
     { label: 'Review Submissions', href: '/teacher/submissions', icon: ClipboardList },
     { label: 'Create Assignment', href: '/teacher/assignments/new', icon: PenTool }
   ];

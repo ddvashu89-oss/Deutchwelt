@@ -4,6 +4,8 @@ import {
   getStudents,
   getTeachers,
   createTeacher,
+  assignTeacherToBatch,
+  unassignTeacherFromBatch,
   getAdminCourses,
   createCourse,
   getAdminEnquiries,
@@ -24,6 +26,8 @@ router.get('/analytics', getAdminAnalytics);
 router.get('/students', getStudents);
 router.get('/teachers', getTeachers);
 router.post('/teachers', createTeacher);
+router.post('/teachers/:teacherId/batches', assignTeacherToBatch);
+router.delete('/teachers/:teacherId/batches/:batchId', unassignTeacherFromBatch);
 router.get('/courses', getAdminCourses);
 router.post('/courses', createCourse);
 router.get('/enquiries', getAdminEnquiries);
