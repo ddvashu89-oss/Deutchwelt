@@ -241,7 +241,7 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
       return next(new AppError('Unauthorized', 401));
     }
 
-    const { firstName, lastName, phone, currentLevel, learningGoal, dailyGoalMinutes, preferredLanguage } = req.body;
+    const { firstName, lastName, phone, address, currentLevel, learningGoal, dailyGoalMinutes, preferredLanguage } = req.body;
 
     if (isDatabaseConnected) {
       const updatedUser = await prisma.user.update({
@@ -277,6 +277,7 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
         if (firstName) user.firstName = firstName;
         if (lastName) user.lastName = lastName;
         if (phone !== undefined) user.phone = phone;
+        if (address !== undefined) user.address = address;
       }
       let sp = store.studentProfiles.find(p => p.userId === req.user?.id);
       if (sp) {

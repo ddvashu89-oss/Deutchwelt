@@ -14,6 +14,7 @@ export function StudentProfilePage() {
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [phone, setPhone] = useState(user?.phone || '');
+  const [address, setAddress] = useState(user?.address || '');
   const [currentLevel, setCurrentLevel] = useState(user?.studentProfile?.currentLevel || 'A1');
   const [dailyGoalMinutes, setDailyGoalMinutes] = useState(user?.studentProfile?.dailyGoalMinutes || 25);
   const [learningGoal, setLearningGoal] = useState(user?.studentProfile?.learningGoal || '');
@@ -32,6 +33,7 @@ export function StudentProfilePage() {
         firstName,
         lastName,
         phone,
+        address,
         currentLevel,
         dailyGoalMinutes: Number(dailyGoalMinutes),
         learningGoal,
@@ -88,12 +90,19 @@ export function StudentProfilePage() {
               helperText="Managed by account credentials"
             />
             <Input
-              label="Phone Number"
+              label="Mobile Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+49 151 12345678"
             />
           </div>
+
+          <Input
+            label="Residential Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="e.g. Friedrichstraße 10, 10117 Berlin, Germany"
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
             <div className="space-y-1.5">

@@ -177,7 +177,7 @@ export function StudentDashboard() {
         <div className="lg:col-span-7 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-navy">Enrolled Courses</h3>
-            <Link to="/courses" className="text-xs font-bold text-germanRed hover:underline">
+            <Link to="/student/courses" className="text-xs font-bold text-germanRed hover:underline">
               Browse All Courses
             </Link>
           </div>
@@ -196,9 +196,9 @@ export function StudentDashboard() {
                   <Progress value={enr.progressPercentage} className="h-2 mb-4" />
                   <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                     <span className="text-xs text-dark-muted">Status: Active</span>
-                    <Link to={`/courses/${enr.courseSlug}`}>
+                    <Link to="/student/courses">
                       <Button variant="outline" size="sm">
-                        View Syllabus <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                        View Syllabus & Lessons <ArrowRight className="w-3.5 h-3.5 ml-1" />
                       </Button>
                     </Link>
                   </div>

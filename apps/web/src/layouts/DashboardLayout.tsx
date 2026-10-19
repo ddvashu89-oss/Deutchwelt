@@ -42,7 +42,7 @@ export function DashboardLayout() {
 
   const studentLinks = [
     { label: 'Overview', href: '/student/dashboard', icon: LayoutDashboard },
-    { label: 'My Courses', href: '/courses', icon: BookOpen },
+    { label: 'My Courses', href: '/student/courses', icon: BookOpen },
     { label: 'Class Lectures & Files', href: '/student/materials', icon: Video },
     { label: 'Vocabulary Trainer', href: '/student/vocabulary', icon: Layers },
     { label: 'Speaking Lab', href: '/student/speaking', icon: Mic },

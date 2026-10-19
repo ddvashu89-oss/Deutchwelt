@@ -8,6 +8,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phone?: string | null;
+  address?: string | null;
   role: UserRole;
   studentProfile?: any;
   teacherProfile?: any;

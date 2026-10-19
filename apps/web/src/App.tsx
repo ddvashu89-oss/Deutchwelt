@@ -30,6 +30,7 @@ import { SpeakingLabPage } from './pages/student/SpeakingLabPage.js';
 import { AssignmentsPage } from './pages/student/AssignmentsPage.js';
 import { StudentProfilePage } from './pages/student/StudentProfilePage.js';
 import { StudentMaterialsPage } from './pages/student/StudentMaterialsPage.js';
+import { StudentCoursesPage } from './pages/student/StudentCoursesPage.js';
 
 // Teacher Pages
 import { TeacherDashboard } from './pages/teacher/TeacherDashboard.js';
@@ -148,6 +149,7 @@ export function App() {
               }
             >
               <Route path="dashboard" element={<StudentDashboard />} />
+              <Route path="courses" element={<StudentCoursesPage />} />
               <Route path="materials" element={<StudentMaterialsPage />} />
               <Route path="vocabulary" element={<VocabularyTrainerPage />} />
               <Route path="speaking" element={<SpeakingLabPage />} />

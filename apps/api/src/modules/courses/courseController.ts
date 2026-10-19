@@ -145,7 +145,11 @@ export async function enrollInCourse(req: Request, res: Response, next: NextFunc
     const { courseId } = req.params;
 
     if (isDatabaseConnected) {
-      const course = await prisma.course.findUnique({ where: { id: courseId } });
+      const course = await prisma.course.findFirst({
+        where: {
+          OR: [{ id: courseId }, { slug: courseId }]
+        }
+      });
       if (!course) {
         return next(new AppError('Course not found.', 404, 'NOT_FOUND'));
       }
@@ -154,13 +158,13 @@ export async function enrollInCourse(req: Request, res: Response, next: NextFunc
         where: {
           userId_courseId: {
             userId: req.user.id,
-            courseId
+            courseId: course.id
           }
         },
         update: { status: 'ACTIVE' },
         create: {
           userId: req.user.id,
-          courseId,
+          courseId: course.id,
           status: 'ACTIVE',
           progressPercentage: 0
         }
