@@ -7,6 +7,7 @@ import { LanguageProvider } from './context/LanguageContext.js';
 // Layouts
 import { PublicLayout } from './layouts/PublicLayout.js';
 import { DashboardLayout } from './layouts/DashboardLayout.js';
+import { ErrorBoundary } from './components/ui/ErrorBoundary.js';
 
 // Public Pages
 import { HomePage } from './pages/public/HomePage.js';
@@ -55,8 +56,17 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-ivory">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-ivory text-center">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-navy text-white font-extrabold flex items-center justify-center text-sm">
+            DW
+          </div>
+          <span className="font-heading font-extrabold text-2xl text-navy">
+            Deutsch<span className="text-germanRed">Welt</span>
+          </span>
+        </div>
         <div className="w-8 h-8 rounded-full border-4 border-navy border-t-germanRed animate-spin" />
+        <p className="mt-3 text-xs font-semibold text-dark-muted">Laden...</p>
       </div>
     );
   }
@@ -72,72 +82,33 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
   return <>{children}</>;
 }
 
-// Content Access Gate (Requires registered user)
-function RequireAuthForContent({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-ivory">
-        <div className="w-8 h-8 rounded-full border-4 border-navy border-t-germanRed animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/register?reason=content_access" replace />;
-  }
-
-  return <>{children}</>;
-}
-
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Public & Gated Routes */}
-              <Route element={<PublicLayout />}>
-                <Route path="/" element={<HomePage />} />
-                <Route
-                  path="/courses"
-                  element={
-                    <RequireAuthForContent>
-                      <CoursesPage />
-                    </RequireAuthForContent>
-                  }
-                />
-                <Route
-                  path="/courses/:slug"
-                  element={
-                    <RequireAuthForContent>
-                      <CourseDetailPage />
-                    </RequireAuthForContent>
-                  }
-                />
-                <Route
-                  path="/vocabulary"
-                  element={
-                    <RequireAuthForContent>
-                      <VocabularyTrainerPage />
-                    </RequireAuthForContent>
-                  }
-                />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/faq" element={<FAQPage />} />
-                <Route path="/privacy" element={<PrivacyPolicyPage />} />
-                <Route path="/terms" element={<TermsOfServicePage />} />
-                <Route path="/cookies" element={<CookieNoticePage />} />
-              </Route>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Public Marketing & Courses Routes */}
+                <Route element={<PublicLayout />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/courses" element={<CoursesPage />} />
+                  <Route path="/courses/:slug" element={<CourseDetailPage />} />
+                  <Route path="/vocabulary" element={<VocabularyTrainerPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                  <Route path="/terms" element={<TermsOfServicePage />} />
+                  <Route path="/cookies" element={<CookieNoticePage />} />
+                </Route>
 
-            {/* Auth Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+              {/* Auth Routes */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
 
             {/* Student Protected Routes */}
             <Route
@@ -210,7 +181,8 @@ export function App() {
       </AuthProvider>
     </LanguageProvider>
   </QueryClientProvider>
-);
+</ErrorBoundary>
+  );
 }
 
 export default App;
