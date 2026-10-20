@@ -6,7 +6,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const host = process.env.DB_HOST || 's1-livi.neondns.com';
 const port = parseInt(process.env.DB_PORT || '3306', 10);
-const user = process.env.DB_USER || 'vecosis_DeutchWelt';
+const user = process.env.DB_USER || 'vecosiss_DeutchWelt';
 const password = process.env.DB_PASSWORD || 'x{=Q=]qko2%sxNyX';
 const database = process.env.DB_NAME || 'vecosiss_DeutchWelt';
 

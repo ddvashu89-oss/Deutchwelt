@@ -12,7 +12,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 async function importSchema() {
   const host = process.env.DB_HOST || 's1-livi.neondns.com';
   const port = parseInt(process.env.DB_PORT || '3306', 10);
-  const user = process.env.DB_USER || 'vecosis_DeutchWelt';
+  const user = process.env.DB_USER || 'vecosiss_DeutchWelt';
   const password = process.env.DB_PASSWORD || 'x{=Q=]qko2%sxNyX';
   const database = process.env.DB_NAME || 'vecosiss_DeutchWelt';
 
@@ -57,7 +57,7 @@ async function importSchema() {
       console.error('\n--> To fix this, you must whitelist your IP address in cPanel:');
       console.error('    1. Open cPanel -> Databases -> Remote MySQL®');
       console.error('    2. Add your current public IP address or "%"');
-      console.error('    3. Verify user vecosis_DeutchWelt has ALL PRIVILEGES on vecosiss_DeutchWelt');
+      console.error('    3. Verify user vecosiss_DeutchWelt has ALL PRIVILEGES on vecosiss_DeutchWelt');
     }
     process.exit(1);
   }
