@@ -6,8 +6,10 @@ declare global {
 }
 
 const isPostgresUrl =
+  Boolean(env.DATABASE_URL) &&
   typeof env.DATABASE_URL === 'string' &&
-  (env.DATABASE_URL.startsWith('postgresql://') || env.DATABASE_URL.startsWith('postgres://'));
+  (env.DATABASE_URL.startsWith('postgresql://') || env.DATABASE_URL.startsWith('postgres://')) &&
+  !(process.env.VERCEL && env.DATABASE_URL.includes('localhost'));
 
 let client: any = null;
 

@@ -7,7 +7,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: parseInt(process.env.PORT || '5000', 10),
-  DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgrespassword@localhost:5432/deutschwelt?schema=public',
+  DATABASE_URL: process.env.DATABASE_URL || '',
   SESSION_SECRET: process.env.SESSION_SECRET || 'deutschwelt-insecure-dev-session-key-32chars',
   COOKIE_SECRET: process.env.COOKIE_SECRET || 'deutschwelt-insecure-dev-cookie-key-32chars',
   SESSION_MAX_AGE_DAYS: parseInt(process.env.SESSION_MAX_AGE_DAYS || '14', 10),
