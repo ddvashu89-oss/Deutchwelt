@@ -1,6 +1,7 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import esbuild from 'esbuild';
 
 console.log('[Build] Starting DeutschWelt Vercel production build...');
 
@@ -21,13 +22,18 @@ execSync('npm --prefix apps/api run build', { stdio: 'inherit' });
 console.log('[Build] 3/4 Building @deutschwelt/web (Vite)...');
 execSync('npm --prefix apps/web run build', { stdio: 'inherit' });
 
-// 4. Bundle standalone serverless API handler with esbuild (keeping packages external for native Node ESM loading)
+// 4. Bundle standalone serverless API handler with esbuild JS API
 console.log('[Build] 4/4 Bundling standalone Serverless API handlers with esbuild...');
 
-execSync(
-  `npx esbuild apps/api/src/app.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/index.js --packages=external`,
-  { stdio: 'inherit' }
-);
+await esbuild.build({
+  entryPoints: ['apps/api/src/app.ts'],
+  bundle: true,
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  outfile: 'api/index.js',
+  packages: 'external'
+});
 
 // Copy to catch-all and web subdirectories
 fs.mkdirSync('api', { recursive: true });
