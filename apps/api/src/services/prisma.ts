@@ -1,39 +1,49 @@
-import { PrismaClient } from '@prisma/client';
+import type { PrismaClient as PrismaClientType } from '@prisma/client';
 import { env } from '../config/env.js';
 
 declare global {
-  var prismaInstance: PrismaClient | undefined;
+  var prismaInstance: any | undefined;
 }
 
 const isPostgresUrl =
   typeof env.DATABASE_URL === 'string' &&
   (env.DATABASE_URL.startsWith('postgresql://') || env.DATABASE_URL.startsWith('postgres://'));
 
-export const prisma: PrismaClient =
-  global.prismaInstance ||
-  (isPostgresUrl
-    ? new PrismaClient({
-        log: env.isDev ? ['warn', 'error'] : ['error']
-      })
-    : (new Proxy({} as PrismaClient, {
-        get: (_target, prop) => {
-          if (prop === '$queryRaw' || prop === '$connect' || prop === '$disconnect') {
-            return async () => {
-              throw new Error('PostgreSQL database URL is not configured. Running in memory mode.');
-            };
-          }
-          return undefined;
-        }
-      }) as PrismaClient));
+let client: any = null;
 
-if (env.isDev && isPostgresUrl) {
-  global.prismaInstance = prisma;
+if (isPostgresUrl) {
+  try {
+    const { PrismaClient } = await import('@prisma/client');
+    client = global.prismaInstance || new PrismaClient({
+      log: env.isDev ? ['warn', 'error'] : ['error']
+    });
+    if (env.isDev) {
+      global.prismaInstance = client;
+    }
+  } catch (e: any) {
+    console.warn('[Prisma Warning] Could not initialize PrismaClient, operating in resilient store mode:', e?.message);
+  }
 }
+
+if (!client) {
+  client = new Proxy({} as any, {
+    get: (_target, prop) => {
+      if (prop === '$queryRaw' || prop === '$connect' || prop === '$disconnect') {
+        return async () => {
+          throw new Error('PostgreSQL database URL is not configured. Running in memory mode.');
+        };
+      }
+      return undefined;
+    }
+  });
+}
+
+export const prisma: any = client;
 
 export let isDatabaseConnected = false;
 
 export async function checkDatabaseConnection(): Promise<boolean> {
-  if (!isPostgresUrl) {
+  if (!isPostgresUrl || !client || typeof client.$queryRaw !== 'function') {
     isDatabaseConnected = false;
     console.log('[Database] PostgreSQL URL not configured. Operating in high-performance in-memory mode.');
     return false;
@@ -48,7 +58,6 @@ export async function checkDatabaseConnection(): Promise<boolean> {
     isDatabaseConnected = false;
     const sanitizedUrl = env.DATABASE_URL.replace(/:[^:@]+@/, ':****@');
     console.warn(`[Database Warning] Could not connect to PostgreSQL at ${sanitizedUrl}.`);
-    console.warn('[Database Notice] Resilient in-memory fallback is active and handling all requests.');
     return false;
   }
 }
