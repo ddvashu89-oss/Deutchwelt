@@ -24,6 +24,14 @@ import enquiryRoutes from './modules/enquiries/enquiryRoutes.js';
 
 const app = express();
 
+// Normalize URL for Vercel Serverless Function Proxying
+app.use((req, res, next) => {
+  if (req.url && !req.url.startsWith('/api') && !req.url.startsWith('/uploads')) {
+    req.url = `/api${req.url.startsWith('/') ? '' : '/'}${req.url}`;
+  }
+  next();
+});
+
 // Security Headers Hardening
 app.use(helmet({
   contentSecurityPolicy: false,
