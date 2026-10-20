@@ -26,34 +26,40 @@ var env = {
 };
 
 // apps/api/src/services/prisma.ts
+import { createRequire } from "node:module";
+var require2 = createRequire(import.meta.url);
 var isPostgresUrl = Boolean(env.DATABASE_URL) && typeof env.DATABASE_URL === "string" && (env.DATABASE_URL.startsWith("postgresql://") || env.DATABASE_URL.startsWith("postgres://")) && !(process.env.VERCEL && env.DATABASE_URL.includes("localhost"));
 var client = null;
-if (isPostgresUrl) {
-  try {
-    const { PrismaClient } = await import("@prisma/client");
-    client = global.prismaInstance || new PrismaClient({
-      log: env.isDev ? ["warn", "error"] : ["error"]
-    });
-    if (env.isDev) {
-      global.prismaInstance = client;
-    }
-  } catch (e) {
-    console.warn("[Prisma Warning] Could not initialize PrismaClient, operating in resilient store mode:", e?.message);
-  }
-}
-if (!client) {
-  client = new Proxy({}, {
-    get: (_target, prop) => {
-      if (prop === "$queryRaw" || prop === "$connect" || prop === "$disconnect") {
-        return async () => {
-          throw new Error("PostgreSQL database URL is not configured. Running in memory mode.");
-        };
+function initPrismaClient() {
+  if (!client && isPostgresUrl) {
+    try {
+      const { PrismaClient } = require2("@prisma/client");
+      client = global.prismaInstance || new PrismaClient({
+        log: env.isDev ? ["warn", "error"] : ["error"]
+      });
+      if (env.isDev) {
+        global.prismaInstance = client;
       }
-      return void 0;
+    } catch (e) {
+      console.warn("[Prisma Warning] Could not initialize PrismaClient, operating in resilient store mode:", e?.message);
     }
-  });
+  }
+  return client;
 }
-var prisma = client;
+var prisma = new Proxy({}, {
+  get: (_target, prop) => {
+    const c = initPrismaClient();
+    if (c && c[prop]) {
+      return typeof c[prop] === "function" ? c[prop].bind(c) : c[prop];
+    }
+    if (prop === "$queryRaw" || prop === "$connect" || prop === "$disconnect") {
+      return async () => {
+        throw new Error("PostgreSQL database URL is not configured. Running in memory mode.");
+      };
+    }
+    return void 0;
+  }
+});
 var isDatabaseConnected = false;
 
 // apps/api/src/services/store.ts

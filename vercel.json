@@ -4,11 +4,15 @@
   "outputDirectory": "apps/web/dist",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "source": "/api",
+      "destination": "/api/index.js"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/((?!api/|uploads/).*)",
       "destination": "/index.html"
     }
   ]

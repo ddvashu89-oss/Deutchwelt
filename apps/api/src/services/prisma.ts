@@ -1,5 +1,7 @@
-import type { PrismaClient as PrismaClientType } from '@prisma/client';
+import { createRequire } from 'node:module';
 import { env } from '../config/env.js';
+
+const require = createRequire(import.meta.url);
 
 declare global {
   var prismaInstance: any | undefined;
@@ -13,46 +15,50 @@ const isPostgresUrl =
 
 let client: any = null;
 
-if (isPostgresUrl) {
-  try {
-    const { PrismaClient } = await import('@prisma/client');
-    client = global.prismaInstance || new PrismaClient({
-      log: env.isDev ? ['warn', 'error'] : ['error']
-    });
-    if (env.isDev) {
-      global.prismaInstance = client;
-    }
-  } catch (e: any) {
-    console.warn('[Prisma Warning] Could not initialize PrismaClient, operating in resilient store mode:', e?.message);
-  }
-}
-
-if (!client) {
-  client = new Proxy({} as any, {
-    get: (_target, prop) => {
-      if (prop === '$queryRaw' || prop === '$connect' || prop === '$disconnect') {
-        return async () => {
-          throw new Error('PostgreSQL database URL is not configured. Running in memory mode.');
-        };
+function initPrismaClient() {
+  if (!client && isPostgresUrl) {
+    try {
+      const { PrismaClient } = require('@prisma/client');
+      client = global.prismaInstance || new PrismaClient({
+        log: env.isDev ? ['warn', 'error'] : ['error']
+      });
+      if (env.isDev) {
+        global.prismaInstance = client;
       }
-      return undefined;
+    } catch (e: any) {
+      console.warn('[Prisma Warning] Could not initialize PrismaClient, operating in resilient store mode:', e?.message);
     }
-  });
+  }
+  return client;
 }
 
-export const prisma: any = client;
+export const prisma: any = new Proxy({} as any, {
+  get: (_target, prop) => {
+    const c = initPrismaClient();
+    if (c && c[prop]) {
+      return typeof c[prop] === 'function' ? c[prop].bind(c) : c[prop];
+    }
+    if (prop === '$queryRaw' || prop === '$connect' || prop === '$disconnect') {
+      return async () => {
+        throw new Error('PostgreSQL database URL is not configured. Running in memory mode.');
+      };
+    }
+    return undefined;
+  }
+});
 
 export let isDatabaseConnected = false;
 
 export async function checkDatabaseConnection(): Promise<boolean> {
-  if (!isPostgresUrl || !client || typeof client.$queryRaw !== 'function') {
+  const c = initPrismaClient();
+  if (!isPostgresUrl || !c || typeof c.$queryRaw !== 'function') {
     isDatabaseConnected = false;
     console.log('[Database] PostgreSQL URL not configured. Operating in high-performance in-memory mode.');
     return false;
   }
 
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    await c.$queryRaw`SELECT 1`;
     isDatabaseConnected = true;
     console.log('[Database] Successfully connected to PostgreSQL via Prisma.');
     return true;
