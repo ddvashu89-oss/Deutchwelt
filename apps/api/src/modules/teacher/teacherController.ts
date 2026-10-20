@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
+import fs from 'fs';
+import path from 'path';
 import { SubmissionStatus, UserRole } from '@deutschwelt/shared';
 import { prisma, isDatabaseConnected } from '../../services/prisma.js';
 import { store } from '../../services/store.js';
 import { AppError } from '../../middleware/errorHandler.js';
+import { env } from '../../config/env.js';
 
 /**
  * Resolves the active teacher's TeacherProfile ID
@@ -525,9 +528,40 @@ export async function getTeacherLectures(req: Request, res: Response, next: Next
   }
 }
 
+export async function uploadLectureVideo(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file) {
+      return next(new AppError('No video file provided for upload.', 400));
+    }
+    const fileUrl = `/uploads/videos/${req.file.filename}`;
+    const sizeMb = (req.file.size / (1024 * 1024)).toFixed(1) + ' MB';
+    return res.json({
+      success: true,
+      message: 'Video file uploaded successfully.',
+      fileUrl,
+      fileName: req.file.originalname,
+      fileSize: sizeMb,
+      mimeType: req.file.mimetype
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function createTeacherLecture(req: Request, res: Response, next: NextFunction) {
   try {
-    const { title, description, level, videoUrl, durationMinutes = 45, scheduledFor, isLive = false, meetingUrl, batchId } = req.body;
+    const { title, description, level, durationMinutes = 45, scheduledFor, meetingUrl, batchId } = req.body;
+    let videoUrl = req.body.videoUrl || '';
+    let fileSize = req.body.fileSize;
+    let originalFilename = req.body.originalFilename;
+
+    if (req.file) {
+      videoUrl = `/uploads/videos/${req.file.filename}`;
+      fileSize = (req.file.size / (1024 * 1024)).toFixed(1) + ' MB';
+      originalFilename = req.file.originalname;
+    }
+
+    const isLive = req.body.isLive === 'true' || req.body.isLive === true;
     const teacherProfileId = resolveTeacherProfileId(req);
 
     if (!title || !batchId) {
@@ -546,6 +580,8 @@ export async function createTeacherLecture(req: Request, res: Response, next: Ne
       scheduledFor: scheduledFor || new Date().toISOString(),
       isLive: Boolean(isLive),
       meetingUrl: meetingUrl || '',
+      fileSize: fileSize || (req.file ? `${(req.file.size / (1024 * 1024)).toFixed(1)} MB` : undefined),
+      originalFilename: originalFilename || (req.file ? req.file.originalname : undefined),
       status: 'PUBLISHED',
       createdAt: new Date().toISOString()
     };
@@ -583,7 +619,20 @@ export async function deleteTeacherLecture(req: Request, res: Response, next: Ne
       return next(new AppError('Lecture not found or unauthorized to delete.', 404));
     }
 
-    store.teacherLectures.splice(index, 1);
+    const [deleted] = store.teacherLectures.splice(index, 1);
+
+    // Clean up local uploaded video file if applicable
+    if (deleted?.videoUrl && deleted.videoUrl.startsWith('/uploads/videos/')) {
+      try {
+        const filePath = path.join(env.UPLOAD_DIR, 'videos', path.basename(deleted.videoUrl));
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (err) {
+        console.warn('[Cleanup Warning] Could not remove deleted lecture video file:', err);
+      }
+    }
+
     return res.json({ success: true, message: 'Lecture deleted successfully.' });
   } catch (error) {
     next(error);
@@ -614,7 +663,18 @@ export async function getTeacherMaterials(req: Request, res: Response, next: Nex
 
 export async function createTeacherMaterial(req: Request, res: Response, next: NextFunction) {
   try {
-    const { title, category, description, fileUrl, fileType = 'PDF', fileSize = '1.0 MB', batchId, level } = req.body;
+    const { title, category, description, batchId, level } = req.body;
+    let fileUrl = req.body.fileUrl || '';
+    let fileType = req.body.fileType || 'PDF';
+    let fileSize = req.body.fileSize || '1.0 MB';
+
+    if (req.file) {
+      fileUrl = `/uploads/materials/${req.file.filename}`;
+      fileSize = `${(req.file.size / (1024 * 1024)).toFixed(1)} MB`;
+      const ext = path.extname(req.file.originalname).replace('.', '').toUpperCase();
+      if (ext) fileType = ext;
+    }
+
     const teacherProfileId = resolveTeacherProfileId(req);
 
     if (!title || !batchId) {
@@ -630,7 +690,7 @@ export async function createTeacherMaterial(req: Request, res: Response, next: N
       description: description || '',
       fileUrl: fileUrl || '/uploads/materials/sample_doc.pdf',
       fileType: fileType.toUpperCase(),
-      fileSize: fileSize || '1.0 MB',
+      fileSize,
       level: level || 'A1',
       createdAt: new Date().toISOString()
     };
@@ -668,7 +728,20 @@ export async function deleteTeacherMaterial(req: Request, res: Response, next: N
       return next(new AppError('Material not found or unauthorized to delete.', 404));
     }
 
-    store.teacherMaterials.splice(index, 1);
+    const [deleted] = store.teacherMaterials.splice(index, 1);
+
+    // Clean up local uploaded material file if applicable
+    if (deleted?.fileUrl && deleted.fileUrl.startsWith('/uploads/materials/')) {
+      try {
+        const filePath = path.join(env.UPLOAD_DIR, 'materials', path.basename(deleted.fileUrl));
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (err) {
+        console.warn('[Cleanup Warning] Could not remove deleted material file:', err);
+      }
+    }
+
     return res.json({ success: true, message: 'Material deleted successfully.' });
   } catch (error) {
     next(error);

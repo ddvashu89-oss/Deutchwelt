@@ -35,6 +35,7 @@ export class DataStore {
   notifications: any[] = [];
   siteSettings: any[] = [];
   auditLogs: any[] = [];
+  certificates: any[] = [];
 
   constructor() {
     this.seedInitialData();
@@ -737,8 +738,10 @@ In German, regular verbs in the present tense take consistent endings based on t
         title: 'A1.1 Aussprache & Alphabet Meisterklasse',
         description: 'Core phonetic rules in German: Umlauts (ä, ö, ü), diphthongs (ei, ie, eu), and the soft/hard ch sound.',
         level: GermanLevel.A1,
-        videoUrl: 'https://www.youtube.com/embed/sample-german-phonetics',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         durationMinutes: 45,
+        fileSize: '15.4 MB',
+        originalFilename: 'A1_Phonetik_Alphabet.mp4',
         scheduledFor: new Date().toISOString(),
         isLive: false,
         meetingUrl: 'https://meet.google.com/dw-a1-live',
@@ -752,10 +755,12 @@ In German, regular verbs in the present tense take consistent endings based on t
         title: 'A1.2 Nominativ vs. Akkusativ Satzbau',
         description: 'Understanding how direct objects transform der -> den, with interactive sentence breakdown examples.',
         level: GermanLevel.A1,
-        videoUrl: 'https://www.youtube.com/embed/sample-german-akkusativ',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
         durationMinutes: 50,
+        fileSize: '24.1 MB',
+        originalFilename: 'A1_Akkusativ_Satzbau.mp4',
         scheduledFor: new Date(Date.now() + 86400000).toISOString(),
-        isLive: true,
+        isLive: false,
         meetingUrl: 'https://meet.google.com/dw-a1-live',
         status: 'PUBLISHED',
         createdAt: new Date().toISOString()
@@ -767,8 +772,10 @@ In German, regular verbs in the present tense take consistent endings based on t
         title: 'B1 Konjunktiv II: Wünsche & Höfliche Bitten',
         description: 'Advanced hypotheticals using wäre, hätte, and würde + Infinitiv for official Goethe B1 speaking exam.',
         level: GermanLevel.B1,
-        videoUrl: 'https://www.youtube.com/embed/sample-german-b1',
+        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
         durationMinutes: 60,
+        fileSize: '36.8 MB',
+        originalFilename: 'B1_Konjunktiv_II_Mastery.mp4',
         scheduledFor: new Date().toISOString(),
         isLive: false,
         meetingUrl: 'https://meet.google.com/dw-b1-live',
@@ -910,6 +917,25 @@ In German, regular verbs in the present tense take consistent endings based on t
       { id: 'set-1', key: 'platform_name', value: 'DeutschWelt', description: 'Platform brand name', updatedAt: new Date().toISOString() },
       { id: 'set-2', key: 'tagline', value: 'Your journey to German fluency.', description: 'Tagline', updatedAt: new Date().toISOString() },
       { id: 'set-3', key: 'contact_email', value: 'admissions@deutschwelt.de', description: 'Primary contact email', updatedAt: new Date().toISOString() }
+    ];
+
+    this.certificates = [
+      {
+        id: 'cert-1',
+        certificateNumber: 'DW-2026-A1-8841',
+        userId: student.id,
+        userFullName: `${student.firstName} ${student.lastName}`,
+        courseId: 'course-a1',
+        courseTitle: 'Deutsch A1: Complete Beginner to Breakthrough',
+        level: GermanLevel.A1,
+        gradeScore: 96,
+        gradeClassification: 'Sehr Gut (With Distinction)',
+        issuedAt: new Date().toISOString(),
+        instructorName: 'Dr. Katharina Weber',
+        directorName: 'Dr. Klaus Becker',
+        directorTitle: 'Direktor Akademische Bildung, DeutschWelt',
+        verificationCode: 'DW-VERIFY-A1-8841'
+      }
     ];
   }
 }

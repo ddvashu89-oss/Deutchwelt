@@ -5,17 +5,40 @@ declare global {
   var prismaInstance: PrismaClient | undefined;
 }
 
-export const prisma = global.prismaInstance || new PrismaClient({
-  log: env.isDev ? ['warn', 'error'] : ['error']
-});
+const isPostgresUrl =
+  typeof env.DATABASE_URL === 'string' &&
+  (env.DATABASE_URL.startsWith('postgresql://') || env.DATABASE_URL.startsWith('postgres://'));
 
-if (env.isDev) {
+export const prisma: PrismaClient =
+  global.prismaInstance ||
+  (isPostgresUrl
+    ? new PrismaClient({
+        log: env.isDev ? ['warn', 'error'] : ['error']
+      })
+    : (new Proxy({} as PrismaClient, {
+        get: (_target, prop) => {
+          if (prop === '$queryRaw' || prop === '$connect' || prop === '$disconnect') {
+            return async () => {
+              throw new Error('PostgreSQL database URL is not configured. Running in memory mode.');
+            };
+          }
+          return undefined;
+        }
+      }) as PrismaClient));
+
+if (env.isDev && isPostgresUrl) {
   global.prismaInstance = prisma;
 }
 
 export let isDatabaseConnected = false;
 
 export async function checkDatabaseConnection(): Promise<boolean> {
+  if (!isPostgresUrl) {
+    isDatabaseConnected = false;
+    console.log('[Database] PostgreSQL URL not configured. Operating in high-performance in-memory mode.');
+    return false;
+  }
+
   try {
     await prisma.$queryRaw`SELECT 1`;
     isDatabaseConnected = true;
@@ -23,8 +46,9 @@ export async function checkDatabaseConnection(): Promise<boolean> {
     return true;
   } catch (error: any) {
     isDatabaseConnected = false;
-    console.warn(`[Database Warning] Could not connect to PostgreSQL at ${env.DATABASE_URL}.`);
-    console.warn('[Database Notice] If running locally, start PostgreSQL via "docker compose up -d" or configure DATABASE_URL in .env. Resilient in-memory fallback will handle requests gracefully.');
+    const sanitizedUrl = env.DATABASE_URL.replace(/:[^:@]+@/, ':****@');
+    console.warn(`[Database Warning] Could not connect to PostgreSQL at ${sanitizedUrl}.`);
+    console.warn('[Database Notice] Resilient in-memory fallback is active and handling all requests.');
     return false;
   }
 }

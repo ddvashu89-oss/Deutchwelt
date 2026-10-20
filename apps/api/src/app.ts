@@ -8,6 +8,7 @@ import path from 'path';
 import { env } from './config/env.js';
 import { authenticate } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { apiRateLimiter } from './middleware/rateLimiter.js';
 
 import authRoutes from './modules/auth/authRoutes.js';
 import courseRoutes from './modules/courses/courseRoutes.js';
@@ -23,10 +24,15 @@ import enquiryRoutes from './modules/enquiries/enquiryRoutes.js';
 
 const app = express();
 
-// Security Headers
+// Security Headers Hardening
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: 'cross-origin' }
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  xContentTypeOptions: true,
+  xFrameOptions: { action: 'deny' },
+  xXssProtection: true,
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  hsts: env.isProd ? { maxAge: 31536000, includeSubDomains: true } : false
 }));
 
 // CORS
@@ -58,11 +64,21 @@ if (!env.isTest) {
   app.use(morgan('dev'));
 }
 
-// Static Uploads Serving
-app.use('/uploads', express.static(env.UPLOAD_DIR));
+// Static Uploads Serving with Security Controls
+app.use('/uploads', express.static(env.UPLOAD_DIR, {
+  setHeaders: (res, filePath) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    if (filePath.endsWith('.html') || filePath.endsWith('.htm') || filePath.endsWith('.svg') || filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'text/plain');
+    }
+  }
+}));
 
 // Session Authentication
 app.use(authenticate);
+
+// API Rate Limiting
+app.use('/api/', apiRateLimiter);
 
 // Health Check
 app.get('/api/v1/health', (req, res) => {

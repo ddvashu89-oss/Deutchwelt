@@ -41,9 +41,10 @@ export async function checkMySQLConnection(): Promise<boolean> {
     return true;
   } catch (error: any) {
     isMySQLConnected = false;
-    console.warn(`[MySQL Warning] Could not connect to remote MySQL server: ${error.message}`);
     if (error.code === 'ER_ACCESS_DENIED_ERROR') {
-      console.warn('[MySQL Action Required] Add your public IP to cPanel -> Remote MySQL to enable remote access.');
+      console.warn(`[MySQL Notice] Remote MySQL (${host}) access requires client IP whitelist in cPanel -> Remote MySQL. Using resilient in-memory store.`);
+    } else {
+      console.warn(`[MySQL Notice] Remote MySQL server unreachable (${error.message}). Using resilient in-memory store.`);
     }
     return false;
   }

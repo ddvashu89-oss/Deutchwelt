@@ -5,6 +5,7 @@ import { Badge } from '../../components/ui/Badge.js';
 import { Input } from '../../components/ui/Input.js';
 import { Modal } from '../../components/ui/Modal.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
+import { VideoPlayer } from '../../components/ui/VideoPlayer.js';
 import {
   Video,
   FileText,
@@ -18,7 +19,11 @@ import {
   BookOpen,
   Bell,
   CheckCircle2,
-  FileCheck
+  FileCheck,
+  UploadCloud,
+  FileVideo,
+  Play,
+  X
 } from 'lucide-react';
 
 export function TeacherMaterialsPage() {
@@ -40,6 +45,10 @@ export function TeacherMaterialsPage() {
   const [lectureTitle, setLectureTitle] = useState('');
   const [lectureDesc, setLectureDesc] = useState('');
   const [lectureBatchId, setLectureBatchId] = useState('');
+  const [videoSourceType, setVideoSourceType] = useState<'upload' | 'url'>('upload');
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
+  const [dragActive, setDragActive] = useState(false);
   const [lectureVideoUrl, setLectureVideoUrl] = useState('');
   const [lectureMeetingUrl, setLectureMeetingUrl] = useState('');
   const [lectureDuration, setLectureDuration] = useState('45');
@@ -52,6 +61,7 @@ export function TeacherMaterialsPage() {
   const [materialDesc, setMaterialDesc] = useState('');
   const [materialCategory, setMaterialCategory] = useState('WORKSHEET');
   const [materialBatchId, setMaterialBatchId] = useState('');
+  const [materialFile, setMaterialFile] = useState<File | null>(null);
   const [materialFileUrl, setMaterialFileUrl] = useState('');
   const [materialFileType, setMaterialFileType] = useState('PDF');
   const [materialLevel, setMaterialLevel] = useState('A1');
@@ -62,6 +72,38 @@ export function TeacherMaterialsPage() {
   const [announcementContent, setAnnouncementContent] = useState('');
   const [announcementBatchId, setAnnouncementBatchId] = useState('');
   const [announcementSaving, setAnnouncementSaving] = useState(false);
+
+  const resetLectureForm = () => {
+    if (videoPreviewUrl) {
+      URL.revokeObjectURL(videoPreviewUrl);
+    }
+    setLectureTitle('');
+    setLectureDesc('');
+    setLectureVideoUrl('');
+    setLectureMeetingUrl('');
+    setVideoFile(null);
+    setVideoPreviewUrl(null);
+    setVideoSourceType('upload');
+    setDragActive(false);
+    setLectureIsLive(false);
+    setLectureDuration('45');
+  };
+
+  const handleVideoFileSelect = (file: File) => {
+    if (!file.type.startsWith('video/') && !file.name.match(/\.(mp4|webm|mov|mkv|ogg)$/i)) {
+      alert('Please select a valid video file (.mp4, .webm, .mov, .mkv).');
+      return;
+    }
+    if (file.size > 500 * 1024 * 1024) {
+      alert('Video file exceeds 500MB limit. Please compress or choose a smaller file.');
+      return;
+    }
+    if (videoPreviewUrl) {
+      URL.revokeObjectURL(videoPreviewUrl);
+    }
+    setVideoFile(file);
+    setVideoPreviewUrl(URL.createObjectURL(file));
+  };
 
   const fetchData = async () => {
     try {
@@ -98,28 +140,48 @@ export function TeacherMaterialsPage() {
 
   const handleCreateLecture = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (videoSourceType === 'upload' && !videoFile && !lectureVideoUrl && !lectureIsLive) {
+      alert('Please select a video file to upload, or provide an external video URL, or mark as a live session.');
+      return;
+    }
     setLectureSaving(true);
     try {
-      const res: any = await api.post('/teacher/lectures', {
-        title: lectureTitle,
-        description: lectureDesc,
-        batchId: lectureBatchId,
-        videoUrl: lectureVideoUrl,
-        meetingUrl: lectureMeetingUrl,
-        durationMinutes: Number(lectureDuration),
-        level: lectureLevel,
-        isLive: lectureIsLive
-      });
-      if (res.success) {
-        setIsLectureModalOpen(false);
-        setLectureTitle('');
-        setLectureDesc('');
-        setLectureVideoUrl('');
-        setLectureMeetingUrl('');
-        fetchData();
+      if (videoSourceType === 'upload' && videoFile) {
+        const formData = new FormData();
+        formData.append('title', lectureTitle);
+        formData.append('description', lectureDesc);
+        formData.append('batchId', lectureBatchId);
+        formData.append('level', lectureLevel);
+        formData.append('durationMinutes', lectureDuration);
+        formData.append('isLive', String(lectureIsLive));
+        formData.append('meetingUrl', lectureMeetingUrl);
+        formData.append('video', videoFile);
+        const res: any = await api.upload('/teacher/lectures', formData);
+        if (res.success) {
+          setIsLectureModalOpen(false);
+          resetLectureForm();
+          fetchData();
+        }
+      } else {
+        const res: any = await api.post('/teacher/lectures', {
+          title: lectureTitle,
+          description: lectureDesc,
+          batchId: lectureBatchId,
+          videoUrl: lectureVideoUrl,
+          meetingUrl: lectureMeetingUrl,
+          durationMinutes: Number(lectureDuration),
+          level: lectureLevel,
+          isLive: lectureIsLive
+        });
+        if (res.success) {
+          setIsLectureModalOpen(false);
+          resetLectureForm();
+          fetchData();
+        }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error('Error creating lecture:', e);
+      alert(e?.message || 'Failed to create lecture. Please try again.');
     } finally {
       setLectureSaving(false);
     }
@@ -139,25 +201,46 @@ export function TeacherMaterialsPage() {
     e.preventDefault();
     setMaterialSaving(true);
     try {
-      const res: any = await api.post('/teacher/materials', {
-        title: materialTitle,
-        description: materialDesc,
-        category: materialCategory,
-        batchId: materialBatchId,
-        fileUrl: materialFileUrl || '/uploads/materials/sample_doc.pdf',
-        fileType: materialFileType,
-        level: materialLevel,
-        fileSize: '1.2 MB'
-      });
-      if (res.success) {
-        setIsMaterialModalOpen(false);
-        setMaterialTitle('');
-        setMaterialDesc('');
-        setMaterialFileUrl('');
-        fetchData();
+      if (materialFile) {
+        const formData = new FormData();
+        formData.append('title', materialTitle);
+        formData.append('description', materialDesc);
+        formData.append('category', materialCategory);
+        formData.append('batchId', materialBatchId);
+        formData.append('level', materialLevel);
+        formData.append('file', materialFile);
+        const res: any = await api.upload('/teacher/materials', formData);
+        if (res.success) {
+          setIsMaterialModalOpen(false);
+          setMaterialTitle('');
+          setMaterialDesc('');
+          setMaterialFile(null);
+          setMaterialFileUrl('');
+          fetchData();
+        }
+      } else {
+        const res: any = await api.post('/teacher/materials', {
+          title: materialTitle,
+          description: materialDesc,
+          category: materialCategory,
+          batchId: materialBatchId,
+          fileUrl: materialFileUrl || '/uploads/materials/sample_doc.pdf',
+          fileType: materialFileType,
+          level: materialLevel,
+          fileSize: '1.2 MB'
+        });
+        if (res.success) {
+          setIsMaterialModalOpen(false);
+          setMaterialTitle('');
+          setMaterialDesc('');
+          setMaterialFile(null);
+          setMaterialFileUrl('');
+          fetchData();
+        }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error('Error creating material:', e);
+      alert(e?.message || 'Failed to upload material. Please try again.');
     } finally {
       setMaterialSaving(false);
     }
@@ -281,15 +364,24 @@ export function TeacherMaterialsPage() {
                     <div key={lec.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between gap-2">
-                          <span className="px-2.5 py-0.5 rounded bg-navy text-white text-[10px] font-black uppercase">
-                            {lec.level || 'A1'}
-                          </span>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="px-2.5 py-0.5 rounded bg-navy text-white text-[10px] font-black uppercase">
+                              {lec.level || 'A1'}
+                            </span>
+                            {lec.fileSize && (
+                              <span className="flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                <FileVideo className="w-3 h-3 text-blue-600" /> {lec.fileSize}
+                              </span>
+                            )}
+                          </div>
                           {lec.isLive ? (
                             <span className="flex items-center gap-1 text-[11px] font-bold text-germanRed bg-red-50 px-2 py-0.5 rounded-full border border-red-200 animate-pulse">
                               <Radio className="w-3 h-3 text-germanRed" /> Live Session
                             </span>
                           ) : (
-                            <Badge variant="secondary" className="text-[10px]">On-Demand Video</Badge>
+                            <Badge variant="secondary" className="text-[10px]">
+                              {lec.videoUrl?.startsWith('/uploads/') ? 'Uploaded Video' : 'Video Lesson'}
+                            </Badge>
                           )}
                         </div>
 
@@ -318,16 +410,30 @@ export function TeacherMaterialsPage() {
                             onClick={() => setPreviewLecture(lec)}
                             className="text-xs font-bold text-navy hover:text-germanRed transition-colors flex items-center gap-1"
                           >
-                            Watch Preview <Video className="w-3.5 h-3.5" />
+                            <Play className="w-3.5 h-3.5 fill-current" /> Watch Preview
                           </button>
                         )}
-                        <button
-                          onClick={() => handleDeleteLecture(lec.id)}
-                          className="text-gray-400 hover:text-red-600 transition-colors p-1"
-                          title="Delete Lecture"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {lec.videoUrl && (lec.videoUrl.startsWith('/uploads/') || lec.videoUrl.endsWith('.mp4')) && (
+                            <a
+                              href={lec.videoUrl}
+                              download
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-gray-400 hover:text-navy transition-colors p-1"
+                              title="Download Video File"
+                            >
+                              <Download className="w-4 h-4" />
+                            </a>
+                          )}
+                          <button
+                            onClick={() => handleDeleteLecture(lec.id)}
+                            className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                            title="Delete Lecture"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -442,13 +548,16 @@ export function TeacherMaterialsPage() {
         </>
       )}
 
-      {/* MODAL 1: ADD LECTURE */}
+      {/* MODAL 1: ADD / UPLOAD LECTURE */}
       <Modal
         isOpen={isLectureModalOpen}
-        onClose={() => setIsLectureModalOpen(false)}
-        title="Add / Schedule Class Lecture"
-        description="Publish an instructional video lesson or schedule a live class session for your batch."
-        maxWidth="lg"
+        onClose={() => {
+          resetLectureForm();
+          setIsLectureModalOpen(false);
+        }}
+        title="Upload & Schedule Class Lecture"
+        description="Upload an MP4/WebM video lesson directly or publish a YouTube/Vimeo stream or live class session."
+        maxWidth="xl"
       >
         <form onSubmit={handleCreateLecture} className="space-y-4 pt-2">
           <Input
@@ -495,30 +604,129 @@ export function TeacherMaterialsPage() {
 
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-              Lecture Description
+              Lecture Description & Grammar Notes
             </label>
             <textarea
               rows={3}
-              placeholder="Key grammar rules and conversational objectives covered in this lecture..."
+              placeholder="Key grammatical concepts, vocabulary takeaways, and homework instructions covered in this video lecture..."
               value={lectureDesc}
               onChange={(e) => setLectureDesc(e.target.value)}
               className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Video URL / Embed Link (YouTube, Vimeo, MP4)"
-              placeholder="https://www.youtube.com/embed/..."
-              value={lectureVideoUrl}
-              onChange={(e) => setLectureVideoUrl(e.target.value)}
-            />
-            <Input
-              label="Live Meeting Link (Google Meet / Zoom)"
-              placeholder="https://meet.google.com/..."
-              value={lectureMeetingUrl}
-              onChange={(e) => setLectureMeetingUrl(e.target.value)}
-            />
+          {/* Video Lecture Source Mode */}
+          <div className="space-y-2 pt-1">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Video Source
+            </label>
+            <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-xl">
+              <button
+                type="button"
+                onClick={() => setVideoSourceType('upload')}
+                className={`py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  videoSourceType === 'upload'
+                    ? 'bg-white text-navy shadow-sm'
+                    : 'text-dark-muted hover:text-dark'
+                }`}
+              >
+                <UploadCloud className="w-3.5 h-3.5 text-germanRed" /> Upload Video File
+              </button>
+              <button
+                type="button"
+                onClick={() => setVideoSourceType('url')}
+                className={`py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  videoSourceType === 'url'
+                    ? 'bg-white text-navy shadow-sm'
+                    : 'text-dark-muted hover:text-dark'
+                }`}
+              >
+                <ExternalLink className="w-3.5 h-3.5" /> External URL / Embed
+              </button>
+            </div>
+
+            {videoSourceType === 'upload' ? (
+              <div className="space-y-3">
+                {!videoFile ? (
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+                    onDragLeave={() => setDragActive(false)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDragActive(false);
+                      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                        handleVideoFileSelect(e.dataTransfer.files[0]);
+                      }
+                    }}
+                    className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
+                      dragActive ? 'border-germanRed bg-red-50/50' : 'border-gray-300 hover:border-gray-400 bg-gray-50/50'
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      id="videoFileInput"
+                      accept="video/mp4,video/webm,video/ogg,video/quicktime,video/x-matroska"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          handleVideoFileSelect(e.target.files[0]);
+                        }
+                      }}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <UploadCloud className="w-10 h-10 text-gray-400 mx-auto mb-2" />
+                    <p className="text-xs font-bold text-navy">
+                      Click to choose video file or drag and drop
+                    </p>
+                    <p className="text-[11px] text-dark-muted mt-1">
+                      Supports MP4, WebM, MOV, MKV files up to 500 MB
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <div className="p-2 bg-blue-100 text-blue-700 rounded-lg shrink-0">
+                          <FileVideo className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-navy truncate">{videoFile.name}</p>
+                          <p className="text-[11px] text-gray-500">{(videoFile.size / (1024 * 1024)).toFixed(1)} MB</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
+                          setVideoFile(null);
+                          setVideoPreviewUrl(null);
+                        }}
+                        className="p-1 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-200 transition-colors"
+                        title="Remove video file"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {videoPreviewUrl && (
+                      <div className="mt-2 aspect-video w-full rounded-xl bg-black overflow-hidden shadow">
+                        <video
+                          src={videoPreviewUrl}
+                          controls
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Input
+                label="Video URL / Embed Link (YouTube, Vimeo, Cloud MP4)"
+                placeholder="https://www.youtube.com/watch?v=... or https://...mp4"
+                value={lectureVideoUrl}
+                onChange={(e) => setLectureVideoUrl(e.target.value)}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -530,26 +738,61 @@ export function TeacherMaterialsPage() {
               onChange={(e) => setLectureDuration(e.target.value)}
               required
             />
-            <div className="flex items-center pt-6 gap-2">
-              <input
-                type="checkbox"
-                id="isLiveCheckbox"
-                checked={lectureIsLive}
-                onChange={(e) => setLectureIsLive(e.target.checked)}
-                className="w-4 h-4 text-germanRed rounded focus:ring-germanRed"
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-semibold text-dark">Live Meeting Link</label>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setLectureMeetingUrl('https://meet.google.com/')}
+                    className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold border border-emerald-200 hover:bg-emerald-100"
+                  >
+                    Google Meet
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLectureMeetingUrl('https://zoom.us/j/')}
+                    className="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-800 font-bold border border-blue-200 hover:bg-blue-100"
+                  >
+                    Zoom
+                  </button>
+                </div>
+              </div>
+              <Input
+                placeholder="https://meet.google.com/... or https://zoom.us/j/..."
+                value={lectureMeetingUrl}
+                onChange={(e) => setLectureMeetingUrl(e.target.value)}
               />
-              <label htmlFor="isLiveCheckbox" className="text-xs font-bold text-dark cursor-pointer">
-                Interactive Live Class Session
-              </label>
             </div>
           </div>
 
+          <div className="flex items-center gap-2 pt-1">
+            <input
+              type="checkbox"
+              id="isLiveCheckbox"
+              checked={lectureIsLive}
+              onChange={(e) => setLectureIsLive(e.target.checked)}
+              className="w-4 h-4 text-germanRed rounded focus:ring-germanRed"
+            />
+            <label htmlFor="isLiveCheckbox" className="text-xs font-bold text-dark cursor-pointer">
+              Mark as Interactive Live Class Session
+            </label>
+          </div>
+
           <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
-            <Button variant="outline" size="sm" type="button" onClick={() => setIsLectureModalOpen(false)}>
+            <Button
+              variant="outline"
+              size="sm"
+              type="button"
+              onClick={() => {
+                resetLectureForm();
+                setIsLectureModalOpen(false);
+              }}
+            >
               Cancel
             </Button>
             <Button variant="primary" size="sm" type="submit" isLoading={lectureSaving}>
-              Publish Lecture
+              {lectureSaving ? 'Uploading Lecture...' : 'Publish Lecture'}
             </Button>
           </div>
         </form>
@@ -619,9 +862,38 @@ export function TeacherMaterialsPage() {
             />
           </div>
 
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Upload Document File (.pdf, .docx, .zip)
+            </label>
+            <div className="relative border border-dashed rounded-xl p-4 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+              <input
+                type="file"
+                accept=".pdf,.docx,.doc,.txt,.zip,.mp3,.mp4"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setMaterialFile(e.target.files[0]);
+                  }
+                }}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              {materialFile ? (
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-navy">
+                  <FileCheck className="w-4 h-4 text-green-600" />
+                  <span>{materialFile.name} ({(materialFile.size / (1024 * 1024)).toFixed(1)} MB)</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2 text-xs text-dark-muted">
+                  <UploadCloud className="w-4 h-4 text-gray-400" />
+                  <span>Click to select PDF or worksheet file (or specify URL below)</span>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Document URL / Cloud Path"
+              label="Document URL / Cloud Path (Fallback)"
               placeholder="/uploads/materials/A1_Grammatik.pdf"
               value={materialFileUrl}
               onChange={(e) => setMaterialFileUrl(e.target.value)}
@@ -717,20 +989,26 @@ export function TeacherMaterialsPage() {
           isOpen={Boolean(previewLecture)}
           onClose={() => setPreviewLecture(null)}
           title={previewLecture.title}
-          description={`Batch: ${previewLecture.batch?.name || 'Class'} • ${previewLecture.durationMinutes} min`}
+          description={`Batch: ${previewLecture.batch?.name || 'Class'} • ${previewLecture.durationMinutes} min ${previewLecture.fileSize ? `• ${previewLecture.fileSize}` : ''}`}
           maxWidth="2xl"
         >
           <div className="space-y-4 pt-2">
-            <div className="aspect-video w-full rounded-2xl bg-black overflow-hidden flex items-center justify-center">
-              <iframe
-                src={previewLecture.videoUrl}
-                title={previewLecture.title}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            <VideoPlayer url={previewLecture.videoUrl} title={previewLecture.title} autoPlay />
+            <div className="flex items-center justify-between text-xs text-dark-muted pt-2 border-t border-gray-100">
+              <span>Level: <strong className="text-navy">{previewLecture.level}</strong></span>
+              {(previewLecture.videoUrl?.startsWith('/uploads/') || previewLecture.videoUrl?.endsWith('.mp4')) && (
+                <a
+                  href={previewLecture.videoUrl}
+                  download
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-germanRed font-bold hover:underline"
+                >
+                  <Download className="w-3.5 h-3.5" /> Download Video File
+                </a>
+              )}
             </div>
-            <p className="text-xs text-dark leading-relaxed">
+            <p className="text-xs text-dark leading-relaxed whitespace-pre-line">
               {previewLecture.description}
             </p>
           </div>

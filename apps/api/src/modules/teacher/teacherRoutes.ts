@@ -9,6 +9,7 @@ import {
   gradeSpeakingAttempt,
   getTeacherLectures,
   createTeacherLecture,
+  uploadLectureVideo,
   deleteTeacherLecture,
   getTeacherMaterials,
   createTeacherMaterial,
@@ -18,6 +19,7 @@ import {
   enrollStudentInBatch
 } from './teacherController.js';
 import { requireAuth, requireRole } from '../../middleware/auth.js';
+import { uploadVideo, uploadMaterial } from '../../middleware/upload.js';
 import { UserRole } from '@deutschwelt/shared';
 
 const router = Router();
@@ -37,14 +39,15 @@ router.post('/assignments', createAssignment);
 router.post('/submissions/:submissionId/grade', gradeWritingSubmission);
 router.post('/speaking/:attemptId/grade', gradeSpeakingAttempt);
 
-// Lectures & Live Sessions
+// Lectures & Live Sessions (Supports direct video file uploads or embed links)
 router.get('/lectures', getTeacherLectures);
-router.post('/lectures', createTeacherLecture);
+router.post('/lectures', uploadVideo.single('video'), createTeacherLecture);
+router.post('/lectures/upload', uploadVideo.single('video'), uploadLectureVideo);
 router.delete('/lectures/:lectureId', deleteTeacherLecture);
 
-// Study Materials & Worksheets
+// Study Materials & Worksheets (Supports document uploads)
 router.get('/materials', getTeacherMaterials);
-router.post('/materials', createTeacherMaterial);
+router.post('/materials', uploadMaterial.single('file'), createTeacherMaterial);
 router.delete('/materials/:materialId', deleteTeacherMaterial);
 
 // Noticeboard Announcements

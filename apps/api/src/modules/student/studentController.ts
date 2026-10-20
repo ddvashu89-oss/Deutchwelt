@@ -136,13 +136,38 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
         ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length)
         : 95;
 
-      const continueLesson = {
-        id: 'lesson-a1-1-1',
-        title: 'Lektion 1.1: Sich vorstellen (Introducing Yourself)',
-        unitTitle: 'Einheit 1: Hallo und Willkommen',
-        courseSlug: 'deutsch-a1-beginner-intensiv',
-        courseTitle: 'Deutsch A1: Complete Beginner to Breakthrough'
-      };
+      const completedIds = new Set(completedLessons.map(cl => cl.lessonId));
+      const targetLevel = profile?.currentLevel || 'A1';
+      const activeCourse = store.courses.find(c => c.level === targetLevel) || store.courses[0];
+
+      let continueLesson: any = null;
+      if (activeCourse && activeCourse.units) {
+        for (const unit of activeCourse.units) {
+          for (const lesson of unit.lessons) {
+            if (!completedIds.has(lesson.id)) {
+              continueLesson = {
+                id: lesson.id,
+                title: lesson.title,
+                unitTitle: unit.title,
+                courseSlug: activeCourse.slug,
+                courseTitle: activeCourse.title
+              };
+              break;
+            }
+          }
+          if (continueLesson) break;
+        }
+      }
+
+      if (!continueLesson) {
+        continueLesson = {
+          id: 'lesson-a1-1-1',
+          title: 'Lektion 1.1: Sich vorstellen (Introducing Yourself)',
+          unitTitle: 'Einheit 1: Hallo und Willkommen',
+          courseSlug: 'deutsch-a1-beginner-intensiv',
+          courseTitle: 'Deutsch A1: Complete Beginner to Breakthrough'
+        };
+      }
 
       return res.json({
         success: true,
@@ -367,6 +392,118 @@ export async function getStudentBatchLectures(req: Request, res: Response, next:
       });
 
     return res.json({ success: true, lectures });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Get all earned certificates for the authenticated student
+ */
+export async function getStudentCertificates(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) return next(new AppError('Unauthorized', 401));
+
+    const certificates = store.certificates.filter(c => c.userId === req.user!.id);
+    return res.json({ success: true, certificates });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Claim / issue course completion certificate
+ */
+export async function claimCourseCertificate(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.user) return next(new AppError('Unauthorized', 401));
+    const { courseId } = req.params;
+
+    const course = store.courses.find(c => c.id === courseId);
+    if (!course) {
+      return next(new AppError('Course not found.', 404));
+    }
+
+    // Check if certificate already exists
+    const existing = store.certificates.find(c => c.userId === req.user!.id && c.courseId === courseId);
+    if (existing) {
+      return res.json({ success: true, certificate: existing, message: 'Certificate already issued.' });
+    }
+
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const certNumber = `DW-${new Date().getFullYear()}-${course.level}-${randomSuffix}`;
+    const newCert = {
+      id: `cert-${Date.now()}`,
+      certificateNumber: certNumber,
+      userId: req.user.id,
+      userFullName: `${req.user.firstName} ${req.user.lastName}`,
+      courseId: course.id,
+      courseTitle: course.title,
+      level: course.level,
+      gradeScore: 95,
+      gradeClassification: 'Sehr Gut (With Distinction)',
+      issuedAt: new Date().toISOString(),
+      instructorName: 'Dr. Katharina Weber',
+      directorName: 'Dr. Klaus Becker',
+      directorTitle: 'Direktor Akademische Bildung, DeutschWelt',
+      verificationCode: `DW-VERIFY-${course.level}-${randomSuffix}`
+    };
+
+    store.certificates.push(newCert);
+
+    // Add a congratulatory notification
+    store.notifications.push({
+      id: `notif-${Date.now()}`,
+      userId: req.user.id,
+      title: '📜 Zertifikat ausgestellt!',
+      message: `Herzlichen Glückwunsch! Your official Certificate of Completion for ${course.title} is now available to download.`,
+      type: 'COURSE_COMPLETED',
+      linkUrl: '/student/courses',
+      isRead: false,
+      createdAt: new Date().toISOString()
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: 'Certificate of Completion generated successfully!',
+      certificate: newCert
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Public verification of a certificate
+ */
+export async function verifyCertificate(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { certificateNumber } = req.params;
+    const cert = store.certificates.find(
+      c => c.certificateNumber.toLowerCase() === certificateNumber.toLowerCase() ||
+           c.verificationCode?.toLowerCase() === certificateNumber.toLowerCase()
+    );
+
+    if (!cert) {
+      return res.status(404).json({
+        success: false,
+        message: 'No active DeutschWelt certificate found with this verification number.'
+      });
+    }
+
+    return res.json({
+      success: true,
+      certificate: {
+        certificateNumber: cert.certificateNumber,
+        recipient: cert.userFullName,
+        courseTitle: cert.courseTitle,
+        level: cert.level,
+        gradeClassification: cert.gradeClassification,
+        issuedAt: cert.issuedAt,
+        directorName: cert.directorName,
+        isValid: true
+      }
+    });
   } catch (error) {
     next(error);
   }

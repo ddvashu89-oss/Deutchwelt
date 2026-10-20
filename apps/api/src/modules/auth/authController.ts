@@ -139,6 +139,43 @@ export async function register(req: Request, res: Response, next: NextFunction) 
       store.users.push(user);
       store.studentProfiles.push(studentProfile);
 
+      // Auto-enroll new student into their selected CEFR course
+      const targetLevel = currentLevel || GermanLevel.A1;
+      const matchingCourse = store.courses.find(c => c.level === targetLevel) || store.courses[0];
+      if (matchingCourse) {
+        store.enrollments.push({
+          id: `enr-${Date.now()}`,
+          userId,
+          courseId: matchingCourse.id,
+          enrolledAt: new Date().toISOString(),
+          status: 'ACTIVE',
+          progressPercentage: 0
+        });
+      }
+
+      // Auto-assign new student to active cohort batch
+      const matchingBatch = store.batches.find(b => b.level === targetLevel) || store.batches[0];
+      if (matchingBatch) {
+        store.batchMemberships.push({
+          id: `bm-${Date.now()}`,
+          batchId: matchingBatch.id,
+          userId,
+          joinedAt: new Date().toISOString()
+        });
+      }
+
+      // Welcome onboarding notification
+      store.notifications.push({
+        id: `notif-${Date.now()}`,
+        userId,
+        title: `Willkommen bei DeutschWelt, ${firstName}!`,
+        message: `Your learning path for German ${targetLevel} is ready. Start your first lesson or practice vocabulary flashcards.`,
+        type: 'SUCCESS',
+        linkUrl: '/student/dashboard',
+        isRead: false,
+        createdAt: new Date().toISOString()
+      });
+
       const token = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date(Date.now() + env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000).toISOString();
 

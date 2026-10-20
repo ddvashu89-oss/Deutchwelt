@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/Button.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../components/ui/Card.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
-import { BookOpen, Clock, CheckCircle, ArrowRight, Filter } from 'lucide-react';
+import { BookOpen, Clock, CheckCircle, ArrowRight, ArrowUpRight, Filter, ShieldCheck, Sparkles } from 'lucide-react';
 
 export function CoursesPage() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -30,103 +30,129 @@ export function CoursesPage() {
   }, [selectedLevel]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10 font-sans">
       {/* Header */}
       <div className="max-w-3xl space-y-3">
-        <Badge variant="default" className="uppercase font-bold tracking-wider">Course Catalog</Badge>
-        <h1 className="text-4xl font-extrabold text-navy tracking-tight">
-          Comprehensive German Learning Paths
+        <span className="text-xs font-bold uppercase tracking-wider text-forest-800 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">
+          Lehrplan A1 bis B2
+        </span>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-gray-950 tracking-tight">
+          Zertifizierte Deutschkurse
         </h1>
-        <p className="text-base text-dark-muted">
-          Our curriculum is engineered to align strictly with the Common European Framework of Reference for Languages (CEFR) and official Goethe-Institut / telc examinations.
+        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+          Strukturierte Vorbereitung auf die Goethe-Zertifikate und telc Prüfungen. Erlernen Sie Grammatik, Wortschatz und freies Sprechen mit persönlicher Dozentenbegleitung.
         </p>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-gray-200">
-        <span className="text-xs font-bold uppercase text-dark-muted mr-2 flex items-center gap-1">
-          <Filter className="w-3.5 h-3.5" /> Level:
+      {/* Testing Sandbox Alert */}
+      <div className="p-4 rounded-3xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0" />
+          <span>
+            <strong>Testbetrieb aktiv:</strong> Alle Kurseinschreibungen können im Testmodus kostenfrei ohne Zahlungsdaten freigeschaltet werden.
+          </span>
+        </div>
+        <span className="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0 self-start sm:self-auto border border-amber-200">
+          Sandbox Modus
         </span>
-        {['ALL', 'A1', 'A2', 'B1', 'B2'].map(lvl => (
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-gray-200/80">
+        <span className="text-xs font-bold uppercase text-gray-400 mr-2 flex items-center gap-1 shrink-0">
+          <Filter className="w-3.5 h-3.5" /> Filter:
+        </span>
+        {['ALL', 'A1', 'A2', 'B1', 'B2'].map((lvl) => (
           <button
             key={lvl}
             onClick={() => { setSelectedLevel(lvl); setLoading(true); }}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 ${
               selectedLevel === lvl
-                ? 'bg-navy text-white shadow-xs'
-                : 'bg-white text-dark-muted border border-gray-200 hover:border-navy hover:text-dark'
+                ? 'bg-forest-900 text-white shadow-xs'
+                : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:text-gray-950'
             }`}
           >
-            {lvl === 'ALL' ? 'All Levels (A1–B2)' : `Level ${lvl}`}
+            {lvl === 'ALL' ? 'Alle Niveaus (A1–B2)' : `Niveau ${lvl}`}
           </button>
         ))}
       </div>
 
       {/* Course List */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {[1, 2, 3, 4].map(i => (
-            <div key={i} className="p-6 bg-white rounded-2xl border border-gray-200 space-y-4">
-              <Skeleton className="h-6 w-1/3" />
-              <Skeleton className="h-8 w-3/4" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-10 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="p-7 bg-white rounded-3xl border border-gray-200/80 space-y-4">
+              <Skeleton className="h-6 w-1/3 rounded-xl" />
+              <Skeleton className="h-8 w-3/4 rounded-xl" />
+              <Skeleton className="h-16 w-full rounded-2xl" />
+              <Skeleton className="h-10 w-full rounded-full" />
             </div>
           ))}
         </div>
       ) : courses.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+        <div className="text-center py-16 bg-white rounded-3xl border border-gray-200/80 shadow-xs">
           <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-navy">No courses found</h3>
-          <p className="text-xs text-dark-muted mt-1">Try selecting a different level filter above.</p>
+          <h3 className="text-lg font-bold text-gray-950">Keine Kurse gefunden</h3>
+          <p className="text-xs text-gray-500 mt-1">Bitte wählen Sie einen anderen Filter.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {courses.map(course => (
-            <Card key={course.id} className="flex flex-col justify-between hover:shadow-card-hover transition-all border-gray-200/90">
-              <CardHeader className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {courses.map((course) => (
+            <div
+              key={course.id}
+              className="rounded-3xl bg-white p-7 border border-gray-200/80 shadow-xs hover:shadow-card hover:border-gray-300 transition-all flex flex-col justify-between group"
+            >
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center px-3 py-1 rounded-lg bg-navy text-white text-xs font-black tracking-wider">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-forest-900 text-mint text-xs font-black tracking-wider">
                     {course.level}
                   </span>
-                  <span className="text-xs font-semibold text-dark-muted flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-germanRed" /> ~{course.estimatedHours} Hours
+                  <span className="text-xs font-semibold text-gray-500 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-forest-700" /> ca. {course.estimatedHours} Stunden
                   </span>
                 </div>
-                <CardTitle className="text-xl sm:text-2xl">{course.title}</CardTitle>
-                <CardDescription className="text-sm leading-relaxed">
-                  {course.description}
-                </CardDescription>
+
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-heading font-black text-gray-950 tracking-tight">
+                    {course.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
+                    {course.description}
+                  </p>
+                </div>
 
                 {/* Objectives */}
                 {course.learningObjectives && course.learningObjectives.length > 0 && (
-                  <div className="pt-3 border-t border-gray-100 space-y-1.5">
-                    <p className="text-xs font-bold uppercase tracking-wider text-navy">Core Competencies:</p>
-                    <ul className="space-y-1">
+                  <div className="pt-3 border-t border-gray-100 space-y-2">
+                    <p className="text-xs font-bold uppercase tracking-wider text-forest-900">
+                      Lernziele & Kompetenzen:
+                    </p>
+                    <ul className="space-y-1.5">
                       {course.learningObjectives.slice(0, 3).map((obj: string, idx: number) => (
-                        <li key={idx} className="text-xs text-dark flex items-start gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                        <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 text-mint mt-0.5 shrink-0" />
                           <span>{obj}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
-              </CardHeader>
+              </div>
 
-              <CardContent className="pt-0">
-                <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                  <span className="text-xs text-dark-muted">
-                    {course.units?.length || 2} Curriculum Units
-                  </span>
-                  <Link to={`/courses/${course.slug}`}>
-                    <Button variant="secondary" size="md" className="font-bold">
-                      View Syllabus & Enroll <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+              <div className="pt-6 mt-6 border-t border-gray-100 flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-400">
+                  {course.units?.length || 2} Lerneinheiten
+                </span>
+
+                <Link
+                  to={`/courses/${course.slug}`}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold transition-all shadow-xs"
+                >
+                  <span>Lehrplan & Einschreiben</span>
+                  <ArrowUpRight className="w-4 h-4 text-mint" />
+                </Link>
+              </div>
+            </div>
           ))}
         </div>
       )}

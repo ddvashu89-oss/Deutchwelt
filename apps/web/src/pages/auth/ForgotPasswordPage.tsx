@@ -29,19 +29,21 @@ export function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ivory flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-canvas flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
-        <Logo size="lg" showTagline />
-        <h2 className="text-3xl font-extrabold text-navy tracking-tight pt-2">
-          Reset Your Password
+        <div className="flex justify-center">
+          <Logo size="lg" />
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
+          Passwort zurücksetzen
         </h2>
-        <p className="text-xs text-dark-muted">
-          Enter your registered email address to receive recovery instructions.
+        <p className="text-xs text-gray-500 font-medium">
+          Geben Sie Ihre E-Mail-Adresse ein, um einen Wiederherstellungslink zu erhalten.
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-card sm:rounded-3xl sm:px-10 border border-gray-200/90 space-y-6">
+        <div className="bg-white py-8 px-6 shadow-xl sm:rounded-4xl sm:px-10 border border-gray-200/80 space-y-6">
           {submitted ? (
             <div className="text-center space-y-4">
               <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
@@ -76,13 +78,17 @@ export function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
 
-              <Button type="submit" variant="primary" size="lg" className="w-full font-bold shadow-md" isLoading={loading}>
-                Send Reset Link
-              </Button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all"
+              >
+                {loading ? 'Wird gesendet...' : 'Link zum Zurücksetzen senden'}
+              </button>
 
               <div className="text-center pt-2">
-                <Link to="/login" className="text-xs font-bold text-dark-muted hover:text-dark inline-flex items-center gap-1">
-                  <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
+                <Link to="/login" className="text-xs font-bold text-forest-800 hover:text-forest-900 hover:underline inline-flex items-center gap-1">
+                  <ArrowLeft className="w-3.5 h-3.5" /> Zurück zur Anmeldung
                 </Link>
               </div>
             </form>
@@ -103,38 +109,45 @@ export function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ivory flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-canvas flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
-        <Logo size="lg" showTagline />
-        <h2 className="text-3xl font-extrabold text-navy tracking-tight pt-2">
-          Enter New Password
+        <div className="flex justify-center">
+          <Logo size="lg" />
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
+          Neues Passwort vergeben
         </h2>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-card sm:rounded-3xl sm:px-10 border border-gray-200/90 space-y-6">
+        <div className="bg-white py-8 px-6 shadow-xl sm:rounded-4xl sm:px-10 border border-gray-200/80 space-y-6">
           {success ? (
             <div className="text-center space-y-4">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-              <h3 className="text-lg font-bold text-navy">Password Reset Successfully</h3>
-              <p className="text-xs text-dark-muted">You can now sign in with your updated credentials.</p>
+              <h3 className="text-lg font-bold text-gray-950">Passwort erfolgreich geändert</h3>
+              <p className="text-xs text-gray-500">Sie können sich jetzt mit Ihrem neuen Passwort anmelden.</p>
               <Link to="/login">
-                <Button variant="primary">Proceed to Sign In</Button>
+                <button className="px-6 py-2.5 rounded-full bg-forest-900 text-white text-xs font-bold shadow-md">
+                  Weiter zur Anmeldung
+                </button>
               </Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
-                label="New Password"
+                label="Neues Passwort"
                 type="password"
                 required
-                placeholder="Minimum 8 characters"
+                placeholder="Mindestens 8 Zeichen"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <Button type="submit" variant="primary" size="lg" className="w-full font-bold">
-                Update Password
-              </Button>
+              <button
+                type="submit"
+                className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm shadow-md transition-all"
+              >
+                Passwort aktualisieren
+              </button>
             </form>
           )}
         </div>

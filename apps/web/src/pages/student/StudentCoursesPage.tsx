@@ -22,8 +22,11 @@ import {
   Layers,
   ArrowRight,
   Flame,
-  Check
+  Check,
+  ShieldCheck,
+  Info
 } from 'lucide-react';
+import { CertificateModal } from '../../components/ui/CertificateModal.js';
 
 interface Lesson {
   id: string;
@@ -68,6 +71,12 @@ export function StudentCoursesPage() {
   const [enrollingCourseId, setEnrollingCourseId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Certificate Modal State
+  const [certificates, setCertificates] = useState<any[]>([]);
+  const [selectedCert, setSelectedCert] = useState<any | null>(null);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [claimingCertId, setClaimingCertId] = useState<string | null>(null);
+
   useEffect(() => {
     loadCourseData();
   }, []);
@@ -75,13 +84,18 @@ export function StudentCoursesPage() {
   async function loadCourseData() {
     setLoading(true);
     try {
-      const [coursesRes, dashRes]: any = await Promise.all([
+      const [coursesRes, dashRes, certsRes]: any = await Promise.all([
         api.get('/courses'),
-        api.get('/student/dashboard')
+        api.get('/student/dashboard'),
+        api.get('/student/certificates').catch(() => ({ success: false, certificates: [] }))
       ]);
 
       const allCourses: Course[] = coursesRes?.courses || [];
       const dashStats = dashRes?.stats;
+
+      if (certsRes?.success && certsRes?.certificates) {
+        setCertificates(certsRes.certificates);
+      }
 
       const enrolledIds = new Set<string>();
       if (dashStats?.enrollments) {
@@ -143,8 +157,8 @@ export function StudentCoursesPage() {
     try {
       const res: any = await api.post(`/courses/${course.id}/enroll`);
       if (res.success) {
-        setToastMessage(`Erfolgreich! You are now enrolled in "${course.title}".`);
-        setTimeout(() => setToastMessage(null), 4000);
+        setToastMessage(`💳 Testing Provision Active: Complimentary enrollment processed for "${course.title}"! (Payment Sandbox Mode)`);
+        setTimeout(() => setToastMessage(null), 5000);
 
         setEnrolledCourseIds(prev => new Set(prev).add(course.id).add(course.slug));
         setCourses(prev =>
@@ -163,6 +177,26 @@ export function StudentCoursesPage() {
       setTimeout(() => setToastMessage(null), 4000);
     } finally {
       setEnrollingCourseId(null);
+    }
+  };
+
+  const handleClaimCertificate = async (courseId: string) => {
+    setClaimingCertId(courseId);
+    try {
+      const res: any = await api.post(`/student/courses/${courseId}/claim-certificate`);
+      if (res.success && res.certificate) {
+        setCertificates(prev => [...prev.filter(c => c.id !== res.certificate.id), res.certificate]);
+        setSelectedCert(res.certificate);
+        setIsCertModalOpen(true);
+        setToastMessage('🎉 Glückwunsch! Your official Certificate of Completion has been issued!');
+        setTimeout(() => setToastMessage(null), 5000);
+      }
+    } catch (e: any) {
+      console.error('Error claiming certificate:', e);
+      setToastMessage('Could not claim certificate at this time.');
+      setTimeout(() => setToastMessage(null), 4000);
+    } finally {
+      setClaimingCertId(null);
     }
   };
 
@@ -236,6 +270,22 @@ export function StudentCoursesPage() {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Testing Provision Alert */}
+      <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 text-amber-700">
+            <Info className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="font-bold">Test-Bereitstellung (Payment Sandbox Active): </span>
+            <span>All course enrollments and completions are currently complimentary for testing provision without payment charges.</span>
+          </div>
+        </div>
+        <Badge variant="warning" className="text-[10px] uppercase font-bold shrink-0 self-start sm:self-auto">
+          Testing Mode
+        </Badge>
       </div>
 
       {/* 2. Quick Overview Stats */}
@@ -361,6 +411,7 @@ export function StudentCoursesPage() {
 
             // Find first lesson for 1-click continue
             const firstLessonId = course.units?.[0]?.lessons?.[0]?.id || 'lesson-a1-1-1';
+            const courseCert = certificates.find(c => c.courseId === course.id);
 
             return (
               <Card
@@ -406,7 +457,7 @@ export function StudentCoursesPage() {
                       </Badge>
                     )}
 
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                       {isEnrolled ? (
                         <>
                           <Link to={`/lessons/${firstLessonId}`}>
@@ -415,6 +466,30 @@ export function StudentCoursesPage() {
                               {progress > 0 ? 'Weiterlernen' : 'Start Lesson'}
                             </Button>
                           </Link>
+                          {courseCert ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedCert(courseCert);
+                                setIsCertModalOpen(true);
+                              }}
+                              className="font-bold text-amber-900 bg-amber-50 border-amber-300 hover:bg-amber-100 shadow-xs"
+                            >
+                              <Award className="w-4 h-4 mr-1 text-amber-600" /> Abschlusszertifikat
+                            </Button>
+                          ) : progress >= 30 ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={claimingCertId === course.id}
+                              onClick={() => handleClaimCertificate(course.id)}
+                              className="font-bold text-emerald-800 bg-emerald-50 border-emerald-300 hover:bg-emerald-100 shadow-xs"
+                            >
+                              <Sparkles className="w-4 h-4 mr-1 text-emerald-600" />
+                              {claimingCertId === course.id ? 'Ausstellen...' : 'Zertifikat anfordern'}
+                            </Button>
+                          ) : null}
                           <Button
                             variant="outline"
                             size="sm"
@@ -567,6 +642,13 @@ export function StudentCoursesPage() {
           })}
         </div>
       )}
+
+      {/* Official Certificate Modal */}
+      <CertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+        certificate={selectedCert}
+      />
     </div>
   );
 }

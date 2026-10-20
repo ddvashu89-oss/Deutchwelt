@@ -5,63 +5,67 @@ import { ShieldCheck, GraduationCap, Award, Globe, Users, HeartHandshake } from 
 
 export function AboutPage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16 font-sans">
       {/* Header */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <Badge variant="default" className="uppercase font-bold tracking-wider">Our Mission</Badge>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-navy tracking-tight">
-          Combining Academic Rigor with Modern EdTech
+        <span className="text-xs font-bold uppercase tracking-wider text-forest-800 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">
+          Unsere Mission
+        </span>
+        <h1 className="text-4xl sm:text-5xl font-heading font-black text-gray-950 tracking-tight">
+          Akademische Exzellenz trifft moderne EdTech
         </h1>
-        <p className="text-base sm:text-lg text-dark-muted leading-relaxed">
-          DeutschWelt was established to solve a critical problem: language learning apps are often too superficial for real examinations, while traditional institutes are rigid and expensive.
+        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+          DeutschWelt Coaching schließt die Lücke zwischen oberflächlichen Vokabel-Apps und starren, teuren Sprachschulen. Wir begleiten Sie strukturiert vom ersten Wort bis zum Goethe-Zertifikat B2.
         </p>
       </div>
 
       {/* Vision Pillars */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <Card className="p-6 space-y-3 bg-white">
-          <div className="w-12 h-12 rounded-xl bg-navy-100 text-navy flex items-center justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="p-7 rounded-3xl bg-white border border-gray-200/80 shadow-xs space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-forest-100 text-forest-900 flex items-center justify-center">
             <GraduationCap className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold text-navy">Pedagogical Integrity</h3>
-          <p className="text-xs text-dark-muted leading-relaxed">
-            Our courses do not shy away from the German grammatical case system (Nominativ, Akkusativ, Dativ, Genitiv). We teach you the principles behind the language from day one.
+          <h3 className="text-lg font-heading font-bold text-gray-950">Didaktische Präzision</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Wir vereinfachen das deutsche Kasus-System (Nominativ, Akkusativ, Dativ, Genitiv) mit intuitiven Farb- und Strukturmustern, sodass Grammatik sofort verständlich wird.
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-6 space-y-3 bg-white">
-          <div className="w-12 h-12 rounded-xl bg-germanRed-100 text-germanRed flex items-center justify-center">
+        <div className="p-7 rounded-3xl bg-white border border-gray-200/80 shadow-xs space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-mint/15 text-forest-900 border border-mint/20 flex items-center justify-center">
             <Award className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold text-navy">Goethe & telc Exam Focus</h3>
-          <p className="text-xs text-dark-muted leading-relaxed">
-            Designed for students moving to Germany for higher education, nursing/medical careers, and EU Blue Card visas who need recognized CEFR certifications.
+          <h3 className="text-lg font-heading font-bold text-gray-950">Goethe- & telc-Fokus</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Speziell konzipiert für Mediziner, Ingenieure, Studenten und Fachkräfte, die anerkannte CEFR-Nachweise für Studium, Arbeitsplatz oder Visum in Deutschland benötigen.
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-6 space-y-3 bg-white">
-          <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+        <div className="p-7 rounded-3xl bg-white border border-gray-200/80 shadow-xs space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
             <HeartHandshake className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold text-navy">Human Coaching</h3>
-          <p className="text-xs text-dark-muted leading-relaxed">
-            Technology powers your daily practice, but experienced instructors provide the qualitative review your speaking and writing skills require.
+          <h3 className="text-lg font-heading font-bold text-gray-950">Persönliche Begleitung</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Moderne Algorithmen unterstützen das tägliche Üben, während erfahrene Dozenten Ihre Aussprache in Live-Seminaren individuell korrigieren.
           </p>
-        </Card>
+        </div>
       </div>
 
       {/* Story / Context */}
-      <div className="bg-white rounded-3xl p-8 sm:p-12 border border-gray-200/90 shadow-card space-y-6">
-        <h2 className="text-2xl font-bold text-navy">The DeutschWelt Philosophy</h2>
-        <div className="space-y-4 text-sm text-dark leading-relaxed">
+      <div className="bg-white rounded-4xl p-8 sm:p-12 border border-gray-200/80 shadow-xs space-y-6">
+        <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950">
+          Die Philosophie von DeutschWelt Coaching
+        </h2>
+        <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
           <p>
-            German is a beautiful, logical, and structured language. Yet millions of learners drop out at A1 or A2 because standard flashcard apps fail to teach them how the language actually works, while textbooks make simple concepts feel needlessly intimidating.
+            Deutsch ist eine logische, strukturierte und ausdrucksstarke Sprache. Dennoch brechen viele Lernende auf Niveau A1 oder A2 frustriert ab, weil standardisierte Quiz-Apps keine Zusammenhänge vermitteln und traditionelle Lehrbücher oft trocken und überladen wirken.
           </p>
           <p>
-            At DeutschWelt, we introduce visual article distinctions (blue for masculine, red for feminine, green for neuter), intuitive two-way prepositions, and audio recording labs that let learners speak without fear of making mistakes in public.
+            Bei DeutschWelt setzen wir auf klare visuelle Leitlinien: Farbcodierte Artikel (der/die/das), kontextbezogene Beispielsätze mit Alltagsrelevanz und Audio-Sprechlabore, in denen Hemmungen vor dem freien Sprechen Schritt für Schritt abgebaut werden.
           </p>
           <p>
-            Whether your dream is studying engineering at TU Munich, working as a healthcare specialist in Berlin, or building a new life in Germany, we provide the pathway to help you succeed.
+            Ob Studium an einer deutschen Spitzenuniversität, Karriere im Ingenieur- oder Gesundheitswesen oder der Start eines neuen Lebenskapitels in Deutschland, Österreich oder der Schweiz – wir ebnen Ihnen den Weg dorthin.
           </p>
         </div>
       </div>

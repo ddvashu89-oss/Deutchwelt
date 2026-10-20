@@ -3,14 +3,15 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --color-navy: 23 36 58;
-    --color-german-red: 217 71 71;
-    --color-ivory: 245 241 232;
+  body {
+    background-color: #F3F4F6;
+    color: #111827;
+    @apply font-sans antialiased min-h-screen;
   }
 
-  body {
-    @apply bg-ivory text-dark font-sans antialiased min-h-screen selection:bg-germanRed selection:text-white;
+  ::selection {
+    background-color: #34D399;
+    color: #09241C;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -21,6 +22,47 @@
 /* Custom utility styles */
 .text-balance {
   text-wrap: balance;
+}
+
+/* Diagonal hatched stripes pattern matching Donezo inactive pill bar chart */
+.bg-stripes-pattern {
+  background-color: #F9FAFB;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #E5E7EB 0,
+    #E5E7EB 2px,
+    transparent 2px,
+    transparent 8px
+  );
+}
+
+.bg-stripes-light {
+  background-color: #FFFFFF;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #E5E7EB 0,
+    #E5E7EB 2px,
+    transparent 2px,
+    transparent 8px
+  );
+}
+
+.bg-stripes-dark {
+  background-color: #113F32;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(52, 211, 153, 0.25) 0,
+    rgba(52, 211, 153, 0.25) 2px,
+    transparent 2px,
+    transparent 8px
+  );
+}
+
+/* Organic curved wave mesh texture for time tracker & sidebar widget */
+.bg-mesh-dark {
+  background: radial-gradient(circle at 80% 20%, rgba(52, 211, 153, 0.22), transparent 45%),
+              radial-gradient(circle at 20% 80%, rgba(20, 78, 61, 0.8), transparent 50%),
+              linear-gradient(135deg, #09241C 0%, #113F32 100%);
 }
 
 .perspective-1000 {

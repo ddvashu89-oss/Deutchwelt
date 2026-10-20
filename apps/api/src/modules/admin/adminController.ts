@@ -244,6 +244,32 @@ export async function createStudent(req: Request, res: Response, next: NextFunct
       };
       store.users.unshift(student);
       store.studentProfiles.unshift(sp);
+
+      // Auto-enroll created student into course
+      const targetLevel = currentLevel || GermanLevel.A1;
+      const matchingCourse = store.courses.find(c => c.level === targetLevel) || store.courses[0];
+      if (matchingCourse) {
+        store.enrollments.push({
+          id: `enr-${Date.now()}`,
+          userId: student.id,
+          courseId: matchingCourse.id,
+          enrolledAt: new Date().toISOString(),
+          status: 'ACTIVE',
+          progressPercentage: 0
+        });
+      }
+
+      // Auto-assign to cohort batch
+      const matchingBatch = store.batches.find(b => b.level === targetLevel) || store.batches[0];
+      if (matchingBatch) {
+        store.batchMemberships.push({
+          id: `bm-${Date.now()}`,
+          batchId: matchingBatch.id,
+          userId: student.id,
+          joinedAt: new Date().toISOString()
+        });
+      }
+
       return res.status(201).json({ success: true, message: 'Student created successfully.', student: { ...student, studentProfile: sp } });
     }
   } catch (error) {

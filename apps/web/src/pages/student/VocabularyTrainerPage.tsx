@@ -136,22 +136,22 @@ export function VocabularyTrainerPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-gray-200/80 p-1 rounded-xl self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 bg-gray-100 p-1 rounded-full self-start sm:self-auto border border-gray-200/70">
           <button
             onClick={() => setMode('flashcards')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-              mode === 'flashcards' ? 'bg-white text-navy shadow-xs' : 'text-gray-600 hover:text-dark'
+            className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
+              mode === 'flashcards' ? 'bg-forest-900 text-white shadow-xs' : 'text-gray-600 hover:text-gray-950'
             }`}
           >
-            Flashcards Mode
+            Karteikarten (Flashcards)
           </button>
           <button
             onClick={() => setMode('bank')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-              mode === 'bank' ? 'bg-white text-navy shadow-xs' : 'text-gray-600 hover:text-dark'
+            className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
+              mode === 'bank' ? 'bg-forest-900 text-white shadow-xs' : 'text-gray-600 hover:text-gray-950'
             }`}
           >
-            Word Bank Table
+            Wortschatz-Tabelle
           </button>
         </div>
       </div>
@@ -289,10 +289,10 @@ export function VocabularyTrainerPage() {
                 </div>
 
                 {/* Example sentence */}
-                <div className="p-4 rounded-2xl bg-ivory/60 border border-gray-200 text-xs space-y-1">
-                  <p className="font-bold text-navy">Beispiel (In Context):</p>
+                <div className="p-4 rounded-2xl bg-canvas border border-gray-200 text-xs space-y-1">
+                  <p className="font-bold text-forest-900">Beispiel (In Context):</p>
                   <p className="italic text-gray-800 font-medium leading-relaxed">"{currentWord.exampleSentenceDe}"</p>
-                  <p className="text-dark-muted">{currentWord.exampleSentenceEn}</p>
+                  <p className="text-gray-500">{currentWord.exampleSentenceEn}</p>
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-dark-muted pt-3 border-t border-gray-100">

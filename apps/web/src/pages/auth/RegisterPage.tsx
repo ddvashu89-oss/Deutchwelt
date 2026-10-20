@@ -44,7 +44,7 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ivory flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-canvas flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans">
       {/* Top Bar with Language Toggle */}
       <div className="absolute top-6 right-6 flex items-center gap-3">
         <LanguageToggle />
@@ -52,18 +52,18 @@ export function RegisterPage() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <div className="flex justify-center">
-          <Logo size="lg" showTagline />
+          <Logo size="lg" />
         </div>
-        <h2 className="text-3xl font-extrabold text-navy tracking-tight pt-2">
+        <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
           {t('reg.title')}
         </h2>
-        <p className="text-xs text-dark-muted max-w-sm mx-auto">
+        <p className="text-xs text-gray-500 max-w-sm mx-auto font-medium">
           {t('reg.subtitle')}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-6 shadow-card sm:rounded-3xl sm:px-10 border border-gray-200/90 space-y-6">
+        <div className="bg-white py-8 px-6 shadow-xl sm:rounded-4xl sm:px-10 border border-gray-200/80 space-y-6">
           {/* Content Gate Alert */}
           {isContentGate && (
             <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl flex items-start gap-3 shadow-sm">
@@ -211,20 +211,19 @@ export function RegisterPage() {
               <p className="text-xs text-red-600 font-medium">{errors.consentToTerms.message}</p>
             )}
 
-            <Button
+            <button
               type="submit"
-              variant="secondary"
-              size="lg"
-              className="w-full font-bold shadow-md mt-4"
-              isLoading={isSubmitting}
+              disabled={isSubmitting}
+              className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all mt-4"
             >
-              {t('reg.submit')} <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
+              <span>{isSubmitting ? 'Wird erstellt...' : t('reg.submit')}</span>
+              <ArrowRight className="w-4 h-4 text-mint" />
+            </button>
           </form>
 
-          <div className="text-center text-xs text-dark-muted pt-2 border-t border-gray-100">
+          <div className="text-center text-xs text-gray-500 pt-2 border-t border-gray-100">
             {t('reg.hasAccount')}{' '}
-            <Link to="/login" className="font-bold text-navy hover:underline">
+            <Link to="/login" className="font-bold text-forest-800 hover:text-forest-900 hover:underline">
               {t('nav.login')}
             </Link>
           </div>
