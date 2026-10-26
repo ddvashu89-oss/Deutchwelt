@@ -842,3 +842,99 @@ export async function enrollStudentInBatch(req: Request, res: Response, next: Ne
     next(error);
   }
 }
+
+export async function getTeacherSchedule(req: Request, res: Response, next: NextFunction) {
+  try {
+    return res.json({
+      success: true,
+      upcomingSessions: [
+        {
+          id: 'sess-1',
+          studentName: 'Jason K',
+          topic: 'A1 Phonetics & Pronunciation Coaching',
+          time: '9:30 AM',
+          date: 'Today',
+          status: 'ACTIVE',
+          meetingUrl: 'https://meet.google.com/dw-a1-live'
+        },
+        {
+          id: 'sess-2',
+          studentName: 'Enoch',
+          topic: 'B1 Dativ vs Akkusativ Mastery',
+          time: '4:50 PM',
+          date: 'Today',
+          status: 'ACTIVE',
+          meetingUrl: 'https://meet.google.com/dw-b1-live'
+        },
+        {
+          id: 'sess-3',
+          studentName: 'Mia G',
+          topic: 'A2 Goethe Sprechen Preparation',
+          time: '7:00 PM',
+          date: 'Today',
+          status: 'ACTIVE',
+          meetingUrl: 'https://meet.google.com/dw-a2-live'
+        }
+      ],
+      cancelledSessions: [],
+      stats: {
+        activeStudents: 4,
+        upcomingCount: 4,
+        taughtHoursMonth: 5
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createTeacherLessonReport(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { studentName, lessonTopic, rating, notes } = req.body;
+    const report = {
+      id: `rep-${Date.now()}`,
+      teacherId: resolveTeacherProfileId(req),
+      studentName: studentName || 'Elena Rostova',
+      lessonTopic: lessonTopic || 'Alltagskommunikation A1',
+      date: new Date().toISOString(),
+      rating: Number(rating) || 5,
+      notes: notes || 'Sehr gute Aussprache und Konzentration im Unterricht.'
+    };
+    store.lessonReports.push(report);
+    return res.status(201).json({ success: true, report });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getTeacherAttendance(req: Request, res: Response, next: NextFunction) {
+  try {
+    return res.json({
+      success: true,
+      attendance: store.attendance || []
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function recordTeacherAttendance(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { batchId, date, records } = req.body;
+    const batch = store.batches.find(b => b.id === batchId) || store.batches[0];
+    const newEntry = {
+      id: `att-${Date.now()}`,
+      batchId: batch.id,
+      batchName: batch.name,
+      date: date || new Date().toISOString().split('T')[0],
+      totalEnrolled: Array.isArray(records) ? records.length : 15,
+      presentCount: Array.isArray(records) ? records.filter((r: any) => r.status === 'PRESENT').length : 14,
+      attendanceRate: 95,
+      students: records || []
+    };
+    store.attendance.push(newEntry);
+    return res.json({ success: true, attendance: newEntry });
+  } catch (error) {
+    next(error);
+  }
+}

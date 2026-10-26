@@ -887,3 +887,135 @@ export async function updatePlatformSetting(req: Request, res: Response, next: N
     next(error);
   }
 }
+
+export async function getAdminBatches(req: Request, res: Response, next: NextFunction) {
+  try {
+    const batches = store.batches.map(b => {
+      const assignedTeachers = store.teacherBatchAssignments
+        .filter(t => t.batchId === b.id)
+        .map(tba => {
+          const tp = store.teacherProfiles.find(p => p.id === tba.teacherId);
+          const u = tp ? store.users.find(usr => usr.id === tp.userId) : null;
+          return u ? { id: tp?.id, name: `${u.firstName} ${u.lastName}`, email: u.email } : null;
+        })
+        .filter(Boolean);
+
+      const enrolledCount = store.batchMemberships.filter(m => m.batchId === b.id).length;
+      return { ...b, assignedTeachers, enrolledCount };
+    });
+
+    return res.json({ success: true, batches });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createAdminBatch(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { name, level, description, startDate, endDate, maxStudents, teacherProfileId } = req.body;
+    const newBatch = {
+      id: `batch-${Date.now()}`,
+      name: name || 'Neue DeutschWelt Kohorte',
+      level: level || GermanLevel.A1,
+      description: description || 'Interaktiver Deutschkurs mit muttersprachlichen Dozenten.',
+      startDate: startDate || new Date().toISOString(),
+      endDate: endDate || new Date(Date.now() + 60 * 86400000).toISOString(),
+      maxStudents: Number(maxStudents) || 15,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    store.batches.push(newBatch);
+
+    if (teacherProfileId) {
+      store.teacherBatchAssignments.push({
+        id: `tba-${Date.now()}`,
+        batchId: newBatch.id,
+        teacherId: teacherProfileId,
+        isPrimary: true,
+        assignedAt: new Date().toISOString()
+      });
+    }
+
+    return res.json({ success: true, batch: newBatch });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAdminPayments(req: Request, res: Response, next: NextFunction) {
+  try {
+    return res.json({
+      success: true,
+      payments: store.payments || [],
+      feePlans: store.feePlans || [],
+      totalVolume: 750000,
+      monthlyVolume: 48500
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createAdminFeePlan(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { name, price, currency, billingCycle, features } = req.body;
+    const newPlan = {
+      id: `fee-${Date.now()}`,
+      name,
+      price: Number(price) || 299,
+      currency: currency || 'EUR',
+      billingCycle: billingCycle || 'MONTHLY',
+      features: Array.isArray(features) ? features : ['Alle GER-Module', 'Live-Klassen', 'Zertifikat'],
+      isActive: true
+    };
+    store.feePlans.push(newPlan);
+    return res.json({ success: true, feePlan: newPlan });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAdminAttendance(req: Request, res: Response, next: NextFunction) {
+  try {
+    return res.json({
+      success: true,
+      attendance: store.attendance || [],
+      overallRate: 95
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAdminAnnouncements(req: Request, res: Response, next: NextFunction) {
+  try {
+    const announcements = store.batchAnnouncements.map(a => ({
+      ...a,
+      batch: store.batches.find(b => b.id === a.batchId)
+    }));
+    return res.json({ success: true, announcements });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createAdminAnnouncement(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { title, message, batchId, priority } = req.body;
+    const newAnnouncement = {
+      id: `ann-${Date.now()}`,
+      teacherId: 'admin',
+      batchId: batchId || 'all',
+      title,
+      message,
+      priority: priority || 'HIGH',
+      createdAt: new Date().toISOString()
+    };
+    store.batchAnnouncements.unshift(newAnnouncement);
+    return res.json({ success: true, announcement: newAnnouncement });
+  } catch (error) {
+    next(error);
+  }
+}

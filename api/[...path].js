@@ -99,6 +99,10 @@ var DataStore = class {
   siteSettings = [];
   auditLogs = [];
   certificates = [];
+  feePlans = [];
+  payments = [];
+  attendance = [];
+  lessonReports = [];
   constructor() {
     this.seedInitialData();
   }
@@ -959,6 +963,126 @@ Elena Rostova`,
         directorName: "Dr. Klaus Becker",
         directorTitle: "Direktor Akademische Bildung, DeutschWelt",
         verificationCode: "DW-VERIFY-A1-8841"
+      }
+    ];
+    this.feePlans = [
+      {
+        id: "fee-1",
+        name: "Intensivkurs Flatrate",
+        price: 399,
+        currency: "EUR",
+        billingCycle: "MONTHLY",
+        features: ["Alle GER-Stufen A1 bis B2", "4x w\xF6chentlich Live-Klassen (Google Meet)", "Unbegrenzter Wortschatz-Trainer", "Audio-Sprachlabor mit Dozenten-Feedback"],
+        isActive: true
+      },
+      {
+        id: "fee-2",
+        name: "1-zu-1 VIP Coaching",
+        price: 799,
+        currency: "EUR",
+        billingCycle: "MONTHLY",
+        features: ["Pers\xF6nlicher Goethe-Dozent", "12 Einzelsitzungen im Monat", "Individueller Lehrplan & Korrekturservice", "Garantierte Bestehensbegleitung"],
+        isActive: true
+      },
+      {
+        id: "fee-3",
+        name: "Selbstlerner Goethe-Pr\xFCfungspaket",
+        price: 149,
+        currency: "EUR",
+        billingCycle: "ONE_TIME",
+        features: ["Vollst\xE4ndiges digitales Lehrmaterial", "Original Goethe & Telc Modellpr\xFCfungen", "KI-Aussprachetraining"],
+        isActive: true
+      }
+    ];
+    this.payments = [
+      {
+        id: "pay-1",
+        studentName: "Elena Rostova",
+        studentEmail: "student@deutschwelt.de",
+        courseName: "Goethe A1 Intensive \u2014 Winter 2026",
+        amount: 399,
+        currency: "EUR",
+        method: "Stripe (Credit Card)",
+        status: "COMPLETED",
+        date: new Date(Date.now() - 864e5 * 2).toISOString(),
+        invoiceNumber: "INV-2026-00481"
+      },
+      {
+        id: "pay-2",
+        studentName: "Lucas Weber",
+        studentEmail: "lucas.weber@gmail.com",
+        courseName: "Goethe B1/B2 Mastery \u2014 Abendkurs",
+        amount: 799,
+        currency: "EUR",
+        method: "SEPA Direct Debit",
+        status: "COMPLETED",
+        date: new Date(Date.now() - 864e5 * 4).toISOString(),
+        invoiceNumber: "INV-2026-00480"
+      },
+      {
+        id: "pay-3",
+        studentName: "Ananya Sharma",
+        studentEmail: "ananya.s@outlook.com",
+        courseName: "Deutsch A1: Beginner Intensiv",
+        amount: 399,
+        currency: "EUR",
+        method: "PayPal",
+        status: "COMPLETED",
+        date: new Date(Date.now() - 864e5 * 5).toISOString(),
+        invoiceNumber: "INV-2026-00479"
+      },
+      {
+        id: "pay-4",
+        studentName: "Matteo Rossi",
+        studentEmail: "matteo.rossi@yahoo.it",
+        courseName: "Selbstlerner Goethe-Pr\xFCfungspaket",
+        amount: 149,
+        currency: "EUR",
+        method: "Stripe",
+        status: "COMPLETED",
+        date: new Date(Date.now() - 864e5 * 7).toISOString(),
+        invoiceNumber: "INV-2026-00478"
+      }
+    ];
+    this.attendance = [
+      {
+        id: "att-1",
+        batchId: "batch-1",
+        batchName: "Goethe A1 Intensive \u2014 Winter 2026",
+        date: (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+        totalEnrolled: 15,
+        presentCount: 14,
+        attendanceRate: 93,
+        students: [
+          { studentId: "user-student-1", studentName: "Elena Rostova", status: "PRESENT" },
+          { studentId: "user-student-2", studentName: "Lucas Weber", status: "PRESENT" },
+          { studentId: "user-student-3", studentName: "Mia G", status: "ABSENT" }
+        ]
+      },
+      {
+        id: "att-2",
+        batchId: "batch-2",
+        batchName: "Goethe B1/B2 Mastery \u2014 Abendkurs",
+        date: (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+        totalEnrolled: 12,
+        presentCount: 12,
+        attendanceRate: 100,
+        students: [
+          { studentId: "user-student-2", studentName: "Lucas Weber", status: "PRESENT" },
+          { studentId: "user-student-4", studentName: "Enoch", status: "PRESENT" }
+        ]
+      }
+    ];
+    this.lessonReports = [
+      {
+        id: "rep-1",
+        teacherId: "profile-teacher-1",
+        studentId: student.id,
+        studentName: "Elena Rostova",
+        lessonTopic: "Aussprache & Verb-Konjugation A1",
+        date: (/* @__PURE__ */ new Date()).toISOString(),
+        rating: 5,
+        notes: "Hervorragende Mitarbeit. Die Umlaute \xE4 und \xF6 gelingen bereits fl\xFCssig. Hausaufgabe: \xDCbung 3 auf Seite 12."
       }
     ];
   }
@@ -3021,13 +3145,17 @@ async function getStudentDashboard(req, res, next) {
         success: true,
         stats: {
           currentLevel: profile?.currentLevel || "A1",
+          currentLevelName: "A1 - Beginner",
           streakDays: profile?.streakCount || 7,
           dailyGoalMinutes: profile?.dailyGoalMinutes || 25,
-          minutesSpentToday: 18,
-          wordsLearned: wordsLearned || 6,
-          wordsMastered: wordsMastered || 1,
-          exerciseAccuracy: avgAccuracy,
-          completedLessonsCount: completedLessons.length || 1,
+          minutesSpentToday: 180,
+          studyTimeMinutes: 180,
+          wordsLearned: wordsLearned || 25,
+          wordsMastered: wordsMastered || 18,
+          exerciseAccuracy: avgAccuracy || 95,
+          exercisesDone: exerciseAttempts.length || 12,
+          levelProgressPercentage: 20,
+          completedLessonsCount: completedLessons.length || 3,
           enrolledCoursesCount: enrollments.length || 1,
           upcomingAssignmentsCount: 1,
           continueLesson,
@@ -3994,6 +4122,98 @@ async function enrollStudentInBatch(req, res, next) {
     next(error);
   }
 }
+async function getTeacherSchedule(req, res, next) {
+  try {
+    return res.json({
+      success: true,
+      upcomingSessions: [
+        {
+          id: "sess-1",
+          studentName: "Jason K",
+          topic: "A1 Phonetics & Pronunciation Coaching",
+          time: "9:30 AM",
+          date: "Today",
+          status: "ACTIVE",
+          meetingUrl: "https://meet.google.com/dw-a1-live"
+        },
+        {
+          id: "sess-2",
+          studentName: "Enoch",
+          topic: "B1 Dativ vs Akkusativ Mastery",
+          time: "4:50 PM",
+          date: "Today",
+          status: "ACTIVE",
+          meetingUrl: "https://meet.google.com/dw-b1-live"
+        },
+        {
+          id: "sess-3",
+          studentName: "Mia G",
+          topic: "A2 Goethe Sprechen Preparation",
+          time: "7:00 PM",
+          date: "Today",
+          status: "ACTIVE",
+          meetingUrl: "https://meet.google.com/dw-a2-live"
+        }
+      ],
+      cancelledSessions: [],
+      stats: {
+        activeStudents: 4,
+        upcomingCount: 4,
+        taughtHoursMonth: 5
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function createTeacherLessonReport(req, res, next) {
+  try {
+    const { studentName, lessonTopic, rating, notes } = req.body;
+    const report = {
+      id: `rep-${Date.now()}`,
+      teacherId: resolveTeacherProfileId(req),
+      studentName: studentName || "Elena Rostova",
+      lessonTopic: lessonTopic || "Alltagskommunikation A1",
+      date: (/* @__PURE__ */ new Date()).toISOString(),
+      rating: Number(rating) || 5,
+      notes: notes || "Sehr gute Aussprache und Konzentration im Unterricht."
+    };
+    store.lessonReports.push(report);
+    return res.status(201).json({ success: true, report });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getTeacherAttendance(req, res, next) {
+  try {
+    return res.json({
+      success: true,
+      attendance: store.attendance || []
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function recordTeacherAttendance(req, res, next) {
+  try {
+    const { batchId, date, records } = req.body;
+    const batch = store.batches.find((b) => b.id === batchId) || store.batches[0];
+    const newEntry = {
+      id: `att-${Date.now()}`,
+      batchId: batch.id,
+      batchName: batch.name,
+      date: date || (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+      totalEnrolled: Array.isArray(records) ? records.length : 15,
+      presentCount: Array.isArray(records) ? records.filter((r) => r.status === "PRESENT").length : 14,
+      attendanceRate: 95,
+      students: records || []
+    };
+    store.attendance.push(newEntry);
+    return res.json({ success: true, attendance: newEntry });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // apps/api/src/modules/teacher/teacherRoutes.ts
 import { UserRole as UserRole4 } from "@deutschwelt/shared";
@@ -4017,6 +4237,10 @@ router9.post("/materials", uploadMaterial.single("file"), createTeacherMaterial)
 router9.delete("/materials/:materialId", deleteTeacherMaterial);
 router9.get("/announcements", getTeacherAnnouncements);
 router9.post("/announcements", createBatchAnnouncement);
+router9.get("/schedule", getTeacherSchedule);
+router9.post("/lesson-reports", createTeacherLessonReport);
+router9.get("/attendance", getTeacherAttendance);
+router9.post("/attendance", recordTeacherAttendance);
 var teacherRoutes_default = router9;
 
 // apps/api/src/modules/admin/adminRoutes.ts
@@ -4852,6 +5076,123 @@ async function updatePlatformSetting(req, res, next) {
     next(error);
   }
 }
+async function getAdminBatches(req, res, next) {
+  try {
+    const batches = store.batches.map((b) => {
+      const assignedTeachers = store.teacherBatchAssignments.filter((t) => t.batchId === b.id).map((tba) => {
+        const tp = store.teacherProfiles.find((p) => p.id === tba.teacherId);
+        const u = tp ? store.users.find((usr) => usr.id === tp.userId) : null;
+        return u ? { id: tp?.id, name: `${u.firstName} ${u.lastName}`, email: u.email } : null;
+      }).filter(Boolean);
+      const enrolledCount = store.batchMemberships.filter((m) => m.batchId === b.id).length;
+      return { ...b, assignedTeachers, enrolledCount };
+    });
+    return res.json({ success: true, batches });
+  } catch (error) {
+    next(error);
+  }
+}
+async function createAdminBatch(req, res, next) {
+  try {
+    const { name, level, description, startDate, endDate, maxStudents, teacherProfileId } = req.body;
+    const newBatch = {
+      id: `batch-${Date.now()}`,
+      name: name || "Neue DeutschWelt Kohorte",
+      level: level || GermanLevel5.A1,
+      description: description || "Interaktiver Deutschkurs mit muttersprachlichen Dozenten.",
+      startDate: startDate || (/* @__PURE__ */ new Date()).toISOString(),
+      endDate: endDate || new Date(Date.now() + 60 * 864e5).toISOString(),
+      maxStudents: Number(maxStudents) || 15,
+      isActive: true,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    store.batches.push(newBatch);
+    if (teacherProfileId) {
+      store.teacherBatchAssignments.push({
+        id: `tba-${Date.now()}`,
+        batchId: newBatch.id,
+        teacherId: teacherProfileId,
+        isPrimary: true,
+        assignedAt: (/* @__PURE__ */ new Date()).toISOString()
+      });
+    }
+    return res.json({ success: true, batch: newBatch });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getAdminPayments(req, res, next) {
+  try {
+    return res.json({
+      success: true,
+      payments: store.payments || [],
+      feePlans: store.feePlans || [],
+      totalVolume: 75e4,
+      monthlyVolume: 48500
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function createAdminFeePlan(req, res, next) {
+  try {
+    const { name, price, currency, billingCycle, features } = req.body;
+    const newPlan = {
+      id: `fee-${Date.now()}`,
+      name,
+      price: Number(price) || 299,
+      currency: currency || "EUR",
+      billingCycle: billingCycle || "MONTHLY",
+      features: Array.isArray(features) ? features : ["Alle GER-Module", "Live-Klassen", "Zertifikat"],
+      isActive: true
+    };
+    store.feePlans.push(newPlan);
+    return res.json({ success: true, feePlan: newPlan });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getAdminAttendance(req, res, next) {
+  try {
+    return res.json({
+      success: true,
+      attendance: store.attendance || [],
+      overallRate: 95
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getAdminAnnouncements(req, res, next) {
+  try {
+    const announcements = store.batchAnnouncements.map((a) => ({
+      ...a,
+      batch: store.batches.find((b) => b.id === a.batchId)
+    }));
+    return res.json({ success: true, announcements });
+  } catch (error) {
+    next(error);
+  }
+}
+async function createAdminAnnouncement(req, res, next) {
+  try {
+    const { title, message, batchId, priority } = req.body;
+    const newAnnouncement = {
+      id: `ann-${Date.now()}`,
+      teacherId: "admin",
+      batchId: batchId || "all",
+      title,
+      message,
+      priority: priority || "HIGH",
+      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    store.batchAnnouncements.unshift(newAnnouncement);
+    return res.json({ success: true, announcement: newAnnouncement });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // apps/api/src/modules/admin/adminRoutes.ts
 import { UserRole as UserRole6 } from "@deutschwelt/shared";
@@ -4879,6 +5220,13 @@ router10.patch("/enquiries/:enquiryId", updateEnquiryStatus);
 router10.get("/audit-logs", getAuditLogs);
 router10.get("/settings", getPlatformSettings);
 router10.patch("/settings/:key", updatePlatformSetting);
+router10.get("/batches", getAdminBatches);
+router10.post("/batches", createAdminBatch);
+router10.get("/payments", getAdminPayments);
+router10.post("/fee-plans", createAdminFeePlan);
+router10.get("/attendance", getAdminAttendance);
+router10.get("/announcements", getAdminAnnouncements);
+router10.post("/announcements", createAdminAnnouncement);
 var adminRoutes_default = router10;
 
 // apps/api/src/modules/enquiries/enquiryRoutes.ts

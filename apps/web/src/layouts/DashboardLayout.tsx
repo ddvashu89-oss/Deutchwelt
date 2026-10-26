@@ -3,7 +3,6 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useLanguage } from '../context/LanguageContext.js';
 import { Logo } from '../components/brand/Logo.js';
-import { Button } from '../components/ui/Button.js';
 import { LanguageToggle } from '../components/ui/LanguageToggle.js';
 import {
   LayoutDashboard,
@@ -15,28 +14,29 @@ import {
   HelpCircle,
   LogOut,
   Search,
-  Mail,
   Bell,
   Menu,
   X,
-  Smartphone,
   BookOpen,
   Video,
   Layers,
   Mic,
   PenTool,
   GraduationCap,
-  FileCheck,
+  Sparkles,
+  Flame,
+  FileText,
   ShieldCheck,
-  Sparkles
+  Award,
+  ChevronDown
 } from 'lucide-react';
 
 export function DashboardLayout() {
   const { user, logout, isStudent, isTeacher, isAdmin } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -45,41 +45,355 @@ export function DashboardLayout() {
     navigate('/login');
   };
 
-  // Student Navigation mapped to Donezo menu structure
-  const studentMenu = [
-    { label: t('dash.menu.dashboard'), href: '/student/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/student/courses', icon: CheckSquare, badge: '12+' },
-    { label: t('dash.menu.calendar'), href: '/student/materials', icon: Calendar },
-    { label: t('dash.menu.analytics'), href: '/student/vocabulary', icon: BarChart2 },
-    { label: t('dash.menu.team'), href: '/student/speaking', icon: Users },
+  // ----------------------------------------------------------------------
+  // CASE 1: STUDENT VIEW (Image 3: German Learning Dark Dashboard with Top Nav)
+  // ----------------------------------------------------------------------
+  if (isStudent) {
+    const studentNavTabs = [
+      { label: language === 'de' ? 'Übersicht' : 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
+      { label: language === 'de' ? 'Wortschatz' : 'Vocabulary', href: '/student/vocabulary', icon: Sparkles },
+      { label: language === 'de' ? 'Grammatik' : 'Grammar', href: '/student/materials', icon: BookOpen },
+      { label: language === 'de' ? 'KI-Sprachlabor' : 'AI Tutor / Speaking Lab', href: '/student/speaking', icon: Mic },
+      { label: language === 'de' ? 'Kurse' : 'Courses', href: '/student/courses', icon: Layers },
+    ];
+
+    return (
+      <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+        {/* Top Navigation Bar matching Image 3 */}
+        <header className="h-18 bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-4 sm:px-8 flex items-center justify-between">
+          {/* Left: Brand with German Flag Icon matching Image 3 */}
+          <div className="flex items-center gap-6">
+            <Link to="/student/dashboard" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-b from-black via-red-600 to-yellow-400 flex items-center justify-center shadow-md">
+                <span className="text-[10px] font-black text-white">DE</span>
+              </div>
+              <span className="font-heading font-black text-lg text-white tracking-tight">
+                German <span className="text-emerald-400">Learning</span>
+              </span>
+            </Link>
+
+            {/* Desktop Center Navigation Tabs matching Image 3 */}
+            <nav className="hidden lg:flex items-center gap-1">
+              {studentNavTabs.map((tab) => {
+                const isActive = location.pathname === tab.href;
+                return (
+                  <Link
+                    key={tab.href}
+                    to={tab.href}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                      isActive
+                        ? 'bg-slate-800 text-emerald-400 shadow-sm border border-slate-700/80'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Right: Language Switcher, Streak, Notifications, Profile */}
+          <div className="flex items-center gap-3">
+            <LanguageToggle />
+
+            {/* Streak Counter Pill matching Image 3 */}
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-black shadow-xs">
+              <Flame className="w-3.5 h-3.5 fill-orange-400" />
+              <span>7 🔥</span>
+            </div>
+
+            {/* Notifications */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60 relative"
+              >
+                <Bell className="w-4 h-4" />
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]" />
+              </button>
+
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-3 w-80 rounded-2xl bg-[#1E293B] shadow-2xl border border-slate-700 py-3 z-50 text-xs text-slate-200 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-4 pb-2 border-b border-slate-700/60 flex items-center justify-between">
+                    <span className="font-bold text-white uppercase text-[11px] tracking-wider">Notifications</span>
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">1 New</span>
+                  </div>
+                  <div className="p-3 hover:bg-slate-800/60 transition-colors">
+                    <p className="font-bold text-white">Daily Streak Active!</p>
+                    <p className="text-slate-400 mt-0.5">Complete your 10-minute German practice today to keep your streak.</p>
+                    <span className="text-[10px] text-slate-500 mt-1 block">Just now</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* User Avatar Pill */}
+            <div className="flex items-center gap-2 pl-1">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm">
+                {user?.firstName?.[0] || 'S'}
+              </div>
+              <span className="hidden sm:inline text-xs font-bold text-slate-200">
+                {user?.firstName}
+              </span>
+            </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              title="Sign Out"
+              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </header>
+
+        {/* Mobile Navigation Dropdown */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-[#0F172A] border-b border-slate-800 px-4 py-3 space-y-1">
+            {studentNavTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = location.pathname === tab.href;
+              return (
+                <Link
+                  key={tab.href}
+                  to={tab.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold ${
+                    isActive ? 'bg-slate-800 text-emerald-400' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Main Content Body */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-10">
+          <div className="max-w-7xl mx-auto">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------------------------
+  // CASE 2: TEACHER VIEW (Image 2: Goteach Workspace with Green Accents)
+  // ----------------------------------------------------------------------
+  if (isTeacher) {
+    const teacherWorkspace = [
+      { label: language === 'de' ? 'Übersicht' : 'Overview', href: '/teacher/dashboard', icon: LayoutDashboard },
+      { label: language === 'de' ? 'Klassen & Schüler' : 'Students & Batches', href: '/teacher/batches', icon: Users },
+      { label: language === 'de' ? 'Korrekturen & Noten' : 'Submissions & Marks', href: '/teacher/submissions', icon: CheckSquare, badge: '5' },
+    ];
+
+    const teacherCreations = [
+      { label: language === 'de' ? 'Unterrichtspläne' : 'Lesson Plans', href: '/teacher/materials', icon: BookOpen },
+      { label: language === 'de' ? 'Arbeitsblätter' : 'Worksheets', href: '/teacher/materials', icon: FileText },
+      { label: language === 'de' ? 'Neue Aufgabe' : 'New Assignment', href: '/teacher/assignments/new', icon: PenTool },
+    ];
+
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-gray-900 antialiased selection:bg-emerald-600 selection:text-white">
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* GOTEACH SIDEBAR */}
+        <aside
+          className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/90 flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col h-full justify-between">
+            <div>
+              {/* Brand Header matching Image 2 Goteach */}
+              <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm shadow-sm">
+                    G
+                  </div>
+                  <div>
+                    <span className="font-heading font-black text-lg text-gray-900 tracking-tight">
+                      Go<span className="text-emerald-700">teach</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-gray-400 block -mt-1">
+                      Faculty Workspace
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Group 1: WORKSPACE */}
+              <div className="px-5 pt-6 pb-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+                  WORKSPACE
+                </p>
+                <nav className="space-y-1">
+                  {teacherWorkspace.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.href;
+                    return (
+                      <Link
+                        key={item.label}
+                        to={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={`group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'text-emerald-800 bg-emerald-50/90 font-extrabold'
+                            : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-700' : 'text-gray-400'}`} />
+                          <span>{item.label}</span>
+                        </div>
+                        {item.badge && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                            {item.badge}
+                          </span>
+                        )}
+                        {isActive && (
+                          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-emerald-700" />
+                        )}
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Group 2: MY CREATIONS */}
+              <div className="px-5 pt-4 pb-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+                  MY CREATIONS
+                </p>
+                <nav className="space-y-1">
+                  {teacherCreations.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.href;
+                    return (
+                      <Link
+                        key={item.label}
+                        to={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'text-emerald-800 bg-emerald-50/90 font-extrabold'
+                            : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 text-gray-400 group-hover:text-emerald-700" />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+
+            {/* Bottom Actions */}
+            <div className="p-5 border-t border-gray-100">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-gray-500 hover:text-rose-600 hover:bg-rose-50/60 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>{language === 'de' ? 'Abmelden' : 'Sign Out'}</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Body */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Top Bar */}
+          <header className="h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              <div className="relative hidden sm:block">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder={language === 'de' ? 'Klasse oder Schüler suchen...' : 'Search classes or students...'}
+                  className="bg-gray-50 border border-transparent focus:border-emerald-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-64 focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3.5">
+              <LanguageToggle />
+              <div className="flex items-center gap-2.5 pl-2">
+                <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center border border-emerald-200 shadow-2xs">
+                  {user?.firstName?.[0] || 'T'}
+                </div>
+                <div className="hidden sm:block text-left leading-tight">
+                  <p className="text-xs font-bold text-gray-900">{user?.firstName} {user?.lastName}</p>
+                  <p className="text-[10px] text-gray-400">{user?.email}</p>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-10">
+            <div className="max-w-7xl mx-auto">
+              <Outlet />
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------------------------
+  // CASE 3: ADMIN VIEW (Image 1: Lurni Design with Purple/Indigo Accents)
+  // ----------------------------------------------------------------------
+  const adminOverview = [
+    { label: language === 'de' ? 'Übersicht' : 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+    { label: language === 'de' ? 'Kurse' : 'Courses', href: '/admin/courses', icon: BookOpen },
+    { label: language === 'de' ? 'Dozenten' : 'Instructors', href: '/admin/teachers', icon: GraduationCap },
+    { label: language === 'de' ? 'Studenten' : 'Students', href: '/admin/students', icon: Users },
+    { label: language === 'de' ? 'Anfragen' : 'Enquiries', href: '/admin/enquiries', icon: FileText, badge: '3' },
+    { label: language === 'de' ? 'Systemprotokolle' : 'Audit Logs & Reports', href: '/admin/audit-logs', icon: ShieldCheck },
   ];
 
-  const teacherMenu = [
-    { label: t('dash.menu.dashboard'), href: '/teacher/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/teacher/submissions', icon: CheckSquare, badge: '5' },
-    { label: t('dash.menu.calendar'), href: '/teacher/materials', icon: Calendar },
-    { label: t('dash.menu.analytics'), href: '/teacher/assignments/new', icon: BarChart2 },
-    { label: t('dash.menu.team'), href: '/teacher/batches', icon: Users },
+  const adminSettings = [
+    { label: language === 'de' ? 'Einstellungen' : 'Settings', href: '/admin/settings', icon: Settings },
+    { label: language === 'de' ? 'Hilfe & FAQ' : 'Help & FAQ', href: '/faq', icon: HelpCircle },
   ];
-
-  const adminMenu = [
-    { label: t('dash.menu.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/admin/courses', icon: CheckSquare },
-    { label: t('dash.menu.calendar'), href: '/admin/enquiries', icon: Calendar, badge: '3' },
-    { label: t('dash.menu.analytics'), href: '/admin/audit-logs', icon: BarChart2 },
-    { label: t('dash.menu.team'), href: '/admin/students', icon: Users },
-  ];
-
-  const generalMenu = [
-    { label: t('dash.menu.settings'), href: isStudent ? '/student/profile' : isAdmin ? '/admin/settings' : '/teacher/dashboard', icon: Settings },
-    { label: t('dash.menu.help'), href: '/faq', icon: HelpCircle },
-  ];
-
-  const currentMenu = isAdmin ? adminMenu : isTeacher ? teacherMenu : studentMenu;
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex flex-col md:flex-row font-sans text-dark antialiased selection:bg-mint selection:text-forest-950">
-      {/* Mobile Backdrop */}
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-gray-900 antialiased selection:bg-indigo-600 selection:text-white">
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs md:hidden"
@@ -87,32 +401,44 @@ export function DashboardLayout() {
         />
       )}
 
-      {/* 1. SIDEBAR (DONEZO CLEAN WHITE DESIGN) */}
+      {/* LURNI SIDEBAR */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/80 flex flex-col justify-between transition-transform duration-300 ease-in-out md:translate-x-0 md:static shrink-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/90 flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full justify-between">
           <div>
-            {/* Logo Header */}
+            {/* Lurni Brand Header matching Image 1 */}
             <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100">
-              <Logo size="md" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm">
+                  L
+                </div>
+                <div>
+                  <span className="font-heading font-black text-lg text-gray-900 tracking-tight">
+                    Lurni <span className="text-indigo-600">Admin</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-gray-400 block -mt-1">
+                    DeutschWelt Platform
+                  </span>
+                </div>
+              </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="md:hidden p-1.5 rounded-lg text-dark-muted hover:bg-gray-100"
+                className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Menu Group 1: MENU */}
-            <div className="px-6 pt-6 pb-2">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-3">
-                MENU
+            {/* OVERVIEW GROUP */}
+            <div className="px-5 pt-6 pb-2">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+                OVERVIEW
               </p>
               <nav className="space-y-1">
-                {currentMenu.map((item) => {
+                {adminOverview.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.href;
                   return (
@@ -120,31 +446,23 @@ export function DashboardLayout() {
                       key={item.label}
                       to={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className={`group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                      className={`group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         isActive
-                          ? 'text-forest font-bold bg-forest-50/80'
-                          : 'text-dark-muted hover:text-dark hover:bg-gray-50'
+                          ? 'text-indigo-700 bg-indigo-50/90 font-extrabold'
+                          : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-forest' : 'text-gray-400 group-hover:text-dark'}`} />
+                        <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-600' : 'text-gray-400'}`} />
                         <span>{item.label}</span>
                       </div>
-
-                      {/* Pill badge if present (e.g. 12+) */}
                       {item.badge && (
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          isActive
-                            ? 'bg-forest text-white'
-                            : 'bg-forest-100/70 text-forest-800'
-                        }`}>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
                           {item.badge}
                         </span>
                       )}
-
-                      {/* Left vertical active bar */}
                       {isActive && (
-                        <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-forest" />
+                        <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-indigo-600" />
                       )}
                     </Link>
                   );
@@ -152,13 +470,13 @@ export function DashboardLayout() {
               </nav>
             </div>
 
-            {/* Menu Group 2: GENERAL */}
-            <div className="px-6 pt-6 pb-2">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-3">
-                GENERAL
+            {/* SETTINGS GROUP */}
+            <div className="px-5 pt-4 pb-2">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+                SETTINGS
               </p>
               <nav className="space-y-1">
-                {generalMenu.map((item) => {
+                {adminSettings.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.href;
                   return (
@@ -166,150 +484,69 @@ export function DashboardLayout() {
                       key={item.label}
                       to={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                      className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         isActive
-                          ? 'text-forest font-bold bg-forest-50/80'
-                          : 'text-dark-muted hover:text-dark hover:bg-gray-50'
+                          ? 'text-indigo-700 bg-indigo-50/90 font-extrabold'
+                          : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
                       }`}
                     >
-                      <Icon className="w-4 h-4 text-gray-400 group-hover:text-dark transition-colors" />
+                      <Icon className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
                       <span>{item.label}</span>
                     </Link>
                   );
                 })}
-                <button
-                  onClick={handleLogout}
-                  className="w-full group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-dark-muted hover:text-red-600 hover:bg-red-50/60 transition-all text-left"
-                >
-                  <LogOut className="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors" />
-                  <span>{t('dash.menu.logout')}</span>
-                </button>
               </nav>
             </div>
           </div>
 
-          {/* Bottom Sidebar Widget: Download Mobile App */}
-          <div className="p-4 m-4 rounded-2xl bg-mesh-dark text-white relative overflow-hidden shadow-card border border-forest-800/80">
-            {/* Background circular overlay */}
-            <div className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-mint/10 pointer-events-none" />
-
-            <div className="relative z-10 space-y-3">
-              <div className="w-7 h-7 rounded-lg bg-forest-800 flex items-center justify-center text-mint border border-forest-600/60">
-                <Smartphone className="w-3.5 h-3.5" />
-              </div>
-
-              <div>
-                <h4 className="text-xs font-bold leading-tight text-white">
-                  {t('dash.app.title')}
-                </h4>
-                <p className="text-[10px] text-gray-300 mt-1">
-                  {t('dash.app.subtitle')}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => alert(t('dash.app.alert'))}
-                className="w-full py-1.5 px-3 rounded-full bg-forest-800 hover:bg-forest-700 text-white text-[11px] font-bold border border-forest-600/70 transition-all active:scale-95 shadow-xs"
-              >
-                {t('dash.app.btn')}
-              </button>
-            </div>
+          {/* Bottom Logout */}
+          <div className="p-5 border-t border-gray-100">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-gray-500 hover:text-rose-600 hover:bg-rose-50/60 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>{language === 'de' ? 'Abmelden' : 'Sign Out'}</span>
+            </button>
           </div>
         </div>
       </aside>
 
-      {/* 2. MAIN CONTENT BODY */}
+      {/* Main Content Body */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Header Bar (Matching Donezo design) */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-200/80 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
-          {/* Left: Mobile Toggle & Search Bar */}
-          <div className="flex items-center gap-4 flex-1 max-w-md">
+        {/* Top Header */}
+        <header className="h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden p-2 rounded-xl text-dark hover:bg-gray-100"
+              className="md:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100"
             >
               <Menu className="w-5 h-5" />
             </button>
-
-            {/* Pill Search Input with Keyboard Badge */}
-            <div className="relative w-full max-w-sm hidden sm:block">
-              <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <div className="relative hidden sm:block">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder={t('dash.searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#f4f5f6] border border-transparent focus:border-forest/30 focus:bg-white text-xs text-dark placeholder:text-gray-400 pl-10 pr-12 py-2.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-forest/10"
+                placeholder={language === 'de' ? 'Suchen...' : 'Search...'}
+                className="bg-gray-50 border border-transparent focus:border-indigo-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-64 focus:outline-none focus:ring-2 focus:ring-indigo-600/10"
               />
-              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-mono font-bold text-gray-400 bg-white px-1.5 py-0.5 rounded-md border border-gray-200 shadow-2xs">
-                ⌘ F
-              </span>
             </div>
           </div>
 
-          {/* Right: Language Toggle, Message Icon, Notification Bell, User Profile Pill */}
           <div className="flex items-center gap-3.5">
             <LanguageToggle />
-
-            {/* Mail Icon Button */}
-            <button
-              type="button"
-              className="w-10 h-10 rounded-full border border-gray-200/90 bg-white flex items-center justify-center text-dark-muted hover:text-dark hover:border-gray-300 transition-colors shadow-2xs"
-            >
-              <Mail className="w-4 h-4" />
-            </button>
-
-            {/* Bell Icon Button */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="w-10 h-10 rounded-full border border-gray-200/90 bg-white flex items-center justify-center text-dark-muted hover:text-dark hover:border-gray-300 transition-colors relative shadow-2xs"
-              >
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-germanRed ring-2 ring-white" />
-              </button>
-
-              {notificationsOpen && (
-                <div className="absolute right-0 mt-3 w-80 rounded-2xl bg-white shadow-xl border border-gray-200 py-3 z-50">
-                  <div className="px-4 pb-2 border-b border-gray-100 flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-forest">Notifications</span>
-                    <span className="text-[10px] bg-mint-50 text-mint-800 font-bold px-2 py-0.5 rounded-full">2 New</span>
-                  </div>
-                  <div className="divide-y divide-gray-50 text-xs max-h-60 overflow-y-auto">
-                    <div className="p-3 hover:bg-gray-50 transition-colors">
-                      <p className="font-bold text-navy">Willkommen bei DeutschWelt!</p>
-                      <p className="text-dark-muted mt-0.5">Welcome! Start with Einheit 1: Sich vorstellen.</p>
-                      <span className="text-[10px] text-gray-400 mt-1 block">Just now</span>
-                    </div>
-                    <div className="p-3 hover:bg-gray-50 transition-colors">
-                      <p className="font-bold text-navy">Neue Sprechaufgabe bereit</p>
-                      <p className="text-dark-muted mt-0.5">Instant AI Speech Check is now enabled in Speaking Lab.</p>
-                      <span className="text-[10px] text-gray-400 mt-1 block">1 hour ago</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* User Profile Pill matching screenshot */}
             <div className="flex items-center gap-2.5 pl-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-orange-400 flex items-center justify-center text-white font-extrabold text-sm border-2 border-white shadow-2xs overflow-hidden">
-                {/* 3D avatar representation */}
-                <span className="text-xs font-bold">
-                  {user?.firstName?.[0] || 'U'}{user?.lastName?.[0] || ''}
-                </span>
+              <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 font-black text-xs flex items-center justify-center border border-indigo-200 shadow-2xs">
+                {user?.firstName?.[0] || 'A'}
               </div>
-              <div className="hidden lg:block text-left leading-tight">
-                <p className="text-xs font-bold text-dark">{user?.firstName} {user?.lastName}</p>
-                <p className="text-[11px] text-gray-400">{user?.email}</p>
+              <div className="hidden sm:block text-left leading-tight">
+                <p className="text-xs font-bold text-gray-900">{user?.firstName} {user?.lastName}</p>
+                <p className="text-[10px] text-gray-400">System Admin</p>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Dynamic Nested Route Content */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-10">
           <div className="max-w-7xl mx-auto">
             <Outlet />

@@ -36,6 +36,10 @@ export class DataStore {
   siteSettings: any[] = [];
   auditLogs: any[] = [];
   certificates: any[] = [];
+  feePlans: any[] = [];
+  payments: any[] = [];
+  attendance: any[] = [];
+  lessonReports: any[] = [];
 
   constructor() {
     this.seedInitialData();
@@ -935,6 +939,130 @@ In German, regular verbs in the present tense take consistent endings based on t
         directorName: 'Dr. Klaus Becker',
         directorTitle: 'Direktor Akademische Bildung, DeutschWelt',
         verificationCode: 'DW-VERIFY-A1-8841'
+      }
+    ];
+
+    this.feePlans = [
+      {
+        id: 'fee-1',
+        name: 'Intensivkurs Flatrate',
+        price: 399,
+        currency: 'EUR',
+        billingCycle: 'MONTHLY',
+        features: ['Alle GER-Stufen A1 bis B2', '4x wöchentlich Live-Klassen (Google Meet)', 'Unbegrenzter Wortschatz-Trainer', 'Audio-Sprachlabor mit Dozenten-Feedback'],
+        isActive: true
+      },
+      {
+        id: 'fee-2',
+        name: '1-zu-1 VIP Coaching',
+        price: 799,
+        currency: 'EUR',
+        billingCycle: 'MONTHLY',
+        features: ['Persönlicher Goethe-Dozent', '12 Einzelsitzungen im Monat', 'Individueller Lehrplan & Korrekturservice', 'Garantierte Bestehensbegleitung'],
+        isActive: true
+      },
+      {
+        id: 'fee-3',
+        name: 'Selbstlerner Goethe-Prüfungspaket',
+        price: 149,
+        currency: 'EUR',
+        billingCycle: 'ONE_TIME',
+        features: ['Vollständiges digitales Lehrmaterial', 'Original Goethe & Telc Modellprüfungen', 'KI-Aussprachetraining'],
+        isActive: true
+      }
+    ];
+
+    this.payments = [
+      {
+        id: 'pay-1',
+        studentName: 'Elena Rostova',
+        studentEmail: 'student@deutschwelt.de',
+        courseName: 'Goethe A1 Intensive — Winter 2026',
+        amount: 399,
+        currency: 'EUR',
+        method: 'Stripe (Credit Card)',
+        status: 'COMPLETED',
+        date: new Date(Date.now() - 86400000 * 2).toISOString(),
+        invoiceNumber: 'INV-2026-00481'
+      },
+      {
+        id: 'pay-2',
+        studentName: 'Lucas Weber',
+        studentEmail: 'lucas.weber@gmail.com',
+        courseName: 'Goethe B1/B2 Mastery — Abendkurs',
+        amount: 799,
+        currency: 'EUR',
+        method: 'SEPA Direct Debit',
+        status: 'COMPLETED',
+        date: new Date(Date.now() - 86400000 * 4).toISOString(),
+        invoiceNumber: 'INV-2026-00480'
+      },
+      {
+        id: 'pay-3',
+        studentName: 'Ananya Sharma',
+        studentEmail: 'ananya.s@outlook.com',
+        courseName: 'Deutsch A1: Beginner Intensiv',
+        amount: 399,
+        currency: 'EUR',
+        method: 'PayPal',
+        status: 'COMPLETED',
+        date: new Date(Date.now() - 86400000 * 5).toISOString(),
+        invoiceNumber: 'INV-2026-00479'
+      },
+      {
+        id: 'pay-4',
+        studentName: 'Matteo Rossi',
+        studentEmail: 'matteo.rossi@yahoo.it',
+        courseName: 'Selbstlerner Goethe-Prüfungspaket',
+        amount: 149,
+        currency: 'EUR',
+        method: 'Stripe',
+        status: 'COMPLETED',
+        date: new Date(Date.now() - 86400000 * 7).toISOString(),
+        invoiceNumber: 'INV-2026-00478'
+      }
+    ];
+
+    this.attendance = [
+      {
+        id: 'att-1',
+        batchId: 'batch-1',
+        batchName: 'Goethe A1 Intensive — Winter 2026',
+        date: new Date().toISOString().split('T')[0],
+        totalEnrolled: 15,
+        presentCount: 14,
+        attendanceRate: 93,
+        students: [
+          { studentId: 'user-student-1', studentName: 'Elena Rostova', status: 'PRESENT' },
+          { studentId: 'user-student-2', studentName: 'Lucas Weber', status: 'PRESENT' },
+          { studentId: 'user-student-3', studentName: 'Mia G', status: 'ABSENT' }
+        ]
+      },
+      {
+        id: 'att-2',
+        batchId: 'batch-2',
+        batchName: 'Goethe B1/B2 Mastery — Abendkurs',
+        date: new Date().toISOString().split('T')[0],
+        totalEnrolled: 12,
+        presentCount: 12,
+        attendanceRate: 100,
+        students: [
+          { studentId: 'user-student-2', studentName: 'Lucas Weber', status: 'PRESENT' },
+          { studentId: 'user-student-4', studentName: 'Enoch', status: 'PRESENT' }
+        ]
+      }
+    ];
+
+    this.lessonReports = [
+      {
+        id: 'rep-1',
+        teacherId: 'profile-teacher-1',
+        studentId: student.id,
+        studentName: 'Elena Rostova',
+        lessonTopic: 'Aussprache & Verb-Konjugation A1',
+        date: new Date().toISOString(),
+        rating: 5,
+        notes: 'Hervorragende Mitarbeit. Die Umlaute ä und ö gelingen bereits flüssig. Hausaufgabe: Übung 3 auf Seite 12.'
       }
     ];
   }

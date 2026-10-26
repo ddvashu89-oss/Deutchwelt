@@ -20,7 +20,14 @@ import {
   updateEnquiryStatus,
   getAuditLogs,
   getPlatformSettings,
-  updatePlatformSetting
+  updatePlatformSetting,
+  getAdminBatches,
+  createAdminBatch,
+  getAdminPayments,
+  createAdminFeePlan,
+  getAdminAttendance,
+  getAdminAnnouncements,
+  createAdminAnnouncement
 } from './adminController.js';
 import { requireAuth, requireRole } from '../../middleware/auth.js';
 import { UserRole } from '@deutschwelt/shared';
@@ -62,5 +69,14 @@ router.patch('/enquiries/:enquiryId', updateEnquiryStatus);
 router.get('/audit-logs', getAuditLogs);
 router.get('/settings', getPlatformSettings);
 router.patch('/settings/:key', updatePlatformSetting);
+
+// Batches, Payments, Attendance & Announcements
+router.get('/batches', getAdminBatches);
+router.post('/batches', createAdminBatch);
+router.get('/payments', getAdminPayments);
+router.post('/fee-plans', createAdminFeePlan);
+router.get('/attendance', getAdminAttendance);
+router.get('/announcements', getAdminAnnouncements);
+router.post('/announcements', createAdminAnnouncement);
 
 export default router;
