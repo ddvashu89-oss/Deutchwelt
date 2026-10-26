@@ -224,40 +224,40 @@ export function DashboardLayout() {
     ];
 
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-gray-900 antialiased selection:bg-emerald-600 selection:text-white">
+      <div className="min-h-screen bg-[#0A0D17] flex flex-col md:flex-row font-sans text-slate-100 antialiased selection:bg-emerald-500 selection:text-slate-950">
         {sidebarOpen && (
           <div
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
         {/* GOTEACH SIDEBAR */}
         <aside
-          className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/90 flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
-            sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+          className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-[#0D111F] border-r border-[#161D33] flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
+            sidebarOpen ? 'translate-x-0 shadow-2xl shadow-black/80' : '-translate-x-full'
           }`}
         >
           <div className="flex flex-col h-full justify-between">
             <div>
               {/* Brand Header matching Image 2 Goteach */}
-              <div className="h-16 sm:h-20 flex items-center justify-between px-6 border-b border-gray-100">
+              <div className="h-16 sm:h-20 flex items-center justify-between px-6 border-b border-[#161D33]">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm shadow-sm">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-emerald-500/20">
                     G
                   </div>
                   <div>
-                    <span className="font-heading font-black text-lg text-gray-900 tracking-tight">
-                      Go<span className="text-emerald-700">teach</span>
+                    <span className="font-heading font-black text-lg text-white tracking-tight">
+                      Go<span className="text-emerald-400">teach</span>
                     </span>
-                    <span className="text-[10px] font-bold text-gray-400 block -mt-1">
+                    <span className="text-[10px] font-bold text-slate-400 block -mt-1">
                       Faculty Workspace
                     </span>
                   </div>
                 </div>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100"
+                  className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -265,7 +265,7 @@ export function DashboardLayout() {
 
               {/* Group 1: WORKSPACE */}
               <div className="px-5 pt-6 pb-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 px-2">
                   WORKSPACE
                 </p>
                 <nav className="space-y-1">
@@ -279,21 +279,21 @@ export function DashboardLayout() {
                         onClick={() => setSidebarOpen(false)}
                         className={`group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                           isActive
-                            ? 'text-emerald-800 bg-emerald-50/90 font-extrabold'
-                            : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
+                            ? 'text-emerald-400 bg-emerald-500/10 font-extrabold border border-emerald-500/25 shadow-sm'
+                            : 'text-slate-400 hover:text-white hover:bg-white/5'
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-700' : 'text-gray-400'}`} />
+                          <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
                           <span>{item.label}</span>
                         </div>
                         {item.badge && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                             {item.badge}
                           </span>
                         )}
                         {isActive && (
-                          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-emerald-700" />
+                          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
                         )}
                       </Link>
                     );
@@ -303,7 +303,7 @@ export function DashboardLayout() {
 
               {/* Group 2: MY CREATIONS */}
               <div className="px-5 pt-4 pb-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 px-2">
                   MY CREATIONS
                 </p>
                 <nav className="space-y-1">
@@ -317,11 +317,11 @@ export function DashboardLayout() {
                         onClick={() => setSidebarOpen(false)}
                         className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                           isActive
-                            ? 'text-emerald-800 bg-emerald-50/90 font-extrabold'
-                            : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
+                            ? 'text-emerald-400 bg-emerald-500/10 font-extrabold border border-emerald-500/25'
+                            : 'text-slate-400 hover:text-white hover:bg-white/5'
                         }`}
                       >
-                        <Icon className="w-4 h-4 text-gray-400 group-hover:text-emerald-700" />
+                        <Icon className="w-4 h-4 text-slate-400 group-hover:text-emerald-400" />
                         <span>{item.label}</span>
                       </Link>
                     );
@@ -331,10 +331,10 @@ export function DashboardLayout() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="p-5 border-t border-gray-100">
+            <div className="p-5 border-t border-[#161D33]">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-gray-500 hover:text-rose-600 hover:bg-rose-50/60 transition-colors"
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 <span>{language === 'de' ? 'Abmelden' : 'Sign Out'}</span>
@@ -346,20 +346,20 @@ export function DashboardLayout() {
         {/* Main Body */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Top Bar */}
-          <header className="h-16 sm:h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
+          <header className="h-16 sm:h-18 bg-[#0D111F]/90 backdrop-blur-md border-b border-[#161D33] px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-md">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="md:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100"
+                className="md:hidden p-2 rounded-xl text-slate-300 hover:bg-white/5"
               >
                 <Menu className="w-5 h-5" />
               </button>
               <div className="relative w-full hidden sm:block">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder={language === 'de' ? 'Klasse oder Schüler suchen...' : 'Search classes or students...'}
-                  className="bg-gray-50 border border-transparent focus:border-emerald-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
+                  className="bg-[#11162B] border border-white/10 focus:border-emerald-500/50 focus:bg-[#151C36] text-xs text-slate-100 placeholder:text-slate-500 pl-9 pr-4 py-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
                 />
               </div>
             </div>
@@ -367,12 +367,12 @@ export function DashboardLayout() {
             <div className="flex items-center gap-2.5 sm:gap-3.5">
               <LanguageToggle className="scale-90 sm:scale-100" />
               <div className="flex items-center gap-2 pl-1 sm:pl-2">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center border border-emerald-200 shadow-2xs">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-500/20 text-emerald-300 font-black text-xs flex items-center justify-center border border-emerald-500/30 shadow-2xs">
                   {user?.firstName?.[0] || 'T'}
                 </div>
                 <div className="hidden sm:block text-left leading-tight">
-                  <p className="text-xs font-bold text-gray-900">{user?.firstName} {user?.lastName}</p>
-                  <p className="text-[10px] text-gray-400">{user?.email}</p>
+                  <p className="text-xs font-bold text-white">{user?.firstName} {user?.lastName}</p>
+                  <p className="text-[10px] text-slate-400">{user?.email}</p>
                 </div>
               </div>
             </div>
@@ -406,40 +406,40 @@ export function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-gray-900 antialiased selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-[#0A0D17] flex flex-col md:flex-row font-sans text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs md:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* LURNI SIDEBAR */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/90 flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
-          sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-[#0D111F] border-r border-[#161D33] flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
+          sidebarOpen ? 'translate-x-0 shadow-2xl shadow-black/80' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full justify-between">
           <div>
             {/* Lurni Brand Header matching Image 1 */}
-            <div className="h-16 sm:h-20 flex items-center justify-between px-6 border-b border-gray-100">
+            <div className="h-16 sm:h-20 flex items-center justify-between px-6 border-b border-[#161D33]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white font-extrabold flex items-center justify-center text-sm shadow-md shadow-indigo-500/30">
                   L
                 </div>
                 <div>
-                  <span className="font-heading font-black text-lg text-gray-900 tracking-tight">
-                    Lurni <span className="text-indigo-600">Admin</span>
+                  <span className="font-heading font-black text-lg text-white tracking-tight">
+                    Lurni <span className="bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">Admin</span>
                   </span>
-                  <span className="text-[10px] font-bold text-gray-400 block -mt-1">
+                  <span className="text-[10px] font-bold text-slate-400 block -mt-1">
                     DeutschWelt Platform
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100"
+                className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -447,7 +447,7 @@ export function DashboardLayout() {
 
             {/* OVERVIEW GROUP */}
             <div className="px-5 pt-6 pb-2">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 px-2">
                 OVERVIEW
               </p>
               <nav className="space-y-1">
@@ -461,21 +461,21 @@ export function DashboardLayout() {
                       onClick={() => setSidebarOpen(false)}
                       className={`group relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         isActive
-                          ? 'text-indigo-700 bg-indigo-50/90 font-extrabold'
-                          : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
+                          ? 'text-indigo-300 bg-indigo-500/15 font-extrabold border border-indigo-500/30 shadow-sm'
+                          : 'text-slate-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-600' : 'text-gray-400'}`} />
+                        <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
                         <span>{item.label}</span>
                       </div>
                       {item.badge && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                           {item.badge}
                         </span>
                       )}
                       {isActive && (
-                        <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-indigo-600" />
+                        <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-gradient-to-b from-indigo-500 to-purple-500 shadow-[0_0_8px_#818CF8]" />
                       )}
                     </Link>
                   );
@@ -485,7 +485,7 @@ export function DashboardLayout() {
 
             {/* SETTINGS GROUP */}
             <div className="px-5 pt-4 pb-2">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-2">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 px-2">
                 SETTINGS
               </p>
               <nav className="space-y-1">
@@ -499,11 +499,11 @@ export function DashboardLayout() {
                       onClick={() => setSidebarOpen(false)}
                       className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         isActive
-                          ? 'text-indigo-700 bg-indigo-50/90 font-extrabold'
-                          : 'text-gray-600 hover:text-gray-950 hover:bg-gray-50'
+                          ? 'text-indigo-300 bg-indigo-500/15 font-extrabold border border-indigo-500/30'
+                          : 'text-slate-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      <Icon className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
+                      <Icon className="w-4 h-4 text-slate-400 group-hover:text-indigo-400" />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -513,10 +513,10 @@ export function DashboardLayout() {
           </div>
 
           {/* Bottom Logout */}
-          <div className="p-5 border-t border-gray-100">
+          <div className="p-5 border-t border-[#161D33]">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-gray-500 hover:text-rose-600 hover:bg-rose-50/60 transition-colors"
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
             >
               <LogOut className="w-4 h-4" />
               <span>{language === 'de' ? 'Abmelden' : 'Sign Out'}</span>
@@ -528,20 +528,20 @@ export function DashboardLayout() {
       {/* Main Content Body */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 sm:h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-16 sm:h-18 bg-[#0D111F]/90 backdrop-blur-md border-b border-[#161D33] px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-md">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100"
+              className="md:hidden p-2 rounded-xl text-slate-300 hover:bg-white/5"
             >
               <Menu className="w-5 h-5" />
             </button>
             <div className="relative w-full hidden sm:block">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder={language === 'de' ? 'Suchen...' : 'Search...'}
-                className="bg-gray-50 border border-transparent focus:border-indigo-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-indigo-600/10"
+                className="bg-[#11162B] border border-white/10 focus:border-indigo-500/50 focus:bg-[#151C36] text-xs text-slate-100 placeholder:text-slate-500 pl-9 pr-4 py-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
           </div>
@@ -549,12 +549,12 @@ export function DashboardLayout() {
           <div className="flex items-center gap-2.5 sm:gap-3.5">
             <LanguageToggle className="scale-90 sm:scale-100" />
             <div className="flex items-center gap-2 pl-1 sm:pl-2">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-100 text-indigo-700 font-black text-xs flex items-center justify-center border border-indigo-200 shadow-2xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-xs flex items-center justify-center border border-indigo-500/30 shadow-2xs">
                 {user?.firstName?.[0] || 'A'}
               </div>
               <div className="hidden sm:block text-left leading-tight">
-                <p className="text-xs font-bold text-gray-900">{user?.firstName} {user?.lastName}</p>
-                <p className="text-[10px] text-gray-400">System Admin</p>
+                <p className="text-xs font-bold text-white">{user?.firstName} {user?.lastName}</p>
+                <p className="text-[10px] text-slate-400">System Admin</p>
               </div>
             </div>
           </div>

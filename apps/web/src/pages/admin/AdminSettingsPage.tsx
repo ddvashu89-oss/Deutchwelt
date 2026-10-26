@@ -57,16 +57,16 @@ export function AdminSettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 pb-16">
+    <div className="max-w-3xl mx-auto space-y-8 pb-16 font-sans">
       <div className="space-y-1">
-        <h1 className="text-3xl font-extrabold text-navy tracking-tight">Platform Configuration</h1>
-        <p className="text-xs text-dark-muted">Manage global branding, academy parameters, and contact destinations.</p>
+        <h1 className="text-3xl font-heading font-extrabold text-white tracking-tight">Platform Configuration</h1>
+        <p className="text-xs text-slate-400">Manage global branding, academy parameters, and contact destinations.</p>
       </div>
 
-      <div className="bg-white rounded-3xl p-8 border border-gray-200/90 shadow-card space-y-6">
+      <div className="bg-[#0D111F] rounded-3xl p-8 border border-white/10 shadow-xl space-y-6">
         {savedMessage && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-2xl text-xs font-semibold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Settings saved successfully. Changes are live across public views.</span>
           </div>
         )}
@@ -95,7 +95,7 @@ export function AdminSettingsPage() {
           />
 
           <div className="pt-2">
-            <Button type="submit" variant="primary" size="md" className="font-bold shadow-md" isLoading={saving}>
+            <Button type="submit" variant="primary" size="md" className="font-bold shadow-lg shadow-indigo-500/20" isLoading={saving}>
               Save Platform Configuration
             </Button>
           </div>
@@ -126,24 +126,24 @@ export function AdminAuditLogsPage() {
   }, []);
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-8 pb-16 font-sans">
       <div className="space-y-1">
-        <h1 className="text-3xl font-extrabold text-navy tracking-tight">Security & Audit Logs</h1>
-        <p className="text-xs text-dark-muted">Historical audit trail of administrative modifications, role changes, and course publications.</p>
+        <h1 className="text-3xl font-heading font-extrabold text-white tracking-tight">Security & Audit Logs</h1>
+        <p className="text-xs text-slate-400">Historical audit trail of administrative modifications, role changes, and course publications.</p>
       </div>
 
       {loading ? (
-        <Skeleton className="h-64 w-full rounded-2xl" />
+        <Skeleton className="h-64 w-full rounded-3xl" />
       ) : logs.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-3xl border border-gray-200">
-          <ShieldCheck className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-          <p className="text-xs text-dark-muted">No audit events recorded yet.</p>
+        <div className="p-12 text-center bg-[#0D111F] rounded-3xl border border-white/10">
+          <ShieldCheck className="w-12 h-12 text-slate-600 mx-auto mb-2" />
+          <p className="text-xs text-slate-400">No audit events recorded yet.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-subtle">
+        <div className="bg-[#0D111F] rounded-3xl border border-white/10 overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-navy text-white uppercase font-bold tracking-wider">
+              <thead className="bg-[#11162B] text-slate-300 uppercase font-bold tracking-wider border-b border-white/10">
                 <tr>
                   <th className="p-4">Action</th>
                   <th className="p-4">Entity Type</th>
@@ -152,16 +152,16 @@ export function AdminAuditLogsPage() {
                   <th className="p-4 text-right">Timestamp</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-dark">
+              <tbody className="divide-y divide-white/5 text-slate-200">
                 {logs.map(log => (
-                  <tr key={log.id} className="hover:bg-gray-50/80">
-                    <td className="p-4 font-mono font-bold text-navy">{log.action}</td>
-                    <td className="p-4 text-dark-muted">{log.entityType}</td>
-                    <td className="p-4 text-dark font-medium">{log.user?.email || 'System'}</td>
-                    <td className="p-4 text-gray-500 font-mono text-[11px] truncate max-w-xs">
+                  <tr key={log.id} className="hover:bg-white/5 transition-colors">
+                    <td className="p-4 font-mono font-bold text-indigo-400">{log.action}</td>
+                    <td className="p-4 text-slate-400">{log.entityType}</td>
+                    <td className="p-4 text-slate-200 font-medium">{log.user?.email || 'System'}</td>
+                    <td className="p-4 text-slate-400 font-mono text-[11px] truncate max-w-xs">
                       {JSON.stringify(log.details || {})}
                     </td>
-                    <td className="p-4 text-right text-gray-400">
+                    <td className="p-4 text-right text-slate-500">
                       {new Date(log.createdAt).toLocaleString()}
                     </td>
                   </tr>

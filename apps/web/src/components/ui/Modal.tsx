@@ -40,7 +40,7 @@ export function Modal({ isOpen, onClose, title, description, children, maxWidth 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-navy-950/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -51,20 +51,20 @@ export function Modal({ isOpen, onClose, title, description, children, maxWidth 
         aria-modal="true"
         aria-labelledby="modal-title"
         className={cn(
-          'relative w-full rounded-2xl bg-white p-6 shadow-2xl transition-all z-10 max-h-[90vh] overflow-y-auto',
+          'relative w-full rounded-3xl bg-[#0D111F] border border-white/10 p-6 sm:p-7 shadow-2xl transition-all z-10 max-h-[90vh] overflow-y-auto text-slate-100',
           maxWidthStyles[maxWidth]
         )}
       >
-        <div className="flex items-start justify-between pb-4 border-b border-gray-100">
+        <div className="flex items-start justify-between pb-4 border-b border-white/10">
           <div>
-            <h3 id="modal-title" className="text-xl font-bold text-navy">
+            <h3 id="modal-title" className="text-xl font-bold font-heading text-white">
               {title}
             </h3>
-            {description && <p className="text-xs text-dark-muted mt-1">{description}</p>}
+            {description && <p className="text-xs text-slate-400 mt-1">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 hover:text-dark hover:bg-gray-100 transition-colors"
+            className="rounded-xl p-1.5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
             <span className="sr-only">Close</span>

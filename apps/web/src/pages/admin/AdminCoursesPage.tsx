@@ -139,46 +139,46 @@ export function AdminCoursesPage() {
   };
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-8 pb-16 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-3xl font-extrabold text-navy tracking-tight">Curriculum & Course Management</h1>
-            <Badge variant="outline" className="text-[10px] font-bold text-navy border-navy-300">
+            <h1 className="text-3xl font-heading font-extrabold text-white tracking-tight">Curriculum & Course Management</h1>
+            <Badge variant="default" className="text-[10px] font-bold">
               Admin Exclusive
             </Badge>
           </div>
-          <p className="text-xs text-dark-muted">
+          <p className="text-xs text-slate-400">
             Oversee A1 through B2 learning tracks, create new courses, edit syllabus content, or delete tracks.
           </p>
         </div>
 
-        <Button variant="secondary" size="md" onClick={() => setIsModalOpen(true)} className="font-bold shadow-md self-start sm:self-auto">
+        <Button variant="primary" size="md" onClick={() => setIsModalOpen(true)} className="font-bold shadow-lg shadow-indigo-500/20 self-start sm:self-auto">
           <Plus className="w-4 h-4 mr-1" /> Add New Course
         </Button>
       </div>
 
       {loading ? (
-        <Skeleton className="h-64 w-full rounded-2xl" />
+        <Skeleton className="h-64 w-full rounded-3xl" />
       ) : (
         <div className="space-y-4">
           {courses.map(course => (
-            <div key={course.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div key={course.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-white/20 transition-all">
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded bg-navy text-white text-xs font-black uppercase">
+                  <span className="px-2.5 py-0.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-black uppercase">
                     Level {course.level}
                   </span>
                   <Badge variant={course.status === 'PUBLISHED' ? 'success' : 'outline'} className="text-[10px]">
                     {course.status}
                   </Badge>
                 </div>
-                <h3 className="text-xl font-bold text-navy">{course.title}</h3>
-                <p className="text-xs text-dark-muted max-w-2xl">{course.description}</p>
-                <div className="flex items-center gap-4 text-xs text-gray-500 pt-1">
+                <h3 className="text-xl font-heading font-bold text-white">{course.title}</h3>
+                <p className="text-xs text-slate-400 max-w-2xl">{course.description}</p>
+                <div className="flex items-center gap-4 text-xs text-slate-500 pt-1">
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> ~{course.estimatedHours} Hours</span>
                   <span className="flex items-center gap-1"><Layers className="w-3.5 h-3.5" /> {course.units?.length || 0} Units</span>
-                  <span className="text-gray-400 font-mono text-[11px]">/{course.slug}</span>
+                  <span className="text-slate-500 font-mono text-[11px]">/{course.slug}</span>
                 </div>
               </div>
 
@@ -191,7 +191,7 @@ export function AdminCoursesPage() {
                 </Link>
                 <button
                   onClick={() => openEditCourse(course)}
-                  className="p-2 rounded-xl border border-gray-200 text-navy hover:bg-navy hover:text-white transition-colors"
+                  className="p-2 rounded-xl border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
                   title="Edit Course"
                 >
                   <Edit2 className="w-4 h-4" />
@@ -199,7 +199,7 @@ export function AdminCoursesPage() {
                 <button
                   onClick={() => handleDeleteCourse(course.id, course.title)}
                   disabled={deletingId === course.id}
-                  className="p-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-600 hover:text-white transition-colors"
+                  className="p-2 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition-colors"
                   title="Delete Course"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -237,18 +237,18 @@ export function AdminCoursesPage() {
             />
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                 CEFR Level
               </label>
               <select
                 value={level}
                 onChange={(e) => setLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={GermanLevel.A1}>A1 — Starter</option>
-                <option value={GermanLevel.A2}>A2 — Elementary</option>
-                <option value={GermanLevel.B1}>B1 — Intermediate</option>
-                <option value={GermanLevel.B2}>B2 — Upper Intermediate</option>
+                <option value={GermanLevel.A1} className="bg-[#0D111F] text-white">A1 — Starter</option>
+                <option value={GermanLevel.A2} className="bg-[#0D111F] text-white">A2 — Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0D111F] text-white">B1 — Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0D111F] text-white">B2 — Upper Intermediate</option>
               </select>
             </div>
           </div>
@@ -262,7 +262,7 @@ export function AdminCoursesPage() {
           />
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
               Course Description & Syllabus Summary
             </label>
             <textarea
@@ -270,16 +270,16 @@ export function AdminCoursesPage() {
               placeholder="Detailed description of grammar structures, dialogues, and learning milestones..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
             <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="secondary" className="font-bold shadow-md" isLoading={saving}>
+            <Button type="submit" variant="primary" className="font-bold shadow-md" isLoading={saving}>
               Create Course
             </Button>
           </div>
@@ -311,18 +311,18 @@ export function AdminCoursesPage() {
             />
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                 CEFR Level
               </label>
               <select
                 value={editLevel}
                 onChange={(e) => setEditLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={GermanLevel.A1}>A1 — Starter</option>
-                <option value={GermanLevel.A2}>A2 — Elementary</option>
-                <option value={GermanLevel.B1}>B1 — Intermediate</option>
-                <option value={GermanLevel.B2}>B2 — Upper Intermediate</option>
+                <option value={GermanLevel.A1} className="bg-[#0D111F] text-white">A1 — Starter</option>
+                <option value={GermanLevel.A2} className="bg-[#0D111F] text-white">A2 — Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0D111F] text-white">B1 — Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0D111F] text-white">B2 — Upper Intermediate</option>
               </select>
             </div>
           </div>
@@ -337,35 +337,35 @@ export function AdminCoursesPage() {
             />
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                 Publication Status
               </label>
               <select
                 value={editStatus}
                 onChange={(e) => setEditStatus(e.target.value as any)}
-                className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={PublicationStatus.PUBLISHED}>Published (Visible to Students)</option>
-                <option value={PublicationStatus.DRAFT}>Draft (Hidden)</option>
-                <option value={PublicationStatus.ARCHIVED}>Archived</option>
+                <option value={PublicationStatus.PUBLISHED} className="bg-[#0D111F] text-white">Published (Visible to Students)</option>
+                <option value={PublicationStatus.DRAFT} className="bg-[#0D111F] text-white">Draft (Hidden)</option>
+                <option value={PublicationStatus.ARCHIVED} className="bg-[#0D111F] text-white">Archived</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
               Course Description
             </label>
             <textarea
               rows={3}
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
             <Button type="button" variant="outline" onClick={() => setEditingCourse(null)}>
               Cancel
             </Button>

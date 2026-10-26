@@ -65,11 +65,11 @@ export function TeacherAssignmentCreator() {
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-16">
       <div className="space-y-1">
-        <h1 className="text-3xl font-extrabold text-navy tracking-tight">Create Writing Assignment</h1>
-        <p className="text-xs text-dark-muted">Publish a new German writing task with custom rubric assessment criteria.</p>
+        <h1 className="text-3xl font-extrabold text-white tracking-tight">Create Writing Assignment</h1>
+        <p className="text-xs text-slate-400">Publish a new German writing task with custom rubric assessment criteria.</p>
       </div>
 
-      <div className="bg-white rounded-3xl p-8 border border-gray-200/90 shadow-card">
+      <div className="bg-[#0D111F] rounded-3xl p-8 border border-white/10 shadow-xl">
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             label="Assignment Title"
@@ -81,18 +81,18 @@ export function TeacherAssignmentCreator() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                 Target Level
               </label>
               <select
                 value={level}
                 onChange={(e) => setLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-4 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
               >
-                <option value={GermanLevel.A1}>A1 Beginner</option>
-                <option value={GermanLevel.A2}>A2 Elementary</option>
-                <option value={GermanLevel.B1}>B1 Intermediate</option>
-                <option value={GermanLevel.B2}>B2 Advanced</option>
+                <option value={GermanLevel.A1} className="bg-[#0D111F] text-slate-100">A1 Beginner</option>
+                <option value={GermanLevel.A2} className="bg-[#0D111F] text-slate-100">A2 Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0D111F] text-slate-100">B1 Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0D111F] text-slate-100">B2 Advanced</option>
               </select>
             </div>
 
@@ -114,7 +114,7 @@ export function TeacherAssignmentCreator() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Brief Overview
             </label>
             <input
@@ -122,13 +122,13 @@ export function TeacherAssignmentCreator() {
               placeholder="e.g. Write a formal inquiry email to book a room at a hotel in Munich..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full h-11 px-4 rounded-2xl border border-white/10 bg-[#0F1424] text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Detailed Instructions & Prompts
             </label>
             <textarea
@@ -136,19 +136,19 @@ export function TeacherAssignmentCreator() {
               placeholder="List the required points for the student to write about..."
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-4 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
               required
             />
           </div>
 
           {/* Rubric Criteria Builder */}
-          <div className="space-y-3 pt-2 border-t border-gray-100">
+          <div className="space-y-3 pt-2 border-t border-white/10">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-navy">Grading Rubric Criteria</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">Grading Rubric Criteria</h3>
               <button
                 type="button"
                 onClick={addRubricRow}
-                className="text-xs font-bold text-germanRed hover:underline flex items-center gap-1"
+                className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Criterion
               </button>
@@ -156,14 +156,14 @@ export function TeacherAssignmentCreator() {
 
             <div className="space-y-3">
               {rubricCriteria.map((r, i) => (
-                <div key={i} className="p-3 rounded-xl bg-gray-50 border border-gray-200 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                <div key={i} className="p-3 rounded-2xl bg-white/[0.02] border border-white/10 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                   <div className="sm:col-span-4">
                     <input
                       type="text"
                       placeholder="Criterion Name"
                       value={r.name}
                       onChange={(e) => updateRubric(i, 'name', e.target.value)}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 bg-white text-xs font-bold text-dark"
+                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0F1424] text-xs font-bold text-slate-100 focus:outline-none focus:border-indigo-500"
                       required
                     />
                   </div>
@@ -173,7 +173,7 @@ export function TeacherAssignmentCreator() {
                       placeholder="Description"
                       value={r.description}
                       onChange={(e) => updateRubric(i, 'description', e.target.value)}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 bg-white text-xs text-dark"
+                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0F1424] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -182,7 +182,7 @@ export function TeacherAssignmentCreator() {
                       placeholder="Max Pts"
                       value={r.maxPoints}
                       onChange={(e) => updateRubric(i, 'maxPoints', Number(e.target.value))}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 bg-white text-xs text-dark text-center"
+                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0F1424] text-xs text-slate-200 text-center focus:outline-none focus:border-indigo-500"
                       required
                     />
                   </div>
@@ -190,7 +190,7 @@ export function TeacherAssignmentCreator() {
                     <button
                       type="button"
                       onClick={() => removeRubricRow(i)}
-                      className="p-1.5 text-gray-400 hover:text-red-600 rounded"
+                      className="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -200,7 +200,7 @@ export function TeacherAssignmentCreator() {
             </div>
           </div>
 
-          <Button type="submit" variant="secondary" size="lg" className="w-full font-bold shadow-md" isLoading={saving}>
+          <Button type="submit" variant="primary" size="lg" className="w-full font-bold shadow-md" isLoading={saving}>
             Publish Assignment to Students
           </Button>
         </form>

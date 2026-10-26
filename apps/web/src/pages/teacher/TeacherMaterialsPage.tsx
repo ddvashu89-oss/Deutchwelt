@@ -283,8 +283,8 @@ export function TeacherMaterialsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-navy tracking-tight">Class Lectures & Study Materials</h1>
-          <p className="text-xs text-dark-muted">Upload video lessons, practice worksheets, and broadcast announcements to your assigned cohorts.</p>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Class Lectures & Study Materials</h1>
+          <p className="text-xs text-slate-400">Upload video lessons, practice worksheets, and broadcast announcements to your assigned cohorts.</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -307,13 +307,13 @@ export function TeacherMaterialsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-gray-200">
+      <div className="flex items-center gap-2 border-b border-white/10">
         <button
           onClick={() => setActiveTab('lectures')}
           className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
             activeTab === 'lectures'
-              ? 'border-germanRed text-germanRed'
-              : 'border-transparent text-dark-muted hover:text-dark'
+              ? 'border-emerald-400 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
           <Video className="w-4 h-4" /> Lectures & Video Classes ({lectures.length})
@@ -322,8 +322,8 @@ export function TeacherMaterialsPage() {
           onClick={() => setActiveTab('materials')}
           className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
             activeTab === 'materials'
-              ? 'border-germanRed text-germanRed'
-              : 'border-transparent text-dark-muted hover:text-dark'
+              ? 'border-emerald-400 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
           <FileText className="w-4 h-4" /> Worksheets & Cheat Sheets ({materials.length})
@@ -332,8 +332,8 @@ export function TeacherMaterialsPage() {
           onClick={() => setActiveTab('announcements')}
           className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
             activeTab === 'announcements'
-              ? 'border-germanRed text-germanRed'
-              : 'border-transparent text-dark-muted hover:text-dark'
+              ? 'border-emerald-400 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
           <Bell className="w-4 h-4" /> Batch Noticeboard ({announcements.length})
@@ -341,17 +341,17 @@ export function TeacherMaterialsPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="h-64 w-full rounded-2xl" />
+        <Skeleton className="h-64 w-full rounded-2xl bg-white/5" />
       ) : (
         <>
           {/* TAB 1: LECTURES */}
           {activeTab === 'lectures' && (
             <div className="space-y-6">
               {lectures.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-white border border-gray-200">
-                  <Video className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <h3 className="text-base font-bold text-navy">No Lectures Published Yet</h3>
-                  <p className="text-xs text-dark-muted max-w-sm mx-auto mt-1 mb-4">
+                <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+                  <Video className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <h3 className="text-base font-bold text-white">No Lectures Published Yet</h3>
+                  <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
                     Upload recorded video lectures or schedule interactive Google Meet/Zoom coaching sessions for your students.
                   </p>
                   <Button variant="secondary" size="sm" onClick={() => setIsLectureModalOpen(true)}>
@@ -361,54 +361,54 @@ export function TeacherMaterialsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {lectures.map(lec => (
-                    <div key={lec.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle flex flex-col justify-between space-y-4">
+                    <div key={lec.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="px-2.5 py-0.5 rounded bg-navy text-white text-[10px] font-black uppercase">
+                            <span className="px-2.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-black uppercase tracking-wider">
                               {lec.level || 'A1'}
                             </span>
                             {lec.fileSize && (
-                              <span className="flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                                <FileVideo className="w-3 h-3 text-blue-600" /> {lec.fileSize}
+                              <span className="flex items-center gap-1 text-[10px] font-bold text-cyan-300 bg-cyan-500/15 px-2 py-0.5 rounded border border-cyan-500/30">
+                                <FileVideo className="w-3 h-3 text-cyan-400" /> {lec.fileSize}
                               </span>
                             )}
                           </div>
                           {lec.isLive ? (
-                            <span className="flex items-center gap-1 text-[11px] font-bold text-germanRed bg-red-50 px-2 py-0.5 rounded-full border border-red-200 animate-pulse">
-                              <Radio className="w-3 h-3 text-germanRed" /> Live Session
+                            <span className="flex items-center gap-1 text-[11px] font-bold text-rose-400 bg-rose-500/15 px-2 py-0.5 rounded-full border border-rose-500/30 animate-pulse">
+                              <Radio className="w-3 h-3 text-rose-400" /> Live Session
                             </span>
                           ) : (
-                            <Badge variant="secondary" className="text-[10px]">
+                            <Badge variant="secondary" className="text-[10px] bg-white/5 border border-white/10 text-slate-300">
                               {lec.videoUrl?.startsWith('/uploads/') ? 'Uploaded Video' : 'Video Lesson'}
                             </Badge>
                           )}
                         </div>
 
                         <div>
-                          <h3 className="text-base font-bold text-navy line-clamp-1">{lec.title}</h3>
-                          <p className="text-xs text-dark-muted font-medium mt-0.5">{lec.batch?.name || 'Class Batch'}</p>
+                          <h3 className="text-base font-bold text-white line-clamp-1">{lec.title}</h3>
+                          <p className="text-xs text-slate-400 font-medium mt-0.5">{lec.batch?.name || 'Class Batch'}</p>
                         </div>
 
-                        <p className="text-xs text-dark-muted leading-relaxed line-clamp-2">
+                        <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
                           {lec.description || 'Instructional German lesson covering key grammatical and spoken patterns.'}
                         </p>
 
-                        <div className="flex items-center gap-4 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+                        <div className="flex items-center gap-4 text-[11px] text-slate-500 pt-2 border-t border-white/10">
                           <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {lec.durationMinutes} min</span>
                           <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {new Date(lec.scheduledFor).toLocaleDateString()}</span>
                         </div>
                       </div>
 
-                      <div className="pt-2 flex items-center justify-between border-t border-gray-100">
+                      <div className="pt-2 flex items-center justify-between border-t border-white/10">
                         {lec.meetingUrl ? (
-                          <a href={lec.meetingUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-germanRed hover:underline flex items-center gap-1">
+                          <a href={lec.meetingUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors">
                             Join Meeting <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         ) : (
                           <button
                             onClick={() => setPreviewLecture(lec)}
-                            className="text-xs font-bold text-navy hover:text-germanRed transition-colors flex items-center gap-1"
+                            className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1"
                           >
                             <Play className="w-3.5 h-3.5 fill-current" /> Watch Preview
                           </button>
@@ -420,7 +420,7 @@ export function TeacherMaterialsPage() {
                               download
                               target="_blank"
                               rel="noreferrer"
-                              className="text-gray-400 hover:text-navy transition-colors p-1"
+                              className="text-slate-500 hover:text-slate-200 transition-colors p-1"
                               title="Download Video File"
                             >
                               <Download className="w-4 h-4" />
@@ -428,7 +428,7 @@ export function TeacherMaterialsPage() {
                           )}
                           <button
                             onClick={() => handleDeleteLecture(lec.id)}
-                            className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                            className="text-slate-500 hover:text-rose-400 transition-colors p-1"
                             title="Delete Lecture"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -446,10 +446,10 @@ export function TeacherMaterialsPage() {
           {activeTab === 'materials' && (
             <div className="space-y-6">
               {materials.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-white border border-gray-200">
-                  <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <h3 className="text-base font-bold text-navy">No Study Materials Uploaded Yet</h3>
-                  <p className="text-xs text-dark-muted max-w-sm mx-auto mt-1 mb-4">
+                <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+                  <FileText className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <h3 className="text-base font-bold text-white">No Study Materials Uploaded Yet</h3>
+                  <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
                     Upload grammar summary sheets, vocabulary PDF tables, and exercise worksheets for your students to download.
                   </p>
                   <Button variant="secondary" size="sm" onClick={() => setIsMaterialModalOpen(true)}>
@@ -459,42 +459,42 @@ export function TeacherMaterialsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {materials.map(mat => (
-                    <div key={mat.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle flex flex-col justify-between space-y-4">
+                    <div key={mat.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between gap-2">
-                          <span className="px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-black uppercase">
+                          <span className="px-2.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 text-[10px] font-black uppercase">
                             {mat.fileType || 'PDF'}
                           </span>
-                          <span className="text-[10px] text-gray-400 font-bold">{mat.fileSize || '1.0 MB'}</span>
+                          <span className="text-[10px] text-slate-500 font-bold">{mat.fileSize || '1.0 MB'}</span>
                         </div>
 
                         <div>
-                          <h3 className="text-base font-bold text-navy line-clamp-1">{mat.title}</h3>
-                          <p className="text-xs text-dark-muted font-medium mt-0.5">{mat.batch?.name || 'Class Batch'}</p>
+                          <h3 className="text-base font-bold text-white line-clamp-1">{mat.title}</h3>
+                          <p className="text-xs text-slate-400 font-medium mt-0.5">{mat.batch?.name || 'Class Batch'}</p>
                         </div>
 
-                        <p className="text-xs text-dark-muted leading-relaxed line-clamp-2">
+                        <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
                           {mat.description || 'Downloadable study material for Goethe exam preparation.'}
                         </p>
 
-                        <Badge variant="outline" className="text-[10px] uppercase font-bold">
+                        <Badge variant="outline" className="text-[10px] uppercase font-bold border-white/15 text-slate-300">
                           {mat.category.replace('_', ' ')}
                         </Badge>
                       </div>
 
-                      <div className="pt-2 flex items-center justify-between border-t border-gray-100">
+                      <div className="pt-2 flex items-center justify-between border-t border-white/10">
                         <a
                           href={mat.fileUrl}
                           download
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 hover:bg-navy hover:text-white text-dark text-xs font-bold transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-300 text-slate-200 text-xs font-bold transition-all border border-white/10"
                         >
                           <Download className="w-3.5 h-3.5" /> Download
                         </a>
                         <button
                           onClick={() => handleDeleteMaterial(mat.id)}
-                          className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                          className="text-slate-500 hover:text-rose-400 transition-colors p-1"
                           title="Delete Material"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -511,10 +511,10 @@ export function TeacherMaterialsPage() {
           {activeTab === 'announcements' && (
             <div className="space-y-6">
               {announcements.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-white border border-gray-200">
-                  <Bell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <h3 className="text-base font-bold text-navy">No Announcements Posted</h3>
-                  <p className="text-xs text-dark-muted max-w-sm mx-auto mt-1 mb-4">
+                <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+                  <Bell className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <h3 className="text-base font-bold text-white">No Announcements Posted</h3>
+                  <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
                     Send noticeboard announcements, schedule changes, and study reminders directly to your students.
                   </p>
                   <Button variant="secondary" size="sm" onClick={() => setIsAnnouncementModalOpen(true)}>
@@ -524,19 +524,19 @@ export function TeacherMaterialsPage() {
               ) : (
                 <div className="space-y-4">
                   {announcements.map(anc => (
-                    <div key={anc.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle space-y-2">
+                    <div key={anc.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl space-y-2">
                       <div className="flex items-start justify-between">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-germanRed">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
                             {anc.batch?.name || 'Class Batch'}
                           </span>
-                          <h3 className="text-base font-bold text-navy mt-0.5">{anc.title}</h3>
+                          <h3 className="text-base font-bold text-white mt-0.5">{anc.title}</h3>
                         </div>
-                        <span className="text-[11px] text-gray-400 font-medium">
+                        <span className="text-[11px] text-slate-500 font-medium">
                           {new Date(anc.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-xs text-dark leading-relaxed whitespace-pre-line">
+                      <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
                         {anc.content}
                       </p>
                     </div>
@@ -570,40 +570,40 @@ export function TeacherMaterialsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                 Target Batch
               </label>
               <select
                 value={lectureBatchId}
                 onChange={(e) => setLectureBatchId(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
                 required
               >
                 {batches.map(b => (
-                  <option key={b.id} value={b.id}>{b.name} ({b.level})</option>
+                  <option key={b.id} value={b.id} className="bg-[#0D111F] text-slate-100">{b.name} ({b.level})</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                 CEFR Level
               </label>
               <select
                 value={lectureLevel}
                 onChange={(e) => setLectureLevel(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="A1">A1 Beginner</option>
-                <option value="A2">A2 Elementary</option>
-                <option value="B1">B1 Intermediate</option>
-                <option value="B2">B2 Upper Intermediate</option>
+                <option value="A1" className="bg-[#0D111F] text-slate-100">A1 Beginner</option>
+                <option value="A2" className="bg-[#0D111F] text-slate-100">A2 Elementary</option>
+                <option value="B1" className="bg-[#0D111F] text-slate-100">B1 Intermediate</option>
+                <option value="B2" className="bg-[#0D111F] text-slate-100">B2 Upper Intermediate</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Lecture Description & Grammar Notes
             </label>
             <textarea
@@ -611,34 +611,34 @@ export function TeacherMaterialsPage() {
               placeholder="Key grammatical concepts, vocabulary takeaways, and homework instructions covered in this video lecture..."
               value={lectureDesc}
               onChange={(e) => setLectureDesc(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 
           {/* Video Lecture Source Mode */}
           <div className="space-y-2 pt-1">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Video Source
             </label>
-            <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-xl">
+            <div className="grid grid-cols-2 gap-2 p-1 bg-white/5 rounded-2xl border border-white/10">
               <button
                 type="button"
                 onClick={() => setVideoSourceType('upload')}
-                className={`py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                className={`py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
                   videoSourceType === 'upload'
-                    ? 'bg-white text-navy shadow-sm'
-                    : 'text-dark-muted hover:text-dark'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <UploadCloud className="w-3.5 h-3.5 text-germanRed" /> Upload Video File
+                <UploadCloud className="w-3.5 h-3.5 text-emerald-400" /> Upload Video File
               </button>
               <button
                 type="button"
                 onClick={() => setVideoSourceType('url')}
-                className={`py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                className={`py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
                   videoSourceType === 'url'
-                    ? 'bg-white text-navy shadow-sm'
-                    : 'text-dark-muted hover:text-dark'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 <ExternalLink className="w-3.5 h-3.5" /> External URL / Embed
@@ -659,7 +659,7 @@ export function TeacherMaterialsPage() {
                       }
                     }}
                     className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
-                      dragActive ? 'border-germanRed bg-red-50/50' : 'border-gray-300 hover:border-gray-400 bg-gray-50/50'
+                      dragActive ? 'border-emerald-500 bg-emerald-500/10' : 'border-white/10 hover:border-white/20 bg-white/[0.02]'
                     }`}
                   >
                     <input
@@ -673,24 +673,24 @@ export function TeacherMaterialsPage() {
                       }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
-                    <UploadCloud className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                    <p className="text-xs font-bold text-navy">
+                    <UploadCloud className="w-10 h-10 text-slate-500 mx-auto mb-2" />
+                    <p className="text-xs font-bold text-white">
                       Click to choose video file or drag and drop
                     </p>
-                    <p className="text-[11px] text-dark-muted mt-1">
+                    <p className="text-[11px] text-slate-400 mt-1">
                       Supports MP4, WebM, MOV, MKV files up to 500 MB
                     </p>
                   </div>
                 ) : (
-                  <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-3">
+                  <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 overflow-hidden">
-                        <div className="p-2 bg-blue-100 text-blue-700 rounded-lg shrink-0">
+                        <div className="p-2 bg-indigo-500/20 text-indigo-300 rounded-lg shrink-0">
                           <FileVideo className="w-5 h-5" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xs font-bold text-navy truncate">{videoFile.name}</p>
-                          <p className="text-[11px] text-gray-500">{(videoFile.size / (1024 * 1024)).toFixed(1)} MB</p>
+                          <p className="text-xs font-bold text-white truncate">{videoFile.name}</p>
+                          <p className="text-[11px] text-slate-400">{(videoFile.size / (1024 * 1024)).toFixed(1)} MB</p>
                         </div>
                       </div>
                       <button
@@ -700,7 +700,7 @@ export function TeacherMaterialsPage() {
                           setVideoFile(null);
                           setVideoPreviewUrl(null);
                         }}
-                        className="p-1 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-200 transition-colors"
+                        className="p-1 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-white/5 transition-colors"
                         title="Remove video file"
                       >
                         <X className="w-4 h-4" />
@@ -740,19 +740,19 @@ export function TeacherMaterialsPage() {
             />
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-dark">Live Meeting Link</label>
+                <label className="text-xs font-bold text-slate-300">Live Meeting Link</label>
                 <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => setLectureMeetingUrl('https://meet.google.com/')}
-                    className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold border border-emerald-200 hover:bg-emerald-100"
+                    className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-bold border border-emerald-500/30 hover:bg-emerald-500/25"
                   >
                     Google Meet
                   </button>
                   <button
                     type="button"
                     onClick={() => setLectureMeetingUrl('https://zoom.us/j/')}
-                    className="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-800 font-bold border border-blue-200 hover:bg-blue-100"
+                    className="text-[10px] px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 font-bold border border-cyan-500/30 hover:bg-cyan-500/25"
                   >
                     Zoom
                   </button>
@@ -772,14 +772,14 @@ export function TeacherMaterialsPage() {
               id="isLiveCheckbox"
               checked={lectureIsLive}
               onChange={(e) => setLectureIsLive(e.target.checked)}
-              className="w-4 h-4 text-germanRed rounded focus:ring-germanRed"
+              className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#0F1424] border-white/10"
             />
-            <label htmlFor="isLiveCheckbox" className="text-xs font-bold text-dark cursor-pointer">
+            <label htmlFor="isLiveCheckbox" className="text-xs font-bold text-slate-300 cursor-pointer">
               Mark as Interactive Live Class Session
             </label>
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
             <Button
               variant="outline"
               size="sm"
@@ -817,40 +817,40 @@ export function TeacherMaterialsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                 Target Batch
               </label>
               <select
                 value={materialBatchId}
                 onChange={(e) => setMaterialBatchId(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
                 required
               >
                 {batches.map(b => (
-                  <option key={b.id} value={b.id}>{b.name} ({b.level})</option>
+                  <option key={b.id} value={b.id} className="bg-[#0D111F] text-slate-100">{b.name} ({b.level})</option>
                 ))}
               </select>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                 Category
               </label>
               <select
                 value={materialCategory}
                 onChange={(e) => setMaterialCategory(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="WORKSHEET">Practice Worksheet</option>
-                <option value="GRAMMAR_CHEAT_SHEET">Grammar Cheat Sheet</option>
-                <option value="VOCABULARY_LIST">Vocabulary Table</option>
-                <option value="EXAM_SIMULATION">Goethe Mock Exam</option>
+                <option value="WORKSHEET" className="bg-[#0D111F] text-slate-100">Practice Worksheet</option>
+                <option value="GRAMMAR_CHEAT_SHEET" className="bg-[#0D111F] text-slate-100">Grammar Cheat Sheet</option>
+                <option value="VOCABULARY_LIST" className="bg-[#0D111F] text-slate-100">Vocabulary Table</option>
+                <option value="EXAM_SIMULATION" className="bg-[#0D111F] text-slate-100">Goethe Mock Exam</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Material Description
             </label>
             <textarea
@@ -858,15 +858,15 @@ export function TeacherMaterialsPage() {
               placeholder="Instructions on how students should use this worksheet..."
               value={materialDesc}
               onChange={(e) => setMaterialDesc(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Upload Document File (.pdf, .docx, .zip)
             </label>
-            <div className="relative border border-dashed rounded-xl p-4 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+            <div className="relative border border-dashed rounded-2xl p-4 text-center bg-white/[0.02] border-white/10 hover:border-white/20 transition-colors cursor-pointer">
               <input
                 type="file"
                 accept=".pdf,.docx,.doc,.txt,.zip,.mp3,.mp4"
@@ -878,13 +878,13 @@ export function TeacherMaterialsPage() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               {materialFile ? (
-                <div className="flex items-center justify-center gap-2 text-xs font-bold text-navy">
-                  <FileCheck className="w-4 h-4 text-green-600" />
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-emerald-400">
+                  <FileCheck className="w-4 h-4 text-emerald-400" />
                   <span>{materialFile.name} ({(materialFile.size / (1024 * 1024)).toFixed(1)} MB)</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-2 text-xs text-dark-muted">
-                  <UploadCloud className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
+                  <UploadCloud className="w-4 h-4 text-slate-500" />
                   <span>Click to select PDF or worksheet file (or specify URL below)</span>
                 </div>
               )}
@@ -899,22 +899,22 @@ export function TeacherMaterialsPage() {
               onChange={(e) => setMaterialFileUrl(e.target.value)}
             />
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                 File Type
               </label>
               <select
                 value={materialFileType}
                 onChange={(e) => setMaterialFileType(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="PDF">PDF Document</option>
-                <option value="DOCX">Word Document (.docx)</option>
-                <option value="MP3">Audio Listening (.mp3)</option>
+                <option value="PDF" className="bg-[#0D111F] text-slate-100">PDF Document</option>
+                <option value="DOCX" className="bg-[#0D111F] text-slate-100">Word Document (.docx)</option>
+                <option value="MP3" className="bg-[#0D111F] text-slate-100">Audio Listening (.mp3)</option>
               </select>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
             <Button variant="outline" size="sm" type="button" onClick={() => setIsMaterialModalOpen(false)}>
               Cancel
             </Button>
@@ -943,23 +943,23 @@ export function TeacherMaterialsPage() {
           />
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Target Batch
             </label>
             <select
               value={announcementBatchId}
               onChange={(e) => setAnnouncementBatchId(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             >
               {batches.map(b => (
-                <option key={b.id} value={b.id}>{b.name} ({b.level})</option>
+                <option key={b.id} value={b.id} className="bg-[#0D111F] text-slate-100">{b.name} ({b.level})</option>
               ))}
             </select>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
               Announcement Message
             </label>
             <textarea
@@ -967,12 +967,12 @@ export function TeacherMaterialsPage() {
               placeholder="Write your announcement message in German or English..."
               value={announcementContent}
               onChange={(e) => setAnnouncementContent(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
             <Button variant="outline" size="sm" type="button" onClick={() => setIsAnnouncementModalOpen(false)}>
               Cancel
             </Button>
@@ -994,21 +994,21 @@ export function TeacherMaterialsPage() {
         >
           <div className="space-y-4 pt-2">
             <VideoPlayer url={previewLecture.videoUrl} title={previewLecture.title} autoPlay />
-            <div className="flex items-center justify-between text-xs text-dark-muted pt-2 border-t border-gray-100">
-              <span>Level: <strong className="text-navy">{previewLecture.level}</strong></span>
+            <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-white/10">
+              <span>Level: <strong className="text-white">{previewLecture.level}</strong></span>
               {(previewLecture.videoUrl?.startsWith('/uploads/') || previewLecture.videoUrl?.endsWith('.mp4')) && (
                 <a
                   href={previewLecture.videoUrl}
                   download
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-germanRed font-bold hover:underline"
+                  className="inline-flex items-center gap-1.5 text-emerald-400 font-bold hover:underline"
                 >
                   <Download className="w-3.5 h-3.5" /> Download Video File
                 </a>
               )}
             </div>
-            <p className="text-xs text-dark leading-relaxed whitespace-pre-line">
+            <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
               {previewLecture.description}
             </p>
           </div>

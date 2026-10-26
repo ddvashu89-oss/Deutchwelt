@@ -75,18 +75,18 @@ export default {
           900: '#691D1D',
         },
         canvas: {
-          DEFAULT: '#F3F4F6',
-          dark: '#EAEBEF',
+          DEFAULT: '#0A0D17',
+          dark: '#05070D',
         },
         ivory: {
-          DEFAULT: '#F4F5F7',
-          50: '#FCFAF7',
-          100: '#F4F5F7',
-          200: '#EAEBEF',
+          DEFAULT: '#0D111F',
+          50: '#161D33',
+          100: '#11162B',
+          200: '#0A0D17',
         },
         dark: {
-          DEFAULT: '#111827',
-          muted: '#6B7280',
+          DEFAULT: '#F8FAFC',
+          muted: '#94A3B8',
         },
         german: {
           der: '#2563EB',

@@ -283,13 +283,13 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-8 pb-16 font-sans">
-      {/* 1. TOP HEADER & SEARCH / FILTER BAR (Matching Image 1: Lurni Design) */}
+      {/* 1. TOP HEADER & SEARCH / FILTER BAR */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-heading font-extrabold text-gray-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-heading font-extrabold text-white tracking-tight">
             {t('admin.overview')}
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
             {t('admin.subtitle')}
           </p>
         </div>
@@ -297,25 +297,25 @@ export function AdminDashboard() {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
           {/* Search bar with filter icon */}
           <div className="relative flex-1 sm:flex-none">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder={language === 'de' ? 'Suchen...' : 'Search...'}
-              className="bg-white border border-gray-200 text-xs text-gray-800 placeholder:text-gray-400 pl-9 pr-9 py-2.5 rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full sm:w-64 transition-all"
+              className="bg-[#11162B] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 pl-9 pr-9 py-2.5 rounded-2xl shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full sm:w-64 transition-all"
             />
             <button
               type="button"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
             >
               <Filter className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* "+ Quick Create" Primary Button (Lurni purple pill matching screenshot) */}
+          {/* "+ Quick Create" Primary Button */}
           <button
             type="button"
             onClick={() => setQuickCreateOpen(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm hover:shadow active:scale-98 shrink-0"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-500/25 active:scale-98 shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>{t('admin.quickCreate')}</span>
@@ -323,25 +323,25 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      {/* 2. 4 STAT CARDS (Exact match to Image 1: Lurni) */}
+      {/* 2. 4 STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Card 1: Total Instructors */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs flex flex-col justify-between hover:border-gray-300 transition-all">
+        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500">
+            <span className="text-xs font-semibold text-slate-400">
               {t('admin.instructors')}
             </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
               +12% this month
             </span>
           </div>
           <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-heading font-black text-gray-900">
+            <span className="text-3xl font-heading font-black text-white">
               {data?.totalTeachers || 128}
             </span>
             <Link
               to="/admin/teachers"
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5"
+              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
             >
               Manage <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -349,22 +349,22 @@ export function AdminDashboard() {
         </div>
 
         {/* Card 2: Active Students */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs flex flex-col justify-between hover:border-gray-300 transition-all">
+        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500">
+            <span className="text-xs font-semibold text-slate-400">
               {t('admin.students')}
             </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
               +24% this month
             </span>
           </div>
           <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-heading font-black text-gray-900">
+            <span className="text-3xl font-heading font-black text-white">
               {data?.totalStudents ? `${data.totalStudents.toLocaleString()}` : '4,532'}
             </span>
             <Link
               to="/admin/students"
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5"
+              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
             >
               Manage <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -372,22 +372,22 @@ export function AdminDashboard() {
         </div>
 
         {/* Card 3: Courses Published */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs flex flex-col justify-between hover:border-gray-300 transition-all">
+        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500">
+            <span className="text-xs font-semibold text-slate-400">
               {t('admin.courses')}
             </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
               +5 new courses
             </span>
           </div>
           <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-heading font-black text-gray-900">
+            <span className="text-3xl font-heading font-black text-white">
               {data?.totalCourses || 67}
             </span>
             <Link
               to="/admin/courses"
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5"
+              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
             >
               Curriculum <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -395,23 +395,23 @@ export function AdminDashboard() {
         </div>
 
         {/* Card 4: Pending Submissions */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs flex flex-col justify-between hover:border-gray-300 transition-all">
+        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500">
+            <span className="text-xs font-semibold text-slate-400">
               {t('admin.submissions')}
             </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-100 flex items-center gap-1">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 flex items-center gap-1">
               -3% from last week
             </span>
           </div>
           <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-3xl font-heading font-black text-gray-900">
+            <span className="text-3xl font-heading font-black text-white">
               152
             </span>
             <button
               type="button"
               onClick={() => alert('Reviewing 152 pending Goethe B1 & A2 speech and homework submissions.')}
-              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5"
+              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
             >
               Review queue <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
@@ -419,18 +419,18 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      {/* 3. MAIN DASHBOARD GRID (Two Columns: 65% / 35% matching Screenshot 1) */}
+      {/* 3. MAIN DASHBOARD GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT COLUMN: Top Engaged Courses + Engagement Breakdown Table */}
         <div className="lg:col-span-8 space-y-6">
           {/* Card: Top Engaged Courses (with $750,000 subheader & Bar Chart) */}
-          <div className="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200/90 shadow-2xs space-y-5">
+          <div className="bg-[#0D111F] p-6 sm:p-7 rounded-3xl border border-white/10 shadow-xl space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-heading font-extrabold text-gray-900">
+                <h2 className="text-base font-heading font-extrabold text-white">
                   {t('admin.topCourses')}
                 </h2>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-slate-400 mt-0.5">
                   {t('admin.topCoursesSub')}
                 </p>
               </div>
@@ -439,43 +439,43 @@ export function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setPaymentsModalOpen(true)}
-                  className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 flex items-center gap-1.5 transition-colors shadow-2xs"
+                  className="px-3.5 py-1.5 rounded-xl border border-white/10 text-xs font-bold text-slate-300 hover:bg-white/5 flex items-center gap-1.5 transition-colors shadow-2xs"
                 >
-                  <CreditCard className="w-3.5 h-3.5 text-indigo-600" />
+                  <CreditCard className="w-3.5 h-3.5 text-indigo-400" />
                   <span>Telemetry Payments</span>
                 </button>
                 <div className="relative">
-                  <select className="appearance-none bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 py-1.5 pl-3 pr-8 rounded-lg cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    <option>{language === 'de' ? 'Diesen Monat' : 'This month'}</option>
-                    <option>{language === 'de' ? 'Letzten Monat' : 'Last month'}</option>
-                    <option>{language === 'de' ? 'Gesamtes Jahr' : 'This year'}</option>
+                  <select className="appearance-none bg-[#11162B] border border-white/10 text-xs font-semibold text-slate-300 py-1.5 pl-3 pr-8 rounded-xl cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <option className="bg-[#0D111F] text-white">{language === 'de' ? 'Diesen Monat' : 'This month'}</option>
+                    <option className="bg-[#0D111F] text-white">{language === 'de' ? 'Letzten Monat' : 'Last month'}</option>
+                    <option className="bg-[#0D111F] text-white">{language === 'de' ? 'Gesamtes Jahr' : 'This year'}</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
             </div>
 
-            {/* $750,000 Volume Metric matching Image 1 */}
-            <div className="pt-2 flex items-baseline gap-3 border-t border-gray-100">
-              <span className="text-3xl sm:text-4xl font-heading font-black text-gray-950 tracking-tight">
+            {/* $750,000 Volume Metric */}
+            <div className="pt-2 flex items-baseline gap-3 border-t border-white/10">
+              <span className="text-3xl sm:text-4xl font-heading font-black text-white tracking-tight">
                 $750,000
               </span>
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                 +14.8% YoY
               </span>
-              <span className="text-xs text-gray-400 hidden sm:inline">
+              <span className="text-xs text-slate-400 hidden sm:inline">
                 Academic tuition, live seminars & institutional enrollments
               </span>
             </div>
 
-            {/* Bar Chart matching Image 1 */}
+            {/* Bar Chart */}
             <div className="h-64 w-full pt-3">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueChartData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="month" stroke="#94A3B8" fontSize={11} tickLine={false} axisLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1E293B" />
+                  <XAxis dataKey="month" stroke="#64748B" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis
-                    stroke="#94A3B8"
+                    stroke="#64748B"
                     fontSize={11}
                     tickLine={false}
                     axisLine={false}
@@ -487,8 +487,8 @@ export function AdminDashboard() {
                       borderRadius: '12px',
                       color: '#FFF',
                       fontSize: '12px',
-                      border: 'none',
-                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
                     }}
                     formatter={(v: any) => [`$${v.toLocaleString()}`, 'Tuition Volume']}
                   />
@@ -503,21 +503,21 @@ export function AdminDashboard() {
             </div>
           </div>
 
-          {/* Card: Engagement Breakdown Table (Matching Image 1) */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-200/90 shadow-2xs space-y-4">
+          {/* Card: Engagement Breakdown Table */}
+          <div className="bg-[#0D111F] p-6 sm:p-7 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-heading font-extrabold text-gray-900">
+                <h2 className="text-base font-heading font-extrabold text-white">
                   {t('admin.breakdown')}
                 </h2>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-slate-400">
                   {language === 'de' ? 'Kursbeteiligung, Abschlussquoten und Dozentenbewertungen' : 'Student enrollment, completion rates and student ratings'}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setAttendanceModalOpen(true)}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
               >
                 <UserCheck className="w-3.5 h-3.5" />
                 <span>Attendance Logs</span>
@@ -527,7 +527,7 @@ export function AdminDashboard() {
             <div className="overflow-x-auto -mx-6 px-6">
               <table className="w-full text-left text-xs min-w-[560px]">
                 <thead>
-                  <tr className="border-b border-gray-100 text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-white/10 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                     <th className="pb-3">Course</th>
                     <th className="pb-3 text-right">Students Enrolled</th>
                     <th className="pb-3 text-center">Completion Rate</th>
@@ -535,32 +535,32 @@ export function AdminDashboard() {
                     <th className="pb-3 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-white/5">
                   {engagementRows.map((row) => (
-                    <tr key={row.id} className="hover:bg-gray-50/60 transition-colors">
+                    <tr key={row.id} className="hover:bg-white/5 transition-colors">
                       <td className="py-3.5 pr-4">
-                        <p className="font-bold text-gray-900">{row.title}</p>
-                        <p className="text-[11px] text-gray-400">{row.category}</p>
+                        <p className="font-bold text-white">{row.title}</p>
+                        <p className="text-[11px] text-slate-400">{row.category}</p>
                       </td>
-                      <td className="py-3.5 text-right font-semibold text-gray-700">
+                      <td className="py-3.5 text-right font-semibold text-slate-300">
                         {row.students.toLocaleString()}
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="flex items-center justify-center gap-2">
-                          <div className="w-24 bg-gray-100 h-2 rounded-full overflow-hidden">
+                          <div className="w-24 bg-white/10 h-2 rounded-full overflow-hidden">
                             <div
-                              className="bg-indigo-600 h-full rounded-full"
+                              className="bg-indigo-500 h-full rounded-full"
                               style={{ width: `${row.completionRate}%` }}
                             />
                           </div>
-                          <span className="font-bold text-gray-700 text-[11px] min-w-[28px]">
+                          <span className="font-bold text-slate-300 text-[11px] min-w-[28px]">
                             {row.completionRate}%
                           </span>
                         </div>
                       </td>
                       <td className="py-3.5 text-right">
-                        <span className="inline-flex items-center gap-1 font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100">
-                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                        <span className="inline-flex items-center gap-1 font-bold text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded-full border border-amber-500/30">
+                          <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                           {row.rating}
                         </span>
                       </td>
@@ -568,7 +568,7 @@ export function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => alert(`Course Details: ${row.title}\n${row.students} students enrolled.\nCompletion rate: ${row.completionRate}%.`)}
-                          className="p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                         >
                           <MoreVertical className="w-4 h-4" />
                         </button>
@@ -583,26 +583,26 @@ export function AdminDashboard() {
 
         {/* RIGHT COLUMN: Recent Activity + Assignment & Quiz Overview */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Card: Recent Activity (Matching Image 1) */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-200/90 shadow-2xs space-y-4">
+          {/* Card: Recent Activity */}
+          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div className="space-y-1">
-              <h2 className="text-base font-heading font-extrabold text-gray-900">
+              <h2 className="text-base font-heading font-extrabold text-white">
                 {t('admin.recentActivity')}
               </h2>
-              <p className="text-[11px] text-gray-400">
+              <p className="text-[11px] text-slate-400">
                 AI generated course outline for 'Full Stack Next.js & German'
               </p>
             </div>
 
-            {/* Filter Tabs matching Image 1: All (18), Enrollments (8), Submissions (6), Updates (4) */}
+            {/* Filter Tabs */}
             <div className="flex flex-wrap gap-1.5 pt-1">
               <button
                 type="button"
                 onClick={() => setActivityFilter('all')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors ${
+                className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'all'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200/70'
+                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 All (18)
@@ -610,10 +610,10 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActivityFilter('enrollments')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors ${
+                className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'enrollments'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200/70'
+                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 Enrollments (8)
@@ -621,10 +621,10 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActivityFilter('submissions')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors ${
+                className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'submissions'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200/70'
+                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 Submissions (6)
@@ -632,10 +632,10 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActivityFilter('updates')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors ${
+                className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'updates'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200/70'
+                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 Updates (4)
@@ -647,15 +647,15 @@ export function AdminDashboard() {
               {filteredActivities.map((act) => {
                 const Icon = act.icon;
                 return (
-                  <div key={act.id} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition-colors">
-                    <div className={`w-8 h-8 rounded-lg ${act.color} flex items-center justify-center shrink-0`}>
+                  <div key={act.id} className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-white/5 transition-colors">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 flex items-center justify-center shrink-0">
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-gray-800 leading-snug">
+                      <p className="text-xs font-semibold text-slate-200 leading-snug">
                         {act.title}
                       </p>
-                      <span className="text-[10px] text-gray-400 mt-0.5 block">
+                      <span className="text-[10px] text-slate-500 mt-0.5 block">
                         {act.time}
                       </span>
                     </div>
@@ -665,80 +665,80 @@ export function AdminDashboard() {
             </div>
           </div>
 
-          {/* Card: Assignment & Quiz Overview (Matching Image 1) */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-200/90 shadow-2xs space-y-4">
+          {/* Card: Assignment & Quiz Overview */}
+          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div>
-              <h2 className="text-base font-heading font-extrabold text-gray-900">
+              <h2 className="text-base font-heading font-extrabold text-white">
                 {t('admin.quizOverview')}
               </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Active examination and homework submission metrics
               </p>
             </div>
 
             <div className="space-y-4 pt-1">
               <div>
-                <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>German A1 Weekly Quiz</span>
-                  <span className="text-indigo-600">94%</span>
+                  <span className="text-indigo-400">94%</span>
                 </div>
-                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-indigo-600 h-full rounded-full" style={{ width: '94%' }} />
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-indigo-500 h-full rounded-full" style={{ width: '94%' }} />
                 </div>
-                <span className="text-[10px] text-gray-400 mt-1 block">384 of 408 students completed</span>
+                <span className="text-[10px] text-slate-500 mt-1 block">384 of 408 students completed</span>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>Grammar Test: Dativ & Akkusativ</span>
-                  <span className="text-indigo-600">78%</span>
+                  <span className="text-indigo-400">78%</span>
                 </div>
-                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-indigo-600 h-full rounded-full" style={{ width: '78%' }} />
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-indigo-500 h-full rounded-full" style={{ width: '78%' }} />
                 </div>
-                <span className="text-[10px] text-gray-400 mt-1 block">212 of 272 students completed</span>
+                <span className="text-[10px] text-slate-500 mt-1 block">212 of 272 students completed</span>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>Oral Exam Submissions (Speaking Lab)</span>
-                  <span className="text-indigo-600">62%</span>
+                  <span className="text-indigo-400">62%</span>
                 </div>
-                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-indigo-600 h-full rounded-full" style={{ width: '62%' }} />
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-indigo-500 h-full rounded-full" style={{ width: '62%' }} />
                 </div>
-                <span className="text-[10px] text-gray-400 mt-1 block">152 submissions pending grading</span>
+                <span className="text-[10px] text-slate-500 mt-1 block">152 submissions pending grading</span>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-bold text-gray-700 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>Final Goethe B1 Mock Exam</span>
-                  <span className="text-indigo-600">45%</span>
+                  <span className="text-indigo-400">45%</span>
                 </div>
-                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-indigo-600 h-full rounded-full" style={{ width: '45%' }} />
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-indigo-500 h-full rounded-full" style={{ width: '45%' }} />
                 </div>
-                <span className="text-[10px] text-gray-400 mt-1 block">82 of 180 registered candidates completed</span>
+                <span className="text-[10px] text-slate-500 mt-1 block">82 of 180 registered candidates completed</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 4. MODAL: + Quick Create (Course, Batch, Fee Plan, Announcement) */}
+      {/* 4. MODAL: + Quick Create */}
       {quickCreateOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 flex items-center justify-center">
                   <Plus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-lg text-gray-900">
+                  <h3 className="font-heading font-black text-lg text-white">
                     {language === 'de' ? 'Schnellerstellung' : 'Quick Create'}
                   </h3>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-slate-400">
                     {language === 'de' ? 'Kurse, Gruppen, Dozenten oder Gebührenpläne anlegen' : 'Create batches, assign teachers, fee plans or announcements'}
                   </p>
                 </div>
@@ -746,19 +746,19 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setQuickCreateOpen(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Tabs for Create Type */}
-            <div className="grid grid-cols-4 gap-1 p-1 bg-gray-100 rounded-xl text-xs font-bold">
+            <div className="grid grid-cols-4 gap-1 p-1 bg-[#11162B] border border-white/10 rounded-2xl text-xs font-bold">
               <button
                 type="button"
                 onClick={() => setCreateType('batch')}
-                className={`py-2 rounded-lg transition-colors ${
-                  createType === 'batch' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-500 hover:text-gray-800'
+                className={`py-2 rounded-xl transition-colors ${
+                  createType === 'batch' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Batch
@@ -766,8 +766,8 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setCreateType('course')}
-                className={`py-2 rounded-lg transition-colors ${
-                  createType === 'course' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-500 hover:text-gray-800'
+                className={`py-2 rounded-xl transition-colors ${
+                  createType === 'course' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Course
@@ -775,8 +775,8 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setCreateType('feePlan')}
-                className={`py-2 rounded-lg transition-colors ${
-                  createType === 'feePlan' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-500 hover:text-gray-800'
+                className={`py-2 rounded-xl transition-colors ${
+                  createType === 'feePlan' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Fee Plan
@@ -784,8 +784,8 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setCreateType('announcement')}
-                className={`py-2 rounded-lg transition-colors ${
-                  createType === 'announcement' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-gray-500 hover:text-gray-800'
+                className={`py-2 rounded-xl transition-colors ${
+                  createType === 'announcement' ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Announce
@@ -797,7 +797,7 @@ export function AdminDashboard() {
               {createType === 'batch' && (
                 <>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Batch Name
                     </label>
                     <input
@@ -806,45 +806,45 @@ export function AdminDashboard() {
                       value={batchName}
                       onChange={(e) => setBatchName(e.target.value)}
                       required
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
                         Course Level
                       </label>
                       <select
                         value={batchCourseId}
                         onChange={(e) => setBatchCourseId(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                       >
-                        <option value="course-a1">German A1 (Beginner)</option>
-                        <option value="course-a2">German A2 (Elementary)</option>
-                        <option value="course-b1">German B1 (Intermediate)</option>
-                        <option value="course-b2">German B2 (Advanced)</option>
+                        <option value="course-a1" className="bg-[#0D111F] text-white">German A1 (Beginner)</option>
+                        <option value="course-a2" className="bg-[#0D111F] text-white">German A2 (Elementary)</option>
+                        <option value="course-b1" className="bg-[#0D111F] text-white">German B1 (Intermediate)</option>
+                        <option value="course-b2" className="bg-[#0D111F] text-white">German B2 (Advanced)</option>
                       </select>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
                         Assign Teacher
                       </label>
                       <select
                         value={batchTeacher}
                         onChange={(e) => setBatchTeacher(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                       >
-                        <option value="Frau Elena Schmidt">Frau Elena Schmidt</option>
-                        <option value="Herr Markus Weber">Herr Markus Weber</option>
-                        <option value="Frau Sophie Becker">Frau Sophie Becker</option>
+                        <option value="Frau Elena Schmidt" className="bg-[#0D111F] text-white">Frau Elena Schmidt</option>
+                        <option value="Herr Markus Weber" className="bg-[#0D111F] text-white">Herr Markus Weber</option>
+                        <option value="Frau Sophie Becker" className="bg-[#0D111F] text-white">Frau Sophie Becker</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Live Schedule & Meeting Room
                     </label>
                     <input
@@ -852,7 +852,7 @@ export function AdminDashboard() {
                       placeholder="e.g. Mon, Wed, Fri 18:00 - 19:30 CET"
                       value={batchSchedule}
                       onChange={(e) => setBatchSchedule(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                     />
                   </div>
                 </>
@@ -861,7 +861,7 @@ export function AdminDashboard() {
               {createType === 'course' && (
                 <>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Course Title
                     </label>
                     <input
@@ -870,36 +870,36 @@ export function AdminDashboard() {
                       value={courseTitle}
                       onChange={(e) => setCourseTitle(e.target.value)}
                       required
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
                         Target CEFR Level
                       </label>
                       <select
                         value={courseLevel}
                         onChange={(e) => setCourseLevel(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       >
-                        <option value="A1">A1 Beginner</option>
-                        <option value="A2">A2 Elementary</option>
-                        <option value="B1">B1 Intermediate</option>
-                        <option value="B2">B2 Advanced</option>
+                        <option value="A1" className="bg-[#0D111F] text-white">A1 Beginner</option>
+                        <option value="A2" className="bg-[#0D111F] text-white">A2 Elementary</option>
+                        <option value="B1" className="bg-[#0D111F] text-white">B1 Intermediate</option>
+                        <option value="B2" className="bg-[#0D111F] text-white">B2 Advanced</option>
                       </select>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
                         Tuition Price (€)
                       </label>
                       <input
                         type="number"
                         value={coursePrice}
                         onChange={(e) => setCoursePrice(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       />
                     </div>
                   </div>
@@ -909,7 +909,7 @@ export function AdminDashboard() {
               {createType === 'feePlan' && (
                 <>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Fee Plan Title
                     </label>
                     <input
@@ -918,32 +918,32 @@ export function AdminDashboard() {
                       value={feePlanName}
                       onChange={(e) => setFeePlanName(e.target.value)}
                       required
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
                         Per Installment Amount (€)
                       </label>
                       <input
                         type="number"
                         value={feeAmount}
                         onChange={(e) => setFeeAmount(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                      <label className="block text-xs font-bold text-slate-300 mb-1">
                         Number of Installments
                       </label>
                       <input
                         type="number"
                         value={feeInstallments}
                         onChange={(e) => setFeeInstallments(e.target.value)}
-                        className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       />
                     </div>
                   </div>
@@ -953,7 +953,7 @@ export function AdminDashboard() {
               {createType === 'announcement' && (
                 <>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Announcement Title
                     </label>
                     <input
@@ -962,27 +962,27 @@ export function AdminDashboard() {
                       value={announcementTitle}
                       onChange={(e) => setAnnouncementTitle(e.target.value)}
                       required
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Target Audience
                     </label>
                     <select
                       value={announcementTarget}
                       onChange={(e) => setAnnouncementTarget(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                     >
-                      <option value="ALL">All Students & Teachers</option>
-                      <option value="STUDENTS">Students Only</option>
-                      <option value="TEACHERS">Faculty / Teachers Only</option>
+                      <option value="ALL" className="bg-[#0D111F] text-white">All Students & Teachers</option>
+                      <option value="STUDENTS" className="bg-[#0D111F] text-white">Students Only</option>
+                      <option value="TEACHERS" className="bg-[#0D111F] text-white">Faculty / Teachers Only</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="block text-xs font-bold text-slate-300 mb-1">
                       Announcement Content
                     </label>
                     <textarea
@@ -991,15 +991,15 @@ export function AdminDashboard() {
                       value={announcementContent}
                       onChange={(e) => setAnnouncementContent(e.target.value)}
                       required
-                      className="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 p-2.5 rounded-xl focus:bg-white focus:outline-none"
+                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                     />
                   </div>
                 </>
               )}
 
               {actionSuccess && (
-                <div className="p-3 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold flex items-center gap-2 border border-emerald-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <div className="p-3 rounded-2xl bg-emerald-500/15 text-emerald-300 text-xs font-bold flex items-center gap-2 border border-emerald-500/30">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   <span>{actionSuccess}</span>
                 </div>
               )}
@@ -1008,13 +1008,13 @@ export function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setQuickCreateOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-50"
+                  className="px-4 py-2 rounded-2xl border border-white/10 text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs"
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-500/25"
                 >
                   Confirm & Create
                 </button>
@@ -1026,39 +1026,39 @@ export function AdminDashboard() {
 
       {/* 5. MODAL: Telemetry Payments Monitor ($750k records) */}
       {paymentsModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-indigo-600" />
-                <h3 className="font-heading font-black text-lg text-gray-900">
+                <CreditCard className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-heading font-black text-lg text-white">
                   Payment Telemetry & Tuition Transactions
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setPaymentsModalOpen(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-indigo-50 border border-indigo-100 text-xs font-bold text-indigo-900">
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 text-xs font-bold text-indigo-300">
               <span>Total Processed Volume:</span>
-              <span className="text-base font-black">$750,000.00 USD</span>
+              <span className="text-base font-black text-white">$750,000.00 USD</span>
             </div>
 
-            <div className="max-h-72 overflow-y-auto divide-y divide-gray-100 text-xs">
+            <div className="max-h-72 overflow-y-auto divide-y divide-white/5 text-xs">
               {paymentsList.map((p) => (
                 <div key={p.id} className="py-2.5 flex items-center justify-between">
                   <div>
-                    <p className="font-bold text-gray-900">{p.studentName}</p>
-                    <p className="text-[11px] text-gray-400">{p.courseTitle} • {p.planName}</p>
+                    <p className="font-bold text-white">{p.studentName}</p>
+                    <p className="text-[11px] text-slate-400">{p.courseTitle} • {p.planName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-gray-900">€{p.amount}</p>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                    <p className="font-bold text-white">€{p.amount}</p>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                       {p.status}
                     </span>
                   </div>
@@ -1070,7 +1070,7 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setPaymentsModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-gray-900 text-white text-xs font-bold hover:bg-gray-800"
+                className="px-5 py-2 rounded-2xl bg-white/10 border border-white/10 text-white text-xs font-bold hover:bg-white/20"
               >
                 Close
               </button>
@@ -1081,35 +1081,35 @@ export function AdminDashboard() {
 
       {/* 6. MODAL: Attendance Logs Monitor */}
       {attendanceModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <UserCheck className="w-5 h-5 text-indigo-600" />
-                <h3 className="font-heading font-black text-lg text-gray-900">
+                <UserCheck className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-heading font-black text-lg text-white">
                   Student Live Class Attendance
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setAttendanceModalOpen(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="max-h-72 overflow-y-auto divide-y divide-gray-100 text-xs">
+            <div className="max-h-72 overflow-y-auto divide-y divide-white/5 text-xs">
               {attendanceList.map((a) => (
                 <div key={a.id} className="py-2.5 flex items-center justify-between">
                   <div>
-                    <p className="font-bold text-gray-900">{a.studentName}</p>
-                    <p className="text-[11px] text-gray-400">{a.batchName} • Date: {a.date}</p>
+                    <p className="font-bold text-white">{a.studentName}</p>
+                    <p className="text-[11px] text-slate-400">{a.batchName} • Date: {a.date}</p>
                   </div>
                   <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
                     a.status === 'PRESENT'
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : 'bg-rose-50 text-rose-700 border border-rose-200'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
                   }`}>
                     {a.status}
                   </span>
@@ -1121,7 +1121,7 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setAttendanceModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-gray-900 text-white text-xs font-bold hover:bg-gray-800"
+                className="px-5 py-2 rounded-2xl bg-white/10 border border-white/10 text-white text-xs font-bold hover:bg-white/20"
               >
                 Close
               </button>

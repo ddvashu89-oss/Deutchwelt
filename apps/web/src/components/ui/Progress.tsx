@@ -7,7 +7,7 @@ interface ProgressProps {
   barColor?: string;
 }
 
-export function Progress({ value = 0, className, barColor = 'bg-mint' }: ProgressProps) {
+export function Progress({ value = 0, className, barColor = 'bg-gradient-to-r from-indigo-500 to-purple-500' }: ProgressProps) {
   const clamped = Math.min(100, Math.max(0, value));
 
   return (
@@ -16,7 +16,7 @@ export function Progress({ value = 0, className, barColor = 'bg-mint' }: Progres
       aria-valuenow={clamped}
       aria-valuemin={0}
       aria-valuemax={100}
-      className={cn('relative h-2 w-full overflow-hidden rounded-full bg-gray-200/80', className)}
+      className={cn('relative h-2 w-full overflow-hidden rounded-full bg-white/10', className)}
     >
       <div
         className={cn('h-full transition-all duration-500 ease-out rounded-full', barColor)}

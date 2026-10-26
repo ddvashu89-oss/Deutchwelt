@@ -157,8 +157,8 @@ export function CertificateModal({ isOpen, onClose, certificate }: CertificateMo
 
         {/* Modal Action Buttons */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-          <div className="text-xs text-dark-muted flex items-center gap-1">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Offiziell verifizierbares Dokument
+          <div className="text-xs text-slate-400 flex items-center gap-1">
+            <ShieldCheck className="w-4 h-4 text-emerald-400" /> Offiziell verifizierbares Dokument
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={handlePrint}>
