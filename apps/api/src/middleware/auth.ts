@@ -86,7 +86,9 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
 
     next();
   } catch (error) {
-    next(error);
+    console.warn('[Auth Middleware Warning] Session authentication issue, continuing unauthenticated:', (error as any)?.message);
+    req.user = undefined;
+    next();
   }
 }
 

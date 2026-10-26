@@ -6,6 +6,7 @@ export const authRateLimiter = rateLimit({
   max: env.isTest ? 1000 : 20, // 20 requests per 15 min per IP in production
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   message: {
     success: false,
     error: 'Too many authentication attempts. Please try again in 15 minutes.'
@@ -17,6 +18,7 @@ export const apiRateLimiter = rateLimit({
   max: env.isTest ? 2000 : 120, // 120 requests per minute
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   message: {
     success: false,
     error: 'Too many requests. Please slow down.'

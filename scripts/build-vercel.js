@@ -25,6 +25,12 @@ execSync('npm --prefix apps/web run build', { stdio: 'inherit' });
 // 4. Bundle standalone serverless API handler with esbuild JS API
 console.log('[Build] 4/4 Bundling standalone Serverless API handlers with esbuild...');
 
+const rootPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const externalDeps = Object.keys(rootPkg.dependencies || {}).filter(
+  dep => !dep.startsWith('@deutschwelt/')
+);
+externalDeps.push('node:*');
+
 await esbuild.build({
   entryPoints: ['apps/api/src/app.ts'],
   bundle: true,
@@ -32,7 +38,7 @@ await esbuild.build({
   target: 'node20',
   format: 'esm',
   outfile: 'api/index.js',
-  packages: 'external'
+  external: externalDeps
 });
 
 // Copy to catch-all and web subdirectories
@@ -43,8 +49,13 @@ fs.mkdirSync('apps/web/api', { recursive: true });
 fs.copyFileSync('api/index.js', 'apps/web/api/index.js');
 fs.copyFileSync('api/index.js', 'apps/web/api/[...path].js');
 
+fs.mkdirSync('apps/web/dist/api', { recursive: true });
+fs.copyFileSync('api/index.js', 'apps/web/dist/api/index.js');
+fs.copyFileSync('api/index.js', 'apps/web/dist/api/[...path].js');
+
 if (fs.existsSync('api/health.js')) {
   fs.copyFileSync('api/health.js', 'apps/web/api/health.js');
+  fs.copyFileSync('api/health.js', 'apps/web/dist/api/health.js');
 }
 
 console.log('[Build] ✓ DeutschWelt build completed successfully!');

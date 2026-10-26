@@ -24,8 +24,23 @@ import enquiryRoutes from './modules/enquiries/enquiryRoutes.js';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 // Normalize URL for Vercel Serverless Function Proxying
 app.use((req, res, next) => {
+  // If Vercel rewrote the URL to /api or /api/index.js, restore the original request path from headers
+  const matchedPath =
+    (req.headers['x-matched-path'] as string) ||
+    (req.headers['x-original-url'] as string) ||
+    req.originalUrl ||
+    req.url;
+
+  if (req.url.includes('/index.js') || req.url === '/api' || req.url === '/api/') {
+    if (matchedPath && !matchedPath.includes('/index.js') && matchedPath !== '/api' && matchedPath !== '/api/') {
+      req.url = matchedPath;
+    }
+  }
+
   if (req.url && !req.url.startsWith('/api') && !req.url.startsWith('/uploads')) {
     req.url = `/api${req.url.startsWith('/') ? '' : '/'}${req.url}`;
   }
@@ -88,8 +103,8 @@ app.use(authenticate);
 // API Rate Limiting
 app.use('/api/', apiRateLimiter);
 
-// Health Check
-app.get('/api/v1/health', (req, res) => {
+// Health and Base Root Handlers
+app.get(['/', '/health', '/api', '/api/health', '/api/v1/health', '/api/index', '/api/index.js'], (req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -112,7 +127,16 @@ app.use('/api/v1/teacher', teacherRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/enquiries', enquiryRoutes);
 
+// Catch-all route for unknown API endpoints
+app.all('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: `API route not found: ${req.method} ${req.url}`
+  });
+});
+
 // Centralized Error Handling
 app.use(errorHandler);
 
 export default app;
+

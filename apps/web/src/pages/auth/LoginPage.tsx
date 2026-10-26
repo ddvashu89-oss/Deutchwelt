@@ -55,7 +55,13 @@ export function LoginPage() {
 
   const fillQuickCreds = (email: string) => {
     setValue('email', email);
-    setValue('password', 'Admin@1234');
+    if (email.includes('admin')) {
+      setValue('password', 'AdminDeutschWelt2026!');
+    } else if (email.includes('teacher')) {
+      setValue('password', 'TeacherDeutschWelt2026!');
+    } else {
+      setValue('password', 'StudentDeutschWelt2026!');
+    }
   };
 
   return (

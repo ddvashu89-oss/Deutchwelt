@@ -45,10 +45,10 @@ export class DataStore {
     this.seedInitialData();
   }
 
-  async seedInitialData() {
-    const adminPasswordHash = await bcrypt.hash('AdminDeutschWelt2026!', 10);
-    const teacherPasswordHash = await bcrypt.hash('TeacherDeutschWelt2026!', 10);
-    const studentPasswordHash = await bcrypt.hash('StudentDeutschWelt2026!', 10);
+  seedInitialData() {
+    const adminPasswordHash = bcrypt.hashSync('AdminDeutschWelt2026!', 10);
+    const teacherPasswordHash = bcrypt.hashSync('TeacherDeutschWelt2026!', 10);
+    const studentPasswordHash = bcrypt.hashSync('StudentDeutschWelt2026!', 10);
 
     const admin = {
       id: 'user-admin-1',
