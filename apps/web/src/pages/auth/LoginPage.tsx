@@ -8,7 +8,7 @@ import { Logo } from '../../components/brand/Logo.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
-import { ArrowRight, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -26,7 +26,6 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting }
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema)
@@ -37,12 +36,12 @@ export function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setServerError(null);
-      await login({ email: data.email, password: data.password });
+      const user = await login({ email: data.email, password: data.password });
       
       const email = data.email.toLowerCase();
-      if (email.includes('admin')) {
+      if (user?.role === 'ADMIN' || email.includes('admin')) {
         navigate('/admin', { replace: true });
-      } else if (email.includes('teacher')) {
+      } else if (user?.role === 'TEACHER' || email.includes('teacher')) {
         navigate('/teacher', { replace: true });
       } else {
         navigate(from === '/login' ? '/student' : from, { replace: true });
@@ -50,11 +49,6 @@ export function LoginPage() {
     } catch (err: any) {
       setServerError(err.message || 'Invalid email or password. Please try again.');
     }
-  };
-
-  const quickFill = (email: string, pass: string) => {
-    setValue('email', email);
-    setValue('password', pass);
   };
 
   return (
@@ -117,39 +111,6 @@ export function LoginPage() {
               <ArrowRight className="w-4 h-4 text-mint" />
             </button>
           </form>
-
-          {/* 1-Click Demo Login Options */}
-          <div className="pt-4 border-t border-gray-100 space-y-3">
-            <p className="text-[11px] font-bold text-center uppercase tracking-wider text-gray-400">
-              1-Klick Demo Login (Testmodus)
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => quickFill('student@deutschwelt.de', 'StudentDeutschWelt2026!')}
-                className="py-2.5 px-2 rounded-2xl bg-forest-50 hover:bg-forest-100/80 text-forest-950 text-[11px] font-bold border border-forest-200 transition-colors flex flex-col items-center shadow-xs cursor-pointer"
-              >
-                <span>Student</span>
-                <span className="text-[9px] text-forest-700 font-medium">B1 Lerner</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => quickFill('teacher@deutschwelt.de', 'TeacherDeutschWelt2026!')}
-                className="py-2.5 px-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 text-emerald-950 text-[11px] font-bold border border-emerald-200 transition-colors flex flex-col items-center shadow-xs cursor-pointer"
-              >
-                <span>Dozent</span>
-                <span className="text-[9px] text-emerald-700 font-medium">Elena Schmidt</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => quickFill('admin@deutschwelt.de', 'AdminDeutschWelt2026!')}
-                className="py-2.5 px-2 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-[11px] font-bold border border-gray-300 transition-colors flex flex-col items-center shadow-xs cursor-pointer"
-              >
-                <span>Admin</span>
-                <span className="text-[9px] text-gray-600 font-medium">Vollzugriff</span>
-              </button>
-            </div>
-          </div>
 
           <div className="text-center text-xs text-gray-500 pt-2">
             Noch kein Konto?{' '}

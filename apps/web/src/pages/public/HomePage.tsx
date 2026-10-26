@@ -161,7 +161,6 @@ export function HomePage() {
   const [activeLevel, setActiveLevel] = useState<'A1' | 'A2' | 'B1' | 'B2'>('A1');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Scroll Progress for Hairline Top Indicator & Hero 3D Perspective
   const heroRef = useRef<HTMLDivElement>(null);
@@ -212,18 +211,6 @@ export function HomePage() {
   };
 
   const currentPhrase = COACHING_PHRASES[activeLevel];
-
-  // Mouse Parallax for Hero Console
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMousePos({ x, y });
-  };
-
-  const handleMouseLeave = () => {
-    setMousePos({ x: 0, y: 0 });
-  };
 
   const features = [
     {
@@ -386,7 +373,7 @@ export function HomePage() {
                 </div>
               </motion.div>
 
-              {/* MAIN COCKPIT: Dynamic 3D Tilt on Mouse & Scroll */}
+              {/* MAIN COCKPIT: Coaching Cockpit Card */}
               <motion.div
                 style={{
                   rotateX: heroCockpitRotateX,
@@ -395,13 +382,6 @@ export function HomePage() {
                   opacity: heroCockpitOpacity,
                   transformStyle: 'preserve-3d'
                 }}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                animate={{
-                  rotateY: mousePos.x * 12,
-                  rotateX: -mousePos.y * 12
-                }}
-                transition={{ type: 'spring', stiffness: 200, damping: 25 }}
                 className="w-full max-w-lg rounded-3xl bg-[#091511] border border-emerald-500/25 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6),0_0_50px_rgba(46,206,134,0.15)] text-white p-6 sm:p-7 relative overflow-hidden space-y-6"
               >
                 {/* Background Ambient Mesh Glow */}
