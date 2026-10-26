@@ -25,33 +25,38 @@ execSync('npm --prefix apps/web run build', { stdio: 'inherit' });
 // 4. Bundle standalone serverless API handler with esbuild JS API
 console.log('[Build] 4/4 Bundling standalone Serverless API handlers with esbuild...');
 
-const rootPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const externalDeps = Object.keys(rootPkg.dependencies || {}).filter(
-  dep => !dep.startsWith('@deutschwelt/')
-);
-externalDeps.push('node:*');
+fs.mkdirSync('api', { recursive: true });
+
+// Ensure api/package.json exists with type: module
+const apiPkg = {
+  name: 'deutschwelt-api-handler',
+  private: true,
+  type: 'module'
+};
+fs.writeFileSync('api/package.json', JSON.stringify(apiPkg, null, 2));
 
 await esbuild.build({
-  entryPoints: ['apps/api/src/app.ts'],
+  entryPoints: ['apps/api/src/serverless.ts'],
   bundle: true,
   platform: 'node',
   target: 'node20',
   format: 'esm',
   outfile: 'api/index.js',
-  external: externalDeps
+  external: ['@prisma/client', 'prisma', 'node:*']
 });
 
 // Copy to catch-all and web subdirectories
-fs.mkdirSync('api', { recursive: true });
 fs.copyFileSync('api/index.js', 'api/[...path].js');
 
 fs.mkdirSync('apps/web/api', { recursive: true });
 fs.copyFileSync('api/index.js', 'apps/web/api/index.js');
 fs.copyFileSync('api/index.js', 'apps/web/api/[...path].js');
+fs.copyFileSync('api/package.json', 'apps/web/api/package.json');
 
 fs.mkdirSync('apps/web/dist/api', { recursive: true });
 fs.copyFileSync('api/index.js', 'apps/web/dist/api/index.js');
 fs.copyFileSync('api/index.js', 'apps/web/dist/api/[...path].js');
+fs.copyFileSync('api/package.json', 'apps/web/dist/api/package.json');
 
 if (fs.existsSync('api/health.js')) {
   fs.copyFileSync('api/health.js', 'apps/web/api/health.js');
