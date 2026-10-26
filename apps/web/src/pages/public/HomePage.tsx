@@ -215,42 +215,42 @@ export function HomePage() {
   const features = [
     {
       icon: Video,
-      title: 'Live-Klassen via Google Meet & Zoom',
-      desc: 'Interaktive Kleingruppen-Seminare mit Goethe-zertifizierten Dozenten. Direkte Aussprache-Korrektur und Sprechübungen in Echtzeit.'
-    },
-    {
-      icon: Mic,
-      title: 'KI-gestütztes Sprachlabor',
-      desc: 'Sprechen Sie deutsche Sätze ein und erhalten Sie sekundenschnelle Auswertung zu Intonation, Grammatik und Vokal-Aussprache.'
+      title: t('home.features.f1.title'),
+      desc: t('home.features.f1.desc')
     },
     {
       icon: Layers,
-      title: 'Leitner Spaced Repetition (SRS)',
-      desc: 'Wissenschaftlich erprobter 5-Boxen Wortschatztrainer. Vokabeln wandern automatisch in Ihr Langzeitgedächtnis.'
+      title: t('home.features.f2.title'),
+      desc: t('home.features.f2.desc')
+    },
+    {
+      icon: Mic,
+      title: t('home.features.f3.title'),
+      desc: t('home.features.f3.desc')
     },
     {
       icon: Award,
-      title: 'Offizielle Abschlusszertifikate',
-      desc: 'Nach Bestehen jeder CEFR-Stufe erhalten Sie ein verifizierbares PDF-Zertifikat mit Ausweisnummer und Notenspiegel.'
+      title: t('home.features.f4.title'),
+      desc: t('home.features.f4.desc')
     }
   ];
 
   const faqs = [
     {
-      q: 'Kann ich starten, wenn ich noch nie ein Wort Deutsch gesprochen habe?',
-      a: 'Absolut! Unser A1-Kurs beginnt bei null mit Phonetik, Lautbildung und grundlegenden Begrüßungen. Sie benötigen keinerlei Vorkenntnisse.'
+      q: t('home.faq.q1'),
+      a: t('home.faq.a1')
     },
     {
-      q: 'Sind die Kurse auf offizielle Goethe- & Telc-Prüfungen ausgerichtet?',
-      a: 'Ja. Unser gesamter Lehrplan folgt exakt dem Gemeinsamen Europäischen Referenzrahmen (GER). Jede Einheit enthält gezielte Prüfungsmodule für Lesen, Hören, Schreiben und Sprechen.'
+      q: t('home.faq.q2'),
+      a: t('home.faq.a2')
     },
     {
-      q: 'Wie laufen die Live-Sitzungen ab?',
-      a: 'Über Ihr Dashboard können Sie mit einem Klick dem Google Meet- oder Zoom-Klassenraum beitreten. Der Dozent leitet interaktive Sprechübungen und teilt Arbeitsblätter.'
+      q: t('home.faq.q3'),
+      a: t('home.faq.a3')
     },
     {
-      q: 'Wie erhalte ich mein Abschlusszertifikat?',
-      a: 'Sobald Sie alle Lektionen und das Abschluss-Quiz Ihrer Kursstufe absolviert haben, generiert das System Ihr persönliches Zertifikat, das Sie sofort als PDF herunterladen können.'
+      q: t('home.faq.q4'),
+      a: t('home.faq.a4')
     }
   ];
 
@@ -286,13 +286,13 @@ export function HomePage() {
             >
               <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-forest-50 border border-forest-200/80 text-forest-900 text-xs font-bold tracking-wide shadow-xs">
                 <span className="w-2.5 h-2.5 rounded-full bg-mint animate-pulse shadow-[0_0_8px_#2ECE86]" />
-                <span>DeutschWelt Coaching • GER A1 bis B2</span>
+                <span>{t('home.hero.badge')}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-gray-950 tracking-tight leading-[1.12]">
-                Meistern Sie Deutsch mit <br />
+                {t('home.hero.titlePrefix')}{' '}
                 <span className="text-forest-800 relative inline-block">
-                  Präzisions-Coaching.
+                  {t('home.hero.titleHighlight')}
                   <svg
                     className="absolute -bottom-2 left-0 w-full h-3 text-mint/60 -z-10"
                     viewBox="0 0 100 20"
@@ -304,14 +304,13 @@ export function HomePage() {
               </h1>
 
               <p className="text-base sm:text-lg text-gray-600 max-w-xl leading-relaxed">
-                Strukturierte Deutschkurse nach Goethe- & Telc-Standard. Live-Seminare mit muttersprachlichen Dozenten,
-                Echtzeit-KI-Sprachlabor und verifizierbare Abschlusszertifikate.
+                {t('home.hero.subtitle')}
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                 <Link to="/register" className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-3 shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-0.5">
-                    <span>Kostenlos starten</span>
+                    <span>{t('home.hero.cta.start')}</span>
                     <ArrowRight className="w-4 h-4 text-mint" />
                   </button>
                 </Link>
@@ -319,7 +318,7 @@ export function HomePage() {
                 <Link to="/courses" className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-7 py-4 rounded-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-800 font-bold text-sm flex items-center justify-center gap-2 shadow-xs transition-colors">
                     <BookOpen className="w-4 h-4 text-forest-800" />
-                    <span>Kursübersicht (A1–B2)</span>
+                    <span>{t('home.hero.cta.courses')}</span>
                   </button>
                 </Link>
               </div>
@@ -473,12 +472,12 @@ export function HomePage() {
                       {isPlayingAudio ? (
                         <>
                           <Pause className="w-4 h-4 fill-current animate-pulse" />
-                          <span>Wiedergabe...</span>
+                          <span>{t('home.cockpit.playing')}</span>
                         </>
                       ) : (
                         <>
                           <Play className="w-4 h-4 fill-current" />
-                          <span>Aussprache anhören</span>
+                          <span>{t('home.cockpit.listenAudio')}</span>
                         </>
                       )}
                     </button>
@@ -716,14 +715,13 @@ export function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
             <span className="text-xs font-bold uppercase tracking-widest text-forest-800 bg-forest-50 px-3.5 py-1.5 rounded-full border border-forest-200">
-              Modernste Lernmethoden
+              {t('home.features.badge')}
             </span>
             <h2 className="text-3xl sm:text-4xl font-heading font-black text-gray-950 tracking-tight">
-              Warum DeutschWelt Coaching?
+              {t('home.features.title')}
             </h2>
             <p className="text-sm text-gray-600">
-              Die Symbiose aus erfahrenen Dozenten, wissenschaftlichem Spaced Repetition und
-              modernster Audio-KI für maximale Prüfungssicherheit.
+              {t('home.features.subtitle')}
             </p>
           </div>
 
@@ -763,10 +761,10 @@ export function HomePage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12 space-y-2">
           <h2 className="text-3xl font-heading font-black text-gray-950 tracking-tight">
-            Häufig gestellte Fragen (FAQ)
+            {t('home.faq.title')}
           </h2>
           <p className="text-sm text-gray-500">
-            Alles Wissenswerte zu Kursablauf, Prüfungen, Google Meet und Abschlusszertifikaten.
+            {t('home.faq.badge')}
           </p>
         </div>
 
@@ -814,21 +812,20 @@ export function HomePage() {
           <div className="space-y-3 max-w-xl text-center md:text-left z-10">
             <span className="text-xs font-bold uppercase tracking-wider text-mint flex items-center justify-center md:justify-start gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-mint" />
-              Bereit für den Durchbruch?
+              {t('home.cta.badge')}
             </span>
             <h2 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-white leading-tight">
-              Starten Sie noch heute Ihre Reise zur deutschen Sprachflüssigkeit.
+              {t('home.cta.title')}
             </h2>
             <p className="text-xs sm:text-sm text-emerald-100/70">
-              Registrieren Sie sich kostenlos und erhalten Sie sofortigen Zugriff auf die ersten A1-Lektionen,
-              das KI-Sprachlabor und Live-Klassen-Termine.
+              {t('home.cta.subtitle')}
             </p>
           </div>
 
           <div className="z-10 flex flex-col sm:flex-row items-center gap-3 shrink-0">
             <Link to="/register">
               <button className="px-8 py-4 rounded-full bg-mint hover:bg-emerald-400 text-forest-950 font-black text-sm shadow-xl transition-all transform hover:scale-105">
-                Jetzt kostenlos anmelden
+                {t('home.cta.btn')}
               </button>
             </Link>
           </div>

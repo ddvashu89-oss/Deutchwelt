@@ -43,14 +43,14 @@ export function PublicLayout() {
       <div className="bg-forest-950 text-white text-xs py-2 px-4 text-center font-medium border-b border-forest-900">
         <span className="inline-flex items-center gap-2">
           <span className="px-2 py-0.5 rounded-full bg-mint/20 text-mint text-[10px] font-bold tracking-wider uppercase border border-mint/30">
-            Intensivkurse 2026
+            {t('nav.ribbon.badge')}
           </span>
-          <span>Goethe & Telc Vorbereitung A1–B2 • Kleine Gruppen & 1-zu-1 Coaching.</span>
+          <span>{t('nav.ribbon.text')}</span>
           <Link
             to="/courses"
             className="underline decoration-mint underline-offset-2 font-bold text-mint hover:text-white transition-colors ml-1 hidden sm:inline"
           >
-            Jetzt Einstufen →
+            {t('nav.ribbon.cta')}
           </Link>
         </span>
       </div>
@@ -140,19 +140,19 @@ export function PublicLayout() {
               {user ? (
                 <Link to={getDashboardLink()} onClick={() => setMobileMenuOpen(false)}>
                   <button className="w-full py-3 rounded-full bg-forest-900 text-white text-sm font-bold shadow-md">
-                    Zum Dashboard
+                    {t('nav.mobile.dashboard')}
                   </button>
                 </Link>
               ) : (
                 <>
                   <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full py-2.5 rounded-full border border-gray-200 text-gray-800 text-sm font-bold">
-                      Anmelden
+                      {t('nav.login')}
                     </button>
                   </Link>
                   <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full py-2.5 rounded-full bg-forest-900 text-white text-sm font-bold">
-                      Kostenlos starten
+                      {t('nav.mobile.startFree')}
                     </button>
                   </Link>
                 </>
@@ -177,7 +177,7 @@ export function PublicLayout() {
                 <Logo size="md" asLink={false} />
               </div>
               <p className="text-sm text-emerald-100/70 max-w-sm leading-relaxed">
-                DeutschWelt Coaching ist Ihre Akademie für deutsche Sprachkompetenz nach dem Gemeinsamen Europäischen Referenzrahmen (GER A1 bis B2).
+                {t('footer.tagline')}
               </p>
               <div className="flex items-center gap-4 text-xs text-emerald-200/80 pt-2">
                 <span className="flex items-center gap-1.5">
@@ -192,50 +192,50 @@ export function PublicLayout() {
             {/* Courses Column */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-                Kursstufen
+                {t('footer.colCourses')}
               </h4>
               <ul className="space-y-2 text-sm text-emerald-100/70">
-                <li><Link to="/courses" className="hover:text-white transition-colors">A1 Anfänger (Start from Zero)</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">A2 Grundstufe (Konversation)</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">B1 Mittelstufe (Beruf & Alltag)</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">B2 Fortgeschritten (Goethe Zertifikat)</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">Prüfungstraining</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.a1')}</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.a2')}</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.b1')}</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.b2')}</Link></li>
+                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.examPrep')}</Link></li>
               </ul>
             </div>
 
             {/* Practice Tools Column */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-                Lernwerkzeuge
+                {t('footer.colTools')}
               </h4>
               <ul className="space-y-2 text-sm text-emerald-100/70">
-                <li><Link to="/vocabulary" className="hover:text-white transition-colors">Wortschatz-Trainer (SRS)</Link></li>
-                <li><Link to="/login" className="hover:text-white transition-colors">Aussprache-Labor</Link></li>
-                <li><Link to="/login" className="hover:text-white transition-colors">Live-Unterricht (Meet/Zoom)</Link></li>
-                <li><Link to="/about" className="hover:text-white transition-colors">Leitner-Karteikartensystem</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition-colors">1-zu-1 Dozentenbetreuung</Link></li>
+                <li><Link to="/vocabulary" className="hover:text-white transition-colors">{t('footer.srs')}</Link></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">{t('footer.speakingLab')}</Link></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">{t('footer.liveClasses')}</Link></li>
+                <li><Link to="/about" className="hover:text-white transition-colors">{t('footer.flashcards')}</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition-colors">{t('footer.mentorship')}</Link></li>
               </ul>
             </div>
 
             {/* Academy & Legal Column */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-                Akademie
+                {t('footer.colAcademy')}
               </h4>
               <ul className="space-y-2 text-sm text-emerald-100/70">
-                <li><Link to="/about" className="hover:text-white transition-colors">Über DeutschWelt</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition-colors">Kontakt & Beratung</Link></li>
-                <li><Link to="/privacy" className="hover:text-white transition-colors">Datenschutz</Link></li>
-                <li><Link to="/terms" className="hover:text-white transition-colors">AGB & Nutzungsbedingungen</Link></li>
-                <li><Link to="/cookies" className="hover:text-white transition-colors">Cookie-Richtlinie</Link></li>
+                <li><Link to="/about" className="hover:text-white transition-colors">{t('footer.about')}</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition-colors">{t('footer.contact')}</Link></li>
+                <li><Link to="/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link></li>
+                <li><Link to="/terms" className="hover:text-white transition-colors">{t('footer.terms')}</Link></li>
+                <li><Link to="/cookies" className="hover:text-white transition-colors">{t('footer.cookies')}</Link></li>
               </ul>
             </div>
           </div>
 
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-emerald-100/60 gap-4">
-            <p>© {new Date().getFullYear()} DeutschWelt Coaching. Alle Rechte vorbehalten.</p>
+            <p>© {new Date().getFullYear()} DeutschWelt Coaching. {t('footer.rights')}</p>
             <p className="flex items-center gap-1 font-medium">
-              Zertifizierte Deutschkurse nach Goethe- & Telc-Standards.
+              {t('footer.certNote')}
             </p>
           </div>
         </div>

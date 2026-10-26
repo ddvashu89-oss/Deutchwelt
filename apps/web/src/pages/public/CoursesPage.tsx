@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Button } from '../../components/ui/Button.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../components/ui/Card.js';
@@ -8,6 +9,7 @@ import { Skeleton } from '../../components/ui/Skeleton.js';
 import { BookOpen, Clock, CheckCircle, ArrowRight, ArrowUpRight, Filter, ShieldCheck, Sparkles } from 'lucide-react';
 
 export function CoursesPage() {
+  const { t } = useLanguage();
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState<string>('ALL');
@@ -34,13 +36,13 @@ export function CoursesPage() {
       {/* Header */}
       <div className="max-w-3xl space-y-3">
         <span className="text-xs font-bold uppercase tracking-wider text-forest-800 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">
-          Lehrplan A1 bis B2
+          {t('courses.badge')}
         </span>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-gray-950 tracking-tight">
-          Zertifizierte Deutschkurse
+          {t('courses.title')}
         </h1>
         <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-          Strukturierte Vorbereitung auf die Goethe-Zertifikate und telc Prüfungen. Erlernen Sie Grammatik, Wortschatz und freies Sprechen mit persönlicher Dozentenbegleitung.
+          {t('courses.subtitle')}
         </p>
       </div>
 

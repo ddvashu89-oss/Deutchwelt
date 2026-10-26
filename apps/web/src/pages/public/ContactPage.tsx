@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Input, Textarea } from '../../components/ui/Input.js';
 import { Button } from '../../components/ui/Button.js';
 import { Badge } from '../../components/ui/Badge.js';
@@ -27,6 +28,7 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>;
 
 export function ContactPage() {
+  const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -46,7 +48,7 @@ export function ContactPage() {
       setSubmitted(true);
       reset();
     } catch (err: any) {
-      setServerError(err.message || 'Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.');
+      setServerError(err.message || 'Error sending message. Please try again.');
     }
   };
 
@@ -57,13 +59,13 @@ export function ContactPage() {
         <div className="lg:col-span-5 space-y-6">
           <div className="space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-forest-800 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">
-              Kontakt & Beratung
+              {t('contact.badge')}
             </span>
             <h1 className="text-3xl sm:text-4xl font-heading font-black text-gray-950 tracking-tight">
-              Sprechen Sie mit unserem Beraterteam
+              {t('contact.title')}
             </h1>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Haben Sie Fragen zur Kurseinstufung, Goethe-Zertifikaten oder den nächsten Live-Terminen? Wir beraten Sie gern persönlich.
+              {t('contact.subtitle')}
             </p>
           </div>
 
@@ -112,27 +114,27 @@ export function ContactPage() {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-2xl font-heading font-black text-gray-950">
-                  Vielen Dank für Ihre Anfrage!
+                  {t('contact.successTitle')}
                 </h3>
                 <p className="text-sm text-gray-600 max-w-md mx-auto">
-                  Ihre Nachricht wurde erfolgreich übermittelt. Ein Fachberater wird sich innerhalb eines Werktags bei Ihnen melden.
+                  {t('contact.successDesc')}
                 </p>
                 <button
                   type="button"
                   onClick={() => setSubmitted(false)}
                   className="px-6 py-2.5 rounded-full border border-gray-300 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors"
                 >
-                  Weitere Nachricht senden
+                  {t('contact.submit')}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <h2 className="text-2xl font-heading font-black text-gray-950 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-forest-800" /> Kontaktformular
+                    <MessageSquare className="w-5 h-5 text-forest-800" /> {t('contact.badge')}
                   </h2>
                   <p className="text-xs text-gray-500 mt-1">
-                    Füllen Sie das Formular aus und erhalten Sie eine unverbindliche Beratung.
+                    {t('contact.subtitle')}
                   </p>
                 </div>
 
@@ -144,15 +146,15 @@ export function ContactPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
-                    label="Vollständiger Name *"
+                    label={t('contact.name')}
                     placeholder="Max Mustermann"
                     error={errors.fullName?.message}
                     {...register('fullName')}
                   />
                   <Input
-                    label="E-Mail-Adresse *"
+                    label={t('contact.email')}
                     type="email"
-                    placeholder="max@example.de"
+                    placeholder="max@example.com"
                     error={errors.email?.message}
                     {...register('email')}
                   />
@@ -160,32 +162,32 @@ export function ContactPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
-                    label="Telefonnummer (optional)"
+                    label={t('contact.phone')}
                     placeholder="+49 170 1234567"
                     error={errors.phone?.message}
                     {...register('phone')}
                   />
                   <div className="space-y-1.5">
                     <label className="block text-xs font-bold text-gray-700 tracking-wide">
-                      Ziel-Niveau
+                      {t('contact.targetLevel')}
                     </label>
                     <select
                       {...register('targetLevel')}
                       className="flex h-11 w-full rounded-2xl border border-gray-200 bg-white px-4 py-2 text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-forest-800/15 focus:border-forest-800 transition-all"
                     >
-                      <option value="A1">A1 Anfänger (Start from Zero)</option>
-                      <option value="A2">A2 Grundstufe</option>
-                      <option value="B1">B1 Mittelstufe (Goethe B1 / DTZ)</option>
-                      <option value="B2">B2 Fortgeschritten (Beruf & Studium)</option>
-                      <option value="OTHER">Allgemeine Beratung</option>
+                      <option value="A1">A1 Beginner</option>
+                      <option value="A2">A2 Elementary</option>
+                      <option value="B1">B1 Intermediate (Goethe B1 / DTZ)</option>
+                      <option value="B2">B2 Advanced (Goethe B2)</option>
+                      <option value="OTHER">General Counselling</option>
                     </select>
                   </div>
                 </div>
 
                 <Textarea
-                  label="Ihre Nachricht *"
+                  label={t('contact.message')}
                   rows={4}
-                  placeholder="Beschreiben Sie kurz Ihre Lernziele oder bisherige Deutschkenntnisse..."
+                  placeholder="Describe your goals or questions..."
                   error={errors.message?.message}
                   {...register('message')}
                 />
@@ -196,7 +198,7 @@ export function ContactPage() {
                     disabled={isSubmitting}
                     className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
                   >
-                    <span>{isSubmitting ? 'Wird übermittelt...' : 'Nachricht absenden'}</span>
+                    <span>{isSubmitting ? t('contact.submitting') : t('contact.submit')}</span>
                     <ArrowRight className="w-4 h-4 text-mint" />
                   </button>
                 </div>

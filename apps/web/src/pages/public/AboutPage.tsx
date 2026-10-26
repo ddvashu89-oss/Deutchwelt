@@ -1,21 +1,24 @@
 import React from 'react';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Card, CardContent } from '../../components/ui/Card.js';
 import { ShieldCheck, GraduationCap, Award, Globe, Users, HeartHandshake } from 'lucide-react';
 
 export function AboutPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16 font-sans">
       {/* Header */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
         <span className="text-xs font-bold uppercase tracking-wider text-forest-800 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">
-          Unsere Mission
+          {t('about.badge')}
         </span>
         <h1 className="text-4xl sm:text-5xl font-heading font-black text-gray-950 tracking-tight">
-          Akademische Exzellenz trifft moderne EdTech
+          {t('about.title')}
         </h1>
         <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-          DeutschWelt Coaching schließt die Lücke zwischen oberflächlichen Vokabel-Apps und starren, teuren Sprachschulen. Wir begleiten Sie strukturiert vom ersten Wort bis zum Goethe-Zertifikat B2.
+          {t('about.subtitle')}
         </p>
       </div>
 
@@ -25,9 +28,9 @@ export function AboutPage() {
           <div className="w-12 h-12 rounded-2xl bg-forest-100 text-forest-900 flex items-center justify-center">
             <GraduationCap className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-heading font-bold text-gray-950">Didaktische Präzision</h3>
+          <h3 className="text-lg font-heading font-bold text-gray-950">{t('about.p1.title')}</h3>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Wir vereinfachen das deutsche Kasus-System (Nominativ, Akkusativ, Dativ, Genitiv) mit intuitiven Farb- und Strukturmustern, sodass Grammatik sofort verständlich wird.
+            {t('about.p1.desc')}
           </p>
         </div>
 
@@ -35,9 +38,9 @@ export function AboutPage() {
           <div className="w-12 h-12 rounded-2xl bg-mint/15 text-forest-900 border border-mint/20 flex items-center justify-center">
             <Award className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-heading font-bold text-gray-950">Goethe- & telc-Fokus</h3>
+          <h3 className="text-lg font-heading font-bold text-gray-950">{t('about.p2.title')}</h3>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Speziell konzipiert für Mediziner, Ingenieure, Studenten und Fachkräfte, die anerkannte CEFR-Nachweise für Studium, Arbeitsplatz oder Visum in Deutschland benötigen.
+            {t('about.p2.desc')}
           </p>
         </div>
 
@@ -45,9 +48,9 @@ export function AboutPage() {
           <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
             <HeartHandshake className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-heading font-bold text-gray-950">Persönliche Begleitung</h3>
+          <h3 className="text-lg font-heading font-bold text-gray-950">{t('about.p3.title')}</h3>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Moderne Algorithmen unterstützen das tägliche Üben, während erfahrene Dozenten Ihre Aussprache in Live-Seminaren individuell korrigieren.
+            {t('about.p3.desc')}
           </p>
         </div>
       </div>

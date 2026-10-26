@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { useLanguage } from '../context/LanguageContext.js';
 import { Logo } from '../components/brand/Logo.js';
 import { Button } from '../components/ui/Button.js';
+import { LanguageToggle } from '../components/ui/LanguageToggle.js';
 import {
   LayoutDashboard,
   CheckSquare,
@@ -31,6 +33,7 @@ import {
 
 export function DashboardLayout() {
   const { user, logout, isStudent, isTeacher, isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,32 +47,32 @@ export function DashboardLayout() {
 
   // Student Navigation mapped to Donezo menu structure
   const studentMenu = [
-    { label: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
-    { label: 'Tasks', href: '/student/courses', icon: CheckSquare, badge: '12+' },
-    { label: 'Calendar', href: '/student/materials', icon: Calendar },
-    { label: 'Analytics', href: '/student/vocabulary', icon: BarChart2 },
-    { label: 'Team', href: '/student/speaking', icon: Users },
+    { label: t('dash.menu.dashboard'), href: '/student/dashboard', icon: LayoutDashboard },
+    { label: t('dash.menu.tasks'), href: '/student/courses', icon: CheckSquare, badge: '12+' },
+    { label: t('dash.menu.calendar'), href: '/student/materials', icon: Calendar },
+    { label: t('dash.menu.analytics'), href: '/student/vocabulary', icon: BarChart2 },
+    { label: t('dash.menu.team'), href: '/student/speaking', icon: Users },
   ];
 
   const teacherMenu = [
-    { label: 'Dashboard', href: '/teacher/dashboard', icon: LayoutDashboard },
-    { label: 'Tasks', href: '/teacher/submissions', icon: CheckSquare, badge: '5' },
-    { label: 'Calendar', href: '/teacher/materials', icon: Calendar },
-    { label: 'Analytics', href: '/teacher/assignments/new', icon: BarChart2 },
-    { label: 'Team', href: '/teacher/batches', icon: Users },
+    { label: t('dash.menu.dashboard'), href: '/teacher/dashboard', icon: LayoutDashboard },
+    { label: t('dash.menu.tasks'), href: '/teacher/submissions', icon: CheckSquare, badge: '5' },
+    { label: t('dash.menu.calendar'), href: '/teacher/materials', icon: Calendar },
+    { label: t('dash.menu.analytics'), href: '/teacher/assignments/new', icon: BarChart2 },
+    { label: t('dash.menu.team'), href: '/teacher/batches', icon: Users },
   ];
 
   const adminMenu = [
-    { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Tasks', href: '/admin/courses', icon: CheckSquare },
-    { label: 'Calendar', href: '/admin/enquiries', icon: Calendar, badge: '3' },
-    { label: 'Analytics', href: '/admin/audit-logs', icon: BarChart2 },
-    { label: 'Team', href: '/admin/students', icon: Users },
+    { label: t('dash.menu.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
+    { label: t('dash.menu.tasks'), href: '/admin/courses', icon: CheckSquare },
+    { label: t('dash.menu.calendar'), href: '/admin/enquiries', icon: Calendar, badge: '3' },
+    { label: t('dash.menu.analytics'), href: '/admin/audit-logs', icon: BarChart2 },
+    { label: t('dash.menu.team'), href: '/admin/students', icon: Users },
   ];
 
   const generalMenu = [
-    { label: 'Settings', href: isStudent ? '/student/profile' : isAdmin ? '/admin/settings' : '/teacher/dashboard', icon: Settings },
-    { label: 'Help', href: '/faq', icon: HelpCircle },
+    { label: t('dash.menu.settings'), href: isStudent ? '/student/profile' : isAdmin ? '/admin/settings' : '/teacher/dashboard', icon: Settings },
+    { label: t('dash.menu.help'), href: '/faq', icon: HelpCircle },
   ];
 
   const currentMenu = isAdmin ? adminMenu : isTeacher ? teacherMenu : studentMenu;
@@ -179,13 +182,13 @@ export function DashboardLayout() {
                   className="w-full group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-dark-muted hover:text-red-600 hover:bg-red-50/60 transition-all text-left"
                 >
                   <LogOut className="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors" />
-                  <span>Logout</span>
+                  <span>{t('dash.menu.logout')}</span>
                 </button>
               </nav>
             </div>
           </div>
 
-          {/* Bottom Sidebar Widget: Download Mobile App (matching screenshot) */}
+          {/* Bottom Sidebar Widget: Download Mobile App */}
           <div className="p-4 m-4 rounded-2xl bg-mesh-dark text-white relative overflow-hidden shadow-card border border-forest-800/80">
             {/* Background circular overlay */}
             <div className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-mint/10 pointer-events-none" />
@@ -197,19 +200,19 @@ export function DashboardLayout() {
 
               <div>
                 <h4 className="text-xs font-bold leading-tight text-white">
-                  Download our <br />Mobile App
+                  {t('dash.app.title')}
                 </h4>
                 <p className="text-[10px] text-gray-300 mt-1">
-                  Get easy in another way
+                  {t('dash.app.subtitle')}
                 </p>
               </div>
 
               <button
                 type="button"
-                onClick={() => alert('DeutschWelt Mobile App for iOS and Android is in active beta preview!')}
+                onClick={() => alert(t('dash.app.alert'))}
                 className="w-full py-1.5 px-3 rounded-full bg-forest-800 hover:bg-forest-700 text-white text-[11px] font-bold border border-forest-600/70 transition-all active:scale-95 shadow-xs"
               >
-                Download
+                {t('dash.app.btn')}
               </button>
             </div>
           </div>
@@ -234,7 +237,7 @@ export function DashboardLayout() {
               <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search task or lesson..."
+                placeholder={t('dash.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-[#f4f5f6] border border-transparent focus:border-forest/30 focus:bg-white text-xs text-dark placeholder:text-gray-400 pl-10 pr-12 py-2.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-forest/10"
@@ -245,8 +248,10 @@ export function DashboardLayout() {
             </div>
           </div>
 
-          {/* Right: Message Icon, Notification Bell, User Profile Pill */}
+          {/* Right: Language Toggle, Message Icon, Notification Bell, User Profile Pill */}
           <div className="flex items-center gap-3.5">
+            <LanguageToggle />
+
             {/* Mail Icon Button */}
             <button
               type="button"

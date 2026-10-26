@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../context/AuthContext.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
@@ -21,6 +22,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
+  const { t } = useLanguage();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -62,10 +64,10 @@ export function LoginPage() {
           <Logo size="lg" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
-          Anmelden bei DeutschWelt
+          {t('login.title')}
         </h2>
         <p className="text-xs text-gray-500 font-medium">
-          Setzen Sie Ihren Deutschkurs von A1 bis B2 nahtlos fort.
+          {t('login.subtitle')}
         </p>
       </div>
 
@@ -79,16 +81,16 @@ export function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
-              label="E-Mail-Adresse"
+              label={t('login.email')}
               type="email"
               autoComplete="email"
-              placeholder="ihre.email@example.com"
+              placeholder={t('login.emailPlaceholder')}
               error={errors.email?.message}
               {...register('email')}
             />
 
             <Input
-              label="Passwort"
+              label={t('login.password')}
               type="password"
               autoComplete="current-password"
               placeholder="••••••••"
@@ -98,7 +100,7 @@ export function LoginPage() {
 
             <div className="flex items-center justify-between text-xs pt-1">
               <Link to="/forgot-password" className="font-semibold text-forest-800 hover:text-forest-900 hover:underline">
-                Passwort vergessen?
+                {t('login.forgotPassword')}
               </Link>
             </div>
 
@@ -107,15 +109,15 @@ export function LoginPage() {
               disabled={isSubmitting}
               className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
             >
-              <span>{isSubmitting ? 'Wird angemeldet...' : 'Jetzt Anmelden'}</span>
+              <span>{isSubmitting ? t('login.submitting') : t('login.submit')}</span>
               <ArrowRight className="w-4 h-4 text-mint" />
             </button>
           </form>
 
           <div className="text-center text-xs text-gray-500 pt-2">
-            Noch kein Konto?{' '}
+            {t('login.noAccount')}{' '}
             <Link to="/register" className="font-bold text-forest-800 hover:text-forest-900 hover:underline">
-              Kostenlos registrieren
+              {t('login.registerNow')}
             </Link>
           </div>
         </div>
