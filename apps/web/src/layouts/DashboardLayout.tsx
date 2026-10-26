@@ -59,14 +59,14 @@ export function DashboardLayout() {
     ];
 
     return (
-      <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+      <div className="min-h-screen bg-[#090E21] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
         {/* Top Navigation Bar matching Image 3 (Fully Responsive) */}
-        <header className="h-16 sm:h-18 bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-3 sm:px-6 md:px-8 flex items-center justify-between">
+        <header className="h-16 sm:h-18 bg-[#020516]/95 backdrop-blur-md border-b border-[#161D33] sticky top-0 z-40 px-3 sm:px-6 md:px-8 flex items-center justify-between">
           {/* Left: Brand with German Flag Icon matching Image 3 */}
           <div className="flex items-center gap-3 sm:gap-6">
-            <Link to="/student/dashboard" className="flex items-center gap-2 group shrink-0">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-b from-black via-red-600 to-yellow-400 flex items-center justify-center shadow-md">
-                <span className="text-[9px] sm:text-[10px] font-black text-white">DE</span>
+            <Link to="/student/dashboard" className="flex items-center gap-2.5 group shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-black via-red-600 to-yellow-400 flex items-center justify-center shadow-md shadow-black/50 ring-1 ring-white/10">
+                <span className="text-[10px] font-black text-white tracking-wider">DE</span>
               </div>
               <span className="font-heading font-black text-base sm:text-lg text-white tracking-tight">
                 German<span className="text-emerald-400 ml-1">Learning</span>
@@ -74,17 +74,17 @@ export function DashboardLayout() {
             </Link>
 
             {/* Desktop Center Navigation Tabs matching Image 3 */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1.5">
               {studentNavTabs.map((tab) => {
                 const isActive = location.pathname === tab.href || (tab.href === '/student/dashboard' && (location.pathname === '/student' || location.pathname === '/student/'));
                 return (
                   <Link
                     key={tab.href}
                     to={tab.href}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                       isActive
-                        ? 'bg-slate-800 text-emerald-400 shadow-sm border border-slate-700/80'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                        ? 'bg-[#161E36] text-emerald-400 shadow-sm border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-white hover:bg-[#161E36]/50'
                     }`}
                   >
                     <span>{tab.label}</span>
@@ -102,7 +102,7 @@ export function DashboardLayout() {
             <LanguageToggle className="scale-90 sm:scale-100 origin-right" />
 
             {/* Streak Counter Pill matching Image 3 */}
-            <div className="hidden xs:flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-black shadow-xs">
+            <div className="hidden xs:flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-black shadow-xs">
               <Flame className="w-3.5 h-3.5 fill-orange-400" />
               <span>7 🔥</span>
             </div>
@@ -112,19 +112,19 @@ export function DashboardLayout() {
               <button
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60 relative"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#161E36] hover:bg-[#1F2A4C] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#232F52] relative"
               >
                 <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]" />
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-2xl bg-[#1E293B] shadow-2xl border border-slate-700 py-3 z-50 text-xs text-slate-200 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-4 pb-2 border-b border-slate-700/60 flex items-center justify-between">
+                <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-2xl bg-[#11172B] shadow-2xl border border-[#1F2742] py-3 z-50 text-xs text-slate-200 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-4 pb-2 border-b border-[#1F2742] flex items-center justify-between">
                     <span className="font-bold text-white uppercase text-[11px] tracking-wider">Notifications</span>
                     <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">1 New</span>
                   </div>
-                  <div className="p-3 hover:bg-slate-800/60 transition-colors">
+                  <div className="p-3 hover:bg-[#161E36]/60 transition-colors">
                     <p className="font-bold text-white">Daily Streak Active!</p>
                     <p className="text-slate-400 mt-0.5">Complete your 10-minute German practice today to keep your streak.</p>
                     <span className="text-[10px] text-slate-500 mt-1 block">Just now</span>
@@ -135,7 +135,7 @@ export function DashboardLayout() {
 
             {/* User Avatar Pill */}
             <div className="flex items-center gap-2 pl-1">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-md shadow-emerald-500/20">
                 {user?.firstName?.[0] || 'S'}
               </div>
               <span className="hidden md:inline text-xs font-bold text-slate-200">
@@ -147,7 +147,7 @@ export function DashboardLayout() {
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="hidden sm:flex p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
+              className="hidden sm:flex p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-[#161E36] transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -156,7 +156,7 @@ export function DashboardLayout() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Navigation Menu"
-              className="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-300 hover:bg-slate-800 transition-colors"
+              className="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-300 hover:bg-[#161E36] transition-colors"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -165,7 +165,7 @@ export function DashboardLayout() {
 
         {/* Mobile Navigation Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0F172A] border-b border-slate-800 px-4 py-3 space-y-1 animate-in slide-in-from-top-2 duration-150">
+          <div className="lg:hidden bg-[#020516] border-b border-[#161D33] px-4 py-3 space-y-1 animate-in slide-in-from-top-2 duration-150">
             {studentNavTabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = location.pathname === tab.href || (tab.href === '/student/dashboard' && (location.pathname === '/student' || location.pathname === '/student/'));
@@ -175,7 +175,7 @@ export function DashboardLayout() {
                   to={tab.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
-                    isActive ? 'bg-slate-800 text-emerald-400 border border-slate-700/80' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    isActive ? 'bg-[#161E36] text-emerald-400 border border-emerald-500/30' : 'text-slate-300 hover:text-white hover:bg-[#161E36]/40'
                   }`}
                 >
                   <Icon className="w-4 h-4 text-emerald-400" />
@@ -184,7 +184,7 @@ export function DashboardLayout() {
               );
             })}
 
-            <div className="pt-2 border-t border-slate-800 flex items-center justify-between px-2">
+            <div className="pt-2 border-t border-[#161D33] flex items-center justify-between px-2">
               <span className="text-xs text-slate-400">Streak: 7 Days 🔥</span>
               <button
                 onClick={handleLogout}
@@ -198,7 +198,7 @@ export function DashboardLayout() {
         )}
 
         {/* Main Content Body (Responsive container) */}
-        <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 lg:p-10">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
