@@ -5,15 +5,12 @@ import { z } from 'zod';
 import { api } from '../../lib/api.js';
 import { useLanguage } from '../../context/LanguageContext.js';
 import { Input, Textarea } from '../../components/ui/Input.js';
-import { Button } from '../../components/ui/Button.js';
-import { Badge } from '../../components/ui/Badge.js';
 import {
   Mail,
   Clock,
   MapPin,
   CheckCircle2,
   MessageSquare,
-  Sparkles,
   ArrowRight
 } from 'lucide-react';
 
@@ -53,53 +50,53 @@ export function ContactPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12 font-sans text-slate-100">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column: Contact Info */}
         <div className="lg:col-span-5 space-y-6">
           <div className="space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-forest-800 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
               {t('contact.badge')}
             </span>
-            <h1 className="text-3xl sm:text-4xl font-heading font-black text-gray-950 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-heading font-black text-white tracking-tight">
               {t('contact.title')}
             </h1>
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <p className="text-sm text-slate-400 leading-relaxed">
               {t('contact.subtitle')}
             </p>
           </div>
 
           <div className="space-y-4 pt-2">
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-gray-200/80 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-forest-50 text-forest-900 flex items-center justify-center shrink-0">
-                <Mail className="w-5 h-5 text-forest-800" />
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#11162B] border border-white/[0.08] shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/20">
+                <Mail className="w-5 h-5 text-indigo-400" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">E-Mail Beratung</p>
-                <p className="text-sm font-bold text-gray-950">beratung@deutschwelt.de</p>
-                <p className="text-xs text-gray-500 mt-0.5">Antwortzeit: innerhalb von 24 Stunden</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">E-Mail Beratung</p>
+                <p className="text-sm font-bold text-white">beratung@deutschwelt.de</p>
+                <p className="text-xs text-slate-400 mt-0.5">Antwortzeit: innerhalb von 24 Stunden</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-gray-200/80 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-mint/15 text-forest-900 flex items-center justify-center shrink-0">
-                <Clock className="w-5 h-5 text-forest-800" />
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#11162B] border border-white/[0.08] shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
+                <Clock className="w-5 h-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Sprechzeiten</p>
-                <p className="text-sm font-bold text-gray-950">Mo – Fr: 09:00 – 18:00 CET</p>
-                <p className="text-xs text-gray-500 mt-0.5">Berlin & Zentraleuropäische Zeit</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Sprechzeiten</p>
+                <p className="text-sm font-bold text-white">Mo – Fr: 09:00 – 18:00 CET</p>
+                <p className="text-xs text-slate-400 mt-0.5">Berlin & Zentraleuropäische Zeit</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-gray-200/80 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
-                <MapPin className="w-5 h-5 text-emerald-700" />
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#11162B] border border-white/[0.08] shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-pink-500/15 text-pink-400 flex items-center justify-center shrink-0 border border-pink-500/20">
+                <MapPin className="w-5 h-5 text-pink-400" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Akademie-Standort</p>
-                <p className="text-sm font-bold text-gray-950">Berlin Campus & Digitale Akademie</p>
-                <p className="text-xs text-gray-500 mt-0.5">Zertifizierte DACH-Sprachausbildung</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Akademie-Standort</p>
+                <p className="text-sm font-bold text-white">Berlin Campus & Digitale Akademie</p>
+                <p className="text-xs text-slate-400 mt-0.5">Zertifizierte DACH-Sprachausbildung</p>
               </div>
             </div>
           </div>
@@ -107,22 +104,22 @@ export function ContactPage() {
 
         {/* Right Column: Enquiry Form Card */}
         <div className="lg:col-span-7">
-          <div className="bg-white rounded-4xl p-8 sm:p-10 border border-gray-200/80 shadow-xs space-y-6">
+          <div className="bg-[#11162B] rounded-4xl p-8 sm:p-10 border border-white/[0.08] shadow-2xl space-y-6">
             {submitted ? (
               <div className="text-center py-12 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-heading font-black text-gray-950">
+                <h3 className="text-2xl font-heading font-black text-white">
                   {t('contact.successTitle')}
                 </h3>
-                <p className="text-sm text-gray-600 max-w-md mx-auto">
+                <p className="text-sm text-slate-300 max-w-md mx-auto">
                   {t('contact.successDesc')}
                 </p>
                 <button
                   type="button"
                   onClick={() => setSubmitted(false)}
-                  className="px-6 py-2.5 rounded-full border border-gray-300 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors"
+                  className="px-6 py-2.5 rounded-full border border-white/10 bg-white/5 text-xs font-bold text-white hover:bg-white/10 transition-colors"
                 >
                   {t('contact.submit')}
                 </button>
@@ -130,16 +127,16 @@ export function ContactPage() {
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <h2 className="text-2xl font-heading font-black text-gray-950 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-forest-800" /> {t('contact.badge')}
+                  <h2 className="text-2xl font-heading font-black text-white flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-indigo-400" /> {t('contact.badge')}
                   </h2>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-400 mt-1">
                     {t('contact.subtitle')}
                   </p>
                 </div>
 
                 {serverError && (
-                  <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl text-xs font-semibold">
+                  <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-2xl text-xs font-semibold">
                     {serverError}
                   </div>
                 )}
@@ -168,12 +165,12 @@ export function ContactPage() {
                     {...register('phone')}
                   />
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-gray-700 tracking-wide">
+                    <label className="block text-xs font-bold text-slate-300 tracking-wide">
                       {t('contact.targetLevel')}
                     </label>
                     <select
                       {...register('targetLevel')}
-                      className="flex h-11 w-full rounded-2xl border border-gray-200 bg-white px-4 py-2 text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-forest-800/15 focus:border-forest-800 transition-all"
+                      className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-4 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
                     >
                       <option value="A1">A1 Beginner</option>
                       <option value="A2">A2 Elementary</option>
@@ -196,10 +193,10 @@ export function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all"
                   >
                     <span>{isSubmitting ? t('contact.submitting') : t('contact.submit')}</span>
-                    <ArrowRight className="w-4 h-4 text-mint" />
+                    <ArrowRight className="w-4 h-4 text-white" />
                   </button>
                 </div>
               </form>
@@ -210,3 +207,5 @@ export function ContactPage() {
     </div>
   );
 }
+
+export default ContactPage;

@@ -128,7 +128,7 @@ export function VocabularyTrainerPage() {
   });
 
   return (
-    <div className="space-y-7 sm:space-y-8 pb-16 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-7 sm:space-y-8 pb-16 font-sans">
       {/* 1. HEADER & MODE TOGGLE */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">

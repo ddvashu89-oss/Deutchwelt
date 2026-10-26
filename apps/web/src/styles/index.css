@@ -4,14 +4,14 @@
 
 @layer base {
   body {
-    background-color: #F3F4F6;
-    color: #111827;
-    @apply font-sans antialiased min-h-screen;
+    background-color: #0A0D17;
+    color: #F8FAFC;
+    @apply font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white;
   }
 
   ::selection {
-    background-color: #34D399;
-    color: #09241C;
+    background-color: #6366F1;
+    color: #FFFFFF;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -24,45 +24,34 @@
   text-wrap: balance;
 }
 
-/* Diagonal hatched stripes pattern matching Donezo inactive pill bar chart */
-.bg-stripes-pattern {
-  background-color: #F9FAFB;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    #E5E7EB 0,
-    #E5E7EB 2px,
-    transparent 2px,
-    transparent 8px
-  );
-}
-
-.bg-stripes-light {
-  background-color: #FFFFFF;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    #E5E7EB 0,
-    #E5E7EB 2px,
-    transparent 2px,
-    transparent 8px
-  );
-}
-
-.bg-stripes-dark {
-  background-color: #113F32;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgba(52, 211, 153, 0.25) 0,
-    rgba(52, 211, 153, 0.25) 2px,
-    transparent 2px,
-    transparent 8px
-  );
-}
-
-/* Organic curved wave mesh texture for time tracker & sidebar widget */
+/* Linear & Stripe signature gradients and effects */
 .bg-mesh-dark {
-  background: radial-gradient(circle at 80% 20%, rgba(52, 211, 153, 0.22), transparent 45%),
-              radial-gradient(circle at 20% 80%, rgba(20, 78, 61, 0.8), transparent 50%),
-              linear-gradient(135deg, #09241C 0%, #113F32 100%);
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 60%),
+              radial-gradient(circle at 100% 50%, rgba(168, 85, 247, 0.1), transparent 50%),
+              #0A0D17;
+}
+
+.bg-hero-glow {
+  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.25), transparent);
+}
+
+.glow-card {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+}
+
+.glow-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-card-hover:hover {
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4), 0 20px 50px -10px rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+  padding: 1px;
 }
 
 .perspective-1000 {

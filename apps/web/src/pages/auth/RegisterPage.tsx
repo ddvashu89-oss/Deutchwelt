@@ -7,9 +7,8 @@ import { useAuth } from '../../context/AuthContext.js';
 import { useLanguage } from '../../context/LanguageContext.js';
 import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
 import { Logo } from '../../components/brand/Logo.js';
-import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
-import { ArrowRight, Lock, MapPin, Phone, Mail, User, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 
 export function RegisterPage() {
   const { register: registerUser } = useAuth();
@@ -44,7 +43,7 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans">
+    <div className="min-h-screen bg-[#0A0D17] flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans text-slate-100 bg-hero-glow bg-mesh-dark">
       {/* Top Bar with Language Toggle */}
       <div className="absolute top-6 right-6 flex items-center gap-3">
         <LanguageToggle />
@@ -54,27 +53,27 @@ export function RegisterPage() {
         <div className="flex justify-center">
           <Logo size="lg" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
+        <h2 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight pt-2">
           {t('reg.title')}
         </h2>
-        <p className="text-xs text-gray-500 max-w-sm mx-auto font-medium">
+        <p className="text-xs text-slate-400 max-w-sm mx-auto font-medium">
           {t('reg.subtitle')}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-white py-8 px-6 shadow-xl sm:rounded-4xl sm:px-10 border border-gray-200/80 space-y-6">
+        <div className="bg-[#11162B]/95 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/[0.08] space-y-6">
           {/* Content Gate Alert */}
           {isContentGate && (
-            <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl flex items-start gap-3 shadow-sm">
-              <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-800 mt-0.5">
+            <div className="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl flex items-start gap-3 shadow-md">
+              <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0 text-indigo-300 mt-0.5">
                 <Lock className="w-4 h-4" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-bold text-amber-900">
+                <h4 className="text-sm font-bold text-white">
                   {t('gate.title')}
                 </h4>
-                <p className="text-xs text-amber-800 leading-relaxed">
+                <p className="text-xs text-indigo-200 leading-relaxed">
                   {t('gate.description')}
                 </p>
               </div>
@@ -82,7 +81,7 @@ export function RegisterPage() {
           )}
 
           {serverError && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-medium">
+            <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-xl text-xs font-medium">
               {serverError}
             </div>
           )}
@@ -148,11 +147,11 @@ export function RegisterPage() {
             {/* German Level & Preferred Language */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   {t('reg.level')}
                 </label>
                 <select
-                  className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                   {...register('currentLevel')}
                 >
                   <option value={GermanLevel.BEGINNER}>Beginner (Zero German)</option>
@@ -165,11 +164,11 @@ export function RegisterPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                   Explanation Language
                 </label>
                 <select
-                  className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                   {...register('preferredLanguage')}
                 >
                   <option value="en">English explanations</option>
@@ -192,38 +191,38 @@ export function RegisterPage() {
               <input
                 type="checkbox"
                 id="terms"
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-navy focus:ring-navy"
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-[#0F1424] text-indigo-600 focus:ring-indigo-500"
                 {...register('consentToTerms')}
               />
-              <label htmlFor="terms" className="text-xs text-dark-muted leading-snug">
+              <label htmlFor="terms" className="text-xs text-slate-400 leading-snug">
                 {t('reg.terms')}{' '}
-                <Link to="/terms" className="text-navy font-bold hover:underline">
+                <Link to="/terms" className="text-indigo-400 font-bold hover:underline">
                   Terms
                 </Link>{' '}
                 &{' '}
-                <Link to="/privacy" className="text-navy font-bold hover:underline">
+                <Link to="/privacy" className="text-indigo-400 font-bold hover:underline">
                   Privacy
                 </Link>
                 .
               </label>
             </div>
             {errors.consentToTerms && (
-              <p className="text-xs text-red-600 font-medium">{errors.consentToTerms.message}</p>
+              <p className="text-xs text-rose-400 font-medium">{errors.consentToTerms.message}</p>
             )}
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all mt-4"
+              className="w-full py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all mt-4"
             >
               <span>{isSubmitting ? 'Wird erstellt...' : t('reg.submit')}</span>
-              <ArrowRight className="w-4 h-4 text-mint" />
+              <ArrowRight className="w-4 h-4 text-white" />
             </button>
           </form>
 
-          <div className="text-center text-xs text-gray-500 pt-2 border-t border-gray-100">
+          <div className="text-center text-xs text-slate-400 pt-2 border-t border-white/[0.06]">
             {t('reg.hasAccount')}{' '}
-            <Link to="/login" className="font-bold text-forest-800 hover:text-forest-900 hover:underline">
+            <Link to="/login" className="font-bold text-indigo-400 hover:text-indigo-300 hover:underline">
               {t('nav.login')}
             </Link>
           </div>
