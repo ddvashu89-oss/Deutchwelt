@@ -294,14 +294,14 @@ export function AdminDashboard() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
           {/* Search bar with filter icon */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder={language === 'de' ? 'Suchen...' : 'Search...'}
-              className="bg-white border border-gray-200 text-xs text-gray-800 placeholder:text-gray-400 pl-9 pr-9 py-2.5 rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-48 sm:w-64 transition-all"
+              className="bg-white border border-gray-200 text-xs text-gray-800 placeholder:text-gray-400 pl-9 pr-9 py-2.5 rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full sm:w-64 transition-all"
             />
             <button
               type="button"
@@ -315,7 +315,7 @@ export function AdminDashboard() {
           <button
             type="button"
             onClick={() => setQuickCreateOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm hover:shadow active:scale-98"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm hover:shadow active:scale-98 shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>{t('admin.quickCreate')}</span>
@@ -525,7 +525,7 @@ export function AdminDashboard() {
             </div>
 
             <div className="overflow-x-auto -mx-6 px-6">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[560px]">
                 <thead>
                   <tr className="border-b border-gray-100 text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
                     <th className="pb-3">Course</th>
@@ -727,8 +727,8 @@ export function AdminDashboard() {
 
       {/* 4. MODAL: + Quick Create (Course, Batch, Fee Plan, Announcement) */}
       {quickCreateOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -1026,8 +1026,8 @@ export function AdminDashboard() {
 
       {/* 5. MODAL: Telemetry Payments Monitor ($750k records) */}
       {paymentsModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-indigo-600" />
@@ -1081,8 +1081,8 @@ export function AdminDashboard() {
 
       {/* 6. MODAL: Attendance Logs Monitor */}
       {attendanceModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <UserCheck className="w-5 h-5 text-indigo-600" />

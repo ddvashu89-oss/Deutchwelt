@@ -244,9 +244,9 @@ export function StudentDashboard() {
       </div>
 
       {/* 3. THREE FEATURE CARDS (Current Level A1, 7 Day Streak, Quick Tips - Matching Image 3) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
         {/* Card 1: Current Level A1 (with 20% progress bar) */}
-        <div className="bg-[#1E293B] p-6 rounded-3xl border border-slate-700/60 shadow-lg flex flex-col justify-between space-y-4">
+        <div className="bg-[#1E293B] p-5 sm:p-6 rounded-3xl border border-slate-700/60 shadow-lg flex flex-col justify-between space-y-4">
           <div className="space-y-1">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
               {t('student.currentLevel')}
@@ -308,15 +308,15 @@ export function StudentDashboard() {
             {streakDays.map((item, idx) => (
               <div
                 key={idx}
-                className={`py-2 rounded-xl text-center flex flex-col items-center justify-center gap-1 ${
+                className={`py-1.5 sm:py-2 px-0.5 rounded-xl text-center flex flex-col items-center justify-center gap-1 min-w-0 ${
                   item.today
                     ? 'bg-orange-500/20 border border-orange-500/40 text-orange-300'
                     : 'bg-slate-800/80 text-slate-400'
                 }`}
               >
-                <span className="text-[10px] font-bold">{item.day}</span>
-                <div className="w-4 h-4 rounded-full bg-orange-500 text-slate-950 flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 stroke-[3]" />
+                <span className="text-[9px] sm:text-[10px] font-bold truncate">{item.day}</span>
+                <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-orange-500 text-slate-950 flex items-center justify-center shrink-0">
+                  <Check className="w-2 h-2 sm:w-2.5 sm:h-2.5 stroke-[3]" />
                 </div>
               </div>
             ))}

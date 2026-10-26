@@ -28,7 +28,8 @@ import {
   FileText,
   ShieldCheck,
   Award,
-  ChevronDown
+  ChevronDown,
+  User
 } from 'lucide-react';
 
 export function DashboardLayout() {
@@ -53,22 +54,22 @@ export function DashboardLayout() {
       { label: language === 'de' ? 'Übersicht' : 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
       { label: language === 'de' ? 'Wortschatz' : 'Vocabulary', href: '/student/vocabulary', icon: Sparkles },
       { label: language === 'de' ? 'Grammatik' : 'Grammar', href: '/student/materials', icon: BookOpen },
-      { label: language === 'de' ? 'KI-Sprachlabor' : 'AI Tutor / Speaking Lab', href: '/student/speaking', icon: Mic },
+      { label: language === 'de' ? 'KI-Sprachlabor' : 'AI Speaking Lab', href: '/student/speaking', icon: Mic },
       { label: language === 'de' ? 'Kurse' : 'Courses', href: '/student/courses', icon: Layers },
     ];
 
     return (
       <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
-        {/* Top Navigation Bar matching Image 3 */}
-        <header className="h-18 bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-4 sm:px-8 flex items-center justify-between">
+        {/* Top Navigation Bar matching Image 3 (Fully Responsive) */}
+        <header className="h-16 sm:h-18 bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-3 sm:px-6 md:px-8 flex items-center justify-between">
           {/* Left: Brand with German Flag Icon matching Image 3 */}
-          <div className="flex items-center gap-6">
-            <Link to="/student/dashboard" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-b from-black via-red-600 to-yellow-400 flex items-center justify-center shadow-md">
-                <span className="text-[10px] font-black text-white">DE</span>
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link to="/student/dashboard" className="flex items-center gap-2 group shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-b from-black via-red-600 to-yellow-400 flex items-center justify-center shadow-md">
+                <span className="text-[9px] sm:text-[10px] font-black text-white">DE</span>
               </div>
-              <span className="font-heading font-black text-lg text-white tracking-tight">
-                German <span className="text-emerald-400">Learning</span>
+              <span className="font-heading font-black text-base sm:text-lg text-white tracking-tight">
+                German<span className="text-emerald-400 ml-1">Learning</span>
               </span>
             </Link>
 
@@ -80,7 +81,7 @@ export function DashboardLayout() {
                   <Link
                     key={tab.href}
                     to={tab.href}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                       isActive
                         ? 'bg-slate-800 text-emerald-400 shadow-sm border border-slate-700/80'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
@@ -96,12 +97,12 @@ export function DashboardLayout() {
             </nav>
           </div>
 
-          {/* Right: Language Switcher, Streak, Notifications, Profile */}
-          <div className="flex items-center gap-3">
-            <LanguageToggle />
+          {/* Right: Language Switcher, Streak, Notifications, Profile (Responsive) */}
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            <LanguageToggle className="scale-90 sm:scale-100 origin-right" />
 
             {/* Streak Counter Pill matching Image 3 */}
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-black shadow-xs">
+            <div className="hidden xs:flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-black shadow-xs">
               <Flame className="w-3.5 h-3.5 fill-orange-400" />
               <span>7 🔥</span>
             </div>
@@ -111,14 +112,14 @@ export function DashboardLayout() {
               <button
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60 relative"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60 relative"
               >
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]" />
+                <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]" />
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-3 w-80 rounded-2xl bg-[#1E293B] shadow-2xl border border-slate-700 py-3 z-50 text-xs text-slate-200 animate-in fade-in zoom-in-95 duration-150">
+                <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-2xl bg-[#1E293B] shadow-2xl border border-slate-700 py-3 z-50 text-xs text-slate-200 animate-in fade-in zoom-in-95 duration-150">
                   <div className="px-4 pb-2 border-b border-slate-700/60 flex items-center justify-between">
                     <span className="font-bold text-white uppercase text-[11px] tracking-wider">Notifications</span>
                     <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">1 New</span>
@@ -134,19 +135,19 @@ export function DashboardLayout() {
 
             {/* User Avatar Pill */}
             <div className="flex items-center gap-2 pl-1">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm">
                 {user?.firstName?.[0] || 'S'}
               </div>
-              <span className="hidden sm:inline text-xs font-bold text-slate-200">
+              <span className="hidden md:inline text-xs font-bold text-slate-200">
                 {user?.firstName}
               </span>
             </div>
 
-            {/* Logout Button */}
+            {/* Logout Button (Desktop) */}
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
+              className="hidden sm:flex p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -154,16 +155,17 @@ export function DashboardLayout() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800"
+              aria-label="Toggle Navigation Menu"
+              className="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-300 hover:bg-slate-800 transition-colors"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </header>
 
-        {/* Mobile Navigation Dropdown */}
+        {/* Mobile Navigation Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0F172A] border-b border-slate-800 px-4 py-3 space-y-1">
+          <div className="lg:hidden bg-[#0F172A] border-b border-slate-800 px-4 py-3 space-y-1 animate-in slide-in-from-top-2 duration-150">
             {studentNavTabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = location.pathname === tab.href;
@@ -172,20 +174,31 @@ export function DashboardLayout() {
                   key={tab.href}
                   to={tab.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold ${
-                    isActive ? 'bg-slate-800 text-emerald-400' : 'text-slate-400 hover:text-white'
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                    isActive ? 'bg-slate-800 text-emerald-400 border border-slate-700/80' : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 text-emerald-400" />
                   <span>{tab.label}</span>
                 </Link>
               );
             })}
+
+            <div className="pt-2 border-t border-slate-800 flex items-center justify-between px-2">
+              <span className="text-xs text-slate-400">Streak: 7 Days 🔥</span>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 text-xs font-bold text-rose-400 hover:text-rose-300 py-1"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>{language === 'de' ? 'Abmelden' : 'Sign Out'}</span>
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Main Content Body */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-10">
+        {/* Main Content Body (Responsive container) */}
+        <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
@@ -222,13 +235,13 @@ export function DashboardLayout() {
         {/* GOTEACH SIDEBAR */}
         <aside
           className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/90 flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
           }`}
         >
           <div className="flex flex-col h-full justify-between">
             <div>
               {/* Brand Header matching Image 2 Goteach */}
-              <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100">
+              <div className="h-16 sm:h-20 flex items-center justify-between px-6 border-b border-gray-100">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm shadow-sm">
                     G
@@ -333,28 +346,28 @@ export function DashboardLayout() {
         {/* Main Body */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Top Bar */}
-          <header className="h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
-            <div className="flex items-center gap-4">
+          <header className="h-16 sm:h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-md">
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="md:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100"
               >
                 <Menu className="w-5 h-5" />
               </button>
-              <div className="relative hidden sm:block">
+              <div className="relative w-full hidden sm:block">
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder={language === 'de' ? 'Klasse oder Schüler suchen...' : 'Search classes or students...'}
-                  className="bg-gray-50 border border-transparent focus:border-emerald-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-64 focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
+                  className="bg-gray-50 border border-transparent focus:border-emerald-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <LanguageToggle />
-              <div className="flex items-center gap-2.5 pl-2">
-                <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center border border-emerald-200 shadow-2xs">
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
+              <LanguageToggle className="scale-90 sm:scale-100" />
+              <div className="flex items-center gap-2 pl-1 sm:pl-2">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center border border-emerald-200 shadow-2xs">
                   {user?.firstName?.[0] || 'T'}
                 </div>
                 <div className="hidden sm:block text-left leading-tight">
@@ -365,7 +378,7 @@ export function DashboardLayout() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-10">
+          <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10">
             <div className="max-w-7xl mx-auto">
               <Outlet />
             </div>
@@ -404,13 +417,13 @@ export function DashboardLayout() {
       {/* LURNI SIDEBAR */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/90 flex flex-col justify-between transition-transform duration-300 md:translate-x-0 md:static shrink-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full justify-between">
           <div>
             {/* Lurni Brand Header matching Image 1 */}
-            <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100">
+            <div className="h-16 sm:h-20 flex items-center justify-between px-6 border-b border-gray-100">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm">
                   L
@@ -515,28 +528,28 @@ export function DashboardLayout() {
       {/* Main Content Body */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header */}
-        <header className="h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+        <header className="h-16 sm:h-18 bg-white/90 backdrop-blur-md border-b border-gray-200/80 px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-md">
             <button
               onClick={() => setSidebarOpen(true)}
               className="md:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div className="relative hidden sm:block">
+            <div className="relative w-full hidden sm:block">
               <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder={language === 'de' ? 'Suchen...' : 'Search...'}
-                className="bg-gray-50 border border-transparent focus:border-indigo-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-64 focus:outline-none focus:ring-2 focus:ring-indigo-600/10"
+                className="bg-gray-50 border border-transparent focus:border-indigo-600/30 focus:bg-white text-xs text-gray-800 pl-9 pr-4 py-2 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-indigo-600/10"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <LanguageToggle />
-            <div className="flex items-center gap-2.5 pl-2">
-              <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 font-black text-xs flex items-center justify-center border border-indigo-200 shadow-2xs">
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <LanguageToggle className="scale-90 sm:scale-100" />
+            <div className="flex items-center gap-2 pl-1 sm:pl-2">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-100 text-indigo-700 font-black text-xs flex items-center justify-center border border-indigo-200 shadow-2xs">
                 {user?.firstName?.[0] || 'A'}
               </div>
               <div className="hidden sm:block text-left leading-tight">
@@ -547,7 +560,7 @@ export function DashboardLayout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-8 md:p-10">
+        <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

@@ -157,15 +157,15 @@ export function VocabularyTrainerPage() {
       </div>
 
       {/* 2. LEITNER BOX PROGRESSION VISUALIZER */}
-      <div className="grid grid-cols-5 gap-2 sm:gap-4 p-4 rounded-2xl bg-white border border-gray-200/90 shadow-subtle text-center">
+      <div className="grid grid-cols-5 gap-1.5 sm:gap-4 p-2 sm:p-4 rounded-2xl bg-white border border-gray-200/90 shadow-subtle text-center">
         {[1, 2, 3, 4, 5].map(b => (
-          <div key={b} className={`p-2.5 rounded-xl border ${b === 5 ? 'bg-emerald-50/70 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-dark-muted block">
+          <div key={b} className={`p-1.5 sm:p-2.5 rounded-xl border min-w-0 ${b === 5 ? 'bg-emerald-50/70 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
+            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-dark-muted block truncate">
               Box {b} {b === 5 ? '★' : ''}
             </span>
-            <span className="text-xl sm:text-2xl font-black text-navy">{boxCounts[b as keyof typeof boxCounts]}</span>
-            <span className="text-[9px] text-gray-400 block mt-0.5">
-              {b === 1 ? 'Every Day' : b === 2 ? 'Every 3d' : b === 3 ? 'Every 7d' : b === 4 ? 'Every 14d' : 'Mastered'}
+            <span className="text-base sm:text-2xl font-black text-navy">{boxCounts[b as keyof typeof boxCounts]}</span>
+            <span className="text-[8px] sm:text-[9px] text-gray-400 block mt-0.5 truncate">
+              {b === 1 ? 'Daily' : b === 2 ? '3d' : b === 3 ? '7d' : b === 4 ? '14d' : 'Done'}
             </span>
           </div>
         ))}

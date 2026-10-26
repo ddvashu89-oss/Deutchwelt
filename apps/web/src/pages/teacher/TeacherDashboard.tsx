@@ -317,18 +317,18 @@ export function TeacherDashboard() {
                   </div>
 
                   {/* Actions matching Image 2: Cancel + Open */}
-                  <div className="flex items-center gap-2 self-end sm:self-center">
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-start">
                     <button
                       type="button"
                       onClick={() => handleCancelSession(session.id, session.studentName)}
-                      className="px-3.5 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                      className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors text-center"
                     >
                       {t('teacher.cancel')}
                     </button>
                     <button
                       type="button"
                       onClick={() => handleOpenLiveClass(session)}
-                      className="px-4 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+                      className="flex-1 sm:flex-none px-4 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
                     >
                       <Video className="w-3.5 h-3.5" />
                       <span>{t('teacher.openClass')}</span>
@@ -407,7 +407,7 @@ export function TeacherDashboard() {
                 <span className="line-through text-gray-400">Create first vocabulary worksheet</span>
               </div>
 
-              <div className="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
                 <div className="flex items-center gap-2.5 text-amber-950 font-bold">
                   {reportSubmitted ? (
                     <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
@@ -522,8 +522,8 @@ export function TeacherDashboard() {
 
       {/* 4. MODAL: + New Lesson Report (calls backend POST /api/v1/teacher/lesson-reports) */}
       {reportModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-emerald-700" />
@@ -626,8 +626,8 @@ export function TeacherDashboard() {
 
       {/* 5. MODAL: Create Worksheet */}
       {worksheetModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <h3 className="font-heading font-black text-lg text-gray-900">
                 {t('teacher.createWorksheet')}
@@ -712,8 +712,8 @@ export function TeacherDashboard() {
 
       {/* 6. MODAL: New Lesson Plan */}
       {lessonPlanModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <h3 className="font-heading font-black text-lg text-gray-900">
                 {t('teacher.newLessonPlan')}
@@ -781,8 +781,8 @@ export function TeacherDashboard() {
 
       {/* 7. MODAL: Mark Attendance & Score */}
       {attendanceModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-gray-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <UserCheck className="w-5 h-5 text-emerald-700" />
