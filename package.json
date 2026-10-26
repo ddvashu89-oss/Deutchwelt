@@ -14,7 +14,7 @@
     "dev:web": "npm run --workspace=@deutschwelt/web dev",
     "dev:api": "npm run --workspace=@deutschwelt/api dev",
     "build": "node scripts/build-vercel.js",
-    "postinstall": "npx prisma generate --schema apps/api/prisma/schema.prisma || true",
+    "postinstall": "prisma generate --schema apps/api/prisma/schema.prisma || npx --yes prisma generate --schema apps/api/prisma/schema.prisma || true",
     "typecheck": "npm run typecheck --workspaces",
     "lint": "npm run lint --workspaces",
     "test": "npm run test --workspaces",
