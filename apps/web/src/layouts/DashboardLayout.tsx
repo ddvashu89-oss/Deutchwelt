@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.js';
 import { useLanguage } from '../context/LanguageContext.js';
 import { Logo } from '../components/brand/Logo.js';
 import { LanguageToggle } from '../components/ui/LanguageToggle.js';
+import { SandboxBanner } from '../components/ui/SandboxBanner.js';
 import {
   LayoutDashboard,
   CheckSquare,
@@ -27,13 +28,14 @@ import {
   Flame,
   FileText,
   ShieldCheck,
+  ShieldAlert,
   Award,
   ChevronDown,
   User
 } from 'lucide-react';
 
 export function DashboardLayout() {
-  const { user, logout, isStudent, isTeacher, isAdmin } = useAuth();
+  const { user, logout, isStudent, isTeacher, isAdmin, accountBlocked, blockedMessage } = useAuth();
   const { t, language } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,6 +47,38 @@ export function DashboardLayout() {
     await logout();
     navigate('/login');
   };
+
+  // Immediate Security Suspension Lockout for Blocked Accounts
+  if (accountBlocked) {
+    return (
+      <div className="min-h-screen bg-[#0A0D17] text-white flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-[#0D111F] rounded-3xl p-8 border border-rose-500/30 text-center space-y-5 shadow-2xl shadow-rose-950/40">
+          <div className="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto">
+            <ShieldAlert className="w-8 h-8" />
+          </div>
+          <div>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded-full border border-rose-500/20">
+              Security Action Enforced
+            </span>
+            <h2 className="text-2xl font-black text-white mt-2">Account Suspended</h2>
+          </div>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            {blockedMessage || 'Your account access has been suspended or blocked by a platform administrator. Course access, speaking exercises, and batch materials are currently restricted.'}
+          </p>
+          <div className="p-3 bg-[#0F1424] rounded-2xl border border-white/10 text-xs text-slate-400 text-left space-y-1">
+            <p className="font-bold text-slate-200">Admissions & Security Desk:</p>
+            <p>support@deutschwelt.de • Tel: +49 89 12345678</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full py-3 rounded-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30"
+          >
+            Sign Out & Return to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // ----------------------------------------------------------------------
   // CASE 1: STUDENT VIEW (Image 3: German Learning Dark Dashboard with Top Nav)
@@ -60,6 +94,7 @@ export function DashboardLayout() {
 
     return (
       <div className="min-h-screen bg-[#090E21] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+        <SandboxBanner />
         {/* Top Navigation Bar matching Image 3 (Fully Responsive) */}
         <header className="h-16 sm:h-18 bg-[#020516]/95 backdrop-blur-md border-b border-[#161D33] sticky top-0 z-40 px-3 sm:px-6 md:px-8 flex items-center justify-between">
           {/* Left: Brand with German Flag Icon matching Image 3 */}
@@ -345,6 +380,7 @@ export function DashboardLayout() {
 
         {/* Main Body */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <SandboxBanner />
           {/* Top Bar */}
           <header className="h-16 sm:h-18 bg-[#0D111F]/90 backdrop-blur-md border-b border-[#161D33] px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-md">
@@ -527,6 +563,7 @@ export function DashboardLayout() {
 
       {/* Main Content Body */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <SandboxBanner />
         {/* Top Header */}
         <header className="h-16 sm:h-18 bg-[#0D111F]/90 backdrop-blur-md border-b border-[#161D33] px-4 sm:px-8 md:px-10 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-md">

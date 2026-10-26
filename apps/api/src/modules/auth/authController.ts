@@ -356,6 +356,17 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
 
 export async function getMe(req: Request, res: Response, next: NextFunction) {
   try {
+    if (req.isAccountBlocked) {
+      clearSessionCookie(res);
+      return res.status(403).json({
+        success: false,
+        authenticated: false,
+        blocked: true,
+        error: 'Your account has been suspended or blocked by an administrator. Please contact admissions.',
+        code: 'ACCOUNT_BLOCKED'
+      });
+    }
+
     if (!req.user) {
       return res.json({
         success: true,

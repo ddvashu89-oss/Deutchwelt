@@ -40,9 +40,18 @@ export class DataStore {
   payments: any[] = [];
   attendance: any[] = [];
   lessonReports: any[] = [];
+  isSandboxMode: boolean = true;
 
   constructor() {
     this.seedInitialData();
+  }
+
+  resetSandbox() {
+    this.seedInitialData();
+    return {
+      success: true,
+      timestamp: new Date().toISOString()
+    };
   }
 
   seedInitialData() {

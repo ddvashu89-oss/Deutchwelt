@@ -9,6 +9,7 @@ import { env } from './config/env.js';
 import { authenticate } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiRateLimiter } from './middleware/rateLimiter.js';
+import { sanitizeInputs } from './middleware/sanitize.js';
 
 import authRoutes from './modules/auth/authRoutes.js';
 import courseRoutes from './modules/courses/courseRoutes.js';
@@ -21,6 +22,7 @@ import studentRoutes from './modules/student/studentRoutes.js';
 import teacherRoutes from './modules/teacher/teacherRoutes.js';
 import adminRoutes from './modules/admin/adminRoutes.js';
 import enquiryRoutes from './modules/enquiries/enquiryRoutes.js';
+import systemRoutes from './modules/system/systemRoutes.js';
 
 const app = express();
 
@@ -58,7 +60,7 @@ app.use(helmet({
   hsts: env.isProd ? { maxAge: 31536000, includeSubDomains: true } : false
 }));
 
-// CORS
+// CORS - Strict Allowed Origins Enforcement
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
@@ -70,17 +72,19 @@ app.use(cors({
     ) {
       return callback(null, true);
     }
-    return callback(null, true);
+    // Block untrusted cross-origin requests
+    return callback(new Error('Cross-origin request blocked by DeutschWelt security policy.'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Parsers
+// Parsers & Input Sanitization
 app.use(cookieParser(env.COOKIE_SECRET));
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
+app.use(sanitizeInputs);
 
 // Logging
 if (!env.isTest) {
@@ -110,7 +114,9 @@ app.get(['/', '/health', '/api', '/api/health', '/api/v1/health', '/api/index', 
     timestamp: new Date().toISOString(),
     service: 'DeutschWelt API',
     version: '1.0.0',
-    environment: env.NODE_ENV
+    environment: env.isSandbox ? 'sandbox' : 'production',
+    sandboxMode: env.isSandbox,
+    secure: true
   });
 });
 
@@ -126,6 +132,7 @@ app.use('/api/v1/student', studentRoutes);
 app.use('/api/v1/teacher', teacherRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/enquiries', enquiryRoutes);
+app.use('/api/v1/system', systemRoutes);
 
 // Catch-all route for unknown API endpoints
 app.all('/api/*', (req, res) => {

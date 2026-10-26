@@ -19105,17 +19105,17 @@ var require_router = __commonJS({
     var toString = Object.prototype.toString;
     var proto = module.exports = function(options) {
       var opts = options || {};
-      function router12(req, res, next) {
-        router12.handle(req, res, next);
+      function router13(req, res, next) {
+        router13.handle(req, res, next);
       }
-      setPrototypeOf(router12, proto);
-      router12.params = {};
-      router12._params = [];
-      router12.caseSensitive = opts.caseSensitive;
-      router12.mergeParams = opts.mergeParams;
-      router12.strict = opts.strict;
-      router12.stack = [];
-      return router12;
+      setPrototypeOf(router13, proto);
+      router13.params = {};
+      router13._params = [];
+      router13.caseSensitive = opts.caseSensitive;
+      router13.mergeParams = opts.mergeParams;
+      router13.strict = opts.strict;
+      router13.stack = [];
+      return router13;
     };
     proto.param = function param(name, fn) {
       if (typeof name === "function") {
@@ -22148,7 +22148,7 @@ var require_application = __commonJS({
   "node_modules/express/lib/application.js"(exports, module) {
     "use strict";
     var finalhandler = require_finalhandler();
-    var Router12 = require_router();
+    var Router13 = require_router();
     var methods = require_methods();
     var middleware = require_init();
     var query = require_query();
@@ -22213,7 +22213,7 @@ var require_application = __commonJS({
     };
     app2.lazyrouter = function lazyrouter() {
       if (!this._router) {
-        this._router = new Router12({
+        this._router = new Router13({
           caseSensitive: this.enabled("case sensitive routing"),
           strict: this.enabled("strict routing")
         });
@@ -22222,17 +22222,17 @@ var require_application = __commonJS({
       }
     };
     app2.handle = function handle(req, res, callback) {
-      var router12 = this._router;
+      var router13 = this._router;
       var done = callback || finalhandler(req, res, {
         env: this.get("env"),
         onerror: logerror.bind(this)
       });
-      if (!router12) {
+      if (!router13) {
         debug("no routes defined on app");
         done();
         return;
       }
-      router12.handle(req, res, done);
+      router13.handle(req, res, done);
     };
     app2.use = function use(fn) {
       var offset = 0;
@@ -22252,15 +22252,15 @@ var require_application = __commonJS({
         throw new TypeError("app.use() requires a middleware function");
       }
       this.lazyrouter();
-      var router12 = this._router;
+      var router13 = this._router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router12.use(path4, fn2);
+          return router13.use(path4, fn2);
         }
         debug(".use app under %s", path4);
         fn2.mountpath = path4;
         fn2.parent = this;
-        router12.use(path4, function mounted_app(req, res, next) {
+        router13.use(path4, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             setPrototypeOf(req, orig.request);
@@ -24077,7 +24077,7 @@ var require_express = __commonJS({
     var mixin = require_merge_descriptors();
     var proto = require_application();
     var Route = require_route();
-    var Router12 = require_router();
+    var Router13 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -24100,7 +24100,7 @@ var require_express = __commonJS({
     exports.request = req;
     exports.response = res;
     exports.Route = Route;
-    exports.Router = Router12;
+    exports.Router = Router13;
     exports.json = bodyParser.json;
     exports.query = require_query();
     exports.raw = bodyParser.raw;
@@ -32905,7 +32905,7 @@ var require_multer = __commonJS({
 });
 
 // apps/api/src/app.ts
-var import_express12 = __toESM(require_express2(), 1);
+var import_express13 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 
 // node_modules/helmet/index.mjs
@@ -33484,8 +33484,11 @@ var import_dotenv = __toESM(require_main(), 1);
 import path from "path";
 import_dotenv.default.config({ path: path.resolve(process.cwd(), ".env") });
 import_dotenv.default.config({ path: path.resolve(process.cwd(), "../../.env") });
+var nodeEnv = process.env.NODE_ENV || "development";
+var appEnv = (process.env.APP_ENV || (process.env.VERCEL ? "production" : "sandbox")).toLowerCase();
 var env = {
-  NODE_ENV: process.env.NODE_ENV || "development",
+  NODE_ENV: nodeEnv,
+  APP_ENV: appEnv,
   PORT: parseInt(process.env.PORT || "5000", 10),
   DATABASE_URL: process.env.DATABASE_URL || "",
   SESSION_SECRET: process.env.SESSION_SECRET || "deutschwelt-insecure-dev-session-key-32chars",
@@ -33494,9 +33497,10 @@ var env = {
   FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",
   UPLOAD_DIR: process.env.UPLOAD_DIR || (process.env.VERCEL ? path.join("/tmp", "uploads") : path.resolve(process.cwd(), "uploads")),
   MAX_FILE_SIZE_MB: parseInt(process.env.MAX_FILE_SIZE_MB || "10", 10),
-  isDev: (process.env.NODE_ENV || "development") === "development" && !process.env.VERCEL,
-  isTest: (process.env.NODE_ENV || "development") === "test",
-  isProd: process.env.NODE_ENV === "production" || process.env.VERCEL === "1"
+  isDev: nodeEnv === "development" && !process.env.VERCEL,
+  isTest: nodeEnv === "test",
+  isProd: nodeEnv === "production" || process.env.VERCEL === "1",
+  isSandbox: appEnv === "sandbox" || !process.env.VERCEL && nodeEnv !== "production"
 };
 
 // apps/api/src/services/prisma.ts
@@ -39709,8 +39713,16 @@ var DataStore = class {
   payments = [];
   attendance = [];
   lessonReports = [];
+  isSandboxMode = true;
   constructor() {
     this.seedInitialData();
+  }
+  resetSandbox() {
+    this.seedInitialData();
+    return {
+      success: true,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    };
   }
   seedInitialData() {
     const adminPasswordHash = bcryptjs_default.hashSync("AdminDeutschWelt2026!", 10);
@@ -40768,37 +40780,45 @@ async function authenticate(req, res, next) {
           }
         }
       });
-      if (session && session.expiresAt > /* @__PURE__ */ new Date() && session.user.isActive) {
-        req.user = {
-          id: session.user.id,
-          email: session.user.email,
-          firstName: session.user.firstName,
-          lastName: session.user.lastName,
-          role: session.user.role,
-          isActive: session.user.isActive,
-          isEmailVerified: session.user.isEmailVerified,
-          studentProfile: session.user.studentProfile,
-          teacherProfile: session.user.teacherProfile
-        };
+      if (session && session.expiresAt > /* @__PURE__ */ new Date()) {
+        if (!session.user.isActive) {
+          req.isAccountBlocked = true;
+        } else {
+          req.user = {
+            id: session.user.id,
+            email: session.user.email,
+            firstName: session.user.firstName,
+            lastName: session.user.lastName,
+            role: session.user.role,
+            isActive: session.user.isActive,
+            isEmailVerified: session.user.isEmailVerified,
+            studentProfile: session.user.studentProfile,
+            teacherProfile: session.user.teacherProfile
+          };
+        }
       }
     } else {
       const session = store.sessions.find((s) => s.token === token && new Date(s.expiresAt) > /* @__PURE__ */ new Date());
       if (session) {
-        const user = store.users.find((u) => u.id === session.userId && u.isActive);
+        const user = store.users.find((u) => u.id === session.userId);
         if (user) {
-          const studentProfile = store.studentProfiles.find((sp) => sp.userId === user.id);
-          const teacherProfile = store.teacherProfiles.find((tp) => tp.userId === user.id);
-          req.user = {
-            id: user.id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role,
-            isActive: user.isActive,
-            isEmailVerified: user.isEmailVerified,
-            studentProfile,
-            teacherProfile
-          };
+          if (!user.isActive) {
+            req.isAccountBlocked = true;
+          } else {
+            const studentProfile = store.studentProfiles.find((sp) => sp.userId === user.id);
+            const teacherProfile = store.teacherProfiles.find((tp) => tp.userId === user.id);
+            req.user = {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              role: user.role,
+              isActive: user.isActive,
+              isEmailVerified: user.isEmailVerified,
+              studentProfile,
+              teacherProfile
+            };
+          }
         }
       }
     }
@@ -40810,6 +40830,9 @@ async function authenticate(req, res, next) {
   }
 }
 function requireAuth(req, res, next) {
+  if (req.isAccountBlocked) {
+    return next(new AppError("Your account has been suspended or blocked by an administrator. Access is denied.", 403, "ACCOUNT_BLOCKED"));
+  }
   if (!req.user) {
     return next(new AppError("Authentication required. Please log in to continue.", 401, "UNAUTHORIZED"));
   }
@@ -41625,6 +41648,51 @@ var apiRateLimiter = lib_default({
   }
 });
 
+// apps/api/src/middleware/sanitize.ts
+function sanitizeString(val) {
+  if (typeof val !== "string") return val;
+  return val.replace(/\0/g, "").replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "").replace(/javascript\s*:/gi, "blocked-scheme:").replace(/data\s*:\s*text\/html/gi, "blocked-data:").replace(/vbscript\s*:/gi, "blocked-scheme:").replace(/\s+on\w+\s*=/gi, " data-blocked-handler=");
+}
+function sanitizeValue(value) {
+  if (value === null || value === void 0) {
+    return value;
+  }
+  if (typeof value === "string") {
+    return sanitizeString(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map(sanitizeValue);
+  }
+  if (typeof value === "object") {
+    const clean = {};
+    for (const [key, val] of Object.entries(value)) {
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+        continue;
+      }
+      clean[key] = sanitizeValue(val);
+    }
+    return clean;
+  }
+  return value;
+}
+function sanitizeInputs(req, res, next) {
+  try {
+    if (req.body && typeof req.body === "object") {
+      req.body = sanitizeValue(req.body);
+    }
+    if (req.query && typeof req.query === "object") {
+      req.query = sanitizeValue(req.query);
+    }
+    if (req.params && typeof req.params === "object") {
+      req.params = sanitizeValue(req.params);
+    }
+    next();
+  } catch (err) {
+    console.error("[Sanitization Error]", err);
+    next(err);
+  }
+}
+
 // apps/api/src/modules/auth/authRoutes.ts
 var import_express = __toESM(require_express2(), 1);
 
@@ -41930,6 +41998,16 @@ async function logout(req, res, next) {
 }
 async function getMe(req, res, next) {
   try {
+    if (req.isAccountBlocked) {
+      clearSessionCookie(res);
+      return res.status(403).json({
+        success: false,
+        authenticated: false,
+        blocked: true,
+        error: "Your account has been suspended or blocked by an administrator. Please contact admissions.",
+        code: "ACCOUNT_BLOCKED"
+      });
+    }
     if (!req.user) {
       return res.json({
         success: true,
@@ -44772,7 +44850,11 @@ async function getStudents(req, res, next) {
         },
         orderBy: { createdAt: "desc" }
       });
-      return res.json({ success: true, students });
+      const safeStudents = students.map((u) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, students: safeStudents });
     } else {
       let students = store.users.filter((u) => u.role === UserRole.STUDENT).map((u) => ({
         ...u,
@@ -44786,7 +44868,11 @@ async function getStudents(req, res, next) {
         const s = String(search).toLowerCase();
         students = students.filter((u) => u.email.toLowerCase().includes(s) || u.firstName.toLowerCase().includes(s) || u.lastName.toLowerCase().includes(s));
       }
-      return res.json({ success: true, students });
+      const safeStudents = students.map((u) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, students: safeStudents });
     }
   } catch (error) {
     next(error);
@@ -44832,7 +44918,8 @@ async function createStudent(req, res, next) {
         entityId: student.id,
         details: { email: student.email }
       });
-      return res.status(201).json({ success: true, message: "Student created successfully.", student });
+      const { passwordHash: _, ...safeStudent } = student;
+      return res.status(201).json({ success: true, message: "Student created successfully.", student: safeStudent });
     } else {
       const student = {
         id: `student-${Date.now()}`,
@@ -44882,7 +44969,8 @@ async function createStudent(req, res, next) {
           joinedAt: (/* @__PURE__ */ new Date()).toISOString()
         });
       }
-      return res.status(201).json({ success: true, message: "Student created successfully.", student: { ...student, studentProfile: sp } });
+      const { passwordHash: _ph, ...safeMemStudent } = student;
+      return res.status(201).json({ success: true, message: "Student created successfully.", student: { ...safeMemStudent, studentProfile: sp } });
     }
   } catch (error) {
     next(error);
@@ -44979,7 +45067,11 @@ async function getTeachers(req, res, next) {
           }
         }
       });
-      return res.json({ success: true, teachers });
+      const safeTeachers = teachers.map((u) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, teachers: safeTeachers });
     } else {
       const teachers = store.users.filter((u) => u.role === UserRole.TEACHER).map((u) => {
         const tp = store.teacherProfiles.find((p) => p.userId === u.id);
@@ -44995,7 +45087,11 @@ async function getTeachers(req, res, next) {
           totalStudents: studentUserIds.size
         };
       });
-      return res.json({ success: true, teachers });
+      const safeTeachers = teachers.map((u) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, teachers: safeTeachers });
     }
   } catch (error) {
     next(error);
@@ -45046,7 +45142,8 @@ async function createTeacher(req, res, next) {
         entityId: teacher.id,
         details: { email: teacher.email, assignedBatches: batchIds }
       });
-      return res.status(201).json({ success: true, message: "Teacher created successfully.", teacher });
+      const { passwordHash: _, ...safeTeacher } = teacher;
+      return res.status(201).json({ success: true, message: "Teacher created successfully.", teacher: safeTeacher });
     } else {
       const teacher = {
         id: `teacher-${Date.now()}`,
@@ -45084,7 +45181,8 @@ async function createTeacher(req, res, next) {
           });
         }
       }
-      return res.status(201).json({ success: true, message: "Teacher created successfully.", teacher: { ...teacher, teacherProfile: tp } });
+      const { passwordHash: _ph, ...safeMemTeacher } = teacher;
+      return res.status(201).json({ success: true, message: "Teacher created successfully.", teacher: { ...safeMemTeacher, teacherProfile: tp } });
     }
   } catch (error) {
     next(error);
@@ -45679,8 +45777,78 @@ var router11 = (0, import_express11.Router)();
 router11.post("/", authRateLimiter, validateBody(contactEnquirySchema), submitEnquiry);
 var enquiryRoutes_default = router11;
 
+// apps/api/src/modules/system/systemRoutes.ts
+var import_express12 = __toESM(require_express2(), 1);
+
+// apps/api/src/modules/system/systemController.ts
+async function getEnvironmentStatus(req, res, next) {
+  try {
+    return res.json({
+      success: true,
+      environment: env.isSandbox ? "sandbox" : "production",
+      isSandbox: env.isSandbox,
+      isProduction: env.isProd,
+      nodeEnv: env.NODE_ENV,
+      databaseMode: isDatabaseConnected ? "PostgreSQL" : "Isolated Memory Sandbox",
+      securityControls: {
+        xssSanitization: true,
+        strictCors: true,
+        rateLimiting: true,
+        accountSuspensionEnforced: true,
+        rbacEnforced: true,
+        bcryptSaltRounds: 10,
+        cookieHttpOnly: true,
+        cookieSecure: env.isProd,
+        cookieSameSite: env.isProd ? "strict" : "lax"
+      },
+      sandboxSimulationActive: store.isSandboxMode,
+      version: "1.0.0",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function resetSandboxData(req, res, next) {
+  try {
+    const isAuthorized = env.isSandbox || req.user && req.user.role === UserRole.ADMIN;
+    if (!isAuthorized) {
+      return next(new AppError("Sandbox reset is prohibited in production mode without administrator authorization.", 403));
+    }
+    const result = store.resetSandbox();
+    return res.json({
+      success: true,
+      message: "Sandbox environment successfully restored to factory demo state.",
+      timestamp: result.timestamp,
+      environment: "sandbox"
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function toggleSandboxMode(req, res, next) {
+  try {
+    const { enabled } = req.body;
+    store.isSandboxMode = Boolean(enabled);
+    return res.json({
+      success: true,
+      message: `Sandbox simulation mode is now ${store.isSandboxMode ? "ENABLED" : "DISABLED"}.`,
+      sandboxSimulationActive: store.isSandboxMode
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// apps/api/src/modules/system/systemRoutes.ts
+var router12 = (0, import_express12.Router)();
+router12.get("/environment", getEnvironmentStatus);
+router12.post("/sandbox/reset", resetSandboxData);
+router12.post("/sandbox/toggle", toggleSandboxMode);
+var systemRoutes_default = router12;
+
 // apps/api/src/app.ts
-var app = (0, import_express12.default)();
+var app = (0, import_express13.default)();
 app.set("trust proxy", 1);
 app.use((req, res, next) => {
   const matchedPath = req.headers["x-matched-path"] || req.headers["x-original-url"] || req.originalUrl || req.url;
@@ -45709,19 +45877,20 @@ app.use((0, import_cors.default)({
     if (origin === env.FRONTEND_URL || origin.endsWith(".vercel.app") || origin.includes("localhost") || origin.includes("127.0.0.1")) {
       return callback(null, true);
     }
-    return callback(null, true);
+    return callback(new Error("Cross-origin request blocked by DeutschWelt security policy."));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 app.use((0, import_cookie_parser.default)(env.COOKIE_SECRET));
-app.use(import_express12.default.json({ limit: "2mb" }));
-app.use(import_express12.default.urlencoded({ extended: true, limit: "2mb" }));
+app.use(import_express13.default.json({ limit: "2mb" }));
+app.use(import_express13.default.urlencoded({ extended: true, limit: "2mb" }));
+app.use(sanitizeInputs);
 if (!env.isTest) {
   app.use((0, import_morgan.default)("dev"));
 }
-app.use("/uploads", import_express12.default.static(env.UPLOAD_DIR, {
+app.use("/uploads", import_express13.default.static(env.UPLOAD_DIR, {
   setHeaders: (res, filePath) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     if (filePath.endsWith(".html") || filePath.endsWith(".htm") || filePath.endsWith(".svg") || filePath.endsWith(".js")) {
@@ -45737,7 +45906,9 @@ app.get(["/", "/health", "/api", "/api/health", "/api/v1/health", "/api/index", 
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),
     service: "DeutschWelt API",
     version: "1.0.0",
-    environment: env.NODE_ENV
+    environment: env.isSandbox ? "sandbox" : "production",
+    sandboxMode: env.isSandbox,
+    secure: true
   });
 });
 app.use("/api/v1/auth", authRoutes_default);
@@ -45751,6 +45922,7 @@ app.use("/api/v1/student", studentRoutes_default);
 app.use("/api/v1/teacher", teacherRoutes_default);
 app.use("/api/v1/admin", adminRoutes_default);
 app.use("/api/v1/enquiries", enquiryRoutes_default);
+app.use("/api/v1/system", systemRoutes_default);
 app.all("/api/*", (req, res) => {
   res.status(404).json({
     success: false,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Logo } from '../components/brand/Logo.js';
 import { LanguageToggle } from '../components/ui/LanguageToggle.js';
+import { SandboxBanner } from '../components/ui/SandboxBanner.js';
 import { useAuth } from '../context/AuthContext.js';
 import { useLanguage } from '../context/LanguageContext.js';
 import {
@@ -35,6 +36,9 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0D17] text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+      {/* Sandbox Environment Indicator */}
+      <SandboxBanner />
+
       {/* Top Subtle Announcement Ribbon */}
       <div className="bg-[#080B14] text-slate-300 text-xs py-2 px-4 text-center font-medium border-b border-white/[0.08]">
         <span className="inline-flex items-center gap-2">

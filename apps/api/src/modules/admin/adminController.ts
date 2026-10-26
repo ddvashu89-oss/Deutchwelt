@@ -145,7 +145,11 @@ export async function getStudents(req: Request, res: Response, next: NextFunctio
         orderBy: { createdAt: 'desc' }
       });
 
-      return res.json({ success: true, students });
+      const safeStudents = students.map((u: any) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, students: safeStudents });
     } else {
       let students = store.users.filter(u => u.role === UserRole.STUDENT).map(u => ({
         ...u,
@@ -161,7 +165,11 @@ export async function getStudents(req: Request, res: Response, next: NextFunctio
         students = students.filter(u => u.email.toLowerCase().includes(s) || u.firstName.toLowerCase().includes(s) || u.lastName.toLowerCase().includes(s));
       }
 
-      return res.json({ success: true, students });
+      const safeStudents = students.map((u: any) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, students: safeStudents });
     }
   } catch (error) {
     next(error);
@@ -215,7 +223,8 @@ export async function createStudent(req: Request, res: Response, next: NextFunct
         details: { email: student.email }
       });
 
-      return res.status(201).json({ success: true, message: 'Student created successfully.', student });
+      const { passwordHash: _, ...safeStudent } = student;
+      return res.status(201).json({ success: true, message: 'Student created successfully.', student: safeStudent });
     } else {
       const student = {
         id: `student-${Date.now()}`,
@@ -270,7 +279,8 @@ export async function createStudent(req: Request, res: Response, next: NextFunct
         });
       }
 
-      return res.status(201).json({ success: true, message: 'Student created successfully.', student: { ...student, studentProfile: sp } });
+      const { passwordHash: _ph, ...safeMemStudent } = student;
+      return res.status(201).json({ success: true, message: 'Student created successfully.', student: { ...safeMemStudent, studentProfile: sp } });
     }
   } catch (error) {
     next(error);
@@ -374,7 +384,11 @@ export async function getTeachers(req: Request, res: Response, next: NextFunctio
           }
         }
       });
-      return res.json({ success: true, teachers });
+      const safeTeachers = teachers.map((u: any) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, teachers: safeTeachers });
     } else {
       const teachers = store.users.filter(u => u.role === UserRole.TEACHER).map(u => {
         const tp = store.teacherProfiles.find(p => p.userId === u.id);
@@ -393,7 +407,11 @@ export async function getTeachers(req: Request, res: Response, next: NextFunctio
           totalStudents: studentUserIds.size
         };
       });
-      return res.json({ success: true, teachers });
+      const safeTeachers = teachers.map((u: any) => {
+        const { passwordHash, ...safe } = u;
+        return safe;
+      });
+      return res.json({ success: true, teachers: safeTeachers });
     }
   } catch (error) {
     next(error);
@@ -450,7 +468,8 @@ export async function createTeacher(req: Request, res: Response, next: NextFunct
         details: { email: teacher.email, assignedBatches: batchIds }
       });
 
-      return res.status(201).json({ success: true, message: 'Teacher created successfully.', teacher });
+      const { passwordHash: _, ...safeTeacher } = teacher;
+      return res.status(201).json({ success: true, message: 'Teacher created successfully.', teacher: safeTeacher });
     } else {
       const teacher = {
         id: `teacher-${Date.now()}`,
@@ -490,7 +509,8 @@ export async function createTeacher(req: Request, res: Response, next: NextFunct
         }
       }
 
-      return res.status(201).json({ success: true, message: 'Teacher created successfully.', teacher: { ...teacher, teacherProfile: tp } });
+      const { passwordHash: _ph, ...safeMemTeacher } = teacher;
+      return res.status(201).json({ success: true, message: 'Teacher created successfully.', teacher: { ...safeMemTeacher, teacherProfile: tp } });
     }
   } catch (error) {
     next(error);
