@@ -76,7 +76,7 @@ export function DashboardLayout() {
             {/* Desktop Center Navigation Tabs matching Image 3 */}
             <nav className="hidden lg:flex items-center gap-1">
               {studentNavTabs.map((tab) => {
-                const isActive = location.pathname === tab.href;
+                const isActive = location.pathname === tab.href || (tab.href === '/student/dashboard' && (location.pathname === '/student' || location.pathname === '/student/'));
                 return (
                   <Link
                     key={tab.href}
@@ -168,7 +168,7 @@ export function DashboardLayout() {
           <div className="lg:hidden bg-[#0F172A] border-b border-slate-800 px-4 py-3 space-y-1 animate-in slide-in-from-top-2 duration-150">
             {studentNavTabs.map((tab) => {
               const Icon = tab.icon;
-              const isActive = location.pathname === tab.href;
+              const isActive = location.pathname === tab.href || (tab.href === '/student/dashboard' && (location.pathname === '/student' || location.pathname === '/student/'));
               return (
                 <Link
                   key={tab.href}

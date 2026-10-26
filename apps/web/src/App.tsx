@@ -119,6 +119,7 @@ export function App() {
                 </ProtectedRoute>
               }
             >
+              <Route index element={<StudentDashboard />} />
               <Route path="dashboard" element={<StudentDashboard />} />
               <Route path="courses" element={<StudentCoursesPage />} />
               <Route path="materials" element={<StudentMaterialsPage />} />
