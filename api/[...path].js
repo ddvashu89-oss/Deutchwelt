@@ -1446,8 +1446,11 @@ async function login(req, res, next) {
           teacherProfile: true
         }
       });
-      if (!user || !user.isActive) {
+      if (!user) {
         return next(new AppError("Invalid email or password.", 401, "INVALID_CREDENTIALS"));
+      }
+      if (!user.isActive) {
+        return next(new AppError("Your account has been suspended or blocked by an administrator. Please contact admissions for assistance.", 403, "ACCOUNT_BLOCKED"));
       }
       const isMatch = await bcrypt2.compare(password, user.passwordHash);
       if (!isMatch) {
@@ -1483,8 +1486,11 @@ async function login(req, res, next) {
       });
     } else {
       const user = store.users.find((u) => u.email === normalizedEmail);
-      if (!user || !user.isActive) {
+      if (!user) {
         return next(new AppError("Invalid email or password.", 401, "INVALID_CREDENTIALS"));
+      }
+      if (!user.isActive) {
+        return next(new AppError("Your account has been suspended or blocked by an administrator. Please contact admissions for assistance.", 403, "ACCOUNT_BLOCKED"));
       }
       const isMatch = await bcrypt2.compare(password, user.passwordHash);
       if (!isMatch) {
@@ -4970,13 +4976,44 @@ async function toggleUserActiveStatus(req, res, next) {
         where: { id: userId },
         data: { isActive: !user.isActive }
       });
-      return res.json({ success: true, message: `User status changed to ${updated.isActive ? "Active" : "Suspended"}.`, isActive: updated.isActive });
+      if (!updated.isActive) {
+        await prisma.session.deleteMany({ where: { userId } }).catch(() => {
+        });
+      }
+      await recordAuditLog({
+        userId: req.user?.id || "admin",
+        action: updated.isActive ? "USER_UNBLOCKED" : "USER_BLOCKED",
+        entityType: "USER",
+        entityId: userId,
+        details: { email: user.email, previousStatus: user.isActive, newStatus: updated.isActive }
+      }).catch(() => {
+      });
+      return res.json({
+        success: true,
+        message: updated.isActive ? `Access granted. Student account is now Active.` : `Access blocked. Student account is now Suspended.`,
+        isActive: updated.isActive
+      });
     } else {
       const user = store.users.find((u) => u.id === userId);
       if (!user) return next(new AppError("User not found.", 404));
       user.isActive = !user.isActive;
       user.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
-      return res.json({ success: true, message: `User status changed to ${user.isActive ? "Active" : "Suspended"}.`, isActive: user.isActive });
+      if (!user.isActive) {
+        store.sessions = store.sessions.filter((s) => s.userId !== userId);
+      }
+      await recordAuditLog({
+        userId: req.user?.id || "admin",
+        action: user.isActive ? "USER_UNBLOCKED" : "USER_BLOCKED",
+        entityType: "USER",
+        entityId: userId,
+        details: { email: user.email, previousStatus: !user.isActive, newStatus: user.isActive }
+      }).catch(() => {
+      });
+      return res.json({
+        success: true,
+        message: user.isActive ? `Access granted. Student account is now Active.` : `Access blocked. Student account is now Suspended.`,
+        isActive: user.isActive
+      });
     }
   } catch (error) {
     next(error);

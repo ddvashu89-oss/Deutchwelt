@@ -25,6 +25,7 @@ import {
 export function AdminStudentsPage() {
   const [students, setStudents] = useState<any[]>([]);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'blocked'>('all');
   const [loading, setLoading] = useState(true);
 
   // Add Student Modal State
@@ -168,15 +169,23 @@ export function AdminStudentsPage() {
     }
   };
 
-  // 5. TOGGLE ACTIVE STATUS
-  const handleToggleStatus = async (studentId: string) => {
+  // 5. TOGGLE ACTIVE / BLOCK STATUS
+  const handleToggleBlock = async (studentId: string, name: string, currentActive: boolean) => {
+    const actionText = currentActive ? 'BLOCK access for' : 'RESTORE access for';
+    const warningText = currentActive
+      ? 'This student will be logged out immediately and blocked from logging in, viewing lessons, taking tests, or joining live sessions.'
+      : 'The student will regain full access and can log in to continue learning.';
+
+    const confirmed = window.confirm(`⚠️ Admin Access Control\n\nAre you sure you want to ${actionText} "${name}"?\n\n${warningText}`);
+    if (!confirmed) return;
+
     try {
       const res: any = await api.post(`/admin/users/${studentId}/toggle-status`);
       if (res.success) {
         fetchStudents();
       }
     } catch (err: any) {
-      alert(err.message || 'Failed to toggle status.');
+      alert(err.message || 'Failed to update student access.');
     }
   };
 
@@ -221,17 +230,51 @@ export function AdminStudentsPage() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <form onSubmit={handleSearch} className="max-w-md relative">
-        <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
-        <input
-          type="text"
-          placeholder="Search by name, email, or phone..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-navy"
-        />
-      </form>
+      {/* Search Bar & Status Filter Tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <form onSubmit={handleSearch} className="max-w-md w-full relative">
+          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
+          <input
+            type="text"
+            placeholder="Search by name, email, or phone..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-navy"
+          />
+        </form>
+
+        <div className="flex items-center gap-1.5 p-1 bg-gray-100 rounded-xl border border-gray-200 text-xs font-bold self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setStatusFilter('all')}
+            className={`px-3 py-1.5 rounded-lg transition-colors ${
+              statusFilter === 'all' ? 'bg-white text-navy shadow-xs' : 'text-gray-500 hover:text-dark'
+            }`}
+          >
+            All ({students.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setStatusFilter('active')}
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+              statusFilter === 'active' ? 'bg-white text-emerald-700 shadow-xs' : 'text-gray-500 hover:text-dark'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            Active ({students.filter(s => s.isActive).length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setStatusFilter('blocked')}
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+              statusFilter === 'blocked' ? 'bg-white text-rose-700 shadow-xs' : 'text-gray-500 hover:text-dark'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-rose-500" />
+            Blocked ({students.filter(s => !s.isActive).length})
+          </button>
+        </div>
+      </div>
 
       {/* Students Table */}
       {loading ? (
@@ -239,27 +282,42 @@ export function AdminStudentsPage() {
       ) : (
         <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-subtle">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[650px]">
               <thead className="bg-navy text-white uppercase font-bold tracking-wider">
                 <tr>
                   <th className="p-4">Student</th>
                   <th className="p-4">Contact Info</th>
                   <th className="p-4">Level</th>
                   <th className="p-4">Streak</th>
-                  <th className="p-4">Status</th>
+                  <th className="p-4">Status / Access</th>
                   <th className="p-4">Joined</th>
-                  <th className="p-4 text-right">Actions</th>
+                  <th className="p-4 text-right">Admin Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-dark">
-                {students.map(s => (
-                  <tr key={s.id} className="hover:bg-gray-50/80 transition-colors">
+                {students
+                  .filter(s => {
+                    if (statusFilter === 'active') return s.isActive;
+                    if (statusFilter === 'blocked') return !s.isActive;
+                    return true;
+                  })
+                  .map(s => (
+                  <tr key={s.id} className={`hover:bg-gray-50/80 transition-colors ${!s.isActive ? 'bg-rose-50/30' : ''}`}>
                     <td className="p-4 font-bold text-navy flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-navy-100 text-navy font-bold flex items-center justify-center text-xs shrink-0">
+                      <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 ${
+                        s.isActive ? 'bg-navy-100 text-navy' : 'bg-rose-100 text-rose-700'
+                      }`}>
                         {s.firstName?.[0]}
                       </div>
                       <div>
-                        <div>{s.firstName} {s.lastName}</div>
+                        <div className="flex items-center gap-1.5">
+                          <span>{s.firstName} {s.lastName}</span>
+                          {!s.isActive && (
+                            <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded-md bg-rose-100 text-rose-800">
+                              Blocked
+                            </span>
+                          )}
+                        </div>
                         {s.studentProfile?.learningGoal && (
                           <div className="text-[10px] text-gray-400 font-normal truncate max-w-[180px]">
                             {s.studentProfile.learningGoal}
@@ -292,13 +350,13 @@ export function AdminStudentsPage() {
                     </td>
                     <td className="p-4">
                       <button
-                        onClick={() => handleToggleStatus(s.id)}
+                        onClick={() => handleToggleBlock(s.id, `${s.firstName} ${s.lastName}`, s.isActive)}
                         className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
                           s.isActive
                             ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
-                            : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
+                            : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
                         }`}
-                        title="Click to toggle status"
+                        title={s.isActive ? 'Click to Block Student Access' : 'Click to Restore Student Access'}
                       >
                         {s.isActive ? (
                           <>
@@ -306,7 +364,7 @@ export function AdminStudentsPage() {
                           </>
                         ) : (
                           <>
-                            <XCircle className="w-3 h-3" /> Suspended
+                            <XCircle className="w-3 h-3 text-rose-600" /> Blocked
                           </>
                         )}
                       </button>
@@ -314,13 +372,24 @@ export function AdminStudentsPage() {
                     <td className="p-4 text-dark-muted">
                       {new Date(s.createdAt).toLocaleDateString()}
                     </td>
-                    {/* Action Buttons: Edit & Delete */}
+                    {/* Action Buttons: Block/Unblock, Edit & Delete */}
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
+                          onClick={() => handleToggleBlock(s.id, `${s.firstName} ${s.lastName}`, s.isActive)}
+                          className={`p-1.5 rounded-lg border transition-colors ${
+                            s.isActive
+                              ? 'border-amber-200 hover:bg-amber-600 hover:text-white text-amber-700 bg-amber-50/50'
+                              : 'border-emerald-200 hover:bg-emerald-600 hover:text-white text-emerald-700 bg-emerald-50/50'
+                          }`}
+                          title={s.isActive ? 'Block Student Access' : 'Restore Student Access'}
+                        >
+                          <ShieldAlert className="w-3.5 h-3.5" />
+                        </button>
+                        <button
                           onClick={() => openEditModal(s)}
                           className="p-1.5 rounded-lg border border-gray-200 hover:bg-navy hover:text-white text-navy transition-colors"
-                          title="Edit Student"
+                          title="Edit Student Profile"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>

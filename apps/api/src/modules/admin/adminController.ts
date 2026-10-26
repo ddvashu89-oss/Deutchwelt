@@ -772,13 +772,49 @@ export async function toggleUserActiveStatus(req: Request, res: Response, next: 
         where: { id: userId },
         data: { isActive: !user.isActive }
       });
-      return res.json({ success: true, message: `User status changed to ${updated.isActive ? 'Active' : 'Suspended'}.`, isActive: updated.isActive });
+
+      // If blocked, immediately revoke all active sessions so the student is kicked out in real-time
+      if (!updated.isActive) {
+        await prisma.session.deleteMany({ where: { userId } }).catch(() => {});
+      }
+
+      await recordAuditLog({
+        userId: req.user?.id || 'admin',
+        action: updated.isActive ? 'USER_UNBLOCKED' : 'USER_BLOCKED',
+        entityType: 'USER',
+        entityId: userId,
+        details: { email: user.email, previousStatus: user.isActive, newStatus: updated.isActive }
+      }).catch(() => {});
+
+      return res.json({
+        success: true,
+        message: updated.isActive ? `Access granted. Student account is now Active.` : `Access blocked. Student account is now Suspended.`,
+        isActive: updated.isActive
+      });
     } else {
       const user = store.users.find(u => u.id === userId);
       if (!user) return next(new AppError('User not found.', 404));
       user.isActive = !user.isActive;
       user.updatedAt = new Date().toISOString();
-      return res.json({ success: true, message: `User status changed to ${user.isActive ? 'Active' : 'Suspended'}.`, isActive: user.isActive });
+
+      // If blocked, immediately terminate all active sessions in memory store
+      if (!user.isActive) {
+        store.sessions = store.sessions.filter(s => s.userId !== userId);
+      }
+
+      await recordAuditLog({
+        userId: req.user?.id || 'admin',
+        action: user.isActive ? 'USER_UNBLOCKED' : 'USER_BLOCKED',
+        entityType: 'USER',
+        entityId: userId,
+        details: { email: user.email, previousStatus: !user.isActive, newStatus: user.isActive }
+      }).catch(() => {});
+
+      return res.json({
+        success: true,
+        message: user.isActive ? `Access granted. Student account is now Active.` : `Access blocked. Student account is now Suspended.`,
+        isActive: user.isActive
+      });
     }
   } catch (error) {
     next(error);

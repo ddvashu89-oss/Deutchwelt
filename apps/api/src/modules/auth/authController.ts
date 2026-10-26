@@ -227,8 +227,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         }
       });
 
-      if (!user || !user.isActive) {
+      if (!user) {
         return next(new AppError('Invalid email or password.', 401, 'INVALID_CREDENTIALS'));
+      }
+
+      if (!user.isActive) {
+        return next(new AppError('Your account has been suspended or blocked by an administrator. Please contact admissions for assistance.', 403, 'ACCOUNT_BLOCKED'));
       }
 
       const isMatch = await bcrypt.compare(password, user.passwordHash);
@@ -271,8 +275,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     } else {
       // Memory store fallback
       const user = store.users.find(u => u.email === normalizedEmail);
-      if (!user || !user.isActive) {
+      if (!user) {
         return next(new AppError('Invalid email or password.', 401, 'INVALID_CREDENTIALS'));
+      }
+
+      if (!user.isActive) {
+        return next(new AppError('Your account has been suspended or blocked by an administrator. Please contact admissions for assistance.', 403, 'ACCOUNT_BLOCKED'));
       }
 
       const isMatch = await bcrypt.compare(password, user.passwordHash);
