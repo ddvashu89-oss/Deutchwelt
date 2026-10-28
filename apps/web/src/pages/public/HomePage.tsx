@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import {
   ArrowRight,
   CheckCircle2,
@@ -12,9 +12,7 @@ import {
   Volume2,
   Video,
   Play,
-  Pause,
   Compass,
-  Radio,
   ChevronDown,
   GraduationCap,
   Users
@@ -22,69 +20,7 @@ import {
 
 import { useLanguage } from '../../context/LanguageContext.js';
 
-interface CoachingPhrase {
-  level: 'A1' | 'A2' | 'B1' | 'B2';
-  german: string;
-  ipa: string;
-  english: string;
-  hindi: string;
-  context: string;
-  dozent: string;
-  score: number;
-  phoneticsScore: number;
-  intonationScore: number;
-}
 
-const COACHING_PHRASES: Record<'A1' | 'A2' | 'B1' | 'B2', CoachingPhrase> = {
-  A1: {
-    level: 'A1',
-    german: 'Guten Tag! Mein Name ist Rahul und ich lerne Deutsch.',
-    ipa: '/ˈɡuːtn̩ taːk | maɪ̯n ˈnaːmə ɪst ˈʁaːhʊl ʊnt ɪç ˈlɛʁnə dɔɪ̯tʃ/',
-    english: 'Good day! My name is Rahul and I am learning German.',
-    hindi: 'नमस्ते! मेरा नाम राहुल है और मैं जर्मन सीख रहा हूँ।',
-    context: 'Erste Begrüßung & Selbstvorstellung',
-    dozent: 'Frau Dr. Weber (Berlin)',
-    score: 98,
-    phoneticsScore: 97,
-    intonationScore: 99
-  },
-  A2: {
-    level: 'A2',
-    german: 'Könnten Sie mir bitte sagen, wo der nächste Bahnhof liegt?',
-    ipa: '/ˈkœntn̩ ziː miːɐ̯ ˈbɪtə ˈzaːɡŋ̍ | voː deːɐ̯ ˈnɛːçstə ˈbaːnhoːf liːkt/',
-    english: 'Could you please tell me where the nearest train station is located?',
-    hindi: 'क्या आप मुझे बता सकते हैं कि निकटतम रेलवे स्टेशन कहाँ है?',
-    context: 'Höfliche Alltagsorientierung mit Dativ',
-    dozent: 'Herr Prof. Schneider (München)',
-    score: 96,
-    phoneticsScore: 95,
-    intonationScore: 98
-  },
-  B1: {
-    level: 'B1',
-    german: 'Ich würde mich freuen, wenn Sie meine Bewerbung berücksichtigen.',
-    ipa: '/ɪç ˈvʏʁdə mɪç ˈfʁɔɪ̯ən | vɛn ziː ˈmaɪ̯nə bəˈvɛʁbʊŋ bəˈʁʏkˌzɪçtɪɡŋ̍/',
-    english: 'I would be pleased if you would consider my application.',
-    hindi: 'यदि आप मेरे आवेदन पर विचार करेंगे तो मुझे अत्यंत खुशी होगी।',
-    context: 'Offizielle Korrespondenz & Konjunktiv II',
-    dozent: 'Frau Müller (Goethe-Prüferin)',
-    score: 99,
-    phoneticsScore: 98,
-    intonationScore: 100
-  },
-  B2: {
-    level: 'B2',
-    german: 'Eine fundierte Sprachkompetenz ist die unabdingbare Voraussetzung für den Erfolg.',
-    ipa: '/ˈaɪ̯nə fʊnˈdiːɐ̯tə ˈʃpʁaːxˌkɔmpətɛnt͡s ɪst diː ˈʊnʔapˌdɪŋbaːʁə foːɐ̯ˈʔaʊ̯sˌzɛtsʊŋ/',
-    english: 'Sound language competence is an indispensable prerequisite for success.',
-    hindi: 'सफलता के लिए एक मजबूत भाषाई दक्षता अनिवार्य पूर्वशर्त है।',
-    context: 'Fachsprache, Nominalstil & Verhandlungskompetenz',
-    dozent: 'Dr. Klaus Becker (Frankfurt)',
-    score: 97,
-    phoneticsScore: 96,
-    intonationScore: 99
-  }
-};
 
 const CEFR_JOURNEY = [
   {
@@ -147,7 +83,6 @@ const CEFR_JOURNEY = [
 
 export function HomePage() {
   const { t } = useLanguage();
-  const [activeLevel, setActiveLevel] = useState<'A1' | 'A2' | 'B1' | 'B2'>('A1');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
@@ -156,20 +91,6 @@ export function HomePage() {
 
   const { scrollYProgress } = useScroll();
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-
-  // Hero Scroll Perspective Parallax
-  const { scrollYProgress: heroScroll } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start']
-  });
-
-  const heroCockpitRotateX = useTransform(heroScroll, [0, 1], [0, 14]);
-  const heroCockpitScale = useTransform(heroScroll, [0, 1], [1, 0.94]);
-  const heroCockpitY = useTransform(heroScroll, [0, 1], [0, 80]);
-  const heroCockpitOpacity = useTransform(heroScroll, [0, 0.85, 1], [1, 0.85, 0.5]);
-
-  const satelliteTopY = useTransform(heroScroll, [0, 1], [0, -45]);
-  const satelliteBottomY = useTransform(heroScroll, [0, 1], [0, 55]);
 
   const speakGerman = (text: string) => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -190,8 +111,6 @@ export function HomePage() {
       setTimeout(() => setIsPlayingAudio(false), 3000);
     }
   };
-
-  const currentPhrase = COACHING_PHRASES[activeLevel];
 
   const features = [
     {
@@ -298,219 +217,85 @@ export function HomePage() {
               </div>
             </motion.div>
 
-            {/* Right Column: 3D Immersion Cockpit */}
-            <div className="lg:col-span-6 flex flex-col items-center relative [perspective:1200px]">
-              {/* Floating Satellite 1 */}
-              <motion.div
-                style={{ y: satelliteTopY }}
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="absolute -top-7 -left-4 sm:-left-8 z-30 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#0B1325]/95 backdrop-blur-md border border-white/10 shadow-2xl text-slate-200 text-xs font-bold"
-              >
-                <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-ping" />
-                <Video className="w-4 h-4 text-blue-400" />
-                <span>Nächste Live-Klasse in 14 Min • Google Meet & Zoom</span>
-              </motion.div>
+            {/* Right Column: Authentic German Academy Photo Showcase */}
+            <div className="lg:col-span-6 flex flex-col items-center relative">
+              {/* Main Photo Showcase Container */}
+              <div className="w-full max-w-lg relative">
+                {/* Background ambient sapphire glow */}
+                <div className="absolute -inset-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 rounded-4xl blur-xl opacity-30 -z-10" />
 
-              {/* Floating Satellite 2 */}
-              <motion.div
-                style={{ y: satelliteBottomY }}
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -bottom-7 -right-4 sm:-right-6 z-30 hidden sm:flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#0E172E]/95 backdrop-blur-md border border-blue-500/30 shadow-2xl text-white text-xs font-bold"
-              >
-                <div className="w-7 h-7 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center font-bold">
-                  <Award className="w-4 h-4" />
-                </div>
-                <div>
-                  <div className="text-white text-xs font-bold">99.2% Bestehensquote</div>
-                  <div className="text-[10px] text-slate-400">Goethe A1-B2 & DTZ</div>
-                </div>
-              </motion.div>
-
-              {/* MAIN COCKPIT: Coaching Cockpit Card */}
-              <motion.div
-                style={{
-                  rotateX: heroCockpitRotateX,
-                  scale: heroCockpitScale,
-                  y: heroCockpitY,
-                  opacity: heroCockpitOpacity,
-                  transformStyle: 'preserve-3d'
-                }}
-                className="w-full max-w-lg rounded-3xl bg-[#0B1325]/95 border border-white/[0.08] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(99,102,241,0.15)] text-white p-6 sm:p-7 relative overflow-hidden space-y-6 backdrop-blur-xl"
-              >
-                {/* Background Ambient Mesh Glow */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
-
-                {/* Cockpit Top Bar */}
-                <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 relative z-10">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                    <span className="w-3 h-3 rounded-full bg-amber-400/80" />
-                    <span className="w-3 h-3 rounded-full bg-emerald-400/80" />
-                    <span className="text-[11px] font-mono font-medium text-slate-400 ml-2">
-                      live_coaching_hub.de
-                    </span>
+                {/* Photo Frame */}
+                <div className="rounded-3xl sm:rounded-4xl overflow-hidden border border-white/15 bg-[#0B1325] shadow-2xl shadow-black/80 relative">
+                  {/* German Flag Accent Ribbon at the top */}
+                  <div className="h-1.5 w-full flex">
+                    <div className="flex-1 bg-black" />
+                    <div className="flex-1 bg-rose-600" />
+                    <div className="flex-1 bg-amber-400" />
                   </div>
 
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-[11px] font-bold">
-                    <Radio className="w-3 h-3 animate-pulse text-blue-400" />
-                    <span>Berlin Studio Live</span>
-                  </div>
-                </div>
+                  {/* High Quality German Image */}
+                  <div className="relative aspect-[4/3] sm:aspect-[16/11] w-full overflow-hidden">
+                    <img
+                      src="/german-hero.jpg"
+                      alt="Study German in Germany - Brandenburg Gate Berlin & Academic Immersion"
+                      className="w-full h-full object-cover object-center"
+                      loading="eager"
+                    />
+                    {/* Gradient Overlay for Text Readability & Mood */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#070D1A] via-transparent to-black/30" />
 
-                {/* Level Selector Tabs */}
-                <div className="flex items-center justify-between gap-1.5 p-1 rounded-2xl bg-white/5 border border-white/[0.08] relative z-10">
-                  {(['A1', 'A2', 'B1', 'B2'] as const).map((lvl) => {
-                    const isSelected = activeLevel === lvl;
-                    return (
-                      <button
-                        key={lvl}
-                        onClick={() => {
-                          setActiveLevel(lvl);
-                          if (isPlayingAudio && typeof window !== 'undefined' && 'speechSynthesis' in window) {
-                            window.speechSynthesis.cancel();
-                            setIsPlayingAudio(false);
-                          }
-                        }}
-                        className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                          isSelected
-                            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md font-black scale-[1.02]'
-                            : 'text-slate-400 hover:text-white hover:bg-white/5'
-                        }`}
-                      >
-                        <span>{lvl}</span>
-                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white shadow-xs" />}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Active Phrase & Real-Time Waveform Stage */}
-                <div className="rounded-2xl bg-[#070D1A] border border-white/[0.08] p-5 space-y-4 relative z-10 backdrop-blur-md">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-blue-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                      <GraduationCap className="w-3.5 h-3.5" />
-                      {currentPhrase.context}
-                    </span>
-                    <span className="text-slate-400 font-medium">{currentPhrase.dozent}</span>
-                  </div>
-
-                  {/* German Phrase Highlight */}
-                  <div className="space-y-1">
-                    <p className="text-lg sm:text-xl font-heading font-bold text-white leading-snug">
-                      „{currentPhrase.german}“
-                    </p>
-                    <p className="text-[11px] font-mono text-purple-300/80 tracking-wide">
-                      {currentPhrase.ipa}
-                    </p>
-                  </div>
-
-                  {/* Translations */}
-                  <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
-                    <div className="text-xs text-slate-300 font-medium">
-                      <span className="text-blue-400 font-bold mr-1.5">EN:</span>
-                      {currentPhrase.english}
+                    {/* Top Location Pill */}
+                    <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs font-bold shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
+                      <span>Berlin Campus & Online Classes</span>
                     </div>
-                    <div className="text-xs text-slate-400 font-medium">
-                      <span className="text-amber-300 font-bold mr-1.5">HI:</span>
-                      {currentPhrase.hindi}
+
+                    {/* Top Right CEFR Pill */}
+                    <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600 text-white text-xs font-extrabold shadow-md border border-blue-400/30">
+                      <span>CEFR A1–B2</span>
+                    </div>
+
+                    {/* Bottom Caption Overlay */}
+                    <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#070D1A]/90 backdrop-blur-xl border border-white/10 shadow-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-extrabold text-blue-400 tracking-wide uppercase">
+                          DeutschWelt Academy
+                        </span>
+                        <span className="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+                          ★ 4.9/5 (500+ Alumni)
+                        </span>
+                      </div>
+                      <p className="text-sm font-heading font-black text-white leading-snug">
+                        Your Direct Pathway to German University, Visa & Career Fluency
+                      </p>
+                      <div className="flex items-center justify-between pt-1 text-[11px] text-slate-300 border-t border-white/10">
+                        <span className="flex items-center gap-1 font-medium">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Goethe-Zertifikat Prep
+                        </span>
+                        <span className="flex items-center gap-1 font-medium">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Telc Deutsch B1/B2
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Interactive Audio Player & Dynamic Soundwave */}
-                  <div className="pt-2 flex items-center justify-between gap-4">
-                    <button
-                      onClick={() => speakGerman(currentPhrase.german)}
-                      className="px-4 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-95 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-transform active:scale-95 shrink-0"
-                    >
-                      {isPlayingAudio ? (
-                        <>
-                          <Pause className="w-4 h-4 fill-current animate-pulse" />
-                          <span>{t('home.cockpit.playing')}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-4 h-4 fill-current" />
-                          <span>{t('home.cockpit.listenAudio')}</span>
-                        </>
-                      )}
-                    </button>
-
-                    {/* Animated Audio Equalizer Bars */}
-                    <div className="flex items-end gap-1 h-7 flex-1 justify-end px-2">
-                      {[14, 26, 18, 32, 22, 28, 16, 24, 30, 20, 27, 15].map((h, i) => (
-                        <motion.div
-                          key={i}
-                          animate={
-                            isPlayingAudio
-                              ? {
-                                  height: [h * 0.4, h, h * 0.3, h * 0.9, h * 0.5],
-                                  backgroundColor: ['#6366F1', '#A855F7', '#EC4899', '#6366F1']
-                                }
-                              : { height: Math.max(6, h * 0.35), backgroundColor: '#312E81' }
-                          }
-                          transition={
-                            isPlayingAudio
-                              ? {
-                                  repeat: Infinity,
-                                  duration: 0.8 + (i % 4) * 0.2,
-                                  ease: 'easeInOut'
-                                }
-                              : { duration: 0.3 }
-                          }
-                          className="w-1 rounded-full min-h-[4px]"
-                        />
-                      ))}
+                  {/* Photo Card Bottom Stats Strip */}
+                  <div className="p-4 sm:p-5 bg-[#0B1325] border-t border-white/[0.08] grid grid-cols-3 gap-3 text-center">
+                    <div>
+                      <div className="text-base sm:text-lg font-heading font-black text-white">99.2%</div>
+                      <div className="text-[11px] font-medium text-slate-400">Exam Pass Rate</div>
+                    </div>
+                    <div className="border-x border-white/10">
+                      <div className="text-base sm:text-lg font-heading font-black text-blue-400">60–75h</div>
+                      <div className="text-[11px] font-medium text-slate-400">Per CEFR Level</div>
+                    </div>
+                    <div>
+                      <div className="text-base sm:text-lg font-heading font-black text-emerald-400">1-on-1</div>
+                      <div className="text-[11px] font-medium text-slate-400">Faculty Mentors</div>
                     </div>
                   </div>
                 </div>
-
-                {/* Real-time AI Speech Scoring Telemetry */}
-                <div className="grid grid-cols-3 gap-2.5 relative z-10 pt-1">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/[0.08] text-center">
-                    <div className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Phonetik</div>
-                    <div className="text-base font-heading font-black text-blue-400">
-                      {currentPhrase.phoneticsScore}%
-                    </div>
-                    <div className="text-[9px] text-blue-300 font-semibold">Exakt</div>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/[0.08] text-center">
-                    <div className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Intonation</div>
-                    <div className="text-base font-heading font-black text-purple-400">
-                      {currentPhrase.intonationScore}%
-                    </div>
-                    <div className="text-[9px] text-purple-300 font-semibold">Natürlich</div>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/[0.08] text-center">
-                    <div className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Goethe Score</div>
-                    <div className="text-base font-heading font-black text-pink-400">
-                      {currentPhrase.score}/100
-                    </div>
-                    <div className="text-[9px] text-pink-300 font-semibold">Sehr gut</div>
-                  </div>
-                </div>
-
-                {/* Footer Action inside Cockpit */}
-                <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-xs text-slate-400 relative z-10">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-3.5 h-3.5 text-blue-400" />
-                    <span>342 Lerner aktuell in Live-Übungen</span>
-                  </div>
-                  <Link
-                    to="/vocabulary"
-                    className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 transition-colors"
-                  >
-                    <span>Lernlabor öffnen</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
