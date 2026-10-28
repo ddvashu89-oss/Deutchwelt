@@ -51,8 +51,8 @@ export function CertificateModal({ isOpen, onClose, certificate }: CertificateMo
         {/* Printable Certificate Frame */}
         <div
           ref={printRef}
-          className="relative bg-white rounded-2xl border-4 sm:border-8 border-double border-amber-500/80 p-4 sm:p-8 md:p-12 shadow-2xl overflow-hidden print:p-0 print:border-none print:shadow-none"
-          style={{ minHeight: '480px' }}
+          className="relative bg-white rounded-2xl border-8 border-double border-amber-500/80 p-8 sm:p-12 shadow-2xl overflow-hidden print:p-0 print:border-none print:shadow-none"
+          style={{ minHeight: '520px' }}
         >
           {/* German Flag Decorative Ribbon Top */}
           <div className="absolute top-0 left-0 right-0 h-2.5 flex">
@@ -114,9 +114,9 @@ export function CertificateModal({ isOpen, onClose, certificate }: CertificateMo
           </div>
 
           {/* Signatures & Seal Footer */}
-          <div className="pt-6 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-3 items-center sm:items-end text-center gap-4 sm:gap-2">
+          <div className="pt-6 border-t border-gray-200 grid grid-cols-3 items-end text-center gap-2">
             {/* Instructor Signature */}
-            <div className="space-y-1 order-2 sm:order-1">
+            <div className="space-y-1">
               <div className="font-serif italic text-sm text-navy font-semibold">
                 {certificate.instructorName || 'Dr. Katharina Weber'}
               </div>
@@ -125,7 +125,7 @@ export function CertificateModal({ isOpen, onClose, certificate }: CertificateMo
             </div>
 
             {/* Official Gold Seal */}
-            <div className="flex flex-col items-center justify-center order-1 sm:order-2">
+            <div className="flex flex-col items-center justify-center">
               <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 p-1 shadow-md flex items-center justify-center text-center text-navy font-extrabold text-[9px] border-2 border-white">
                 <div className="w-full h-full rounded-full border border-dashed border-amber-800 flex flex-col items-center justify-center leading-none">
                   <Award className="w-5 h-5 text-navy mb-0.5" />
@@ -136,7 +136,7 @@ export function CertificateModal({ isOpen, onClose, certificate }: CertificateMo
             </div>
 
             {/* Director Signature */}
-            <div className="space-y-1 order-3">
+            <div className="space-y-1">
               <div className="font-serif italic text-sm text-navy font-semibold">
                 {certificate.directorName || 'Dr. Klaus Becker'}
               </div>
@@ -157,8 +157,8 @@ export function CertificateModal({ isOpen, onClose, certificate }: CertificateMo
 
         {/* Modal Action Buttons */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-          <div className="text-xs text-slate-400 flex items-center gap-1">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" /> Offiziell verifizierbares Dokument
+          <div className="text-xs text-dark-muted flex items-center gap-1">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Offiziell verifizierbares Dokument
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={handlePrint}>

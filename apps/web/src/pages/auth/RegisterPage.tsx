@@ -7,9 +7,9 @@ import { useAuth } from '../../context/AuthContext.js';
 import { useLanguage } from '../../context/LanguageContext.js';
 import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
 import { Logo } from '../../components/brand/Logo.js';
-import { Input } from '../../components/ui/Input.js';
 import { Button } from '../../components/ui/Button.js';
-import { ArrowRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Input } from '../../components/ui/Input.js';
+import { ArrowRight, Lock, MapPin, Phone, Mail, User, ShieldCheck } from 'lucide-react';
 
 export function RegisterPage() {
   const { register: registerUser } = useAuth();
@@ -44,45 +44,45 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030712] flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans text-slate-100 bg-mesh-cosmic">
+    <div className="min-h-screen bg-canvas flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans">
       {/* Top Bar with Language Toggle */}
-      <div className="absolute top-6 right-6 flex items-center gap-3 z-20">
+      <div className="absolute top-6 right-6 flex items-center gap-3">
         <LanguageToggle />
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <div className="flex justify-center">
-          <Logo size="lg" showTagline={true} tagline="Student Admissions" />
+          <Logo size="lg" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight pt-2">
-          {t('reg.title') || 'Start Your German Fluency Journey'}
+        <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
+          {t('reg.title')}
         </h2>
-        <p className="text-xs text-slate-400 max-w-sm mx-auto font-medium">
-          {t('reg.subtitle') || 'Create your student account to access CEFR course modules, vocabulary trainers, and interactive speech labs.'}
+        <p className="text-xs text-gray-500 max-w-sm mx-auto font-medium">
+          {t('reg.subtitle')}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-[#0B1325]/90 backdrop-blur-2xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/10 space-y-6">
+        <div className="bg-white py-8 px-6 shadow-xl sm:rounded-4xl sm:px-10 border border-gray-200/80 space-y-6">
           {/* Content Gate Alert */}
           {isContentGate && (
-            <div className="p-4 bg-blue-950/40 border border-blue-500/30 rounded-2xl flex items-start gap-3 shadow-md">
-              <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 text-blue-300 mt-0.5">
+            <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl flex items-start gap-3 shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-800 mt-0.5">
                 <Lock className="w-4 h-4" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-bold text-white">
-                  {t('gate.title') || 'Premium Course Material'}
+                <h4 className="text-sm font-bold text-amber-900">
+                  {t('gate.title')}
                 </h4>
-                <p className="text-xs text-blue-200 leading-relaxed">
-                  {t('gate.description') || 'Register a free account to unlock lessons, vocabulary decks, and pronunciation lab modules.'}
+                <p className="text-xs text-amber-800 leading-relaxed">
+                  {t('gate.description')}
                 </p>
               </div>
             </div>
           )}
 
           {serverError && (
-            <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-2xl text-xs font-semibold">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-medium">
               {serverError}
             </div>
           )}
@@ -91,14 +91,14 @@ export function RegisterPage() {
             {/* First Name & Last Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label={t('reg.firstName') || 'First Name'}
+                label={t('reg.firstName')}
                 placeholder="Elena"
                 required
                 error={errors.firstName?.message}
                 {...register('firstName')}
               />
               <Input
-                label={t('reg.lastName') || 'Last Name'}
+                label={t('reg.lastName')}
                 placeholder="Rostova"
                 required
                 error={errors.lastName?.message}
@@ -109,7 +109,7 @@ export function RegisterPage() {
             {/* Email Address & Mobile Number */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label={t('reg.email') || 'Email Address'}
+                label={t('reg.email')}
                 type="email"
                 placeholder="elena@example.com"
                 required
@@ -117,7 +117,7 @@ export function RegisterPage() {
                 {...register('email')}
               />
               <Input
-                label={t('reg.mobile') || 'Mobile Number'}
+                label={t('reg.mobile')}
                 type="tel"
                 placeholder="+49 151 12345678"
                 required
@@ -128,7 +128,7 @@ export function RegisterPage() {
 
             {/* Address */}
             <Input
-              label={t('reg.address') || 'City & Address'}
+              label={t('reg.address')}
               placeholder="e.g. Friedrichstraße 45, 10117 Berlin, Germany"
               required
               error={errors.address?.message}
@@ -137,9 +137,9 @@ export function RegisterPage() {
 
             {/* Password */}
             <Input
-              label={t('reg.password') || 'Password'}
+              label={t('reg.password')}
               type="password"
-              placeholder="Minimum 8 characters with numbers"
+              placeholder="Minimum 8 chars with uppercase & number"
               required
               error={errors.password?.message}
               {...register('password')}
@@ -147,12 +147,12 @@ export function RegisterPage() {
 
             {/* German Level & Preferred Language */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5 font-sans">
-                <label className="block text-xs font-bold text-slate-300 tracking-wide">
-                  {t('reg.level') || 'Current German CEFR Level'}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
+                  {t('reg.level')}
                 </label>
                 <select
-                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A]/90 px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 transition-all"
+                  className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
                   {...register('currentLevel')}
                 >
                   <option value={GermanLevel.BEGINNER}>Beginner (Zero German)</option>
@@ -164,12 +164,12 @@ export function RegisterPage() {
                 </select>
               </div>
 
-              <div className="space-y-1.5 font-sans">
-                <label className="block text-xs font-bold text-slate-300 tracking-wide">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
                   Explanation Language
                 </label>
                 <select
-                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A]/90 px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 transition-all"
+                  className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
                   {...register('preferredLanguage')}
                 >
                   <option value="en">English explanations</option>
@@ -181,7 +181,7 @@ export function RegisterPage() {
 
             {/* Learning Goal */}
             <Input
-              label={t('reg.goal') || 'Learning Goal'}
+              label={t('reg.goal')}
               placeholder="e.g. Master's in Germany, Goethe-Zertifikat A1, Job Relocation"
               error={errors.learningGoal?.message}
               {...register('learningGoal')}
@@ -192,41 +192,39 @@ export function RegisterPage() {
               <input
                 type="checkbox"
                 id="terms"
-                className="mt-1 h-4 w-4 rounded border-white/20 bg-[#070D1A] text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-navy focus:ring-navy"
                 {...register('consentToTerms')}
               />
-              <label htmlFor="terms" className="text-xs text-slate-400 leading-snug">
-                {t('reg.terms') || 'I agree to the'}{' '}
-                <Link to="/terms" className="text-blue-400 font-bold hover:underline">
-                  Terms of Service
+              <label htmlFor="terms" className="text-xs text-dark-muted leading-snug">
+                {t('reg.terms')}{' '}
+                <Link to="/terms" className="text-navy font-bold hover:underline">
+                  Terms
                 </Link>{' '}
                 &{' '}
-                <Link to="/privacy" className="text-blue-400 font-bold hover:underline">
-                  Privacy Policy
+                <Link to="/privacy" className="text-navy font-bold hover:underline">
+                  Privacy
                 </Link>
                 .
               </label>
             </div>
             {errors.consentToTerms && (
-              <p className="text-xs text-rose-400 font-medium">{errors.consentToTerms.message}</p>
+              <p className="text-xs text-red-600 font-medium">{errors.consentToTerms.message}</p>
             )}
 
-            <Button
+            <button
               type="submit"
               disabled={isSubmitting}
-              isLoading={isSubmitting}
-              variant="primary"
-              className="w-full py-3.5 rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/25 mt-4"
+              className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all mt-4"
             >
-              <span>{isSubmitting ? 'Wird erstellt...' : (t('reg.submit') || 'Create Student Account')}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
+              <span>{isSubmitting ? 'Wird erstellt...' : t('reg.submit')}</span>
+              <ArrowRight className="w-4 h-4 text-mint" />
+            </button>
           </form>
 
-          <div className="text-center text-xs text-slate-400 pt-3 border-t border-white/[0.08]">
-            {t('reg.hasAccount') || 'Already have an account?'}{' '}
-            <Link to="/login" className="font-bold text-blue-400 hover:text-blue-300 hover:underline ml-1">
-              {t('nav.login') || 'Sign in here'}
+          <div className="text-center text-xs text-gray-500 pt-2 border-t border-gray-100">
+            {t('reg.hasAccount')}{' '}
+            <Link to="/login" className="font-bold text-forest-800 hover:text-forest-900 hover:underline">
+              {t('nav.login')}
             </Link>
           </div>
         </div>

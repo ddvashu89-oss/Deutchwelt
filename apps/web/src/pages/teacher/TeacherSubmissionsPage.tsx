@@ -84,34 +84,30 @@ export function TeacherSubmissionsPage() {
     <div className="space-y-8 pb-16">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Badge variant="default" className="uppercase font-bold tracking-wider text-[10px] bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+          <Badge variant="default" className="uppercase font-bold tracking-wider text-[10px]">
             Faculty Grading Suite
           </Badge>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-3xl font-extrabold text-navy tracking-tight mt-1">
             Student Submissions Review Queue
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-dark-muted">
             Assess written texts and listen to audio recordings submitted by students.
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-2xl border border-white/10 self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 bg-gray-200/80 p-1 rounded-xl self-start sm:self-auto">
           <button
             onClick={() => setActiveTab('writing')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeTab === 'writing'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-xs'
-                : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'writing' ? 'bg-white text-navy shadow-xs' : 'text-gray-600 hover:text-dark'
             }`}
           >
             <PenTool className="w-3.5 h-3.5" /> Writing ({writingSubmissions.length})
           </button>
           <button
             onClick={() => setActiveTab('speaking')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeTab === 'speaking'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-xs'
-                : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'speaking' ? 'bg-white text-navy shadow-xs' : 'text-gray-600 hover:text-dark'
             }`}
           >
             <Mic className="w-3.5 h-3.5" /> Speaking ({speakingAttempts.length})
@@ -120,22 +116,22 @@ export function TeacherSubmissionsPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="h-96 w-full rounded-3xl bg-white/5" />
+        <Skeleton className="h-96 w-full rounded-3xl" />
       ) : activeTab === 'writing' ? (
         /* WRITING SUBMISSIONS */
         <div className="space-y-4">
           {writingSubmissions.length === 0 ? (
-            <div className="p-12 text-center bg-[#0B1325] rounded-3xl border border-white/10">
-              <p className="text-xs text-slate-400">No writing submissions in queue.</p>
+            <div className="p-12 text-center bg-white rounded-3xl border border-gray-200">
+              <p className="text-xs text-dark-muted">No writing submissions in queue.</p>
             </div>
           ) : (
             writingSubmissions.map(sub => (
-              <Card key={sub.id} className="p-6 border-white/10 bg-[#0B1325] space-y-4 rounded-3xl shadow-xl">
+              <Card key={sub.id} className="p-6 border-gray-200 bg-white space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-base font-bold text-white">{sub.assignment?.title || 'Writing Assignment'}</h3>
-                    <p className="text-xs text-slate-400">
-                      Student: <span className="font-semibold text-slate-200">{sub.user?.firstName} {sub.user?.lastName}</span> ({sub.user?.email}) • Submitted: {new Date(sub.submittedAt).toLocaleDateString()}
+                    <h3 className="text-base font-bold text-navy">{sub.assignment?.title || 'Writing Assignment'}</h3>
+                    <p className="text-xs text-dark-muted">
+                      Student: <span className="font-semibold text-dark">{sub.user?.firstName} {sub.user?.lastName}</span> ({sub.user?.email}) • Submitted: {new Date(sub.submittedAt).toLocaleDateString()}
                     </p>
                   </div>
                   <Badge variant={sub.status === 'GRADED' ? 'success' : 'warning'}>
@@ -143,14 +139,14 @@ export function TeacherSubmissionsPage() {
                   </Badge>
                 </div>
 
-                <div className="p-4 bg-[#070D1A] rounded-2xl border border-white/10 text-xs text-slate-200 whitespace-pre-line leading-relaxed font-sans">
+                <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-xs text-dark whitespace-pre-line leading-relaxed font-sans">
                   {sub.content}
                 </div>
 
                 {sub.status === 'GRADED' && (
-                  <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 text-xs">
-                    <span className="font-bold text-emerald-400">Graded: {sub.score} points</span>
-                    <p className="text-slate-300 mt-0.5">{sub.teacherFeedback}</p>
+                  <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-xs">
+                    <span className="font-bold text-emerald-900">Graded: {sub.score} points</span>
+                    <p className="text-dark mt-0.5">{sub.teacherFeedback}</p>
                   </div>
                 )}
 
@@ -167,17 +163,17 @@ export function TeacherSubmissionsPage() {
         /* SPEAKING ATTEMPTS */
         <div className="space-y-4">
           {speakingAttempts.length === 0 ? (
-            <div className="p-12 text-center bg-[#0B1325] rounded-3xl border border-white/10">
-              <p className="text-xs text-slate-400">No speaking attempts in queue.</p>
+            <div className="p-12 text-center bg-white rounded-3xl border border-gray-200">
+              <p className="text-xs text-dark-muted">No speaking attempts in queue.</p>
             </div>
           ) : (
             speakingAttempts.map(att => (
-              <Card key={att.id} className="p-6 border-white/10 bg-[#0B1325] space-y-4 rounded-3xl shadow-xl">
+              <Card key={att.id} className="p-6 border-gray-200 bg-white space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-base font-bold text-white">{att.prompt?.title || 'Speaking Prompt'}</h3>
-                    <p className="text-xs text-slate-400">
-                      Student: <span className="font-semibold text-slate-200">{att.user?.firstName} {att.user?.lastName}</span> ({att.user?.email}) • Submitted: {new Date(att.submittedAt).toLocaleDateString()}
+                    <h3 className="text-base font-bold text-navy">{att.prompt?.title || 'Speaking Prompt'}</h3>
+                    <p className="text-xs text-dark-muted">
+                      Student: <span className="font-semibold text-dark">{att.user?.firstName} {att.user?.lastName}</span> ({att.user?.email}) • Submitted: {new Date(att.submittedAt).toLocaleDateString()}
                     </p>
                   </div>
                   <Badge variant={att.status === 'GRADED' ? 'success' : 'warning'}>
@@ -187,23 +183,23 @@ export function TeacherSubmissionsPage() {
 
                 {/* Audio player */}
                 {att.audioUrl && (
-                  <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10 flex items-center gap-3">
-                    <Volume2 className="w-5 h-5 text-indigo-400 shrink-0" />
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center gap-3">
+                    <Volume2 className="w-5 h-5 text-germanRed shrink-0" />
                     <audio src={att.audioUrl} controls className="w-full h-8" />
                   </div>
                 )}
 
                 {att.transcriptText && (
-                  <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10 text-xs text-slate-300">
-                    <span className="font-bold text-white block mb-0.5">Student Note / Transcript:</span>
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs text-dark">
+                    <span className="font-bold text-navy block mb-0.5">Student Note / Transcript:</span>
                     <p>{att.transcriptText}</p>
                   </div>
                 )}
 
                 {att.status === 'GRADED' && (
-                  <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 text-xs">
-                    <span className="font-bold text-emerald-400">Graded: {att.score} / 100</span>
-                    <p className="text-slate-300 mt-0.5">{att.teacherFeedback}</p>
+                  <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200 text-xs">
+                    <span className="font-bold text-emerald-900">Graded: {att.score} / 100</span>
+                    <p className="text-dark mt-0.5">{att.teacherFeedback}</p>
                   </div>
                 )}
 
@@ -228,15 +224,15 @@ export function TeacherSubmissionsPage() {
       >
         <div className="space-y-4 pt-2">
           {selectedItem?.audioUrl && (
-            <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10">
-              <p className="text-xs font-bold text-white mb-1.5">Audio Recording Preview:</p>
+            <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
+              <p className="text-xs font-bold text-navy mb-1.5">Audio Recording Preview:</p>
               <audio src={selectedItem.audioUrl} controls className="w-full h-8" />
             </div>
           )}
 
           {selectedItem?.content && (
-            <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10 text-xs whitespace-pre-line max-h-48 overflow-y-auto text-slate-200">
-              <p className="font-bold text-white mb-1">Student Essay:</p>
+            <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs whitespace-pre-line max-h-48 overflow-y-auto">
+              <p className="font-bold text-navy mb-1">Student Essay:</p>
               <p>{selectedItem.content}</p>
             </div>
           )}
@@ -252,7 +248,7 @@ export function TeacherSubmissionsPage() {
           />
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
               Instructor Written Feedback & Correction Notes
             </label>
             <textarea
@@ -260,11 +256,11 @@ export function TeacherSubmissionsPage() {
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="Highlight strengths, point out specific grammar/vocabulary improvements, and encourage the student..."
-              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
+          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
             <Button variant="outline" size="sm" onClick={() => setSelectedItem(null)}>
               Cancel
             </Button>

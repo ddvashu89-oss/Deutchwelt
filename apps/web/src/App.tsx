@@ -56,21 +56,17 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#030712] bg-mesh-cosmic text-white text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-ivory text-center">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#0B1325] border border-white/10 p-1 flex items-center justify-center shadow-lg shadow-blue-500/10">
-            <div className="w-full h-full rounded-lg overflow-hidden flex flex-col">
-              <div className="flex-1 bg-black" />
-              <div className="flex-1 bg-rose-600" />
-              <div className="flex-1 bg-amber-400" />
-            </div>
+          <div className="w-10 h-10 rounded-xl bg-navy text-white font-extrabold flex items-center justify-center text-sm">
+            DW
           </div>
-          <span className="font-heading font-black text-2xl text-white">
-            Deutsch<span className="text-gradient-brand ml-0.5">Welt</span>
+          <span className="font-heading font-extrabold text-2xl text-navy">
+            Deutsch<span className="text-germanRed">Welt</span>
           </span>
         </div>
-        <div className="w-8 h-8 rounded-full border-2 border-blue-500/20 border-t-blue-500 animate-spin" />
-        <p className="mt-3 text-xs font-semibold text-slate-400">Laden...</p>
+        <div className="w-8 h-8 rounded-full border-4 border-navy border-t-germanRed animate-spin" />
+        <p className="mt-3 text-xs font-semibold text-dark-muted">Laden...</p>
       </div>
     );
   }

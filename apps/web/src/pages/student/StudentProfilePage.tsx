@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext.js';
 import { api } from '../../lib/api.js';
 import { Button } from '../../components/ui/Button.js';
+import { Input } from '../../components/ui/Input.js';
+import { Badge } from '../../components/ui/Badge.js';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card.js';
 import { GermanLevel } from '@deutschwelt/shared';
 import { User, CheckCircle2, ShieldCheck, Target, Globe } from 'lucide-react';
 
@@ -49,107 +52,67 @@ export function StudentProfilePage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-7 sm:space-y-8 pb-16 font-sans">
+    <div className="max-w-3xl mx-auto space-y-8 pb-16">
       <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-            <User className="w-3 h-3" />
-            Account & Preferences
-          </span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-heading font-black text-white tracking-tight">
-          Student Profile & Settings
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400">
-          Manage your personal details, CEFR proficiency level, and study goals.
-        </p>
+        <h1 className="text-3xl font-extrabold text-navy tracking-tight">Student Profile & Settings</h1>
+        <p className="text-xs text-dark-muted">Manage your personal details, CEFR proficiency level, and study goals.</p>
       </div>
 
-      <div className="bg-[#0B1325] rounded-3xl p-6 sm:p-8 border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-6">
+      <div className="bg-white rounded-3xl p-8 border border-gray-200/90 shadow-card space-y-6">
         {success && (
-          <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-2xl text-xs font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Profile and learning goals updated successfully!</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                First Name
-              </label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                Last Name
-              </label>
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={user?.email || ''}
-                disabled
-                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21]/60 px-4 py-2.5 text-sm text-slate-400 cursor-not-allowed"
-              />
-              <span className="text-[10px] text-slate-500 block">Managed by account credentials</span>
-            </div>
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                Mobile Number
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+49 151 12345678"
-                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-              Residential Address
-            </label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="e.g. Friedrichstraße 10, 10117 Berlin, Germany"
-              className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            <Input
+              label="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+            <Input
+              label="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[rgba(255,255,255,0.08)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Email Address"
+              value={user?.email || ''}
+              disabled
+              helperText="Managed by account credentials"
+            />
+            <Input
+              label="Mobile Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+49 151 12345678"
+            />
+          </div>
+
+          <Input
+            label="Residential Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="e.g. Friedrichstraße 10, 10117 Berlin, Germany"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
                 Current CEFR Level
               </label>
               <select
                 value={currentLevel}
                 onChange={(e) => setCurrentLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                className="flex h-11 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
               >
                 <option value={GermanLevel.BEGINNER}>Beginner (Pre-A1)</option>
                 <option value={GermanLevel.A1}>A1 — Starter</option>
@@ -160,13 +123,13 @@ export function StudentProfilePage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
                 Daily Study Goal (Minutes)
               </label>
               <select
                 value={dailyGoalMinutes}
                 onChange={(e) => setDailyGoalMinutes(Number(e.target.value))}
-                className="flex h-11 w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                className="flex h-11 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
               >
                 <option value={15}>15 Minutes / Day (Casual)</option>
                 <option value={25}>25 Minutes / Day (Standard)</option>
@@ -177,13 +140,13 @@ export function StudentProfilePage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
               Grammar & Vocabulary Explanation Language
             </label>
             <select
               value={preferredLanguage}
               onChange={(e) => setPreferredLanguage(e.target.value)}
-              className="flex h-11 w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+              className="flex h-11 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
             >
               <option value="en">English explanations (Default)</option>
               <option value="hi">English + Hindi explanations (हिंदी)</option>
@@ -192,7 +155,7 @@ export function StudentProfilePage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
               Primary Learning Goal
             </label>
             <textarea
@@ -200,21 +163,15 @@ export function StudentProfilePage() {
               value={learningGoal}
               onChange={(e) => setLearningGoal(e.target.value)}
               placeholder="e.g. Preparing for Goethe-Zertifikat B1 exam for my master degree in Munich..."
-              className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] p-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all flex items-center gap-2"
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
+          <Button type="submit" variant="primary" size="md" className="font-bold shadow-md" isLoading={saving}>
+            Save Changes
+          </Button>
         </form>
       </div>
     </div>
   );
 }
-
-export default StudentProfilePage;

@@ -38,40 +38,40 @@ export function Modal({ isOpen, onClose, title, description, children, maxWidth 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-      {/* High-blur dark backdrop */}
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#030712]/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-navy-950/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Dialog with Modern Teutonic Glass Styling */}
+      {/* Modal Dialog */}
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         className={cn(
-          'relative w-full rounded-3xl bg-[#0B1325]/95 border border-white/10 p-6 sm:p-8 shadow-2xl shadow-black/80 transition-all z-10 max-h-[90vh] overflow-y-auto text-slate-100 animate-in zoom-in-95 duration-200',
+          'relative w-full rounded-2xl bg-white p-6 shadow-2xl transition-all z-10 max-h-[90vh] overflow-y-auto',
           maxWidthStyles[maxWidth]
         )}
       >
-        <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
+        <div className="flex items-start justify-between pb-4 border-b border-gray-100">
           <div>
-            <h3 id="modal-title" className="text-xl font-heading font-black text-white tracking-tight">
+            <h3 id="modal-title" className="text-xl font-bold text-navy">
               {title}
             </h3>
-            {description && <p className="text-xs text-slate-400 mt-1 font-medium">{description}</p>}
+            {description && <p className="text-xs text-dark-muted mt-1">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="rounded-lg p-1 text-gray-400 hover:text-dark hover:bg-gray-100 transition-colors"
           >
             <X className="w-5 h-5" />
             <span className="sr-only">Close</span>
           </button>
         </div>
 
-        <div className="mt-5">{children}</div>
+        <div className="mt-4">{children}</div>
       </div>
     </div>
   );

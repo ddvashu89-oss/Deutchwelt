@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Badge } from '../../components/ui/Badge.js';
 import { ChevronDown, Search } from 'lucide-react';
 
 export function FAQPage() {
@@ -38,26 +39,24 @@ export function FAQPage() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12 text-slate-100 font-sans">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
       <div className="text-center space-y-3">
-        <span className="inline-flex px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider">
-          Help & Guidance
-        </span>
-        <h1 className="text-4xl font-heading font-black text-white tracking-tight">Frequently Asked Questions</h1>
-        <p className="text-base text-slate-400">
+        <Badge variant="default" className="uppercase font-bold tracking-wider">Help & Guidance</Badge>
+        <h1 className="text-4xl font-extrabold text-navy">Frequently Asked Questions</h1>
+        <p className="text-base text-dark-muted">
           Everything you need to know about DeutschWelt courses, examinations, and methodology.
         </p>
 
         {/* Search */}
         <div className="pt-4 max-w-md mx-auto">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
+            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
             <input
               type="text"
               placeholder="Search topics (e.g., exams, B1, speaking)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 rounded-full border border-white/10 bg-[#0B1325] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all shadow-inner"
+              className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-navy"
             />
           </div>
         </div>
@@ -65,21 +64,21 @@ export function FAQPage() {
 
       <div className="space-y-4">
         {filteredFaqs.map((faq, idx) => (
-          <div key={idx} className="rounded-2xl border border-white/[0.08] bg-[#0B1325] overflow-hidden shadow-lg transition-all hover:border-white/20">
+          <div key={idx} className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-subtle">
             <button
               onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-              className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:text-blue-400 transition-colors"
+              className="w-full flex items-center justify-between p-5 text-left font-bold text-navy hover:text-germanRed transition-colors"
             >
               <div className="pr-4">
-                <span className="text-[10px] uppercase font-bold text-blue-400 tracking-wider block mb-1">
+                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">
                   {faq.category}
                 </span>
                 <span>{faq.q}</span>
               </div>
-              <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${openIndex === idx ? 'rotate-180 text-blue-400' : 'text-slate-400'}`} />
+              <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${openIndex === idx ? 'rotate-180 text-germanRed' : ''}`} />
             </button>
             {openIndex === idx && (
-              <div className="px-5 pb-5 pt-0 text-sm text-slate-400 leading-relaxed border-t border-white/[0.06] pt-3">
+              <div className="px-5 pb-5 pt-0 text-sm text-dark-muted leading-relaxed border-t border-gray-50">
                 {faq.a}
               </div>
             )}
@@ -89,5 +88,3 @@ export function FAQPage() {
     </div>
   );
 }
-
-export default FAQPage;

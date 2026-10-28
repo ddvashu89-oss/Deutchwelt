@@ -10,7 +10,6 @@ export interface User {
   phone?: string | null;
   address?: string | null;
   role: UserRole;
-  isActive?: boolean;
   studentProfile?: any;
   teacherProfile?: any;
 }
@@ -25,9 +24,6 @@ interface AuthContextType {
   isStudent: boolean;
   isTeacher: boolean;
   isAdmin: boolean;
-  accountBlocked: boolean;
-  blockedMessage: string | null;
-  dismissBlockedAlert: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,24 +31,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [accountBlocked, setAccountBlocked] = useState(false);
-  const [blockedMessage, setBlockedMessage] = useState<string | null>(null);
 
   const refreshUser = async () => {
     try {
       const res: any = await api.get('/auth/me');
       if (res.authenticated && res.user) {
         setUser(res.user);
-        setAccountBlocked(false);
-        setBlockedMessage(null);
       } else {
         setUser(null);
       }
-    } catch (e: any) {
-      if (e?.code === 'ACCOUNT_BLOCKED' || e?.status === 403 || e?.message?.includes('suspended') || e?.message?.includes('blocked')) {
-        setAccountBlocked(true);
-        setBlockedMessage(e?.message || 'Your student account has been suspended or blocked by an administrator.');
-      }
+    } catch (e) {
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -64,30 +52,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (credentials: { email: string; password: string }) => {
-    try {
-      const res: any = await api.post('/auth/login', credentials);
-      if (res.success && res.user) {
-        setUser(res.user);
-        setAccountBlocked(false);
-        setBlockedMessage(null);
-        return res.user;
-      }
-      return null;
-    } catch (err: any) {
-      if (err?.code === 'ACCOUNT_BLOCKED' || err?.message?.includes('suspended') || err?.message?.includes('blocked')) {
-        setAccountBlocked(true);
-        setBlockedMessage(err?.message || 'Your account has been suspended or blocked by an administrator.');
-      }
-      throw err;
+    const res: any = await api.post('/auth/login', credentials);
+    if (res.success && res.user) {
+      setUser(res.user);
+      return res.user;
     }
+    return null;
   };
 
   const register = async (data: any) => {
     const res: any = await api.post('/auth/register', data);
     if (res.success && res.user) {
       setUser(res.user);
-      setAccountBlocked(false);
-      setBlockedMessage(null);
     }
   };
 
@@ -96,14 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await api.post('/auth/logout');
     } finally {
       setUser(null);
-      setAccountBlocked(false);
-      setBlockedMessage(null);
     }
-  };
-
-  const dismissBlockedAlert = () => {
-    setAccountBlocked(false);
-    setBlockedMessage(null);
   };
 
   const isStudent = user?.role === UserRole.STUDENT;
@@ -121,10 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refreshUser,
         isStudent,
         isTeacher,
-        isAdmin,
-        accountBlocked,
-        blockedMessage,
-        dismissBlockedAlert
+        isAdmin
       }}
     >
       {children}
