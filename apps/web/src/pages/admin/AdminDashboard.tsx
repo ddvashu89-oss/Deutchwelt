@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import {
@@ -28,6 +29,7 @@ import {
 } from 'recharts';
 
 export function AdminDashboard() {
+  const { t } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -88,14 +90,14 @@ export function AdminDashboard() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-gray-950">
-              Admin-Zentrale
+              {t('adash.title')}
             </h1>
             <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
               System Online
             </span>
           </div>
           <p className="text-sm font-medium text-gray-500 mt-1">
-            Plattform-Telemetrie, Benutzerkonten und Kursverwaltung der DeutschWelt Akademie.
+            {t('adash.subtitle')}
           </p>
         </div>
 
@@ -105,7 +107,7 @@ export function AdminDashboard() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-semibold transition-all shadow-xs"
           >
             <BookOpen className="w-4 h-4 text-forest-700" />
-            <span>+ Kurs anlegen</span>
+            {t('adash.addCourse')}
           </Link>
 
           <Link
@@ -113,7 +115,7 @@ export function AdminDashboard() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-sm font-semibold transition-all shadow-md hover:shadow-lg"
           >
             <Plus className="w-4 h-4 text-mint" />
-            <span>+ Dozent einladen</span>
+            {t('adash.inviteTeacher')}
           </Link>
         </div>
       </div>
@@ -124,7 +126,7 @@ export function AdminDashboard() {
         <div className="rounded-3xl bg-forest-900 text-white p-6 shadow-sm border border-forest-800 flex flex-col justify-between group">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-emerald-100/90">
-              Eingeschriebene Studenten
+              {t('adash.totalStudents')}
             </span>
             <Link
               to="/admin/students"
@@ -150,7 +152,7 @@ export function AdminDashboard() {
         <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-gray-500">
-              Lehrkräfte (Faculty)
+              {t('adash.teachers2')} (Faculty)
             </span>
             <Link
               to="/admin/teachers"
@@ -229,19 +231,19 @@ export function AdminDashboard() {
             to="/admin/students"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-forest-900 text-white text-xs font-bold hover:bg-forest-800 transition-colors shadow-xs"
           >
-            <Users className="w-3.5 h-3.5 text-mint" /> Studenten verwalten
+            <Users className="w-3.5 h-3.5 text-mint" /> {t('adash.manageStu')}
           </Link>
           <Link
             to="/admin/teachers"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-xs font-bold transition-colors shadow-xs"
           >
-            <GraduationCap className="w-3.5 h-3.5 text-forest-700" /> Lehrkräfte
+            <GraduationCap className="w-3.5 h-3.5 text-forest-700" /> {t('adash.teachers2')}
           </Link>
           <Link
             to="/admin/courses"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-xs font-bold transition-colors shadow-xs"
           >
-            <BookOpen className="w-3.5 h-3.5 text-forest-700" /> Lehrplan
+            <BookOpen className="w-3.5 h-3.5 text-forest-700" /> {t('adash.curriculum')}
           </Link>
           <Link
             to="/admin/enquiries"
@@ -259,12 +261,12 @@ export function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-base font-heading font-bold text-gray-950">
-                Studentenregistrierungen
+                {t('adash.chartReg')}
               </h2>
-              <p className="text-xs text-gray-500">Neuanmeldungen der letzten 6 Monate</p>
+              <p className="text-xs text-gray-500">{t('adash.chartRegSub')}</p>
             </div>
             <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-forest-50 text-forest-900 border border-forest-200">
-              Live-Daten
+              {t('adash.liveData')}
             </span>
           </div>
 
@@ -309,12 +311,12 @@ export function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-base font-heading font-bold text-gray-950">
-                CEFR-Niveau Verteilung
+                {t('adash.chartCefr')}
               </h2>
-              <p className="text-xs text-gray-500">Studenten nach Kompetenzstufe</p>
+              <p className="text-xs text-gray-500">{t('adash.chartCefrSub')}</p>
             </div>
             <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
-              A1 bis B2
+              {t('adash.a1b2')}
             </span>
           </div>
 

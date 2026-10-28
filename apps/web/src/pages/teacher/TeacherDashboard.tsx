@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Button } from '../../components/ui/Button.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 
 export function TeacherDashboard() {
+  const { t } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -92,10 +94,10 @@ export function TeacherDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-gray-950">
-            Dozenten-Workspace
+            {t('tdash.title')}
           </h1>
           <p className="text-sm font-medium text-gray-500 mt-1">
-            Verwalten Sie Ihre Klassen, prüfen Sie Audio-Aufnahmen und laden Sie Video-Lektionen hoch.
+            {t('tdash.subtitle')}
           </p>
         </div>
 
@@ -105,7 +107,7 @@ export function TeacherDashboard() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-semibold transition-all shadow-xs"
           >
             <Video className="w-4 h-4 text-forest-700" />
-            <span>🎥 Live-Klasse starten</span>
+            {t('tdash.startLive')}
           </button>
 
           <button
@@ -113,7 +115,7 @@ export function TeacherDashboard() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-sm font-semibold transition-all shadow-md hover:shadow-lg"
           >
             <Upload className="w-4 h-4 text-mint" />
-            <span>+ Video hochladen</span>
+            {t('tdash.uploadVideo')}
           </button>
         </div>
       </div>
@@ -124,7 +126,7 @@ export function TeacherDashboard() {
         <div className="rounded-3xl bg-forest-900 text-white p-6 shadow-sm border border-forest-800 flex flex-col justify-between group">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-emerald-100/90">
-              Aktive Lerngruppen
+              {t('tdash.activeBatches')}
             </span>
             <div className="w-8 h-8 rounded-full bg-forest-800/80 flex items-center justify-center text-white border border-forest-700/50">
               <ArrowUpRight className="w-4 h-4" />
@@ -138,7 +140,7 @@ export function TeacherDashboard() {
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-mint/20 text-mint border border-mint/30">
                 A1 & B1 Intensiv
               </span>
-              <span className="text-xs text-emerald-100/70">Goethe Prüfungen</span>
+              <span className="text-xs text-emerald-100/70">{t('tdash.goexams')}</span>
             </div>
           </div>
         </div>
@@ -147,7 +149,7 @@ export function TeacherDashboard() {
         <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-gray-500">
-              Betreute Teilnehmer
+              {t('tdash.students')}
             </span>
             <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 border border-gray-200/60">
               <ArrowUpRight className="w-4 h-4" />
@@ -156,11 +158,11 @@ export function TeacherDashboard() {
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
               {data?.totalStudents || 24}
-              <span className="text-base font-bold text-gray-400">Studenten</span>
+              <span className="text-base font-bold text-gray-400">{t('tdash.studentsUnit')}</span>
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-forest-700">
               <Users className="w-3.5 h-3.5" />
-              <span>100% aktiv diese Woche</span>
+              <span>{t('tdash.activeWeek')}</span>
             </div>
           </div>
         </div>
@@ -169,7 +171,7 @@ export function TeacherDashboard() {
         <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-gray-500">
-              Offene Abgaben
+              {t('tdash.pendingSubs')}
             </span>
             <Link
               to="/teacher/submissions"
@@ -181,11 +183,11 @@ export function TeacherDashboard() {
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
               {data?.pendingSubmissionsCount || 3}
-              <span className="text-base font-bold text-amber-600">Zur Korrektur</span>
+              <span className="text-base font-bold text-amber-600">{t('tdash.pendingUnit')}</span>
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-amber-600">
               <ClipboardList className="w-3.5 h-3.5" />
-              <span>Inkl. 2 Audio-Sprechaufnahmen</span>
+              <span>{t('tdash.pendingHint')}</span>
             </div>
           </div>
         </div>
@@ -194,7 +196,7 @@ export function TeacherDashboard() {
         <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-gray-500">
-              Durchschnittsnote
+              {t('tdash.avgScore')}
             </span>
             <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 border border-gray-200/60">
               <ArrowUpRight className="w-4 h-4" />
@@ -203,11 +205,11 @@ export function TeacherDashboard() {
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
               {data?.averageScorePercentage || 88}%
-              <span className="text-base font-bold text-gray-400">Sehr gut</span>
+              <span className="text-base font-bold text-gray-400">{t('tdash.avgUnit')}</span>
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-emerald-700">
               <Award className="w-3.5 h-3.5 text-emerald-600" />
-              <span>+4% über Goethe Benchmark</span>
+              <span>{t('tdash.avgHint')}</span>
             </div>
           </div>
         </div>
@@ -220,9 +222,9 @@ export function TeacherDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-heading font-bold text-gray-950">
-                Offene Hausaufgaben & Audio-Aufnahmen
+                {t('tdash.submissionsTitle')}
               </h2>
-              <p className="text-xs text-gray-500">Studenten warten auf Ihr Feedback und Aussprache-Korrektur</p>
+              <p className="text-xs text-gray-500">{t('tdash.submissionsSubtitle')}</p>
             </div>
             <Link
               to="/teacher/submissions"
@@ -258,7 +260,7 @@ export function TeacherDashboard() {
                         {sub.assignmentTitle}
                       </p>
                       <p className="text-[11px] text-gray-500">
-                        Teilnehmer: <span className="font-semibold text-gray-800">{sub.studentName}</span> • Eingereicht am {new Date(sub.submittedAt).toLocaleDateString()}
+                        {t('tdash.participant')} <span className="font-semibold text-gray-800">{sub.studentName}</span> • {t('tdash.submitted')} {new Date(sub.submittedAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
@@ -273,7 +275,7 @@ export function TeacherDashboard() {
               ))
             ) : (
               <div className="p-8 text-center text-xs text-gray-500">
-                Keine ausstehenden Abgaben. Alle Aufgaben wurden bewertet!
+                {t('tdash.noSubs')}
               </div>
             )}
           </div>
@@ -305,7 +307,7 @@ export function TeacherDashboard() {
             </div>
 
             <p className="text-xs text-gray-500 mt-4 leading-relaxed">
-              Starten Sie die Konferenz für Ihre Teilnehmer. Whiteboard und Bildschirmfreigabe sind aktiv.
+              {t('tdash.liveDesc')}
             </p>
           </div>
 
@@ -314,7 +316,7 @@ export function TeacherDashboard() {
             className="w-full mt-6 py-3 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
           >
             <Video className="w-4 h-4 text-mint" />
-            <span>Google Meet Raum öffnen</span>
+            {t('tdash.openMeet')}
           </button>
         </div>
       </div>
@@ -329,7 +331,7 @@ export function TeacherDashboard() {
                   <Upload className="w-4 h-4" />
                 </div>
                 <h3 className="text-lg font-heading font-bold text-gray-950">
-                  Video-Vorlesung hochladen
+                  {t('tdash.uploadTitle')}
                 </h3>
               </div>
               <button
@@ -341,18 +343,18 @@ export function TeacherDashboard() {
             </div>
 
             <p className="text-xs text-gray-500">
-              Laden Sie eine Videolektion direkt in den lokalen Speicherordner (<code className="bg-gray-100 px-1 py-0.5 rounded">uploads/</code>) hoch.
+              {t('tdash.uploadDesc')} (<code className="bg-gray-100 px-1 py-0.5 rounded">uploads/</code>).
             </p>
 
             <form onSubmit={handleSimulateLectureUpload} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Titel der Vorlesung
+                  {t('tdash.lecTitle')}
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="z.B. Lektion 14: Relativsätze mit Präpositionen"
+                  placeholder={t('tdash.lecTitlePlaceholder')}
                   value={lectureTitle}
                   onChange={(e) => setLectureTitle(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:ring-2 focus:ring-forest-800 focus:outline-none"
@@ -362,7 +364,7 @@ export function TeacherDashboard() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">
-                    CEFR-Niveau
+                    {t('tdash.cefrLevel')}
                   </label>
                   <select
                     value={lectureLevel}
@@ -378,7 +380,7 @@ export function TeacherDashboard() {
 
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">
-                    Videodatei (MP4 / WebM)
+                    {t('tdash.videoFile')}
                   </label>
                   <input
                     type="file"
@@ -402,7 +404,7 @@ export function TeacherDashboard() {
                   disabled={uploadSuccess}
                   className="px-6 py-2 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-sm transition-all"
                 >
-                  {uploadSuccess ? 'Wird gespeichert...' : 'Hochladen & Veröffentlichen'}
+                  {uploadSuccess ? t('tdash.saving') : t('tdash.uploadPublish')}
                 </button>
               </div>
             </form>
