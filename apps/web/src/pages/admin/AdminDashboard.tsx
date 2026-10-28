@@ -278,8 +278,8 @@ export function AdminDashboard() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-                <XAxis dataKey="month" stroke="#9CA3AF" fontSize={11} tickLine={false} />
-                <YAxis stroke="#9CA3AF" fontSize={11} tickLine={false} />
+                <XAxis dataKey="date" stroke="#9CA3AF" fontSize={11} tickLine={false} />
+                <YAxis stroke="#9CA3AF" fontSize={11} tickLine={false} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#111827',
@@ -288,6 +288,8 @@ export function AdminDashboard() {
                     fontSize: '12px',
                     border: 'none'
                   }}
+                  formatter={(value: number) => [value, 'Registrierungen']}
+                  labelStyle={{ color: '#9CA3AF', marginBottom: 4 }}
                 />
                 <Area
                   type="monotone"
@@ -330,8 +332,10 @@ export function AdminDashboard() {
                     fontSize: '12px',
                     border: 'none'
                   }}
+                  formatter={(value: number) => [value, 'Studenten']}
+                  labelStyle={{ color: '#9CA3AF', marginBottom: 4 }}
                 />
-                <Bar dataKey="students" fill="#34D399" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="count" fill="#34D399" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
