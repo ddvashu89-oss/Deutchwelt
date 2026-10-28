@@ -301,7 +301,7 @@ export function AdminDashboard() {
             <input
               type="text"
               placeholder={language === 'de' ? 'Suchen...' : 'Search...'}
-              className="bg-[#11162B] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 pl-9 pr-9 py-2.5 rounded-2xl shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full sm:w-64 transition-all"
+              className="bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 pl-9 pr-9 py-2.5 rounded-2xl shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full sm:w-64 transition-all"
             />
             <button
               type="button"
@@ -315,7 +315,7 @@ export function AdminDashboard() {
           <button
             type="button"
             onClick={() => setQuickCreateOpen(true)}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-500/25 active:scale-98 shrink-0"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-lg shadow-purple-500/25 active:scale-98 shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>{t('admin.quickCreate')}</span>
@@ -326,7 +326,7 @@ export function AdminDashboard() {
       {/* 2. 4 STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Card 1: Total Instructors */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('admin.instructors')}
@@ -341,7 +341,7 @@ export function AdminDashboard() {
             </span>
             <Link
               to="/admin/teachers"
-              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
+              className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-0.5"
             >
               Manage <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -349,7 +349,7 @@ export function AdminDashboard() {
         </div>
 
         {/* Card 2: Active Students */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('admin.students')}
@@ -364,7 +364,7 @@ export function AdminDashboard() {
             </span>
             <Link
               to="/admin/students"
-              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
+              className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-0.5"
             >
               Manage <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -372,12 +372,12 @@ export function AdminDashboard() {
         </div>
 
         {/* Card 3: Courses Published */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('admin.courses')}
             </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30 flex items-center gap-1">
               +5 new courses
             </span>
           </div>
@@ -387,7 +387,7 @@ export function AdminDashboard() {
             </span>
             <Link
               to="/admin/courses"
-              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
+              className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-0.5"
             >
               Curriculum <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -395,7 +395,7 @@ export function AdminDashboard() {
         </div>
 
         {/* Card 4: Pending Submissions */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('admin.submissions')}
@@ -411,7 +411,7 @@ export function AdminDashboard() {
             <button
               type="button"
               onClick={() => alert('Reviewing 152 pending Goethe B1 & A2 speech and homework submissions.')}
-              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
+              className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-0.5"
             >
               Review queue <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
@@ -424,7 +424,7 @@ export function AdminDashboard() {
         {/* LEFT COLUMN: Top Engaged Courses + Engagement Breakdown Table */}
         <div className="lg:col-span-8 space-y-6">
           {/* Card: Top Engaged Courses (with $750,000 subheader & Bar Chart) */}
-          <div className="bg-[#0D111F] p-6 sm:p-7 rounded-3xl border border-white/10 shadow-xl space-y-5">
+          <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-white/10 shadow-xl space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-heading font-extrabold text-white">
@@ -441,14 +441,14 @@ export function AdminDashboard() {
                   onClick={() => setPaymentsModalOpen(true)}
                   className="px-3.5 py-1.5 rounded-xl border border-white/10 text-xs font-bold text-slate-300 hover:bg-white/5 flex items-center gap-1.5 transition-colors shadow-2xs"
                 >
-                  <CreditCard className="w-3.5 h-3.5 text-indigo-400" />
+                  <CreditCard className="w-3.5 h-3.5 text-purple-400" />
                   <span>Telemetry Payments</span>
                 </button>
                 <div className="relative">
-                  <select className="appearance-none bg-[#11162B] border border-white/10 text-xs font-semibold text-slate-300 py-1.5 pl-3 pr-8 rounded-xl cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    <option className="bg-[#0D111F] text-white">{language === 'de' ? 'Diesen Monat' : 'This month'}</option>
-                    <option className="bg-[#0D111F] text-white">{language === 'de' ? 'Letzten Monat' : 'Last month'}</option>
-                    <option className="bg-[#0D111F] text-white">{language === 'de' ? 'Gesamtes Jahr' : 'This year'}</option>
+                  <select className="appearance-none bg-[#070D1A] border border-white/10 text-xs font-semibold text-slate-300 py-1.5 pl-3 pr-8 rounded-xl cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <option className="bg-[#0B1325] text-white">{language === 'de' ? 'Diesen Monat' : 'This month'}</option>
+                    <option className="bg-[#0B1325] text-white">{language === 'de' ? 'Letzten Monat' : 'Last month'}</option>
+                    <option className="bg-[#0B1325] text-white">{language === 'de' ? 'Gesamtes Jahr' : 'This year'}</option>
                   </select>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -504,7 +504,7 @@ export function AdminDashboard() {
           </div>
 
           {/* Card: Engagement Breakdown Table */}
-          <div className="bg-[#0D111F] p-6 sm:p-7 rounded-3xl border border-white/10 shadow-xl space-y-4">
+          <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-heading font-extrabold text-white">
@@ -517,7 +517,7 @@ export function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setAttendanceModalOpen(true)}
-                className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1"
               >
                 <UserCheck className="w-3.5 h-3.5" />
                 <span>Attendance Logs</span>
@@ -584,7 +584,7 @@ export function AdminDashboard() {
         {/* RIGHT COLUMN: Recent Activity + Assignment & Quiz Overview */}
         <div className="lg:col-span-4 space-y-6">
           {/* Card: Recent Activity */}
-          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
+          <div className="bg-[#0B1325] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div className="space-y-1">
               <h2 className="text-base font-heading font-extrabold text-white">
                 {t('admin.recentActivity')}
@@ -602,7 +602,7 @@ export function AdminDashboard() {
                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'all'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
+                    : 'bg-[#070D1A] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 All (18)
@@ -613,7 +613,7 @@ export function AdminDashboard() {
                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'enrollments'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
+                    : 'bg-[#070D1A] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 Enrollments (8)
@@ -624,7 +624,7 @@ export function AdminDashboard() {
                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'submissions'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
+                    : 'bg-[#070D1A] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 Submissions (6)
@@ -635,7 +635,7 @@ export function AdminDashboard() {
                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-colors ${
                   activityFilter === 'updates'
                     ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'bg-[#11162B] border border-white/5 text-slate-400 hover:text-white'
+                    : 'bg-[#070D1A] border border-white/5 text-slate-400 hover:text-white'
                 }`}
               >
                 Updates (4)
@@ -648,7 +648,7 @@ export function AdminDashboard() {
                 const Icon = act.icon;
                 return (
                   <div key={act.id} className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-white/5 transition-colors">
-                    <div className="w-8 h-8 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-300 flex items-center justify-center shrink-0">
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -666,7 +666,7 @@ export function AdminDashboard() {
           </div>
 
           {/* Card: Assignment & Quiz Overview */}
-          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
+          <div className="bg-[#0B1325] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div>
               <h2 className="text-base font-heading font-extrabold text-white">
                 {t('admin.quizOverview')}
@@ -680,7 +680,7 @@ export function AdminDashboard() {
               <div>
                 <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>German A1 Weekly Quiz</span>
-                  <span className="text-indigo-400">94%</span>
+                  <span className="text-purple-400">94%</span>
                 </div>
                 <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div className="bg-indigo-500 h-full rounded-full" style={{ width: '94%' }} />
@@ -691,7 +691,7 @@ export function AdminDashboard() {
               <div>
                 <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>Grammar Test: Dativ & Akkusativ</span>
-                  <span className="text-indigo-400">78%</span>
+                  <span className="text-purple-400">78%</span>
                 </div>
                 <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div className="bg-indigo-500 h-full rounded-full" style={{ width: '78%' }} />
@@ -702,7 +702,7 @@ export function AdminDashboard() {
               <div>
                 <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>Oral Exam Submissions (Speaking Lab)</span>
-                  <span className="text-indigo-400">62%</span>
+                  <span className="text-purple-400">62%</span>
                 </div>
                 <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div className="bg-indigo-500 h-full rounded-full" style={{ width: '62%' }} />
@@ -713,7 +713,7 @@ export function AdminDashboard() {
               <div>
                 <div className="flex justify-between text-xs font-bold text-slate-200 mb-1.5">
                   <span>Final Goethe B1 Mock Exam</span>
-                  <span className="text-indigo-400">45%</span>
+                  <span className="text-purple-400">45%</span>
                 </div>
                 <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div className="bg-indigo-500 h-full rounded-full" style={{ width: '45%' }} />
@@ -728,10 +728,10 @@ export function AdminDashboard() {
       {/* 4. MODAL: + Quick Create */}
       {quickCreateOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-300 flex items-center justify-center">
                   <Plus className="w-5 h-5" />
                 </div>
                 <div>
@@ -753,7 +753,7 @@ export function AdminDashboard() {
             </div>
 
             {/* Tabs for Create Type */}
-            <div className="grid grid-cols-4 gap-1 p-1 bg-[#11162B] border border-white/10 rounded-2xl text-xs font-bold">
+            <div className="grid grid-cols-4 gap-1 p-1 bg-[#070D1A] border border-white/10 rounded-2xl text-xs font-bold">
               <button
                 type="button"
                 onClick={() => setCreateType('batch')}
@@ -806,7 +806,7 @@ export function AdminDashboard() {
                       value={batchName}
                       onChange={(e) => setBatchName(e.target.value)}
                       required
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                     />
                   </div>
 
@@ -818,12 +818,12 @@ export function AdminDashboard() {
                       <select
                         value={batchCourseId}
                         onChange={(e) => setBatchCourseId(e.target.value)}
-                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                       >
-                        <option value="course-a1" className="bg-[#0D111F] text-white">German A1 (Beginner)</option>
-                        <option value="course-a2" className="bg-[#0D111F] text-white">German A2 (Elementary)</option>
-                        <option value="course-b1" className="bg-[#0D111F] text-white">German B1 (Intermediate)</option>
-                        <option value="course-b2" className="bg-[#0D111F] text-white">German B2 (Advanced)</option>
+                        <option value="course-a1" className="bg-[#0B1325] text-white">German A1 (Beginner)</option>
+                        <option value="course-a2" className="bg-[#0B1325] text-white">German A2 (Elementary)</option>
+                        <option value="course-b1" className="bg-[#0B1325] text-white">German B1 (Intermediate)</option>
+                        <option value="course-b2" className="bg-[#0B1325] text-white">German B2 (Advanced)</option>
                       </select>
                     </div>
 
@@ -834,11 +834,11 @@ export function AdminDashboard() {
                       <select
                         value={batchTeacher}
                         onChange={(e) => setBatchTeacher(e.target.value)}
-                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                       >
-                        <option value="Frau Elena Schmidt" className="bg-[#0D111F] text-white">Frau Elena Schmidt</option>
-                        <option value="Herr Markus Weber" className="bg-[#0D111F] text-white">Herr Markus Weber</option>
-                        <option value="Frau Sophie Becker" className="bg-[#0D111F] text-white">Frau Sophie Becker</option>
+                        <option value="Frau Elena Schmidt" className="bg-[#0B1325] text-white">Frau Elena Schmidt</option>
+                        <option value="Herr Markus Weber" className="bg-[#0B1325] text-white">Herr Markus Weber</option>
+                        <option value="Frau Sophie Becker" className="bg-[#0B1325] text-white">Frau Sophie Becker</option>
                       </select>
                     </div>
                   </div>
@@ -852,7 +852,7 @@ export function AdminDashboard() {
                       placeholder="e.g. Mon, Wed, Fri 18:00 - 19:30 CET"
                       value={batchSchedule}
                       onChange={(e) => setBatchSchedule(e.target.value)}
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                     />
                   </div>
                 </>
@@ -870,7 +870,7 @@ export function AdminDashboard() {
                       value={courseTitle}
                       onChange={(e) => setCourseTitle(e.target.value)}
                       required
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                     />
                   </div>
 
@@ -882,12 +882,12 @@ export function AdminDashboard() {
                       <select
                         value={courseLevel}
                         onChange={(e) => setCourseLevel(e.target.value)}
-                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                        className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       >
-                        <option value="A1" className="bg-[#0D111F] text-white">A1 Beginner</option>
-                        <option value="A2" className="bg-[#0D111F] text-white">A2 Elementary</option>
-                        <option value="B1" className="bg-[#0D111F] text-white">B1 Intermediate</option>
-                        <option value="B2" className="bg-[#0D111F] text-white">B2 Advanced</option>
+                        <option value="A1" className="bg-[#0B1325] text-white">A1 Beginner</option>
+                        <option value="A2" className="bg-[#0B1325] text-white">A2 Elementary</option>
+                        <option value="B1" className="bg-[#0B1325] text-white">B1 Intermediate</option>
+                        <option value="B2" className="bg-[#0B1325] text-white">B2 Advanced</option>
                       </select>
                     </div>
 
@@ -899,7 +899,7 @@ export function AdminDashboard() {
                         type="number"
                         value={coursePrice}
                         onChange={(e) => setCoursePrice(e.target.value)}
-                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                        className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       />
                     </div>
                   </div>
@@ -918,7 +918,7 @@ export function AdminDashboard() {
                       value={feePlanName}
                       onChange={(e) => setFeePlanName(e.target.value)}
                       required
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl"
                     />
                   </div>
 
@@ -931,7 +931,7 @@ export function AdminDashboard() {
                         type="number"
                         value={feeAmount}
                         onChange={(e) => setFeeAmount(e.target.value)}
-                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                        className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       />
                     </div>
 
@@ -943,7 +943,7 @@ export function AdminDashboard() {
                         type="number"
                         value={feeInstallments}
                         onChange={(e) => setFeeInstallments(e.target.value)}
-                        className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                        className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                       />
                     </div>
                   </div>
@@ -962,7 +962,7 @@ export function AdminDashboard() {
                       value={announcementTitle}
                       onChange={(e) => setAnnouncementTitle(e.target.value)}
                       required
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl"
                     />
                   </div>
 
@@ -973,11 +973,11 @@ export function AdminDashboard() {
                     <select
                       value={announcementTarget}
                       onChange={(e) => setAnnouncementTarget(e.target.value)}
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                     >
-                      <option value="ALL" className="bg-[#0D111F] text-white">All Students & Teachers</option>
-                      <option value="STUDENTS" className="bg-[#0D111F] text-white">Students Only</option>
-                      <option value="TEACHERS" className="bg-[#0D111F] text-white">Faculty / Teachers Only</option>
+                      <option value="ALL" className="bg-[#0B1325] text-white">All Students & Teachers</option>
+                      <option value="STUDENTS" className="bg-[#0B1325] text-white">Students Only</option>
+                      <option value="TEACHERS" className="bg-[#0B1325] text-white">Faculty / Teachers Only</option>
                     </select>
                   </div>
 
@@ -991,7 +991,7 @@ export function AdminDashboard() {
                       value={announcementContent}
                       onChange={(e) => setAnnouncementContent(e.target.value)}
                       required
-                      className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                      className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 p-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                     />
                   </div>
                 </>
@@ -1014,7 +1014,7 @@ export function AdminDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-500/25"
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-lg shadow-purple-500/25"
                 >
                   Confirm & Create
                 </button>
@@ -1027,10 +1027,10 @@ export function AdminDashboard() {
       {/* 5. MODAL: Telemetry Payments Monitor ($750k records) */}
       {paymentsModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-indigo-400" />
+                <CreditCard className="w-5 h-5 text-purple-400" />
                 <h3 className="font-heading font-black text-lg text-white">
                   Payment Telemetry & Tuition Transactions
                 </h3>
@@ -1044,7 +1044,7 @@ export function AdminDashboard() {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 text-xs font-bold text-indigo-300">
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-purple-500/15 border border-purple-500/30 text-xs font-bold text-purple-300">
               <span>Total Processed Volume:</span>
               <span className="text-base font-black text-white">$750,000.00 USD</span>
             </div>
@@ -1082,10 +1082,10 @@ export function AdminDashboard() {
       {/* 6. MODAL: Attendance Logs Monitor */}
       {attendanceModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <UserCheck className="w-5 h-5 text-indigo-400" />
+                <UserCheck className="w-5 h-5 text-purple-400" />
                 <h3 className="font-heading font-black text-lg text-white">
                   Student Live Class Attendance
                 </h3>

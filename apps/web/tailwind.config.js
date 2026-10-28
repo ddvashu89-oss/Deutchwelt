@@ -17,82 +17,103 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Deep Forest Green / Pine Palette (Donezo Theme)
-        forest: {
-          DEFAULT: '#144E3D',
-          50: '#F0F9F6',
-          100: '#DDF2EB',
-          200: '#BCE5D7',
-          300: '#8DD3BE',
-          400: '#56B99E',
-          500: '#2F9C80',
-          600: '#217E66',
-          700: '#1A6452',
-          800: '#144E3D',
-          900: '#113F32',
-          950: '#09241C',
+        // Deep Teutonic Obsidian Space
+        space: {
+          950: '#030712', // Canvas Background
+          900: '#070D1A', // Elevated Shell
+          850: '#0B1325', // Glass Card Base
+          800: '#101B33', // Card Highlight / Hover
+          750: '#162444', // Surface Interactive
+          700: '#1D2E55', // Structural Border
+          600: '#2A3F70', // Subtle Line
         },
-        // Fresh Mint Accent
-        mint: {
-          DEFAULT: '#34D399',
-          50: '#F0FDF4',
-          100: '#DCFCE7',
-          200: '#BBF7D0',
-          300: '#86EFAC',
-          400: '#4ADE80',
-          500: '#22C55E',
-          600: '#16A34A',
-          700: '#15803D',
-          800: '#166534',
-          900: '#14532D',
+        // Electric Sapphire / Royal Prussian Blue (Brand Primary)
+        brand: {
+          DEFAULT: '#3B82F6',
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#3B82F6',
+          600: '#2563EB',
+          700: '#1D4ED8',
+          800: '#1E40AF',
+          900: '#1E3A8A',
+          950: '#172554',
         },
-        // Navy aliased to sleek deep pine/forest so all existing classes match seamlessly
-        navy: {
-          DEFAULT: '#144E3D',
-          50: '#F4F7F5',
-          100: '#E4ECE8',
-          200: '#C7D9D1',
-          300: '#A4C0B4',
-          400: '#7EA595',
-          500: '#5A8B77',
-          600: '#3D715C',
-          700: '#255745',
-          800: '#144E3D',
-          900: '#0E362A',
-          950: '#072018',
+        // German National Tricolor Modernized Luxury Accents
+        germanGold: {
+          DEFAULT: '#F59E0B',
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          300: '#FCD34D',
+          400: '#FBBF24',
+          500: '#F59E0B',
+          600: '#D97706',
+          700: '#B45309',
         },
         germanRed: {
-          DEFAULT: '#D94747',
-          50: '#FDF2F2',
-          100: '#FCE6E6',
-          200: '#F9C2C2',
-          300: '#F49393',
-          400: '#EC6161',
-          500: '#D94747',
-          600: '#BF2828',
-          700: '#991B1B',
-          800: '#7F1D1D',
-          900: '#691D1D',
+          DEFAULT: '#F43F5E',
+          50: '#FFF1F2',
+          100: '#FFE4E6',
+          200: '#FECDD3',
+          300: '#FDA4AF',
+          400: '#FB7185',
+          500: '#F43F5E',
+          600: '#E11D48',
+          700: '#BE123C',
+          800: '#9F1239',
+        },
+        germanBlack: {
+          DEFAULT: '#0A0E17',
+          deep: '#03060B',
+        },
+        // Role Themes
+        student: {
+          DEFAULT: '#06B6D4',
+          cyan: '#06B6D4',
+          emerald: '#10B981',
+          glow: 'rgba(6, 182, 212, 0.25)',
+        },
+        teacher: {
+          DEFAULT: '#0D9488',
+          teal: '#0D9488',
+          emerald: '#10B981',
+          glow: 'rgba(13, 148, 136, 0.25)',
+        },
+        admin: {
+          DEFAULT: '#8B5CF6',
+          violet: '#8B5CF6',
+          indigo: '#6366F1',
+          glow: 'rgba(139, 92, 246, 0.25)',
+        },
+        // German Grammar Articles
+        german: {
+          der: '#3B82F6', // Masculine (Royal Blue)
+          die: '#F43F5E', // Feminine (Crimson Red)
+          das: '#10B981', // Neuter (Emerald Green)
+          pl: '#F59E0B',  // Plural (Amber Gold)
+        },
+        // Backwards compatibility aliases
+        navy: {
+          DEFAULT: '#0B1325',
+          800: '#070D1A',
+          900: '#030712',
+        },
+        forest: {
+          DEFAULT: '#0D9488',
+        },
+        mint: {
+          DEFAULT: '#10B981',
         },
         canvas: {
-          DEFAULT: '#0A0D17',
-          dark: '#05070D',
+          DEFAULT: '#030712',
+          dark: '#010307',
         },
         ivory: {
-          DEFAULT: '#0D111F',
-          50: '#161D33',
-          100: '#11162B',
-          200: '#0A0D17',
-        },
-        dark: {
-          DEFAULT: '#F8FAFC',
-          muted: '#94A3B8',
-        },
-        german: {
-          der: '#2563EB',
-          die: '#DC2626',
-          das: '#16A34A',
-          pl: '#D97706',
+          DEFAULT: '#070D1A',
         }
       },
       fontFamily: {
@@ -103,11 +124,27 @@ export default {
         '2xl': '16px',
         '3xl': '24px',
         '4xl': '32px',
+        '5xl': '40px',
       },
       boxShadow: {
-        'subtle': '0 1px 3px 0 rgba(17, 24, 39, 0.04), 0 1px 2px -1px rgba(17, 24, 39, 0.04)',
-        'card': '0 4px 6px -1px rgba(17, 24, 39, 0.05), 0 2px 4px -2px rgba(17, 24, 39, 0.04)',
-        'card-hover': '0 12px 20px -3px rgba(17, 24, 39, 0.08), 0 4px 6px -4px rgba(17, 24, 39, 0.04)',
+        'glow-brand': '0 0 30px -5px rgba(59, 130, 246, 0.35)',
+        'glow-gold': '0 0 30px -5px rgba(245, 158, 11, 0.35)',
+        'glow-student': '0 0 30px -5px rgba(6, 182, 212, 0.35)',
+        'glow-teacher': '0 0 30px -5px rgba(13, 148, 136, 0.35)',
+        'glow-admin': '0 0 30px -5px rgba(139, 92, 246, 0.35)',
+        'glass-card': '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
+        'glass-elevated': '0 20px 50px -10px rgba(0, 0, 0, 0.65)',
+        'inner-light': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float': 'float 6s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        }
       }
     },
   },

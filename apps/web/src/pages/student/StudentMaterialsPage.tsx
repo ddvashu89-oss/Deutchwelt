@@ -53,7 +53,7 @@ export function StudentMaterialsPage() {
   }, []);
 
   if (loading) {
-    return <Skeleton className="h-64 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />;
+    return <Skeleton className="h-64 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />;
   }
 
   return (
@@ -77,7 +77,7 @@ export function StudentMaterialsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#1F2742]">
+      <div className="flex items-center gap-2 border-b border-[rgba(255,255,255,0.08)]">
         <button
           onClick={() => setActiveTab('lectures')}
           className={`flex items-center gap-2 px-5 py-3 text-xs sm:text-sm font-bold border-b-2 transition-colors ${
@@ -114,7 +114,7 @@ export function StudentMaterialsPage() {
       {activeTab === 'lectures' && (
         <div className="space-y-6">
           {lectures.length === 0 ? (
-            <div className="p-12 text-center rounded-3xl bg-[#11172B] border border-[#1F2742]">
+            <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]">
               <Video className="w-12 h-12 text-slate-500 mx-auto mb-3" />
               <h3 className="text-base font-bold text-white">No Lectures Uploaded Yet</h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
@@ -124,7 +124,7 @@ export function StudentMaterialsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {lectures.map(lec => (
-                <div key={lec.id} className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 flex flex-col justify-between space-y-4 hover:border-slate-600 transition-all">
+                <div key={lec.id} className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 flex flex-col justify-between space-y-4 hover:border-slate-600 transition-all">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -147,7 +147,7 @@ export function StudentMaterialsPage() {
                             ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
                             : lec.meetingUrl.includes('zoom.us')
                             ? 'bg-blue-500/10 text-blue-300 border-blue-500/30'
-                            : 'bg-[#0B0F21] text-slate-300 border-[#1F2742]'
+                            : 'bg-[#0B0F21] text-slate-300 border-[rgba(255,255,255,0.08)]'
                         }`}>
                           {lec.meetingUrl.includes('meet.google.com') ? 'Google Meet' : lec.meetingUrl.includes('zoom.us') ? 'Zoom' : 'Live Room'}
                         </span>
@@ -167,13 +167,13 @@ export function StudentMaterialsPage() {
                       {lec.description || 'Instructional German lesson covering key grammar and vocabulary.'}
                     </p>
 
-                    <div className="flex items-center gap-4 text-[11px] text-slate-400 pt-2 border-t border-[#1F2742]">
+                    <div className="flex items-center gap-4 text-[11px] text-slate-400 pt-2 border-t border-[rgba(255,255,255,0.08)]">
                       <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {lec.durationMinutes} min</span>
                       <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {new Date(lec.scheduledFor).toLocaleDateString()}</span>
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-[#1F2742] space-y-2">
+                  <div className="pt-2 border-t border-[rgba(255,255,255,0.08)] space-y-2">
                     {lec.meetingUrl && (
                       <a
                         href={lec.meetingUrl}
@@ -219,7 +219,7 @@ export function StudentMaterialsPage() {
       {activeTab === 'materials' && (
         <div className="space-y-6">
           {materials.length === 0 ? (
-            <div className="p-12 text-center rounded-3xl bg-[#11172B] border border-[#1F2742]">
+            <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]">
               <FileText className="w-12 h-12 text-slate-500 mx-auto mb-3" />
               <h3 className="text-base font-bold text-white">No Study Materials Uploaded Yet</h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
@@ -229,7 +229,7 @@ export function StudentMaterialsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {materials.map(mat => (
-                <div key={mat.id} className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 flex flex-col justify-between space-y-4 hover:border-slate-600 transition-all">
+                <div key={mat.id} className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 flex flex-col justify-between space-y-4 hover:border-slate-600 transition-all">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <span className="px-2.5 py-0.5 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/20 text-[10px] font-black uppercase">
@@ -247,12 +247,12 @@ export function StudentMaterialsPage() {
                       {mat.description || 'Downloadable study material for Goethe exam preparation.'}
                     </p>
 
-                    <span className="inline-block px-2 py-0.5 rounded-md bg-[#0B0F21] text-slate-300 text-[10px] uppercase font-bold border border-[#1F2742]">
+                    <span className="inline-block px-2 py-0.5 rounded-md bg-[#0B0F21] text-slate-300 text-[10px] uppercase font-bold border border-[rgba(255,255,255,0.08)]">
                       {mat.category.replace('_', ' ')}
                     </span>
                   </div>
 
-                  <div className="pt-2 border-t border-[#1F2742]">
+                  <div className="pt-2 border-t border-[rgba(255,255,255,0.08)]">
                     <a
                       href={mat.fileUrl}
                       download
@@ -274,7 +274,7 @@ export function StudentMaterialsPage() {
       {activeTab === 'announcements' && (
         <div className="space-y-6">
           {announcements.length === 0 ? (
-            <div className="p-12 text-center rounded-3xl bg-[#11172B] border border-[#1F2742]">
+            <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]">
               <Bell className="w-12 h-12 text-slate-500 mx-auto mb-3" />
               <h3 className="text-base font-bold text-white">No Announcements Posted</h3>
               <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
@@ -284,7 +284,7 @@ export function StudentMaterialsPage() {
           ) : (
             <div className="space-y-4">
               {announcements.map(anc => (
-                <div key={anc.id} className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 space-y-2">
+                <div key={anc.id} className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-2">
                   <div className="flex items-start justify-between">
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
@@ -317,7 +317,7 @@ export function StudentMaterialsPage() {
         >
           <div className="space-y-4 pt-2">
             <VideoPlayer url={selectedLecture.videoUrl} title={selectedLecture.title} autoPlay />
-            <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-[#1F2742]">
+            <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-[rgba(255,255,255,0.08)]">
               <span>Level: <strong className="text-emerald-400">{selectedLecture.level}</strong></span>
               {(selectedLecture.videoUrl?.startsWith('/uploads/') || selectedLecture.videoUrl?.endsWith('.mp4')) && (
                 <a

@@ -65,7 +65,7 @@ export function StudentProfilePage() {
         </p>
       </div>
 
-      <div className="bg-[#11172B] rounded-3xl p-6 sm:p-8 border border-[#1F2742] shadow-xl shadow-black/40 space-y-6">
+      <div className="bg-[#0B1325] rounded-3xl p-6 sm:p-8 border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-6">
         {success && (
           <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-2xl text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -84,7 +84,7 @@ export function StudentProfilePage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
-                className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
               />
             </div>
             <div className="space-y-1.5">
@@ -96,7 +96,7 @@ export function StudentProfilePage() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
-                className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
               />
             </div>
           </div>
@@ -110,7 +110,7 @@ export function StudentProfilePage() {
                 type="email"
                 value={user?.email || ''}
                 disabled
-                className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21]/60 px-4 py-2.5 text-sm text-slate-400 cursor-not-allowed"
+                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21]/60 px-4 py-2.5 text-sm text-slate-400 cursor-not-allowed"
               />
               <span className="text-[10px] text-slate-500 block">Managed by account credentials</span>
             </div>
@@ -123,7 +123,7 @@ export function StudentProfilePage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+49 151 12345678"
-                className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
               />
             </div>
           </div>
@@ -137,11 +137,11 @@ export function StudentProfilePage() {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="e.g. Friedrichstraße 10, 10117 Berlin, Germany"
-              className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#1F2742]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[rgba(255,255,255,0.08)]">
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
                 Current CEFR Level
@@ -149,7 +149,7 @@ export function StudentProfilePage() {
               <select
                 value={currentLevel}
                 onChange={(e) => setCurrentLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                className="flex h-11 w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
               >
                 <option value={GermanLevel.BEGINNER}>Beginner (Pre-A1)</option>
                 <option value={GermanLevel.A1}>A1 — Starter</option>
@@ -166,7 +166,7 @@ export function StudentProfilePage() {
               <select
                 value={dailyGoalMinutes}
                 onChange={(e) => setDailyGoalMinutes(Number(e.target.value))}
-                className="flex h-11 w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                className="flex h-11 w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
               >
                 <option value={15}>15 Minutes / Day (Casual)</option>
                 <option value={25}>25 Minutes / Day (Standard)</option>
@@ -183,7 +183,7 @@ export function StudentProfilePage() {
             <select
               value={preferredLanguage}
               onChange={(e) => setPreferredLanguage(e.target.value)}
-              className="flex h-11 w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+              className="flex h-11 w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] px-3.5 text-sm text-white focus:outline-none focus:border-emerald-500"
             >
               <option value="en">English explanations (Default)</option>
               <option value="hi">English + Hindi explanations (हिंदी)</option>
@@ -200,7 +200,7 @@ export function StudentProfilePage() {
               value={learningGoal}
               onChange={(e) => setLearningGoal(e.target.value)}
               placeholder="e.g. Preparing for Goethe-Zertifikat B1 exam for my master degree in Munich..."
-              className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] p-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] p-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
             />
           </div>
 

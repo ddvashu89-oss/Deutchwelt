@@ -89,7 +89,7 @@ export function TeacherBatchesPage() {
       </div>
 
       {batches.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+        <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-white/10">
           <Users className="w-12 h-12 text-slate-600 mx-auto mb-3" />
           <h3 className="text-base font-bold text-white">No Assigned Batches</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
@@ -99,7 +99,7 @@ export function TeacherBatchesPage() {
       ) : (
         <div className="space-y-6">
           {batches.map(batch => (
-            <Card key={batch.id} className="p-6 border-white/10 bg-[#0D111F] space-y-4">
+            <Card key={batch.id} className="p-6 border-white/10 bg-[#0B1325] space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">

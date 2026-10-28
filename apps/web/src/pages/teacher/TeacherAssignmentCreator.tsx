@@ -69,7 +69,7 @@ export function TeacherAssignmentCreator() {
         <p className="text-xs text-slate-400">Publish a new German writing task with custom rubric assessment criteria.</p>
       </div>
 
-      <div className="bg-[#0D111F] rounded-3xl p-8 border border-white/10 shadow-xl">
+      <div className="bg-[#0B1325] rounded-3xl p-8 border border-white/10 shadow-xl">
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             label="Assignment Title"
@@ -87,12 +87,12 @@ export function TeacherAssignmentCreator() {
               <select
                 value={level}
                 onChange={(e) => setLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-4 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-4 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
               >
-                <option value={GermanLevel.A1} className="bg-[#0D111F] text-slate-100">A1 Beginner</option>
-                <option value={GermanLevel.A2} className="bg-[#0D111F] text-slate-100">A2 Elementary</option>
-                <option value={GermanLevel.B1} className="bg-[#0D111F] text-slate-100">B1 Intermediate</option>
-                <option value={GermanLevel.B2} className="bg-[#0D111F] text-slate-100">B2 Advanced</option>
+                <option value={GermanLevel.A1} className="bg-[#0B1325] text-slate-100">A1 Beginner</option>
+                <option value={GermanLevel.A2} className="bg-[#0B1325] text-slate-100">A2 Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0B1325] text-slate-100">B1 Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0B1325] text-slate-100">B2 Advanced</option>
               </select>
             </div>
 
@@ -122,7 +122,7 @@ export function TeacherAssignmentCreator() {
               placeholder="e.g. Write a formal inquiry email to book a room at a hotel in Munich..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full h-11 px-4 rounded-2xl border border-white/10 bg-[#0F1424] text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
+              className="w-full h-11 px-4 rounded-2xl border border-white/10 bg-[#070D1A] text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
               required
             />
           </div>
@@ -136,7 +136,7 @@ export function TeacherAssignmentCreator() {
               placeholder="List the required points for the student to write about..."
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-4 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-4 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-inner"
               required
             />
           </div>
@@ -163,7 +163,7 @@ export function TeacherAssignmentCreator() {
                       placeholder="Criterion Name"
                       value={r.name}
                       onChange={(e) => updateRubric(i, 'name', e.target.value)}
-                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0F1424] text-xs font-bold text-slate-100 focus:outline-none focus:border-indigo-500"
+                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#070D1A] text-xs font-bold text-slate-100 focus:outline-none focus:border-indigo-500"
                       required
                     />
                   </div>
@@ -173,7 +173,7 @@ export function TeacherAssignmentCreator() {
                       placeholder="Description"
                       value={r.description}
                       onChange={(e) => updateRubric(i, 'description', e.target.value)}
-                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0F1424] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#070D1A] text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -182,7 +182,7 @@ export function TeacherAssignmentCreator() {
                       placeholder="Max Pts"
                       value={r.maxPoints}
                       onChange={(e) => updateRubric(i, 'maxPoints', Number(e.target.value))}
-                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0F1424] text-xs text-slate-200 text-center focus:outline-none focus:border-indigo-500"
+                      className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#070D1A] text-xs text-slate-200 text-center focus:outline-none focus:border-indigo-500"
                       required
                     />
                   </div>

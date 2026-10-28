@@ -47,14 +47,14 @@ export function AdminEnquiriesPage() {
       {loading ? (
         <Skeleton className="h-64 w-full rounded-3xl" />
       ) : enquiries.length === 0 ? (
-        <div className="p-16 text-center bg-[#0D111F] rounded-3xl border border-white/10">
+        <div className="p-16 text-center bg-[#0B1325] rounded-3xl border border-white/10">
           <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-2" />
           <p className="text-sm font-bold text-white">No contact enquiries received yet.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {enquiries.map(enq => (
-            <div key={enq.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl space-y-4 hover:border-white/20 transition-all">
+            <div key={enq.id} className="p-6 rounded-3xl bg-[#0B1325] border border-white/10 shadow-xl space-y-4 hover:border-white/20 transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -76,18 +76,18 @@ export function AdminEnquiriesPage() {
                   <select
                     value={enq.status}
                     onChange={(e) => handleUpdateStatus(enq.id, e.target.value as any)}
-                    className="h-9 px-3 rounded-xl border border-white/10 bg-[#11162B] text-xs font-semibold text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="h-9 px-3 rounded-xl border border-white/10 bg-[#070D1A] text-xs font-semibold text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                   >
-                    <option value={EnquiryStatus.NEW} className="bg-[#0D111F] text-white">Mark as New</option>
-                    <option value={EnquiryStatus.CONTACTED} className="bg-[#0D111F] text-white">Mark as Contacted</option>
-                    <option value={EnquiryStatus.RESOLVED} className="bg-[#0D111F] text-white">Mark as Resolved</option>
-                    <option value={EnquiryStatus.CLOSED} className="bg-[#0D111F] text-white">Mark as Closed</option>
+                    <option value={EnquiryStatus.NEW} className="bg-[#0B1325] text-white">Mark as New</option>
+                    <option value={EnquiryStatus.CONTACTED} className="bg-[#0B1325] text-white">Mark as Contacted</option>
+                    <option value={EnquiryStatus.RESOLVED} className="bg-[#0B1325] text-white">Mark as Resolved</option>
+                    <option value={EnquiryStatus.CLOSED} className="bg-[#0B1325] text-white">Mark as Closed</option>
                   </select>
                 </div>
               </div>
 
               {/* Message text */}
-              <div className="p-4 rounded-2xl bg-[#0F1424] border border-white/5 text-xs text-slate-200 leading-relaxed whitespace-pre-line">
+              <div className="p-4 rounded-2xl bg-[#070D1A] border border-white/5 text-xs text-slate-200 leading-relaxed whitespace-pre-line">
                 {enq.message}
               </div>
 

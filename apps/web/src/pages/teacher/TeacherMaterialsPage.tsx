@@ -348,7 +348,7 @@ export function TeacherMaterialsPage() {
           {activeTab === 'lectures' && (
             <div className="space-y-6">
               {lectures.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+                <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-white/10">
                   <Video className="w-12 h-12 text-slate-600 mx-auto mb-3" />
                   <h3 className="text-base font-bold text-white">No Lectures Published Yet</h3>
                   <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
@@ -361,7 +361,7 @@ export function TeacherMaterialsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {lectures.map(lec => (
-                    <div key={lec.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col justify-between space-y-4">
+                    <div key={lec.id} className="p-6 rounded-3xl bg-[#0B1325] border border-white/10 shadow-xl flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-1.5 flex-wrap">
@@ -446,7 +446,7 @@ export function TeacherMaterialsPage() {
           {activeTab === 'materials' && (
             <div className="space-y-6">
               {materials.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+                <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-white/10">
                   <FileText className="w-12 h-12 text-slate-600 mx-auto mb-3" />
                   <h3 className="text-base font-bold text-white">No Study Materials Uploaded Yet</h3>
                   <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
@@ -459,7 +459,7 @@ export function TeacherMaterialsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {materials.map(mat => (
-                    <div key={mat.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col justify-between space-y-4">
+                    <div key={mat.id} className="p-6 rounded-3xl bg-[#0B1325] border border-white/10 shadow-xl flex flex-col justify-between space-y-4">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between gap-2">
                           <span className="px-2.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 text-[10px] font-black uppercase">
@@ -511,7 +511,7 @@ export function TeacherMaterialsPage() {
           {activeTab === 'announcements' && (
             <div className="space-y-6">
               {announcements.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-[#0D111F] border border-white/10">
+                <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-white/10">
                   <Bell className="w-12 h-12 text-slate-600 mx-auto mb-3" />
                   <h3 className="text-base font-bold text-white">No Announcements Posted</h3>
                   <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
@@ -524,7 +524,7 @@ export function TeacherMaterialsPage() {
               ) : (
                 <div className="space-y-4">
                   {announcements.map(anc => (
-                    <div key={anc.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl space-y-2">
+                    <div key={anc.id} className="p-6 rounded-3xl bg-[#0B1325] border border-white/10 shadow-xl space-y-2">
                       <div className="flex items-start justify-between">
                         <div>
                           <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
@@ -576,11 +576,11 @@ export function TeacherMaterialsPage() {
               <select
                 value={lectureBatchId}
                 onChange={(e) => setLectureBatchId(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
                 required
               >
                 {batches.map(b => (
-                  <option key={b.id} value={b.id} className="bg-[#0D111F] text-slate-100">{b.name} ({b.level})</option>
+                  <option key={b.id} value={b.id} className="bg-[#0B1325] text-slate-100">{b.name} ({b.level})</option>
                 ))}
               </select>
             </div>
@@ -592,12 +592,12 @@ export function TeacherMaterialsPage() {
               <select
                 value={lectureLevel}
                 onChange={(e) => setLectureLevel(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="A1" className="bg-[#0D111F] text-slate-100">A1 Beginner</option>
-                <option value="A2" className="bg-[#0D111F] text-slate-100">A2 Elementary</option>
-                <option value="B1" className="bg-[#0D111F] text-slate-100">B1 Intermediate</option>
-                <option value="B2" className="bg-[#0D111F] text-slate-100">B2 Upper Intermediate</option>
+                <option value="A1" className="bg-[#0B1325] text-slate-100">A1 Beginner</option>
+                <option value="A2" className="bg-[#0B1325] text-slate-100">A2 Elementary</option>
+                <option value="B1" className="bg-[#0B1325] text-slate-100">B1 Intermediate</option>
+                <option value="B2" className="bg-[#0B1325] text-slate-100">B2 Upper Intermediate</option>
               </select>
             </div>
           </div>
@@ -611,7 +611,7 @@ export function TeacherMaterialsPage() {
               placeholder="Key grammatical concepts, vocabulary takeaways, and homework instructions covered in this video lecture..."
               value={lectureDesc}
               onChange={(e) => setLectureDesc(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 
@@ -772,7 +772,7 @@ export function TeacherMaterialsPage() {
               id="isLiveCheckbox"
               checked={lectureIsLive}
               onChange={(e) => setLectureIsLive(e.target.checked)}
-              className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#0F1424] border-white/10"
+              className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#070D1A] border-white/10"
             />
             <label htmlFor="isLiveCheckbox" className="text-xs font-bold text-slate-300 cursor-pointer">
               Mark as Interactive Live Class Session
@@ -823,11 +823,11 @@ export function TeacherMaterialsPage() {
               <select
                 value={materialBatchId}
                 onChange={(e) => setMaterialBatchId(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
                 required
               >
                 {batches.map(b => (
-                  <option key={b.id} value={b.id} className="bg-[#0D111F] text-slate-100">{b.name} ({b.level})</option>
+                  <option key={b.id} value={b.id} className="bg-[#0B1325] text-slate-100">{b.name} ({b.level})</option>
                 ))}
               </select>
             </div>
@@ -839,12 +839,12 @@ export function TeacherMaterialsPage() {
               <select
                 value={materialCategory}
                 onChange={(e) => setMaterialCategory(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="WORKSHEET" className="bg-[#0D111F] text-slate-100">Practice Worksheet</option>
-                <option value="GRAMMAR_CHEAT_SHEET" className="bg-[#0D111F] text-slate-100">Grammar Cheat Sheet</option>
-                <option value="VOCABULARY_LIST" className="bg-[#0D111F] text-slate-100">Vocabulary Table</option>
-                <option value="EXAM_SIMULATION" className="bg-[#0D111F] text-slate-100">Goethe Mock Exam</option>
+                <option value="WORKSHEET" className="bg-[#0B1325] text-slate-100">Practice Worksheet</option>
+                <option value="GRAMMAR_CHEAT_SHEET" className="bg-[#0B1325] text-slate-100">Grammar Cheat Sheet</option>
+                <option value="VOCABULARY_LIST" className="bg-[#0B1325] text-slate-100">Vocabulary Table</option>
+                <option value="EXAM_SIMULATION" className="bg-[#0B1325] text-slate-100">Goethe Mock Exam</option>
               </select>
             </div>
           </div>
@@ -858,7 +858,7 @@ export function TeacherMaterialsPage() {
               placeholder="Instructions on how students should use this worksheet..."
               value={materialDesc}
               onChange={(e) => setMaterialDesc(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 
@@ -905,11 +905,11 @@ export function TeacherMaterialsPage() {
               <select
                 value={materialFileType}
                 onChange={(e) => setMaterialFileType(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="PDF" className="bg-[#0D111F] text-slate-100">PDF Document</option>
-                <option value="DOCX" className="bg-[#0D111F] text-slate-100">Word Document (.docx)</option>
-                <option value="MP3" className="bg-[#0D111F] text-slate-100">Audio Listening (.mp3)</option>
+                <option value="PDF" className="bg-[#0B1325] text-slate-100">PDF Document</option>
+                <option value="DOCX" className="bg-[#0B1325] text-slate-100">Word Document (.docx)</option>
+                <option value="MP3" className="bg-[#0B1325] text-slate-100">Audio Listening (.mp3)</option>
               </select>
             </div>
           </div>
@@ -949,11 +949,11 @@ export function TeacherMaterialsPage() {
             <select
               value={announcementBatchId}
               onChange={(e) => setAnnouncementBatchId(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             >
               {batches.map(b => (
-                <option key={b.id} value={b.id} className="bg-[#0D111F] text-slate-100">{b.name} ({b.level})</option>
+                <option key={b.id} value={b.id} className="bg-[#0B1325] text-slate-100">{b.name} ({b.level})</option>
               ))}
             </select>
           </div>
@@ -967,7 +967,7 @@ export function TeacherMaterialsPage() {
               placeholder="Write your announcement message in German or English..."
               value={announcementContent}
               onChange={(e) => setAnnouncementContent(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             />
           </div>

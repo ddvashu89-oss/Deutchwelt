@@ -163,10 +163,10 @@ export function AdminCoursesPage() {
       ) : (
         <div className="space-y-4">
           {courses.map(course => (
-            <div key={course.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-white/20 transition-all">
+            <div key={course.id} className="p-6 rounded-3xl bg-[#0B1325] border border-white/10 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-white/20 transition-all">
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-black uppercase">
+                  <span className="px-2.5 py-0.5 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-black uppercase">
                     Level {course.level}
                   </span>
                   <Badge variant={course.status === 'PUBLISHED' ? 'success' : 'outline'} className="text-[10px]">
@@ -243,12 +243,12 @@ export function AdminCoursesPage() {
               <select
                 value={level}
                 onChange={(e) => setLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={GermanLevel.A1} className="bg-[#0D111F] text-white">A1 — Starter</option>
-                <option value={GermanLevel.A2} className="bg-[#0D111F] text-white">A2 — Elementary</option>
-                <option value={GermanLevel.B1} className="bg-[#0D111F] text-white">B1 — Intermediate</option>
-                <option value={GermanLevel.B2} className="bg-[#0D111F] text-white">B2 — Upper Intermediate</option>
+                <option value={GermanLevel.A1} className="bg-[#0B1325] text-white">A1 — Starter</option>
+                <option value={GermanLevel.A2} className="bg-[#0B1325] text-white">A2 — Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0B1325] text-white">B1 — Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0B1325] text-white">B2 — Upper Intermediate</option>
               </select>
             </div>
           </div>
@@ -270,7 +270,7 @@ export function AdminCoursesPage() {
               placeholder="Detailed description of grammar structures, dialogues, and learning milestones..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             />
           </div>
@@ -317,12 +317,12 @@ export function AdminCoursesPage() {
               <select
                 value={editLevel}
                 onChange={(e) => setEditLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={GermanLevel.A1} className="bg-[#0D111F] text-white">A1 — Starter</option>
-                <option value={GermanLevel.A2} className="bg-[#0D111F] text-white">A2 — Elementary</option>
-                <option value={GermanLevel.B1} className="bg-[#0D111F] text-white">B1 — Intermediate</option>
-                <option value={GermanLevel.B2} className="bg-[#0D111F] text-white">B2 — Upper Intermediate</option>
+                <option value={GermanLevel.A1} className="bg-[#0B1325] text-white">A1 — Starter</option>
+                <option value={GermanLevel.A2} className="bg-[#0B1325] text-white">A2 — Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0B1325] text-white">B1 — Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0B1325] text-white">B2 — Upper Intermediate</option>
               </select>
             </div>
           </div>
@@ -343,11 +343,11 @@ export function AdminCoursesPage() {
               <select
                 value={editStatus}
                 onChange={(e) => setEditStatus(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={PublicationStatus.PUBLISHED} className="bg-[#0D111F] text-white">Published (Visible to Students)</option>
-                <option value={PublicationStatus.DRAFT} className="bg-[#0D111F] text-white">Draft (Hidden)</option>
-                <option value={PublicationStatus.ARCHIVED} className="bg-[#0D111F] text-white">Archived</option>
+                <option value={PublicationStatus.PUBLISHED} className="bg-[#0B1325] text-white">Published (Visible to Students)</option>
+                <option value={PublicationStatus.DRAFT} className="bg-[#0B1325] text-white">Draft (Hidden)</option>
+                <option value={PublicationStatus.ARCHIVED} className="bg-[#0B1325] text-white">Archived</option>
               </select>
             </div>
           </div>
@@ -360,7 +360,7 @@ export function AdminCoursesPage() {
               rows={3}
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               required
             />
           </div>

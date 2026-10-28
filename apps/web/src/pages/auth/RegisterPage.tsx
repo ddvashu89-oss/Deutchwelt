@@ -8,7 +8,8 @@ import { useLanguage } from '../../context/LanguageContext.js';
 import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Input } from '../../components/ui/Input.js';
-import { ArrowRight, Lock } from 'lucide-react';
+import { Button } from '../../components/ui/Button.js';
+import { ArrowRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export function RegisterPage() {
   const { register: registerUser } = useAuth();
@@ -43,45 +44,45 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D17] flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans text-slate-100 bg-hero-glow bg-mesh-dark">
+    <div className="min-h-screen bg-[#030712] flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative font-sans text-slate-100 bg-mesh-cosmic">
       {/* Top Bar with Language Toggle */}
-      <div className="absolute top-6 right-6 flex items-center gap-3">
+      <div className="absolute top-6 right-6 flex items-center gap-3 z-20">
         <LanguageToggle />
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <div className="flex justify-center">
-          <Logo size="lg" />
+          <Logo size="lg" showTagline={true} tagline="Student Admissions" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight pt-2">
-          {t('reg.title')}
+          {t('reg.title') || 'Start Your German Fluency Journey'}
         </h2>
         <p className="text-xs text-slate-400 max-w-sm mx-auto font-medium">
-          {t('reg.subtitle')}
+          {t('reg.subtitle') || 'Create your student account to access CEFR course modules, vocabulary trainers, and interactive speech labs.'}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
-        <div className="bg-[#11162B]/95 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/[0.08] space-y-6">
+        <div className="bg-[#0B1325]/90 backdrop-blur-2xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/10 space-y-6">
           {/* Content Gate Alert */}
           {isContentGate && (
-            <div className="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl flex items-start gap-3 shadow-md">
-              <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0 text-indigo-300 mt-0.5">
+            <div className="p-4 bg-blue-950/40 border border-blue-500/30 rounded-2xl flex items-start gap-3 shadow-md">
+              <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 text-blue-300 mt-0.5">
                 <Lock className="w-4 h-4" />
               </div>
               <div className="space-y-1">
                 <h4 className="text-sm font-bold text-white">
-                  {t('gate.title')}
+                  {t('gate.title') || 'Premium Course Material'}
                 </h4>
-                <p className="text-xs text-indigo-200 leading-relaxed">
-                  {t('gate.description')}
+                <p className="text-xs text-blue-200 leading-relaxed">
+                  {t('gate.description') || 'Register a free account to unlock lessons, vocabulary decks, and pronunciation lab modules.'}
                 </p>
               </div>
             </div>
           )}
 
           {serverError && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-xl text-xs font-medium">
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-2xl text-xs font-semibold">
               {serverError}
             </div>
           )}
@@ -90,14 +91,14 @@ export function RegisterPage() {
             {/* First Name & Last Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label={t('reg.firstName')}
+                label={t('reg.firstName') || 'First Name'}
                 placeholder="Elena"
                 required
                 error={errors.firstName?.message}
                 {...register('firstName')}
               />
               <Input
-                label={t('reg.lastName')}
+                label={t('reg.lastName') || 'Last Name'}
                 placeholder="Rostova"
                 required
                 error={errors.lastName?.message}
@@ -108,7 +109,7 @@ export function RegisterPage() {
             {/* Email Address & Mobile Number */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label={t('reg.email')}
+                label={t('reg.email') || 'Email Address'}
                 type="email"
                 placeholder="elena@example.com"
                 required
@@ -116,7 +117,7 @@ export function RegisterPage() {
                 {...register('email')}
               />
               <Input
-                label={t('reg.mobile')}
+                label={t('reg.mobile') || 'Mobile Number'}
                 type="tel"
                 placeholder="+49 151 12345678"
                 required
@@ -127,7 +128,7 @@ export function RegisterPage() {
 
             {/* Address */}
             <Input
-              label={t('reg.address')}
+              label={t('reg.address') || 'City & Address'}
               placeholder="e.g. Friedrichstraße 45, 10117 Berlin, Germany"
               required
               error={errors.address?.message}
@@ -136,9 +137,9 @@ export function RegisterPage() {
 
             {/* Password */}
             <Input
-              label={t('reg.password')}
+              label={t('reg.password') || 'Password'}
               type="password"
-              placeholder="Minimum 8 chars with uppercase & number"
+              placeholder="Minimum 8 characters with numbers"
               required
               error={errors.password?.message}
               {...register('password')}
@@ -146,12 +147,12 @@ export function RegisterPage() {
 
             {/* German Level & Preferred Language */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  {t('reg.level')}
+              <div className="space-y-1.5 font-sans">
+                <label className="block text-xs font-bold text-slate-300 tracking-wide">
+                  {t('reg.level') || 'Current German CEFR Level'}
                 </label>
                 <select
-                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A]/90 px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 transition-all"
                   {...register('currentLevel')}
                 >
                   <option value={GermanLevel.BEGINNER}>Beginner (Zero German)</option>
@@ -163,12 +164,12 @@ export function RegisterPage() {
                 </select>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <div className="space-y-1.5 font-sans">
+                <label className="block text-xs font-bold text-slate-300 tracking-wide">
                   Explanation Language
                 </label>
                 <select
-                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A]/90 px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/25 focus:border-blue-500 transition-all"
                   {...register('preferredLanguage')}
                 >
                   <option value="en">English explanations</option>
@@ -180,7 +181,7 @@ export function RegisterPage() {
 
             {/* Learning Goal */}
             <Input
-              label={t('reg.goal')}
+              label={t('reg.goal') || 'Learning Goal'}
               placeholder="e.g. Master's in Germany, Goethe-Zertifikat A1, Job Relocation"
               error={errors.learningGoal?.message}
               {...register('learningGoal')}
@@ -191,17 +192,17 @@ export function RegisterPage() {
               <input
                 type="checkbox"
                 id="terms"
-                className="mt-1 h-4 w-4 rounded border-white/20 bg-[#0F1424] text-indigo-600 focus:ring-indigo-500"
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-[#070D1A] text-blue-600 focus:ring-blue-500"
                 {...register('consentToTerms')}
               />
               <label htmlFor="terms" className="text-xs text-slate-400 leading-snug">
-                {t('reg.terms')}{' '}
-                <Link to="/terms" className="text-indigo-400 font-bold hover:underline">
-                  Terms
+                {t('reg.terms') || 'I agree to the'}{' '}
+                <Link to="/terms" className="text-blue-400 font-bold hover:underline">
+                  Terms of Service
                 </Link>{' '}
                 &{' '}
-                <Link to="/privacy" className="text-indigo-400 font-bold hover:underline">
-                  Privacy
+                <Link to="/privacy" className="text-blue-400 font-bold hover:underline">
+                  Privacy Policy
                 </Link>
                 .
               </label>
@@ -210,20 +211,22 @@ export function RegisterPage() {
               <p className="text-xs text-rose-400 font-medium">{errors.consentToTerms.message}</p>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all mt-4"
+              isLoading={isSubmitting}
+              variant="primary"
+              className="w-full py-3.5 rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/25 mt-4"
             >
-              <span>{isSubmitting ? 'Wird erstellt...' : t('reg.submit')}</span>
-              <ArrowRight className="w-4 h-4 text-white" />
-            </button>
+              <span>{isSubmitting ? 'Wird erstellt...' : (t('reg.submit') || 'Create Student Account')}</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
           </form>
 
-          <div className="text-center text-xs text-slate-400 pt-2 border-t border-white/[0.06]">
-            {t('reg.hasAccount')}{' '}
-            <Link to="/login" className="font-bold text-indigo-400 hover:text-indigo-300 hover:underline">
-              {t('nav.login')}
+          <div className="text-center text-xs text-slate-400 pt-3 border-t border-white/[0.08]">
+            {t('reg.hasAccount') || 'Already have an account?'}{' '}
+            <Link to="/login" className="font-bold text-blue-400 hover:text-blue-300 hover:underline ml-1">
+              {t('nav.login') || 'Sign in here'}
             </Link>
           </div>
         </div>

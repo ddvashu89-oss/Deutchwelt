@@ -243,13 +243,13 @@ export function StudentCoursesPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-28 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />
+        <Skeleton className="h-28 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Skeleton className="h-24 rounded-2xl bg-[#11172B] border border-[#1F2742]" />
-          <Skeleton className="h-24 rounded-2xl bg-[#11172B] border border-[#1F2742]" />
-          <Skeleton className="h-24 rounded-2xl bg-[#11172B] border border-[#1F2742]" />
+          <Skeleton className="h-24 rounded-2xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
+          <Skeleton className="h-24 rounded-2xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
+          <Skeleton className="h-24 rounded-2xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
         </div>
-        <Skeleton className="h-80 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />
+        <Skeleton className="h-80 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
       </div>
     );
   }
@@ -258,14 +258,14 @@ export function StudentCoursesPage() {
     <div className="space-y-7 sm:space-y-8 pb-16 font-sans">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 bg-[#11172B] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3 animate-slide-up">
+        <div className="fixed top-20 right-6 z-50 bg-[#0B1325] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3 animate-slide-up">
           <Sparkles className="w-5 h-5 text-emerald-400 shrink-0" />
           <p className="text-sm font-semibold">{toastMessage}</p>
         </div>
       )}
 
       {/* 1. Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-[#11172B] text-white p-6 sm:p-8 shadow-xl shadow-black/40 border border-[#1F2742]">
+      <div className="relative overflow-hidden rounded-3xl bg-[#0B1325] text-white p-6 sm:p-8 shadow-xl shadow-black/40 border border-[rgba(255,255,255,0.08)]">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -314,7 +314,7 @@ export function StudentCoursesPage() {
 
       {/* 2. Quick Overview Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        <div className="p-5 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 flex items-center gap-4">
+        <div className="p-5 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30">
             <BookOpen className="w-6 h-6" />
           </div>
@@ -325,7 +325,7 @@ export function StudentCoursesPage() {
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 flex items-center gap-4">
+        <div className="p-5 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
             <Award className="w-6 h-6" />
           </div>
@@ -336,7 +336,7 @@ export function StudentCoursesPage() {
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 flex items-center gap-4">
+        <div className="p-5 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
             <Flame className="w-6 h-6 fill-amber-400" />
           </div>
@@ -349,15 +349,15 @@ export function StudentCoursesPage() {
       </div>
 
       {/* 3. Navigation Tabs & Filters */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-[#1F2742] pb-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-[rgba(255,255,255,0.08)] pb-4">
         {/* Tabs */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('enrolled')}
             className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'enrolled'
-                ? 'bg-[#161E36] text-emerald-400 shadow-sm border border-emerald-500/30'
-                : 'text-slate-400 hover:text-white hover:bg-[#161E36]/50'
+                ? 'bg-[#101B33] text-emerald-400 shadow-sm border border-emerald-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-[#101B33]/50'
             }`}
           >
             Meine Kurse ({enrolledCount})
@@ -366,8 +366,8 @@ export function StudentCoursesPage() {
             onClick={() => setActiveTab('all')}
             className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'all'
-                ? 'bg-[#161E36] text-emerald-400 shadow-sm border border-emerald-500/30'
-                : 'text-slate-400 hover:text-white hover:bg-[#161E36]/50'
+                ? 'bg-[#101B33] text-emerald-400 shadow-sm border border-emerald-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-[#101B33]/50'
             }`}
           >
             Alle Kurse & Einschreiben ({courses.length})
@@ -383,14 +383,14 @@ export function StudentCoursesPage() {
               placeholder="Search syllabus..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#1F2742] text-xs text-white bg-[#11172B] placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] text-xs text-white bg-[#0B1325] placeholder-slate-500 focus:outline-none focus:border-emerald-500"
             />
           </div>
 
           <select
             value={selectedLevel}
             onChange={e => setSelectedLevel(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-[#1F2742] text-xs font-semibold text-slate-200 bg-[#11172B] focus:outline-none focus:border-emerald-500"
+            className="px-3 py-1.5 rounded-xl border border-[rgba(255,255,255,0.08)] text-xs font-semibold text-slate-200 bg-[#0B1325] focus:outline-none focus:border-emerald-500"
           >
             <option value="ALL">All Levels</option>
             <option value="A1">Level A1</option>
@@ -403,7 +403,7 @@ export function StudentCoursesPage() {
 
       {/* 4. Course List Display */}
       {filteredCourses.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-[#11172B] border border-[#1F2742]">
+        <div className="p-12 text-center rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]">
           <BookOpen className="w-12 h-12 text-slate-500 mx-auto mb-3" />
           <h3 className="text-base font-bold text-white">Keine Kurse gefunden</h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
@@ -439,10 +439,10 @@ export function StudentCoursesPage() {
             return (
               <div
                 key={course.id}
-                className="overflow-hidden rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 transition-all hover:border-slate-600"
+                className="overflow-hidden rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 transition-all hover:border-slate-600"
               >
                 {/* Course Header Bar */}
-                <div className="p-6 bg-[#11172B] flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#1F2742]">
+                <div className="p-6 bg-[#0B1325] flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[rgba(255,255,255,0.08)]">
                   <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-black uppercase tracking-wider">
@@ -472,7 +472,7 @@ export function StudentCoursesPage() {
                           <span className="text-slate-400">Fortschritt</span>
                           <span className="text-emerald-400">{progress}%</span>
                         </div>
-                        <div className="w-full bg-[#0B0F21] h-2 rounded-full overflow-hidden border border-[#1F2742]">
+                        <div className="w-full bg-[#0B0F21] h-2 rounded-full overflow-hidden border border-[rgba(255,255,255,0.08)]">
                           <div
                             className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full"
                             style={{ width: `${progress}%` }}
@@ -557,7 +557,7 @@ export function StudentCoursesPage() {
 
                 {/* 5. Expanded Units & Lessons Curriculum */}
                 {isExpanded && (
-                  <div className="bg-[#0B0F21] p-6 space-y-6 border-t border-[#1F2742]">
+                  <div className="bg-[#0B0F21] p-6 space-y-6 border-t border-[rgba(255,255,255,0.08)]">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
                         Kurslehrplan & Lektionen (Syllabus)
@@ -572,9 +572,9 @@ export function StudentCoursesPage() {
                         course.units.map((unit, uIdx) => (
                           <div
                             key={unit.id}
-                            className="bg-[#11172B] rounded-2xl border border-[#1F2742] overflow-hidden"
+                            className="bg-[#0B1325] rounded-2xl border border-[rgba(255,255,255,0.08)] overflow-hidden"
                           >
-                            <div className="p-4 bg-[#161E36]/60 border-b border-[#1F2742] flex items-center justify-between">
+                            <div className="p-4 bg-[#101B33]/60 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
                               <div className="flex items-center gap-2.5">
                                 <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-black flex items-center justify-center border border-emerald-500/30">
                                   {uIdx + 1}
@@ -592,7 +592,7 @@ export function StudentCoursesPage() {
                             </div>
 
                             {/* Lessons List inside Unit */}
-                            <div className="divide-y divide-[#1F2742]">
+                            <div className="divide-y divide-[rgba(255,255,255,0.08)]">
                               {unit.lessons && unit.lessons.length > 0 ? (
                                 unit.lessons.map((lesson, lIdx) => {
                                   const isSampleCompleted =
@@ -601,7 +601,7 @@ export function StudentCoursesPage() {
                                   return (
                                     <div
                                       key={lesson.id}
-                                      className="p-3.5 sm:px-5 flex items-center justify-between hover:bg-[#161E36]/40 transition-colors"
+                                      className="p-3.5 sm:px-5 flex items-center justify-between hover:bg-[#101B33]/40 transition-colors"
                                     >
                                       <div className="flex items-center gap-3">
                                         {isSampleCompleted ? (

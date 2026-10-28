@@ -9,7 +9,7 @@ export function AboutPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16 font-sans text-slate-100">
       {/* Header */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+        <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
           {t('about.badge')}
         </span>
         <h1 className="text-4xl sm:text-5xl font-heading font-black text-white tracking-tight">
@@ -22,8 +22,8 @@ export function AboutPage() {
 
       {/* Vision Pillars */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-7 rounded-3xl bg-[#11162B] border border-white/[0.08] shadow-xl space-y-3 glow-card-hover">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center border border-indigo-500/20 shadow-md shadow-indigo-500/10">
+        <div className="p-7 rounded-3xl bg-[#0B1325] border border-white/[0.08] shadow-xl space-y-3 glow-card-hover">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 text-blue-400 flex items-center justify-center border border-indigo-500/20 shadow-md shadow-indigo-500/10">
             <GraduationCap className="w-6 h-6" />
           </div>
           <h3 className="text-lg font-heading font-bold text-white">{t('about.p1.title')}</h3>
@@ -32,7 +32,7 @@ export function AboutPage() {
           </p>
         </div>
 
-        <div className="p-7 rounded-3xl bg-[#11162B] border border-white/[0.08] shadow-xl space-y-3 glow-card-hover">
+        <div className="p-7 rounded-3xl bg-[#0B1325] border border-white/[0.08] shadow-xl space-y-3 glow-card-hover">
           <div className="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/20 flex items-center justify-center shadow-md shadow-purple-500/10">
             <Award className="w-6 h-6" />
           </div>
@@ -42,7 +42,7 @@ export function AboutPage() {
           </p>
         </div>
 
-        <div className="p-7 rounded-3xl bg-[#11162B] border border-white/[0.08] shadow-xl space-y-3 glow-card-hover">
+        <div className="p-7 rounded-3xl bg-[#0B1325] border border-white/[0.08] shadow-xl space-y-3 glow-card-hover">
           <div className="w-12 h-12 rounded-2xl bg-pink-500/15 text-pink-400 border border-pink-500/20 flex items-center justify-center shadow-md shadow-pink-500/10">
             <HeartHandshake className="w-6 h-6" />
           </div>
@@ -54,7 +54,7 @@ export function AboutPage() {
       </div>
 
       {/* Story / Context */}
-      <div className="bg-[#11162B] rounded-4xl p-8 sm:p-12 border border-white/[0.08] shadow-2xl space-y-6">
+      <div className="bg-[#0B1325] rounded-4xl p-8 sm:p-12 border border-white/[0.08] shadow-2xl space-y-6">
         <h2 className="text-2xl sm:text-3xl font-heading font-black text-white">
           Die Philosophie von DeutschWelt Coaching
         </h2>

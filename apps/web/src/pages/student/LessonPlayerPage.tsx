@@ -111,9 +111,9 @@ export function LessonPlayerPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto space-y-6 animate-pulse">
-        <Skeleton className="h-10 w-64 rounded-2xl bg-[#11172B] border border-[#1F2742]" />
-        <Skeleton className="h-20 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />
-        <Skeleton className="h-64 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />
+        <Skeleton className="h-10 w-64 rounded-2xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
+        <Skeleton className="h-20 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
+        <Skeleton className="h-64 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
       </div>
     );
   }
@@ -141,7 +141,7 @@ export function LessonPlayerPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-7 sm:space-y-8 pb-16 font-sans">
       {/* 1. TOP NAVIGATION & BREADCRUMBS */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#1F2742]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[rgba(255,255,255,0.08)]">
         <div className="flex items-center text-xs text-slate-400 gap-1.5 flex-wrap">
           <Link to="/student/courses" className="hover:text-emerald-400 transition-colors">Courses</Link>
           <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
@@ -183,7 +183,7 @@ export function LessonPlayerPage() {
       <div className="space-y-6 sm:space-y-8">
         {contentBlocks && contentBlocks.length > 0 ? (
           contentBlocks.map((block: any) => (
-            <div key={block.id} className="bg-[#11172B] rounded-3xl p-6 sm:p-8 border border-[#1F2742] shadow-xl shadow-black/40 space-y-4">
+            <div key={block.id} className="bg-[#0B1325] rounded-3xl p-6 sm:p-8 border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-4">
               {block.title && (
                 <h3 className="text-xl font-heading font-black text-white flex items-center gap-2.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
@@ -198,7 +198,7 @@ export function LessonPlayerPage() {
 
               {/* Listening Transcript Option */}
               {block.transcript && (
-                <div className="pt-4 border-t border-[#1F2742]">
+                <div className="pt-4 border-t border-[rgba(255,255,255,0.08)]">
                   <button
                     type="button"
                     onClick={() => setShowTranscript(!showTranscript)}
@@ -208,7 +208,7 @@ export function LessonPlayerPage() {
                     {showTranscript ? 'Hide Audio Transcript' : 'Show German Audio Transcript'}
                   </button>
                   {showTranscript && (
-                    <div className="mt-3 p-4 bg-[#0B0F21] rounded-2xl border border-[#1F2742] text-xs text-slate-300 font-mono leading-relaxed whitespace-pre-line">
+                    <div className="mt-3 p-4 bg-[#0B0F21] rounded-2xl border border-[rgba(255,255,255,0.08)] text-xs text-slate-300 font-mono leading-relaxed whitespace-pre-line">
                       {block.transcript}
                     </div>
                   )}
@@ -223,8 +223,8 @@ export function LessonPlayerPage() {
       {exercises && exercises.length > 0 && (
         <div className="space-y-6 pt-4">
           {exercises.map((exercise: any) => (
-            <div key={exercise.id} className="rounded-3xl border border-[#1F2742] bg-[#11172B] overflow-hidden shadow-xl shadow-black/40">
-              <div className="bg-[#161E36] p-6 text-white flex items-center justify-between border-b border-[#1F2742]">
+            <div key={exercise.id} className="rounded-3xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] overflow-hidden shadow-xl shadow-black/40">
+              <div className="bg-[#101B33] p-6 text-white flex items-center justify-between border-b border-[rgba(255,255,255,0.08)]">
                 <div>
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-emerald-400" />
@@ -233,7 +233,7 @@ export function LessonPlayerPage() {
                   <h3 className="text-xl font-heading font-black mt-1 text-white">{exercise.title}</h3>
                   <p className="text-xs text-slate-400 mt-0.5">{exercise.description}</p>
                 </div>
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#0B0F21] text-emerald-400 border border-[#1F2742]">
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#0B0F21] text-emerald-400 border border-[rgba(255,255,255,0.08)]">
                   Pass: {exercise.passingScore}%
                 </span>
               </div>
@@ -243,7 +243,7 @@ export function LessonPlayerPage() {
                   const questionResult = exerciseResult?.breakdown?.find((b: any) => b.questionId === q.id);
 
                   return (
-                    <div key={q.id} className="space-y-3 pb-6 border-b border-[#1F2742] last:border-b-0">
+                    <div key={q.id} className="space-y-3 pb-6 border-b border-[rgba(255,255,255,0.08)] last:border-b-0">
                       <div className="flex items-start justify-between gap-4">
                         <div className="space-y-1">
                           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
@@ -276,7 +276,7 @@ export function LessonPlayerPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
                           {q.options.map((opt: any) => {
                             const isSelected = userAnswers[q.id] === opt.label;
-                            let btnStyle = 'border-[#1F2742] bg-[#0B0F21] text-slate-200 hover:border-slate-500 hover:bg-[#161E36]/40';
+                            let btnStyle = 'border-[rgba(255,255,255,0.08)] bg-[#0B0F21] text-slate-200 hover:border-slate-500 hover:bg-[#101B33]/40';
 
                             if (isSelected) {
                               btnStyle = 'border-emerald-500 bg-[#16233B] text-emerald-300 font-bold ring-2 ring-emerald-500/20';
@@ -315,14 +315,14 @@ export function LessonPlayerPage() {
                             placeholder="Type your answer here..."
                             value={userAnswers[q.id] || ''}
                             onChange={(e) => handleTextAnswerChange(q.id, e.target.value)}
-                            className="w-full h-11 px-4 rounded-2xl border border-[#1F2742] bg-[#0B0F21] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                            className="w-full h-11 px-4 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
                           />
                         </div>
                       )}
 
                       {/* Explanation after submission */}
                       {questionResult && questionResult.explanation && (
-                        <div className="mt-3 p-3.5 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-xs text-slate-300 leading-relaxed">
+                        <div className="mt-3 p-3.5 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-xs text-slate-300 leading-relaxed">
                           <p className="font-bold text-emerald-400 flex items-center gap-1.5 mb-0.5">
                             <HelpCircle className="w-3.5 h-3.5" /> Explanation:
                           </p>
@@ -334,10 +334,10 @@ export function LessonPlayerPage() {
                 })}
 
                 {/* Submit / Score Summary */}
-                <div className="pt-4 border-t border-[#1F2742] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="pt-4 border-t border-[rgba(255,255,255,0.08)] flex flex-col sm:flex-row items-center justify-between gap-4">
                   {exerciseResult ? (
                     <div className="flex items-center gap-4">
-                      <div className="p-3 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-white text-center">
+                      <div className="p-3 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-white text-center">
                         <p className="text-xl font-heading font-black text-emerald-400">{exerciseResult.percentage}%</p>
                         <p className="text-[10px] text-slate-400 uppercase">Score</p>
                       </div>
@@ -368,7 +368,7 @@ export function LessonPlayerPage() {
       )}
 
       {/* 5. BOTTOM ACTIONS & LESSON NAVIGATION */}
-      <div className="pt-6 border-t border-[#1F2742] flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="pt-6 border-t border-[rgba(255,255,255,0.08)] flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           {navigation?.prevLesson ? (
             <Link to={`/lessons/${navigation.prevLesson.id}`}>

@@ -218,7 +218,7 @@ export function SpeakingLabPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="h-96 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />
+        <Skeleton className="h-96 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           {/* 2. PROMPT SELECTOR (LEFT COLUMN) */}
@@ -234,11 +234,11 @@ export function SpeakingLabPage() {
                     className={`w-full p-4 sm:p-5 rounded-3xl border text-left transition-all ${
                       isSelected
                         ? 'border-emerald-500 bg-[#16233B] text-white shadow-xl shadow-black/50 ring-1 ring-emerald-500/30'
-                        : 'border-[#1F2742] bg-[#11172B] text-slate-200 hover:border-slate-600'
+                        : 'border-[rgba(255,255,255,0.08)] bg-[#0B1325] text-slate-200 hover:border-slate-600'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-[#0B0F21] text-emerald-400 border border-[#1F2742]'}`}>
+                      <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-[#0B0F21] text-emerald-400 border border-[rgba(255,255,255,0.08)]'}`}>
                         {p.level}
                       </span>
                       <span className="text-[11px] text-slate-400">
@@ -257,7 +257,7 @@ export function SpeakingLabPage() {
           {selectedPrompt && (
             <div className="lg:col-span-8 space-y-6">
               {/* Scenario Details */}
-              <div className="rounded-3xl border border-[#1F2742] bg-[#11172B] p-6 sm:p-8 space-y-6 shadow-xl shadow-black/40">
+              <div className="rounded-3xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] p-6 sm:p-8 space-y-6 shadow-xl shadow-black/40">
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
@@ -268,7 +268,7 @@ export function SpeakingLabPage() {
                     </span>
                   </div>
                   <h2 className="text-2xl font-heading font-black text-white mt-1.5">{selectedPrompt.title}</h2>
-                  <p className="text-sm text-slate-200 mt-3 bg-[#0B0F21] p-4 rounded-2xl border border-[#1F2742] leading-relaxed">
+                  <p className="text-sm text-slate-200 mt-3 bg-[#0B0F21] p-4 rounded-2xl border border-[rgba(255,255,255,0.08)] leading-relaxed">
                     {selectedPrompt.scenario}
                   </p>
                 </div>
@@ -280,7 +280,7 @@ export function SpeakingLabPage() {
 
                 {/* Sample German Answer Accordion */}
                 {selectedPrompt.sampleAnswerDe && (
-                  <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-xs space-y-1.5">
+                  <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-xs space-y-1.5">
                     <p className="font-bold text-emerald-400 flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Musterantwort (Sample Answer):
                     </p>
@@ -292,7 +292,7 @@ export function SpeakingLabPage() {
                 )}
 
                 {/* Microphone Recording Studio */}
-                <div className="pt-6 border-t border-[#1F2742] space-y-6">
+                <div className="pt-6 border-t border-[rgba(255,255,255,0.08)] space-y-6">
                   {micError && (
                     <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
@@ -307,7 +307,7 @@ export function SpeakingLabPage() {
                     </div>
                   )}
 
-                  <div className="p-8 rounded-2xl bg-[#0B0F21] border border-[#1F2742] flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="p-8 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] flex flex-col items-center justify-center text-center space-y-4">
                     {isRecording ? (
                       /* Live Recording Pulse */
                       <div className="space-y-4">
@@ -367,8 +367,8 @@ export function SpeakingLabPage() {
 
                         {/* Interactive AI Speech Evaluation Results */}
                         {aiAnalysis && (
-                          <div className="mt-6 p-5 rounded-2xl bg-[#11172B] border border-[#1F2742] shadow-xl text-left space-y-4 animate-slide-up">
-                            <div className="flex items-center justify-between border-b border-[#1F2742] pb-3">
+                          <div className="mt-6 p-5 rounded-2xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl text-left space-y-4 animate-slide-up">
+                            <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] pb-3">
                               <div className="flex items-center gap-2">
                                 <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold border border-amber-500/30">
                                   <Award className="w-5 h-5 text-amber-400" />
@@ -386,15 +386,15 @@ export function SpeakingLabPage() {
 
                             {/* Sub-Scores */}
                             <div className="grid grid-cols-3 gap-2 text-center">
-                              <div className="p-2.5 rounded-xl bg-[#0B0F21] border border-[#1F2742]">
+                              <div className="p-2.5 rounded-xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)]">
                                 <p className="text-[10px] text-slate-400 uppercase font-bold">Pronunciation</p>
                                 <p className="text-base font-extrabold text-white mt-0.5">{aiAnalysis.pronunciationScore}%</p>
                               </div>
-                              <div className="p-2.5 rounded-xl bg-[#0B0F21] border border-[#1F2742]">
+                              <div className="p-2.5 rounded-xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)]">
                                 <p className="text-[10px] text-slate-400 uppercase font-bold">Fluency</p>
                                 <p className="text-base font-extrabold text-white mt-0.5">{aiAnalysis.fluencyScore}%</p>
                               </div>
-                              <div className="p-2.5 rounded-xl bg-[#0B0F21] border border-[#1F2742]">
+                              <div className="p-2.5 rounded-xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)]">
                                 <p className="text-[10px] text-slate-400 uppercase font-bold">Grammar</p>
                                 <p className="text-base font-extrabold text-white mt-0.5">{aiAnalysis.grammarScore}%</p>
                               </div>
@@ -425,7 +425,7 @@ export function SpeakingLabPage() {
                             </div>
 
                             {/* Coach Recommendations */}
-                            <div className="p-3.5 rounded-xl bg-[#0B0F21] border border-[#1F2742] space-y-1.5 text-xs">
+                            <div className="p-3.5 rounded-xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] space-y-1.5 text-xs">
                               <p className="font-bold text-emerald-400 flex items-center gap-1.5">
                                 <Sparkles className="w-3.5 h-3.5" /> AI Tutor Recommendations:
                               </p>
@@ -441,7 +441,7 @@ export function SpeakingLabPage() {
                     ) : (
                       /* Initial Start State */
                       <div className="space-y-3">
-                        <div className="w-16 h-16 rounded-2xl bg-[#161E36] text-emerald-400 flex items-center justify-center mx-auto border border-[#1F2742]">
+                        <div className="w-16 h-16 rounded-2xl bg-[#101B33] text-emerald-400 flex items-center justify-center mx-auto border border-[rgba(255,255,255,0.08)]">
                           <Mic className="w-8 h-8" />
                         </div>
                         <div>
@@ -469,7 +469,7 @@ export function SpeakingLabPage() {
                       placeholder="If microphone is unavailable, you can type your German response here..."
                       value={textAlternative}
                       onChange={(e) => setTextAlternative(e.target.value)}
-                      className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all"
+                      className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all"
                     />
                     {!audioBlob && textAlternative.trim().length > 10 && (
                       <button
@@ -491,7 +491,7 @@ export function SpeakingLabPage() {
                   <h3 className="text-base font-bold text-white">My Previous Speaking Submissions</h3>
                   <div className="space-y-3">
                     {myAttempts.map(att => (
-                      <div key={att.id} className="p-5 rounded-3xl border border-[#1F2742] bg-[#11172B] shadow-lg">
+                      <div key={att.id} className="p-5 rounded-3xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] shadow-lg">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold text-sm text-white">{att.prompt?.title || 'Speaking Prompt'}</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${att.status === 'GRADED' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-700 text-slate-300'}`}>
@@ -508,7 +508,7 @@ export function SpeakingLabPage() {
                         )}
 
                         {att.teacherFeedback && (
-                          <div className="mt-3 p-3 bg-[#0B0F21] border border-[#1F2742] rounded-2xl text-xs space-y-1">
+                          <div className="mt-3 p-3 bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] rounded-2xl text-xs space-y-1">
                             <p className="font-bold text-emerald-400 flex items-center gap-1">
                               <Award className="w-3.5 h-3.5" /> Instructor Feedback (Score: {att.score}/100):
                             </p>

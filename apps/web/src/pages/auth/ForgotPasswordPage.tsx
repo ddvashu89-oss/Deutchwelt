@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Input } from '../../components/ui/Input.js';
-import { CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Button } from '../../components/ui/Button.js';
+import { CheckCircle2, ArrowLeft, KeyRound } from 'lucide-react';
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -28,43 +29,47 @@ export function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D17] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans text-slate-100 bg-hero-glow bg-mesh-dark">
+    <div className="min-h-screen bg-[#030712] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans text-slate-100 bg-mesh-cosmic">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <div className="flex justify-center">
-          <Logo size="lg" />
+          <Logo size="lg" showTagline={true} tagline="Account Recovery" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight pt-2">
           Passwort zurücksetzen
         </h2>
-        <p className="text-xs text-slate-400 font-medium">
-          Geben Sie Ihre E-Mail-Adresse ein, um einen Wiederherstellungslink zu erhalten.
+        <p className="text-xs text-slate-400 font-medium max-w-sm mx-auto">
+          Geben Sie Ihre registrierte E-Mail-Adresse ein, um einen sicheren Wiederherstellungslink zu erhalten.
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-[#11162B]/95 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/[0.08] space-y-6">
+        <div className="bg-[#0B1325]/90 backdrop-blur-2xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/10 space-y-6">
           {submitted ? (
             <div className="text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-white">Postfach prüfen</h3>
+              <h3 className="text-lg font-heading font-black text-white">Postfach prüfen</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Falls ein Account mit <strong className="text-white">{email}</strong> existiert, wurde ein Wiederherstellungslink versandt.
+                Falls ein Account mit <strong className="text-white">{email}</strong> existiert, wurde eine E-Mail mit Instruktionen versandt.
               </p>
 
               {devToken && (
-                <div className="p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-left text-xs text-indigo-300 space-y-1">
-                  <p className="font-bold">Development Fast-Track:</p>
-                  <Link to={`/reset-password?token=${devToken}`} className="underline font-mono text-[11px] block break-all text-indigo-400 hover:text-indigo-300">
+                <div className="p-3.5 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-left text-xs text-blue-300 space-y-1">
+                  <p className="font-bold flex items-center gap-1.5">
+                    <KeyRound className="w-3.5 h-3.5" /> Development Fast-Track:
+                  </p>
+                  <Link to={`/reset-password?token=${devToken}`} className="underline font-mono text-[11px] block break-all text-blue-400 hover:text-blue-300">
                     Click here to open Password Reset with token
                   </Link>
                 </div>
               )}
 
-              <Link to="/login" className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 hover:underline pt-2">
-                <ArrowLeft className="w-3.5 h-3.5" /> Zurück zur Anmeldung
-              </Link>
+              <div className="pt-2">
+                <Link to="/login" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:underline">
+                  <ArrowLeft className="w-3.5 h-3.5" /> Zurück zur Anmeldung
+                </Link>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -77,16 +82,18 @@ export function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
 
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 transition-all"
+                isLoading={loading}
+                variant="primary"
+                className="w-full py-3.5 text-sm font-bold shadow-lg shadow-blue-500/25"
               >
-                {loading ? 'Wird gesendet...' : 'Link zum Zurücksetzen senden'}
-              </button>
+                <span>Link zum Zurücksetzen senden</span>
+              </Button>
 
               <div className="text-center pt-2">
-                <Link to="/login" className="text-xs font-bold text-indigo-400 hover:text-indigo-300 hover:underline inline-flex items-center gap-1">
+                <Link to="/login" className="text-xs font-bold text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1">
                   <ArrowLeft className="w-3.5 h-3.5" /> Zurück zur Anmeldung
                 </Link>
               </div>
@@ -108,10 +115,10 @@ export function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D17] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans text-slate-100 bg-hero-glow bg-mesh-dark">
+    <div className="min-h-screen bg-[#030712] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans text-slate-100 bg-mesh-cosmic">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <div className="flex justify-center">
-          <Logo size="lg" />
+          <Logo size="lg" showTagline={true} tagline="Password Update" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight pt-2">
           Neues Passwort vergeben
@@ -119,16 +126,16 @@ export function ResetPasswordPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-[#11162B]/95 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/[0.08] space-y-6">
+        <div className="bg-[#0B1325]/90 backdrop-blur-2xl py-8 px-6 shadow-2xl sm:rounded-4xl sm:px-10 border border-white/10 space-y-6">
           {success ? (
             <div className="text-center space-y-4">
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
-              <h3 className="text-lg font-bold text-white">Passwort erfolgreich geändert</h3>
+              <h3 className="text-lg font-heading font-black text-white">Passwort erfolgreich geändert</h3>
               <p className="text-xs text-slate-400">Sie können sich jetzt mit Ihrem neuen Passwort anmelden.</p>
               <Link to="/login">
-                <button className="px-6 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold shadow-md shadow-indigo-500/20">
+                <Button variant="primary" className="text-xs font-bold">
                   Weiter zur Anmeldung
-                </button>
+                </Button>
               </Link>
             </div>
           ) : (
@@ -141,12 +148,13 @@ export function ResetPasswordPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button
+              <Button
                 type="submit"
-                className="w-full py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 transition-all"
+                variant="primary"
+                className="w-full py-3.5 text-sm font-bold shadow-lg shadow-blue-500/25"
               >
                 Passwort aktualisieren
-              </button>
+              </Button>
             </form>
           )}
         </div>

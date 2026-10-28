@@ -4,56 +4,136 @@
 
 @layer base {
   body {
-    background-color: #0A0D17;
+    background-color: #030712;
     color: #F8FAFC;
-    @apply font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white;
+    @apply font-sans antialiased min-h-screen selection:bg-brand-500 selection:text-white;
   }
 
   ::selection {
-    background-color: #6366F1;
+    background-color: #3B82F6;
     color: #FFFFFF;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;
   }
+
+  /* Custom Slim Sleek Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #030712;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1E293B;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3B82F6;
+  }
 }
 
-/* Custom utility styles */
-.text-balance {
-  text-wrap: balance;
+/* Custom Glassmorphism & Modern Teutonic Design System */
+.glass-panel {
+  background: rgba(7, 13, 26, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Linear & Stripe signature gradients and effects */
-.bg-mesh-dark {
-  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 60%),
-              radial-gradient(circle at 100% 50%, rgba(168, 85, 247, 0.1), transparent 50%),
-              #0A0D17;
+.glass-card {
+  background: rgba(11, 19, 37, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
-.bg-hero-glow {
-  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.25), transparent);
+.glass-card-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glow-card {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-}
-
-.glow-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glow-card-hover:hover {
-  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4), 0 20px 50px -10px rgba(99, 102, 241, 0.2);
+.glass-card-hover:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 16px 40px -10px rgba(59, 130, 246, 0.18), 0 0 0 1px rgba(59, 130, 246, 0.25);
   transform: translateY(-2px);
 }
 
-.gradient-border {
-  position: relative;
-  border-radius: 1.5rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
-  padding: 1px;
+.glass-input {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease-in-out;
 }
 
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Background Atmosphere Gradients */
+.bg-mesh-cosmic {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12), transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(139, 92, 246, 0.1), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.08), transparent 50%),
+    #030712;
+}
+
+.bg-hero-glow {
+  background: radial-gradient(ellipse 70% 50% at 50% -15%, rgba(59, 130, 246, 0.22), transparent 75%);
+}
+
+.bg-hero-student {
+  background: radial-gradient(ellipse 70% 50% at 50% -15%, rgba(6, 182, 212, 0.2), transparent 75%);
+}
+
+.bg-hero-teacher {
+  background: radial-gradient(ellipse 70% 50% at 50% -15%, rgba(13, 148, 136, 0.2), transparent 75%);
+}
+
+.bg-hero-admin {
+  background: radial-gradient(ellipse 70% 50% at 50% -15%, rgba(139, 92, 246, 0.2), transparent 75%);
+}
+
+/* Typography Gradient Utilities */
+.text-gradient-brand {
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #93C5FD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 70%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-student {
+  background: linear-gradient(135deg, #22D3EE 0%, #06B6D4 50%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-teacher {
+  background: linear-gradient(135deg, #2DD4BF 0%, #0D9488 50%, #10B981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-admin {
+  background: linear-gradient(135deg, #C084FC 0%, #8B5CF6 50%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 3D and Perspective utilities */
 .perspective-1000 {
   perspective: 1000px;
 }

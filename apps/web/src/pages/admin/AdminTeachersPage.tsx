@@ -253,11 +253,11 @@ export function AdminTeachersPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {teachers.map(t => (
-            <div key={t.id} className="p-6 rounded-3xl bg-[#0D111F] border border-white/10 shadow-xl flex flex-col justify-between space-y-4 hover:border-white/20 transition-all">
+            <div key={t.id} className="p-6 rounded-3xl bg-[#0B1325] border border-white/10 shadow-xl flex flex-col justify-between space-y-4 hover:border-white/20 transition-all">
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-bold flex items-center justify-center text-base">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/30 text-purple-300 font-bold flex items-center justify-center text-base">
                       {t.firstName?.[0]}{t.lastName?.[0]}
                     </div>
                     <div>
@@ -285,8 +285,8 @@ export function AdminTeachersPage() {
                   </button>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-[#11162B] border border-white/10 text-xs space-y-1">
-                  <p className="font-bold text-indigo-300">Credentials & Focus:</p>
+                <div className="p-3.5 rounded-2xl bg-[#070D1A] border border-white/10 text-xs space-y-1">
+                  <p className="font-bold text-purple-300">Credentials & Focus:</p>
                   <p className="text-slate-200 font-medium">{t.teacherProfile?.qualifications || 'MA Germanistik'}</p>
                   <p className="text-slate-400 italic">{t.teacherProfile?.specialization || 'Goethe Exam Preparation'}</p>
                 </div>
@@ -307,13 +307,13 @@ export function AdminTeachersPage() {
                       t.batches.map((b: any) => (
                         <span
                           key={b.id}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[11px] font-bold"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[11px] font-bold"
                         >
                           {b.name} ({b.level})
                           <button
                             type="button"
                             onClick={() => handleUnassignBatch(t.id, b.id)}
-                            className="text-indigo-400 hover:text-rose-400 transition-colors ml-1"
+                            className="text-purple-400 hover:text-rose-400 transition-colors ml-1"
                             title="Remove from batch"
                           >
                             ×
@@ -436,7 +436,7 @@ export function AdminTeachersPage() {
               placeholder="Brief professional background, teaching philosophy, and academic certifications..."
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 
@@ -451,8 +451,8 @@ export function AdminTeachersPage() {
                   key={b.id}
                   className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer transition-colors ${
                     selectedBatchIds.includes(b.id)
-                      ? 'border-indigo-500/50 bg-indigo-500/15 font-bold text-white'
-                      : 'border-white/10 bg-[#0F1424] text-slate-300 hover:bg-white/5'
+                      ? 'border-indigo-500/50 bg-purple-500/15 font-bold text-white'
+                      : 'border-white/10 bg-[#070D1A] text-slate-300 hover:bg-white/5'
                   }`}
                 >
                   <input
@@ -538,7 +538,7 @@ export function AdminTeachersPage() {
               rows={3}
               value={editBio}
               onChange={(e) => setEditBio(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 
@@ -549,10 +549,10 @@ export function AdminTeachersPage() {
             <select
               value={editActive ? 'active' : 'suspended'}
               onChange={(e) => setEditActive(e.target.value === 'active')}
-              className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             >
-              <option value="active" className="bg-[#0D111F] text-white">Active Faculty (Access Permitted)</option>
-              <option value="suspended" className="bg-[#0D111F] text-white">Suspended (Access Revoked)</option>
+              <option value="active" className="bg-[#0B1325] text-white">Active Faculty (Access Permitted)</option>
+              <option value="suspended" className="bg-[#0B1325] text-white">Suspended (Access Revoked)</option>
             </select>
           </div>
 
@@ -583,10 +583,10 @@ export function AdminTeachersPage() {
             <select
               value={batchToAssign}
               onChange={(e) => setBatchToAssign(e.target.value)}
-              className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             >
               {batches.map(b => (
-                <option key={b.id} value={b.id} className="bg-[#0D111F] text-white">
+                <option key={b.id} value={b.id} className="bg-[#0B1325] text-white">
                   {b.name} ({b.level}) — Max {b.maxStudents} Students
                 </option>
               ))}

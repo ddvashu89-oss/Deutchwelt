@@ -224,11 +224,11 @@ export function HomePage() {
   ];
 
   return (
-    <div className="relative font-sans bg-[#0A0D17] text-slate-100 selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+    <div className="relative font-sans bg-[#030712] text-slate-100 selection:bg-blue-600 selection:text-white overflow-x-hidden">
       {/* 0. CINEMATIC TOP PROGRESSION BAR */}
       <motion.div
         style={{ scaleX: smoothProgress }}
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 origin-left z-50 pointer-events-none shadow-[0_0_12px_rgba(99,102,241,0.6)]"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 origin-left z-50 pointer-events-none shadow-[0_0_12px_rgba(99,102,241,0.6)]"
       />
 
       {/* 1. HERO SECTION WITH 3D INTERACTIVE COCKPIT */}
@@ -249,14 +249,14 @@ export function HomePage() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-6 space-y-6 text-center lg:text-left"
             >
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold tracking-wide shadow-xs backdrop-blur-md">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-bold tracking-wide shadow-xs backdrop-blur-md">
                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_10px_#818CF8]" />
                 <span>{t('home.hero.badge')}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-white tracking-tight leading-[1.12]">
                 {t('home.hero.titlePrefix')}{' '}
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent relative inline-block">
+                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-200 bg-clip-text text-transparent relative inline-block">
                   {t('home.hero.titleHighlight')}
                 </span>
               </h1>
@@ -267,7 +267,7 @@ export function HomePage() {
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                 <Link to="/register" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm flex items-center justify-center gap-3 shadow-xl shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5">
+                  <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:opacity-95 text-white font-bold text-sm flex items-center justify-center gap-3 shadow-xl shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
                     <span>{t('home.hero.cta.start')}</span>
                     <ArrowRight className="w-4 h-4 text-white" />
                   </button>
@@ -275,7 +275,7 @@ export function HomePage() {
 
                 <Link to="/courses" className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto px-7 py-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 font-bold text-sm flex items-center justify-center gap-2 shadow-xs transition-colors backdrop-blur-sm">
-                    <BookOpen className="w-4 h-4 text-indigo-400" />
+                    <BookOpen className="w-4 h-4 text-blue-400" />
                     <span>{t('home.hero.cta.courses')}</span>
                   </button>
                 </Link>
@@ -306,10 +306,10 @@ export function HomePage() {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="absolute -top-7 -left-4 sm:-left-8 z-30 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#11162B]/95 backdrop-blur-md border border-white/10 shadow-2xl text-slate-200 text-xs font-bold"
+                className="absolute -top-7 -left-4 sm:-left-8 z-30 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#0B1325]/95 backdrop-blur-md border border-white/10 shadow-2xl text-slate-200 text-xs font-bold"
               >
                 <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-ping" />
-                <Video className="w-4 h-4 text-indigo-400" />
+                <Video className="w-4 h-4 text-blue-400" />
                 <span>Nächste Live-Klasse in 14 Min • Google Meet & Zoom</span>
               </motion.div>
 
@@ -319,9 +319,9 @@ export function HomePage() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -bottom-7 -right-4 sm:-right-6 z-30 hidden sm:flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#141A32]/95 backdrop-blur-md border border-indigo-500/30 shadow-2xl text-white text-xs font-bold"
+                className="absolute -bottom-7 -right-4 sm:-right-6 z-30 hidden sm:flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#0E172E]/95 backdrop-blur-md border border-blue-500/30 shadow-2xl text-white text-xs font-bold"
               >
-                <div className="w-7 h-7 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold">
+                <div className="w-7 h-7 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center font-bold">
                   <Award className="w-4 h-4" />
                 </div>
                 <div>
@@ -339,10 +339,10 @@ export function HomePage() {
                   opacity: heroCockpitOpacity,
                   transformStyle: 'preserve-3d'
                 }}
-                className="w-full max-w-lg rounded-3xl bg-[#11162B]/95 border border-white/[0.08] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(99,102,241,0.15)] text-white p-6 sm:p-7 relative overflow-hidden space-y-6 backdrop-blur-xl"
+                className="w-full max-w-lg rounded-3xl bg-[#0B1325]/95 border border-white/[0.08] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(99,102,241,0.15)] text-white p-6 sm:p-7 relative overflow-hidden space-y-6 backdrop-blur-xl"
               >
                 {/* Background Ambient Mesh Glow */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Cockpit Top Bar */}
@@ -356,8 +356,8 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[11px] font-bold">
-                    <Radio className="w-3 h-3 animate-pulse text-indigo-400" />
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-[11px] font-bold">
+                    <Radio className="w-3 h-3 animate-pulse text-blue-400" />
                     <span>Berlin Studio Live</span>
                   </div>
                 </div>
@@ -390,9 +390,9 @@ export function HomePage() {
                 </div>
 
                 {/* Active Phrase & Real-Time Waveform Stage */}
-                <div className="rounded-2xl bg-[#0D1120] border border-white/[0.08] p-5 space-y-4 relative z-10 backdrop-blur-md">
+                <div className="rounded-2xl bg-[#070D1A] border border-white/[0.08] p-5 space-y-4 relative z-10 backdrop-blur-md">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-indigo-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="text-blue-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
                       <GraduationCap className="w-3.5 h-3.5" />
                       {currentPhrase.context}
                     </span>
@@ -412,7 +412,7 @@ export function HomePage() {
                   {/* Translations */}
                   <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
                     <div className="text-xs text-slate-300 font-medium">
-                      <span className="text-indigo-400 font-bold mr-1.5">EN:</span>
+                      <span className="text-blue-400 font-bold mr-1.5">EN:</span>
                       {currentPhrase.english}
                     </div>
                     <div className="text-xs text-slate-400 font-medium">
@@ -425,7 +425,7 @@ export function HomePage() {
                   <div className="pt-2 flex items-center justify-between gap-4">
                     <button
                       onClick={() => speakGerman(currentPhrase.german)}
-                      className="px-4 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-95 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/25 transition-transform active:scale-95 shrink-0"
+                      className="px-4 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-95 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-transform active:scale-95 shrink-0"
                     >
                       {isPlayingAudio ? (
                         <>
@@ -473,10 +473,10 @@ export function HomePage() {
                 <div className="grid grid-cols-3 gap-2.5 relative z-10 pt-1">
                   <div className="p-3 rounded-xl bg-white/5 border border-white/[0.08] text-center">
                     <div className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Phonetik</div>
-                    <div className="text-base font-heading font-black text-indigo-400">
+                    <div className="text-base font-heading font-black text-blue-400">
                       {currentPhrase.phoneticsScore}%
                     </div>
-                    <div className="text-[9px] text-indigo-300 font-semibold">Exakt</div>
+                    <div className="text-[9px] text-blue-300 font-semibold">Exakt</div>
                   </div>
 
                   <div className="p-3 rounded-xl bg-white/5 border border-white/[0.08] text-center">
@@ -499,12 +499,12 @@ export function HomePage() {
                 {/* Footer Action inside Cockpit */}
                 <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-xs text-slate-400 relative z-10">
                   <div className="flex items-center gap-2">
-                    <Users className="w-3.5 h-3.5 text-indigo-400" />
+                    <Users className="w-3.5 h-3.5 text-blue-400" />
                     <span>342 Lerner aktuell in Live-Übungen</span>
                   </div>
                   <Link
                     to="/vocabulary"
-                    className="text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1 transition-colors"
+                    className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 transition-colors"
                   >
                     <span>Lernlabor öffnen</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -517,7 +517,7 @@ export function HomePage() {
       </section>
 
       {/* 2. GERMAN MASTERY TRAJECTORY (A1 -> B2) */}
-      <section ref={journeyRef} className="py-24 bg-[#080B14] text-slate-100 relative overflow-hidden border-t border-b border-white/[0.08]">
+      <section ref={journeyRef} className="py-24 bg-[#050B17] text-slate-100 relative overflow-hidden border-t border-b border-white/[0.08]">
         {/* Ambient Dark Mesh Lighting */}
         <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -528,7 +528,7 @@ export function HomePage() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-widest"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-xs font-bold uppercase tracking-widest"
             >
               <Compass className="w-3.5 h-3.5" />
               <span>Der strukturierte Lernpfad</span>
@@ -544,7 +544,7 @@ export function HomePage() {
 
           {/* Connected Progression Spine */}
           <div className="relative">
-            <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-10 bottom-10 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 opacity-25" />
+            <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-10 bottom-10 w-0.5 bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-600 opacity-25" />
 
             <div className="space-y-16 lg:space-y-24">
               {CEFR_JOURNEY.map((phase, idx) => {
@@ -567,7 +567,7 @@ export function HomePage() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-black">
+                        <span className="px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-black">
                           {phase.stage}
                         </span>
                         <span className="text-xs font-mono text-purple-300 font-bold">
@@ -589,7 +589,7 @@ export function HomePage() {
                             key={sIdx}
                             className="flex items-center gap-2 text-xs text-slate-300 font-medium"
                           >
-                            <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                             <span>{skill}</span>
                           </div>
                         ))}
@@ -598,7 +598,7 @@ export function HomePage() {
                       <div className="pt-4 flex items-center gap-4">
                         <Link
                           to={`/courses`}
-                          className="inline-flex items-center gap-2 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                          className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
                         >
                           <span>Curriculum ansehen</span>
                           <ArrowRight className="w-4 h-4" />
@@ -613,14 +613,14 @@ export function HomePage() {
                         isEven ? 'lg:pl-8' : 'lg:col-start-1 lg:pr-8'
                       }`}
                     >
-                      <div className="rounded-3xl bg-[#11162B] border border-white/[0.08] p-6 sm:p-7 shadow-2xl relative overflow-hidden group hover:border-indigo-500/50 glow-card-hover">
+                      <div className="rounded-3xl bg-[#0B1325] border border-white/[0.08] p-6 sm:p-7 shadow-2xl relative overflow-hidden group hover:border-blue-500/50 glow-card-hover">
                         <div
                           className={`absolute inset-0 bg-gradient-to-tr ${phase.color} opacity-20 pointer-events-none group-hover:opacity-30 transition-opacity`}
                         />
 
                         <div className="relative z-10 space-y-4">
                           <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-heading font-black text-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-heading font-black text-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
                               {phase.code}
                             </div>
                             <span className="text-xs font-bold px-3 py-1 rounded-full bg-white/5 text-slate-300 border border-white/10">
@@ -628,9 +628,9 @@ export function HomePage() {
                             </span>
                           </div>
 
-                          <div className="p-4 rounded-2xl bg-[#0D1120] border border-white/5 space-y-2">
+                          <div className="p-4 rounded-2xl bg-[#070D1A] border border-white/5 space-y-2">
                             <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold flex items-center gap-2">
-                              <Volume2 className="w-3.5 h-3.5 text-indigo-400" />
+                              <Volume2 className="w-3.5 h-3.5 text-blue-400" />
                               <span>Muster-Sprachprobe (Native Audio)</span>
                             </div>
                             <p className="text-sm font-heading font-bold text-white italic">
@@ -647,7 +647,7 @@ export function HomePage() {
                               <span>Audio abspielen</span>
                             </button>
 
-                            <span className="text-xs text-indigo-300/80 font-mono italic">
+                            <span className="text-xs text-blue-300/80 font-mono italic">
                               {phase.quote}
                             </span>
                           </div>
@@ -663,10 +663,10 @@ export function HomePage() {
       </section>
 
       {/* 3. PLATFORM HIGHLIGHTS (Modern 4-Grid Cards) */}
-      <section className="bg-[#0A0D17] py-24 text-slate-100 relative">
+      <section className="bg-[#030712] py-24 text-slate-100 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3.5 py-1.5 rounded-full border border-indigo-500/20">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-400 bg-blue-500/10 px-3.5 py-1.5 rounded-full border border-blue-500/20">
               {t('home.features.badge')}
             </span>
             <h2 className="text-3xl sm:text-4xl font-heading font-black text-white tracking-tight">
@@ -687,10 +687,10 @@ export function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="rounded-3xl bg-[#11162B]/80 hover:bg-[#141A32] p-7 border border-white/[0.08] hover:border-indigo-500/40 glow-card-hover flex flex-col justify-between transition-all group"
+                  className="rounded-3xl bg-[#0B1325]/80 hover:bg-[#0E172E] p-7 border border-white/[0.08] hover:border-blue-500/40 glow-card-hover flex flex-col justify-between transition-all group"
                 >
                   <div>
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 group-hover:bg-gradient-to-br group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white flex items-center justify-center mb-5 border border-indigo-500/20 transition-all shadow-md shadow-indigo-500/10">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 group-hover:bg-gradient-to-br group-hover:from-indigo-500 group-hover:to-purple-600 group-hover:text-white flex items-center justify-center mb-5 border border-blue-500/20 transition-all shadow-md shadow-indigo-500/10">
                       <Icon className="w-6 h-6" />
                     </div>
                     <h3 className="text-base font-heading font-bold text-white mb-2">
@@ -722,16 +722,16 @@ export function HomePage() {
           {faqs.map((faq, idx) => (
             <div
               key={idx}
-              className="rounded-2xl bg-[#11162B]/70 border border-white/[0.08] shadow-xs overflow-hidden transition-all hover:border-white/20"
+              className="rounded-2xl bg-[#0B1325]/70 border border-white/[0.08] shadow-xs overflow-hidden transition-all hover:border-white/20"
             >
               <button
                 onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
-                className="w-full p-5 text-left flex items-center justify-between gap-4 font-heading font-bold text-sm text-white hover:text-indigo-400 transition-colors"
+                className="w-full p-5 text-left flex items-center justify-between gap-4 font-heading font-bold text-sm text-white hover:text-blue-400 transition-colors"
               >
                 <span>{faq.q}</span>
                 <ChevronDown
                   className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
-                    expandedFaq === idx ? 'rotate-180 text-indigo-400' : ''
+                    expandedFaq === idx ? 'rotate-180 text-blue-400' : ''
                   }`}
                 />
               </button>
@@ -752,14 +752,14 @@ export function HomePage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="rounded-4xl bg-gradient-to-br from-[#141A32] to-[#0D1120] text-white p-8 sm:p-14 shadow-2xl border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
+          className="rounded-4xl bg-gradient-to-br from-[#0E172E] to-[#070D1A] text-white p-8 sm:p-14 shadow-2xl border border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
         >
           {/* Subtle Ambient Radial Flare */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="space-y-3 max-w-xl text-center md:text-left z-10">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center justify-center md:justify-start gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center justify-center md:justify-start gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
               {t('home.cta.badge')}
             </span>
             <h2 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-white leading-tight">
@@ -772,7 +772,7 @@ export function HomePage() {
 
           <div className="z-10 flex flex-col sm:flex-row items-center gap-3 shrink-0">
             <Link to="/register">
-              <button className="px-8 py-4 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-black text-sm shadow-xl shadow-indigo-500/30 transition-all transform hover:scale-105">
+              <button className="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:opacity-95 text-white font-black text-sm shadow-xl shadow-indigo-500/30 transition-all transform hover:scale-105">
                 {t('home.cta.btn')}
               </button>
             </Link>

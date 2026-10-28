@@ -218,7 +218,7 @@ export function TeacherDashboard() {
       {/* 2. 3 STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         {/* Card 1: Active Students */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('teacher.activeStudents')}
@@ -236,7 +236,7 @@ export function TeacherDashboard() {
         </div>
 
         {/* Card 2: Upcoming Sessions */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('teacher.upcoming')}
@@ -254,7 +254,7 @@ export function TeacherDashboard() {
         </div>
 
         {/* Card 3: Taught This Month */}
-        <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
+        <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl flex flex-col justify-between hover:border-white/20 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400">
               {t('teacher.taughtMonth')}
@@ -277,7 +277,7 @@ export function TeacherDashboard() {
         {/* LEFT COLUMN: Upcoming Lessons + Cancelled Lessons + Getting Started */}
         <div className="lg:col-span-8 space-y-6">
           {/* Card: Upcoming Lessons */}
-          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
+          <div className="bg-[#0B1325] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-heading font-extrabold text-white">
@@ -328,7 +328,7 @@ export function TeacherDashboard() {
                     <button
                       type="button"
                       onClick={() => handleOpenLiveClass(session)}
-                      className="flex-1 sm:flex-none px-4 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-slate-950 font-black text-xs transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-1.5"
+                      className="flex-1 sm:flex-none px-4 py-1.5 rounded-xl bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500 hover:opacity-95 text-white font-extrabold text-xs transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-1.5"
                     >
                       <Video className="w-3.5 h-3.5" />
                       <span>{t('teacher.openClass')}</span>
@@ -346,7 +346,7 @@ export function TeacherDashboard() {
           </div>
 
           {/* Card: Cancelled Lessons */}
-          <div className="bg-[#0D111F] p-5 rounded-3xl border border-white/10 shadow-xl space-y-2">
+          <div className="bg-[#0B1325] p-5 rounded-3xl border border-white/10 shadow-xl space-y-2">
             <h2 className="text-sm font-heading font-extrabold text-white">
               {t('teacher.cancelledLessons')}
             </h2>
@@ -361,7 +361,7 @@ export function TeacherDashboard() {
           </div>
 
           {/* Card: Getting Started Checklist */}
-          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
+          <div className="bg-[#0B1325] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-heading font-extrabold text-white">
@@ -421,7 +421,7 @@ export function TeacherDashboard() {
                 <button
                   type="button"
                   onClick={() => setReportModalOpen(true)}
-                  className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20"
+                  className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-md shadow-amber-500/20"
                 >
                   {t('teacher.writeReport')}
                 </button>
@@ -433,7 +433,7 @@ export function TeacherDashboard() {
         {/* RIGHT COLUMN: Quick Actions + Refer a Teacher + Efficiency Tip */}
         <div className="lg:col-span-4 space-y-6">
           {/* Card: Quick Actions */}
-          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
+          <div className="bg-[#0B1325] p-6 rounded-3xl border border-white/10 shadow-xl space-y-4">
             <h2 className="text-base font-heading font-extrabold text-white">
               {t('teacher.quickActions')}
             </h2>
@@ -442,7 +442,7 @@ export function TeacherDashboard() {
               <button
                 type="button"
                 onClick={() => setReportModalOpen(true)}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-slate-950 font-black text-xs flex items-center justify-between transition-all shadow-md shadow-emerald-500/20"
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500 hover:opacity-95 text-white font-extrabold text-xs flex items-center justify-between transition-all shadow-md shadow-emerald-500/20"
               >
                 <span>{t('teacher.newLessonReport')}</span>
                 <Plus className="w-4 h-4" />
@@ -451,7 +451,7 @@ export function TeacherDashboard() {
               <button
                 type="button"
                 onClick={() => setWorksheetModalOpen(true)}
-                className="w-full py-2.5 px-4 rounded-xl border border-white/10 bg-[#11162B] hover:bg-white/5 text-slate-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
+                className="w-full py-2.5 px-4 rounded-xl border border-white/10 bg-[#070D1A] hover:bg-white/5 text-slate-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
               >
                 <span>{t('teacher.createWorksheet')}</span>
                 <FileText className="w-4 h-4 text-emerald-400" />
@@ -460,7 +460,7 @@ export function TeacherDashboard() {
               <button
                 type="button"
                 onClick={() => setLessonPlanModalOpen(true)}
-                className="w-full py-2.5 px-4 rounded-xl border border-white/10 bg-[#11162B] hover:bg-white/5 text-slate-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
+                className="w-full py-2.5 px-4 rounded-xl border border-white/10 bg-[#070D1A] hover:bg-white/5 text-slate-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
               >
                 <span>{t('teacher.newLessonPlan')}</span>
                 <BookOpen className="w-4 h-4 text-emerald-400" />
@@ -468,7 +468,7 @@ export function TeacherDashboard() {
 
               <Link
                 to="/teacher/submissions"
-                className="w-full py-2.5 px-4 rounded-xl border border-white/10 bg-[#11162B] hover:bg-white/5 text-slate-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
+                className="w-full py-2.5 px-4 rounded-xl border border-white/10 bg-[#070D1A] hover:bg-white/5 text-slate-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
               >
                 <span>Check Submissions & Marks</span>
                 <ClipboardList className="w-4 h-4 text-emerald-400" />
@@ -477,7 +477,7 @@ export function TeacherDashboard() {
           </div>
 
           {/* Card: Refer a fellow teacher */}
-          <div className="bg-[#0D111F] p-6 rounded-3xl border border-white/10 shadow-xl space-y-3">
+          <div className="bg-[#0B1325] p-6 rounded-3xl border border-white/10 shadow-xl space-y-3">
             <h2 className="text-sm font-heading font-extrabold text-white">
               {t('teacher.referTeacher')}
             </h2>
@@ -485,7 +485,7 @@ export function TeacherDashboard() {
               Invite certified colleagues to teach German cohorts and earn faculty referral bonuses.
             </p>
 
-            <div className="flex items-center gap-2 p-2 bg-[#11162B] rounded-2xl border border-white/10">
+            <div className="flex items-center gap-2 p-2 bg-[#070D1A] rounded-2xl border border-white/10">
               <input
                 type="text"
                 readOnly
@@ -523,7 +523,7 @@ export function TeacherDashboard() {
       {/* 4. MODAL: + New Lesson Report */}
       {reportModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-emerald-400" />
@@ -548,12 +548,12 @@ export function TeacherDashboard() {
                 <select
                   value={reportStudent}
                   onChange={(e) => setReportStudent(e.target.value)}
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                 >
-                  <option value="Jason K (A1)" className="bg-[#0D111F] text-white">Jason K (German A1)</option>
-                  <option value="Enoch (B1)" className="bg-[#0D111F] text-white">Enoch (German B1)</option>
-                  <option value="Mia G (A2)" className="bg-[#0D111F] text-white">Mia G (German A2)</option>
-                  <option value="Goethe B1 Intensive Cohort" className="bg-[#0D111F] text-white">Goethe B1 Intensive Cohort</option>
+                  <option value="Jason K (A1)" className="bg-[#0B1325] text-white">Jason K (German A1)</option>
+                  <option value="Enoch (B1)" className="bg-[#0B1325] text-white">Enoch (German B1)</option>
+                  <option value="Mia G (A2)" className="bg-[#0B1325] text-white">Mia G (German A2)</option>
+                  <option value="Goethe B1 Intensive Cohort" className="bg-[#0B1325] text-white">Goethe B1 Intensive Cohort</option>
                 </select>
               </div>
 
@@ -566,7 +566,7 @@ export function TeacherDashboard() {
                   value={reportTopic}
                   onChange={(e) => setReportTopic(e.target.value)}
                   required
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                 />
               </div>
 
@@ -577,11 +577,11 @@ export function TeacherDashboard() {
                 <select
                   value={reportRating}
                   onChange={(e) => setReportRating(e.target.value)}
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                 >
-                  <option value="5" className="bg-[#0D111F] text-white">⭐⭐⭐⭐⭐ Excellent (5/5)</option>
-                  <option value="4" className="bg-[#0D111F] text-white">⭐⭐⭐⭐ Good (4/5)</option>
-                  <option value="3" className="bg-[#0D111F] text-white">⭐⭐⭐ Satisfactory (3/5)</option>
+                  <option value="5" className="bg-[#0B1325] text-white">⭐⭐⭐⭐⭐ Excellent (5/5)</option>
+                  <option value="4" className="bg-[#0B1325] text-white">⭐⭐⭐⭐ Good (4/5)</option>
+                  <option value="3" className="bg-[#0B1325] text-white">⭐⭐⭐ Satisfactory (3/5)</option>
                 </select>
               </div>
 
@@ -593,7 +593,7 @@ export function TeacherDashboard() {
                   rows={3}
                   value={reportNotes}
                   onChange={(e) => setReportNotes(e.target.value)}
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                 />
               </div>
 
@@ -614,7 +614,7 @@ export function TeacherDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-slate-950 font-black text-xs shadow-md shadow-emerald-500/20"
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500 hover:opacity-95 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20"
                 >
                   Save & Complete Milestone
                 </button>
@@ -627,7 +627,7 @@ export function TeacherDashboard() {
       {/* 5. MODAL: Create Worksheet */}
       {worksheetModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h3 className="font-heading font-black text-lg text-white">
                 {t('teacher.createWorksheet')}
@@ -650,12 +650,12 @@ export function TeacherDashboard() {
                   <select
                     value={worksheetLevel}
                     onChange={(e) => setWorksheetLevel(e.target.value)}
-                    className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                    className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                   >
-                    <option value="A1" className="bg-[#0D111F] text-white">A1 Beginner</option>
-                    <option value="A2" className="bg-[#0D111F] text-white">A2 Elementary</option>
-                    <option value="B1" className="bg-[#0D111F] text-white">B1 Intermediate</option>
-                    <option value="B2" className="bg-[#0D111F] text-white">B2 Advanced</option>
+                    <option value="A1" className="bg-[#0B1325] text-white">A1 Beginner</option>
+                    <option value="A2" className="bg-[#0B1325] text-white">A2 Elementary</option>
+                    <option value="B1" className="bg-[#0B1325] text-white">B1 Intermediate</option>
+                    <option value="B2" className="bg-[#0B1325] text-white">B2 Advanced</option>
                   </select>
                 </div>
                 <div>
@@ -666,7 +666,7 @@ export function TeacherDashboard() {
                     type="text"
                     value={worksheetTopic}
                     onChange={(e) => setWorksheetTopic(e.target.value)}
-                    className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                    className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                   />
                 </div>
               </div>
@@ -679,7 +679,7 @@ export function TeacherDashboard() {
                   rows={4}
                   value={worksheetExercises}
                   onChange={(e) => setWorksheetExercises(e.target.value)}
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl font-mono text-[11px]"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl font-mono text-[11px]"
                 />
               </div>
 
@@ -700,7 +700,7 @@ export function TeacherDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-slate-950 font-black text-xs shadow-md shadow-emerald-500/20"
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500 hover:opacity-95 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20"
                 >
                   Generate & Download
                 </button>
@@ -713,7 +713,7 @@ export function TeacherDashboard() {
       {/* 6. MODAL: New Lesson Plan */}
       {lessonPlanModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h3 className="font-heading font-black text-lg text-white">
                 {t('teacher.newLessonPlan')}
@@ -736,7 +736,7 @@ export function TeacherDashboard() {
                   type="text"
                   value={planTitle}
                   onChange={(e) => setPlanTitle(e.target.value)}
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                 />
               </div>
 
@@ -748,7 +748,7 @@ export function TeacherDashboard() {
                   rows={3}
                   value={planGoal}
                   onChange={(e) => setPlanGoal(e.target.value)}
-                  className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                 />
               </div>
 
@@ -769,7 +769,7 @@ export function TeacherDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-slate-950 font-black text-xs shadow-md shadow-emerald-500/20"
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500 hover:opacity-95 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20"
                 >
                   Publish Lesson Plan
                 </button>
@@ -782,7 +782,7 @@ export function TeacherDashboard() {
       {/* 7. MODAL: Mark Attendance & Score */}
       {attendanceModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0D111F] text-slate-100 rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#0B1325] text-slate-100 rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-white/10 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <UserCheck className="w-5 h-5 text-emerald-400" />
@@ -808,7 +808,7 @@ export function TeacherDashboard() {
                   type="text"
                   value={attendanceStudent}
                   readOnly
-                  className="w-full bg-[#11162B] border border-white/10 text-xs font-bold text-slate-200 p-2.5 rounded-2xl"
+                  className="w-full bg-[#070D1A] border border-white/10 text-xs font-bold text-slate-200 p-2.5 rounded-2xl"
                 />
               </div>
 
@@ -820,11 +820,11 @@ export function TeacherDashboard() {
                   <select
                     value={attendanceStatus}
                     onChange={(e) => setAttendanceStatus(e.target.value)}
-                    className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                    className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                   >
-                    <option value="PRESENT" className="bg-[#0D111F] text-white">Present (Anwesend)</option>
-                    <option value="ABSENT" className="bg-[#0D111F] text-white">Absent (Abwesend)</option>
-                    <option value="EXCUSED" className="bg-[#0D111F] text-white">Excused</option>
+                    <option value="PRESENT" className="bg-[#0B1325] text-white">Present (Anwesend)</option>
+                    <option value="ABSENT" className="bg-[#0B1325] text-white">Absent (Abwesend)</option>
+                    <option value="EXCUSED" className="bg-[#0B1325] text-white">Excused</option>
                   </select>
                 </div>
 
@@ -836,7 +836,7 @@ export function TeacherDashboard() {
                     type="number"
                     value={attendanceMarks}
                     onChange={(e) => setAttendanceMarks(e.target.value)}
-                    className="w-full bg-[#0F1424] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
+                    className="w-full bg-[#070D1A] border border-white/10 text-xs text-slate-100 p-2.5 rounded-2xl"
                   />
                 </div>
               </div>
@@ -858,7 +858,7 @@ export function TeacherDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 text-slate-950 font-black text-xs shadow-md shadow-emerald-500/20"
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500 hover:opacity-95 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20"
                 >
                   Confirm & Record
                 </button>

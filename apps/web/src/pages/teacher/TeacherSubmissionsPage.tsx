@@ -125,12 +125,12 @@ export function TeacherSubmissionsPage() {
         /* WRITING SUBMISSIONS */
         <div className="space-y-4">
           {writingSubmissions.length === 0 ? (
-            <div className="p-12 text-center bg-[#0D111F] rounded-3xl border border-white/10">
+            <div className="p-12 text-center bg-[#0B1325] rounded-3xl border border-white/10">
               <p className="text-xs text-slate-400">No writing submissions in queue.</p>
             </div>
           ) : (
             writingSubmissions.map(sub => (
-              <Card key={sub.id} className="p-6 border-white/10 bg-[#0D111F] space-y-4 rounded-3xl shadow-xl">
+              <Card key={sub.id} className="p-6 border-white/10 bg-[#0B1325] space-y-4 rounded-3xl shadow-xl">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-bold text-white">{sub.assignment?.title || 'Writing Assignment'}</h3>
@@ -143,7 +143,7 @@ export function TeacherSubmissionsPage() {
                   </Badge>
                 </div>
 
-                <div className="p-4 bg-[#0F1424] rounded-2xl border border-white/10 text-xs text-slate-200 whitespace-pre-line leading-relaxed font-sans">
+                <div className="p-4 bg-[#070D1A] rounded-2xl border border-white/10 text-xs text-slate-200 whitespace-pre-line leading-relaxed font-sans">
                   {sub.content}
                 </div>
 
@@ -167,12 +167,12 @@ export function TeacherSubmissionsPage() {
         /* SPEAKING ATTEMPTS */
         <div className="space-y-4">
           {speakingAttempts.length === 0 ? (
-            <div className="p-12 text-center bg-[#0D111F] rounded-3xl border border-white/10">
+            <div className="p-12 text-center bg-[#0B1325] rounded-3xl border border-white/10">
               <p className="text-xs text-slate-400">No speaking attempts in queue.</p>
             </div>
           ) : (
             speakingAttempts.map(att => (
-              <Card key={att.id} className="p-6 border-white/10 bg-[#0D111F] space-y-4 rounded-3xl shadow-xl">
+              <Card key={att.id} className="p-6 border-white/10 bg-[#0B1325] space-y-4 rounded-3xl shadow-xl">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-bold text-white">{att.prompt?.title || 'Speaking Prompt'}</h3>
@@ -187,14 +187,14 @@ export function TeacherSubmissionsPage() {
 
                 {/* Audio player */}
                 {att.audioUrl && (
-                  <div className="p-3 bg-[#0F1424] rounded-2xl border border-white/10 flex items-center gap-3">
+                  <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10 flex items-center gap-3">
                     <Volume2 className="w-5 h-5 text-indigo-400 shrink-0" />
                     <audio src={att.audioUrl} controls className="w-full h-8" />
                   </div>
                 )}
 
                 {att.transcriptText && (
-                  <div className="p-3 bg-[#0F1424] rounded-2xl border border-white/10 text-xs text-slate-300">
+                  <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10 text-xs text-slate-300">
                     <span className="font-bold text-white block mb-0.5">Student Note / Transcript:</span>
                     <p>{att.transcriptText}</p>
                   </div>
@@ -228,14 +228,14 @@ export function TeacherSubmissionsPage() {
       >
         <div className="space-y-4 pt-2">
           {selectedItem?.audioUrl && (
-            <div className="p-3 bg-[#0F1424] rounded-2xl border border-white/10">
+            <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10">
               <p className="text-xs font-bold text-white mb-1.5">Audio Recording Preview:</p>
               <audio src={selectedItem.audioUrl} controls className="w-full h-8" />
             </div>
           )}
 
           {selectedItem?.content && (
-            <div className="p-3 bg-[#0F1424] rounded-2xl border border-white/10 text-xs whitespace-pre-line max-h-48 overflow-y-auto text-slate-200">
+            <div className="p-3 bg-[#070D1A] rounded-2xl border border-white/10 text-xs whitespace-pre-line max-h-48 overflow-y-auto text-slate-200">
               <p className="font-bold text-white mb-1">Student Essay:</p>
               <p>{selectedItem.content}</p>
             </div>
@@ -260,7 +260,7 @@ export function TeacherSubmissionsPage() {
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="Highlight strengths, point out specific grammar/vocabulary improvements, and encourage the student..."
-              className="w-full rounded-2xl border border-white/10 bg-[#0F1424] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+              className="w-full rounded-2xl border border-white/10 bg-[#070D1A] p-3 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
             />
           </div>
 

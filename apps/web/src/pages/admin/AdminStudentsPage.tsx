@@ -239,11 +239,11 @@ export function AdminStudentsPage() {
             placeholder="Search by name, email, or phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-[#11162B] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-[#070D1A] text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
           />
         </form>
 
-        <div className="flex items-center gap-1.5 p-1 bg-[#11162B] rounded-2xl border border-white/10 text-xs font-bold self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 p-1 bg-[#070D1A] rounded-2xl border border-white/10 text-xs font-bold self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setStatusFilter('all')}
@@ -280,10 +280,10 @@ export function AdminStudentsPage() {
       {loading ? (
         <Skeleton className="h-64 w-full rounded-3xl" />
       ) : (
-        <div className="bg-[#0D111F] rounded-3xl border border-white/10 overflow-hidden shadow-xl">
+        <div className="bg-[#0B1325] rounded-3xl border border-white/10 overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs min-w-[650px]">
-              <thead className="bg-[#11162B] text-slate-300 uppercase font-bold tracking-wider border-b border-white/10">
+              <thead className="bg-[#070D1A] text-slate-300 uppercase font-bold tracking-wider border-b border-white/10">
                 <tr>
                   <th className="p-4">Student</th>
                   <th className="p-4">Contact Info</th>
@@ -305,7 +305,7 @@ export function AdminStudentsPage() {
                   <tr key={s.id} className={`hover:bg-white/5 transition-colors ${!s.isActive ? 'bg-rose-500/5' : ''}`}>
                     <td className="p-4 font-bold text-white flex items-center gap-2">
                       <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 ${
-                        s.isActive ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                        s.isActive ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                       }`}>
                         {s.firstName?.[0]}
                       </div>
@@ -478,12 +478,12 @@ export function AdminStudentsPage() {
               <select
                 value={newLevel}
                 onChange={(e) => setNewLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={GermanLevel.A1} className="bg-[#0D111F] text-white">A1 — Starter</option>
-                <option value={GermanLevel.A2} className="bg-[#0D111F] text-white">A2 — Elementary</option>
-                <option value={GermanLevel.B1} className="bg-[#0D111F] text-white">B1 — Intermediate</option>
-                <option value={GermanLevel.B2} className="bg-[#0D111F] text-white">B2 — Upper Intermediate</option>
+                <option value={GermanLevel.A1} className="bg-[#0B1325] text-white">A1 — Starter</option>
+                <option value={GermanLevel.A2} className="bg-[#0B1325] text-white">A2 — Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0B1325] text-white">B1 — Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0B1325] text-white">B2 — Upper Intermediate</option>
               </select>
             </div>
           </div>
@@ -559,12 +559,12 @@ export function AdminStudentsPage() {
               <select
                 value={editLevel}
                 onChange={(e) => setEditLevel(e.target.value as any)}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value={GermanLevel.A1} className="bg-[#0D111F] text-white">A1 — Starter</option>
-                <option value={GermanLevel.A2} className="bg-[#0D111F] text-white">A2 — Elementary</option>
-                <option value={GermanLevel.B1} className="bg-[#0D111F] text-white">B1 — Intermediate</option>
-                <option value={GermanLevel.B2} className="bg-[#0D111F] text-white">B2 — Upper Intermediate</option>
+                <option value={GermanLevel.A1} className="bg-[#0B1325] text-white">A1 — Starter</option>
+                <option value={GermanLevel.A2} className="bg-[#0B1325] text-white">A2 — Elementary</option>
+                <option value={GermanLevel.B1} className="bg-[#0B1325] text-white">B1 — Intermediate</option>
+                <option value={GermanLevel.B2} className="bg-[#0B1325] text-white">B2 — Upper Intermediate</option>
               </select>
             </div>
 
@@ -575,10 +575,10 @@ export function AdminStudentsPage() {
               <select
                 value={editActive ? 'active' : 'suspended'}
                 onChange={(e) => setEditActive(e.target.value === 'active')}
-                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#0F1424] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
+                className="flex h-11 w-full rounded-2xl border border-white/10 bg-[#070D1A] px-3 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-inner"
               >
-                <option value="active" className="bg-[#0D111F] text-white">Active (Access Allowed)</option>
-                <option value="suspended" className="bg-[#0D111F] text-white">Suspended (Access Blocked)</option>
+                <option value="active" className="bg-[#0B1325] text-white">Active (Access Allowed)</option>
+                <option value="suspended" className="bg-[#0B1325] text-white">Suspended (Access Blocked)</option>
               </select>
             </div>
           </div>

@@ -83,14 +83,14 @@ export function StudentDashboard() {
   if (loading) {
     return (
       <div className="space-y-8 animate-pulse text-white">
-        <Skeleton className="h-12 w-72 bg-[#11172B] rounded-2xl border border-[#1F2742]" />
+        <Skeleton className="h-12 w-72 bg-[#0B1325] rounded-2xl border border-[rgba(255,255,255,0.08)]" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-36 bg-[#11172B] rounded-3xl border border-[#1F2742]" />
+            <Skeleton key={i} className="h-36 bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)]" />
           ))}
         </div>
-        <Skeleton className="h-64 bg-[#11172B] rounded-3xl border border-[#1F2742]" />
-        <Skeleton className="h-44 bg-[#11172B] rounded-3xl border border-[#1F2742]" />
+        <Skeleton className="h-64 bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)]" />
+        <Skeleton className="h-44 bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)]" />
       </div>
     );
   }
@@ -168,7 +168,7 @@ export function StudentDashboard() {
       {/* 2. 4 COLORFUL METRIC CARDS (Exact match to Image 3 colors, spacing & top-aligned vertical layout) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Card 1: 25 Words Learned (Sky Blue #2891ED) */}
-        <div className="bg-[#11172B] p-6 sm:p-7 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 hover:border-[#2891ED]/50 transition-all duration-200 group flex flex-col justify-between">
+        <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 hover:border-[#2891ED]/50 transition-all duration-200 group flex flex-col justify-between">
           <div className="w-12 h-12 rounded-2xl bg-[#2891ED]/15 text-[#2891ED] border border-[#2891ED]/30 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
             <BookOpen className="w-6 h-6 stroke-[2.2]" />
           </div>
@@ -188,7 +188,7 @@ export function StudentDashboard() {
         </div>
 
         {/* Card 2: 7 Day Streak (Vibrant Flame Orange #F87B08) */}
-        <div className="bg-[#11172B] p-6 sm:p-7 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 hover:border-[#F87B08]/50 transition-all duration-200 group flex flex-col justify-between">
+        <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 hover:border-[#F87B08]/50 transition-all duration-200 group flex flex-col justify-between">
           <div className="w-12 h-12 rounded-2xl bg-[#F87B08]/15 text-[#F87B08] border border-[#F87B08]/30 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
             <Flame className="w-6 h-6 fill-[#F87B08] stroke-[1.5]" />
           </div>
@@ -208,7 +208,7 @@ export function StudentDashboard() {
         </div>
 
         {/* Card 3: 180m Study Time (Purple/Violet #C250D6) */}
-        <div className="bg-[#11172B] p-6 sm:p-7 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 hover:border-[#C250D6]/50 transition-all duration-200 group flex flex-col justify-between">
+        <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 hover:border-[#C250D6]/50 transition-all duration-200 group flex flex-col justify-between">
           <div className="w-12 h-12 rounded-2xl bg-[#C250D6]/15 text-[#C250D6] border border-[#C250D6]/30 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
             <Clock className="w-6 h-6 stroke-[2.2]" />
           </div>
@@ -228,7 +228,7 @@ export function StudentDashboard() {
         </div>
 
         {/* Card 4: 12 Exercises Done (Emerald Green #1BC363) */}
-        <div className="bg-[#11172B] p-6 sm:p-7 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 hover:border-[#1BC363]/50 transition-all duration-200 group flex flex-col justify-between">
+        <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 hover:border-[#1BC363]/50 transition-all duration-200 group flex flex-col justify-between">
           <div className="w-12 h-12 rounded-2xl bg-[#1BC363]/15 text-[#1BC363] border border-[#1BC363]/30 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
             <CheckCircle2 className="w-6 h-6 stroke-[2.2]" />
           </div>
@@ -249,7 +249,7 @@ export function StudentDashboard() {
       </div>
 
       {/* 3. HERO CURRENT LEVEL A1 CARD (Full Width Banner matching Image 3) */}
-      <div className="bg-[#11172B] p-6 sm:p-8 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 space-y-6">
+      <div className="bg-[#0B1325] p-6 sm:p-8 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
             {/* Emerald Circular Badge */}
@@ -293,14 +293,14 @@ export function StudentDashboard() {
         </div>
 
         {/* 20% Glowing Emerald Progress Bar */}
-        <div className="space-y-2 pt-2 border-t border-[#1F2742]">
+        <div className="space-y-2 pt-2 border-t border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between text-xs sm:text-sm font-bold">
             <span className="text-slate-400">
               {language === 'de' ? 'Fortschritt' : 'Course Progress'}: 1 / 5 {language === 'de' ? 'Einheiten' : 'Units'}
             </span>
             <span className="text-emerald-400 font-black text-base">20%</span>
           </div>
-          <div className="w-full bg-[#0B0F21] h-3.5 rounded-full overflow-hidden p-0.5 border border-[#1F2742]">
+          <div className="w-full bg-[#0B0F21] h-3.5 rounded-full overflow-hidden p-0.5 border border-[rgba(255,255,255,0.08)]">
             <div
               className="bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 h-full rounded-full shadow-[0_0_16px_rgba(27,195,99,0.5)] transition-all duration-700"
               style={{ width: '20%' }}
@@ -310,7 +310,7 @@ export function StudentDashboard() {
       </div>
 
       {/* 4. 7 DAY STREAK BANNER (Exact match to Image 3) */}
-      <div className="bg-[#11172B] p-6 sm:p-7 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 space-y-5">
+      <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
           <div className="flex items-start sm:items-center gap-4">
             <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 shrink-0">
@@ -331,7 +331,7 @@ export function StudentDashboard() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 self-start lg:self-auto px-4 py-2 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-xs">
+          <div className="flex items-center gap-3 self-start lg:self-auto px-4 py-2 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-xs">
             <span className="text-slate-400">Next goal: <strong className="text-white">14 Day Streak</strong></span>
             <span className="font-extrabold text-[#F87B08] bg-[#F87B08]/10 px-2 py-0.5 rounded-md border border-[#F87B08]/30">
               +50 XP
@@ -347,7 +347,7 @@ export function StudentDashboard() {
               className={`py-2.5 sm:py-3 px-1 rounded-2xl text-center flex flex-col items-center justify-center gap-1.5 transition-all ${
                 item.today
                   ? 'bg-orange-500/20 border-2 border-orange-500/60 shadow-lg shadow-orange-500/20 text-orange-300'
-                  : 'bg-[#0B0F21] border border-[#1F2742] text-slate-400 hover:border-slate-600'
+                  : 'bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-slate-400 hover:border-slate-600'
               }`}
             >
               <span className="text-[10px] sm:text-xs font-bold tracking-tight">{item.day}</span>
@@ -360,7 +360,7 @@ export function StudentDashboard() {
       </div>
 
       {/* 5. QUICK TIPS FOR LEARNING GERMAN (3-Column Card Layout) */}
-      <div className="bg-[#11172B] p-6 sm:p-7 rounded-3xl border border-[#1F2742] shadow-xl shadow-black/40 space-y-4">
+      <div className="bg-[#0B1325] p-6 sm:p-7 rounded-3xl border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 space-y-4">
         <div className="flex items-center gap-2.5 text-amber-400">
           <div className="w-8 h-8 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
             <Lightbulb className="w-4 h-4 text-amber-400" />
@@ -371,7 +371,7 @@ export function StudentDashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
-          <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[#1F2742] flex items-start gap-3">
+          <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] flex items-start gap-3">
             <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-black flex items-center justify-center shrink-0 border border-emerald-500/30">
               1
             </span>
@@ -381,7 +381,7 @@ export function StudentDashboard() {
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[#1F2742] flex items-start gap-3">
+          <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] flex items-start gap-3">
             <span className="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 text-xs font-black flex items-center justify-center shrink-0 border border-blue-500/30">
               2
             </span>
@@ -391,7 +391,7 @@ export function StudentDashboard() {
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[#1F2742] flex items-start gap-3">
+          <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] flex items-start gap-3">
             <span className="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 text-xs font-black flex items-center justify-center shrink-0 border border-purple-500/30">
               3
             </span>
@@ -429,8 +429,8 @@ export function StudentDashboard() {
               key={m.level}
               className={`p-6 sm:p-7 rounded-3xl border transition-all ${
                 m.active
-                  ? 'bg-[#11172B] border-emerald-500/40 shadow-xl shadow-black/50 ring-1 ring-emerald-500/20'
-                  : 'bg-[#11172B]/70 border-[#1F2742] hover:border-slate-600'
+                  ? 'bg-[#0B1325] border-emerald-500/40 shadow-xl shadow-black/50 ring-1 ring-emerald-500/20'
+                  : 'bg-[#0B1325]/70 border-[rgba(255,255,255,0.08)] hover:border-slate-600'
               }`}
             >
               <div className="flex items-center justify-between">
@@ -460,7 +460,7 @@ export function StudentDashboard() {
               </p>
 
               {m.units && (
-                <div className="space-y-2 mt-4 pt-4 border-t border-[#1F2742]">
+                <div className="space-y-2 mt-4 pt-4 border-t border-[rgba(255,255,255,0.08)]">
                   {m.units.map((u) => (
                     <div key={u.id} className="flex items-center justify-between text-xs py-1.5 px-2 rounded-xl hover:bg-[#0B0F21]/60 transition-colors">
                       <div className="flex items-center gap-2.5">
@@ -488,7 +488,7 @@ export function StudentDashboard() {
                 </div>
               )}
 
-              <div className="mt-5 pt-4 border-t border-[#1F2742] flex items-center justify-between">
+              <div className="mt-5 pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between">
                 <Link
                   to={m.active ? '/lessons/lesson-101' : '/student/courses'}
                   className={`py-2 px-4 rounded-xl text-xs font-bold transition-all ${
@@ -523,7 +523,7 @@ export function StudentDashboard() {
           {/* Practice Tool 1: SRS Vocabulary */}
           <Link
             to="/student/vocabulary"
-            className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] hover:border-[#2891ED]/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40"
+            className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] hover:border-[#2891ED]/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40"
           >
             <div className="w-12 h-12 rounded-2xl bg-[#2891ED]/15 text-[#2891ED] flex items-center justify-center border border-[#2891ED]/30 group-hover:scale-110 transition-transform shadow-inner">
               <Sparkles className="w-6 h-6" />
@@ -544,7 +544,7 @@ export function StudentDashboard() {
           {/* Practice Tool 2: Audio Speaking Lab */}
           <Link
             to="/student/speaking"
-            className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] hover:border-emerald-500/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40"
+            className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform shadow-inner">
               <Mic className="w-6 h-6" />
@@ -565,7 +565,7 @@ export function StudentDashboard() {
           {/* Practice Tool 3: Grammar Drills */}
           <Link
             to="/student/materials"
-            className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] hover:border-[#C250D6]/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40"
+            className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] hover:border-[#C250D6]/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40"
           >
             <div className="w-12 h-12 rounded-2xl bg-[#C250D6]/15 text-[#C250D6] flex items-center justify-center border border-[#C250D6]/30 group-hover:scale-110 transition-transform shadow-inner">
               <FileText className="w-6 h-6" />
@@ -586,7 +586,7 @@ export function StudentDashboard() {
           {/* Practice Tool 4: Goethe Certificates */}
           <div
             onClick={() => handleOpenCert()}
-            className="p-6 rounded-3xl bg-[#11172B] border border-[#1F2742] hover:border-amber-400/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40 cursor-pointer"
+            className="p-6 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] hover:border-amber-400/50 transition-all duration-200 group flex flex-col justify-between space-y-4 shadow-xl shadow-black/40 cursor-pointer"
           >
             <div className="w-12 h-12 rounded-2xl bg-amber-400/15 text-amber-400 flex items-center justify-center border border-amber-400/30 group-hover:scale-110 transition-transform shadow-inner">
               <Award className="w-6 h-6" />

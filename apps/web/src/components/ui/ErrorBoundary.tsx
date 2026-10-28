@@ -36,8 +36,8 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#0A0D17] flex items-center justify-center p-6 text-slate-100">
-          <div className="max-w-md w-full bg-[#0D111F] rounded-3xl p-8 shadow-2xl border border-white/10 text-center space-y-4">
+        <div className="min-h-screen bg-[#030712] flex items-center justify-center p-6 text-slate-100">
+          <div className="max-w-md w-full bg-[#0B1325] rounded-3xl p-8 shadow-2xl border border-white/10 text-center space-y-4">
             <div className="w-14 h-14 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-7 h-7" />
             </div>
@@ -48,7 +48,7 @@ export class ErrorBoundary extends Component<Props, State> {
               An unexpected error occurred while rendering this page. You can reload the application or return to the homepage.
             </p>
             {this.state.error?.message && (
-              <div className="p-3 bg-[#0F1424] border border-white/10 rounded-2xl text-[11px] font-mono text-rose-300 text-left overflow-x-auto max-h-24">
+              <div className="p-3 bg-[#070D1A] border border-white/10 rounded-2xl text-[11px] font-mono text-rose-300 text-left overflow-x-auto max-h-24">
                 {this.state.error.message}
               </div>
             )}

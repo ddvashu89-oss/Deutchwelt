@@ -79,7 +79,7 @@ export function CourseDetailPage() {
         <h2 className="text-2xl font-heading font-black text-white">Kurs nicht gefunden</h2>
         <p className="text-sm text-slate-400">Der angeforderte Deutschkurs existiert nicht oder wurde verschoben.</p>
         <Link to="/courses">
-          <button className="px-6 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-xs shadow-md">
+          <button className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs shadow-md">
             Alle Kurse ansehen
           </button>
         </Link>
@@ -101,14 +101,14 @@ export function CourseDetailPage() {
       </div>
 
       {/* Hero Card */}
-      <div className="bg-[#11162B] rounded-4xl p-8 sm:p-10 border border-white/[0.08] shadow-2xl space-y-6">
+      <div className="bg-[#0B1325] rounded-4xl p-8 sm:p-10 border border-white/[0.08] shadow-2xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-black tracking-wider shadow-md shadow-indigo-500/20">
+            <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black tracking-wider shadow-md shadow-blue-500/20">
               Niveau {course.level}
             </span>
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
-              <Clock className="w-4 h-4 text-indigo-400" /> ca. {course.estimatedHours} Stunden
+              <Clock className="w-4 h-4 text-blue-400" /> ca. {course.estimatedHours} Stunden
             </span>
           </div>
           {isEnrolled && (
@@ -129,7 +129,7 @@ export function CourseDetailPage() {
 
         {/* Prerequisites */}
         {course.prerequisites && course.prerequisites.length > 0 && (
-          <div className="p-4 rounded-2xl bg-[#0D1120] border border-amber-500/30 text-amber-300 text-xs flex items-center gap-3">
+          <div className="p-4 rounded-2xl bg-[#070D1A] border border-amber-500/30 text-amber-300 text-xs flex items-center gap-3">
             <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0" />
             <div>
               <span className="font-bold">Empfohlene Vorkenntnisse: </span>
@@ -139,14 +139,14 @@ export function CourseDetailPage() {
         )}
 
         {/* Payment Sandbox Alert */}
-        <div className="p-4 rounded-2xl bg-[#0D1120] border border-indigo-500/30 text-indigo-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-4 rounded-2xl bg-[#070D1A] border border-blue-500/30 text-blue-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-indigo-400 shrink-0" />
+            <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
             <span>
               <strong className="text-white">Testmodus aktiv:</strong> Kursgebühren (€299) werden zu Testzwecken automatisch erlassen.
             </span>
           </div>
-          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 shrink-0 self-start sm:self-auto border border-indigo-500/30">
+          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-blue-300 shrink-0 self-start sm:self-auto border border-blue-500/30">
             Sandbox Aktiv
           </span>
         </div>
@@ -156,7 +156,7 @@ export function CourseDetailPage() {
           {isEnrolled ? (
             firstLesson ? (
               <Link to={`/lessons/${firstLesson.id}`}>
-                <button className="px-8 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-indigo-500/25 transition-all">
+                <button className="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:opacity-95 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-all">
                   <PlayCircle className="w-4 h-4 text-white" />
                   <span>Kurs starten / Lektion fortsetzen</span>
                 </button>
@@ -166,7 +166,7 @@ export function CourseDetailPage() {
             <button
               onClick={handleEnroll}
               disabled={enrolling}
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-95 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-indigo-500/25 transition-all"
+              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:opacity-95 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-all"
             >
               <span>{enrolling ? 'Wird freigeschaltet...' : 'Jetzt kostenlos einschreiben'}</span>
               <ArrowRight className="w-4 h-4 text-white" />
@@ -184,10 +184,10 @@ export function CourseDetailPage() {
 
         <div className="space-y-4">
           {course.units?.map((unit: any, idx: number) => (
-            <div key={unit.id} className="bg-[#11162B] rounded-3xl p-6 sm:p-7 border border-white/[0.08] shadow-xl space-y-4">
+            <div key={unit.id} className="bg-[#0B1325] rounded-3xl p-6 sm:p-7 border border-white/[0.08] shadow-xl space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
                     Einheit {idx + 1}
                   </span>
                   <h3 className="text-lg font-heading font-bold text-white mt-0.5">
@@ -210,10 +210,10 @@ export function CourseDetailPage() {
                 {unit.lessons?.map((lesson: any, lIdx: number) => (
                   <div
                     key={lesson.id}
-                    className="p-3.5 rounded-2xl bg-[#0D1120] border border-white/[0.06] flex items-center justify-between gap-3 hover:bg-[#141A32] transition-colors"
+                    className="p-3.5 rounded-2xl bg-[#070D1A] border border-white/[0.06] flex items-center justify-between gap-3 hover:bg-[#0E172E] transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-xs flex items-center justify-center shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-indigo-500/20 text-blue-300 font-bold text-xs flex items-center justify-center shrink-0">
                         {lIdx + 1}
                       </div>
                       <div>

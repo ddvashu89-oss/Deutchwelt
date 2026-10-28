@@ -146,13 +146,13 @@ export function VocabularyTrainerPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-[#11172B] p-1.5 rounded-2xl self-start sm:self-auto border border-[#1F2742] shadow-md">
+        <div className="flex items-center gap-1.5 bg-[#0B1325] p-1.5 rounded-2xl self-start sm:self-auto border border-[rgba(255,255,255,0.08)] shadow-md">
           <button
             onClick={() => setMode('flashcards')}
             className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all ${
               mode === 'flashcards'
                 ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-[#161E36]'
+                : 'text-slate-400 hover:text-white hover:bg-[#101B33]'
             }`}
           >
             Karteikarten (Flashcards)
@@ -162,7 +162,7 @@ export function VocabularyTrainerPage() {
             className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all ${
               mode === 'bank'
                 ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-[#161E36]'
+                : 'text-slate-400 hover:text-white hover:bg-[#101B33]'
             }`}
           >
             Wortschatz-Tabelle
@@ -171,14 +171,14 @@ export function VocabularyTrainerPage() {
       </div>
 
       {/* 2. LEITNER BOX PROGRESSION VISUALIZER */}
-      <div className="grid grid-cols-5 gap-2 sm:gap-4 p-4 sm:p-5 rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-xl shadow-black/40 text-center">
+      <div className="grid grid-cols-5 gap-2 sm:gap-4 p-4 sm:p-5 rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-xl shadow-black/40 text-center">
         {[1, 2, 3, 4, 5].map(b => (
           <div
             key={b}
             className={`p-2.5 sm:p-4 rounded-2xl border min-w-0 transition-all ${
               b === 5
                 ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-md shadow-emerald-500/10'
-                : 'bg-[#0B0F21] border-[#1F2742] text-slate-300'
+                : 'bg-[#0B0F21] border-[rgba(255,255,255,0.08)] text-slate-300'
             }`}
           >
             <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 block truncate">
@@ -203,7 +203,7 @@ export function VocabularyTrainerPage() {
             placeholder="Search German or English / Hindi terms..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[#1F2742] bg-[#11172B] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
           />
         </form>
 
@@ -211,7 +211,7 @@ export function VocabularyTrainerPage() {
           <select
             value={levelFilter}
             onChange={(e) => setLevelFilter(e.target.value)}
-            className="h-10 rounded-2xl border border-[#1F2742] bg-[#11172B] px-3.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"
+            className="h-10 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] px-3.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"
           >
             <option value="">All Levels</option>
             <option value="A1">Level A1</option>
@@ -223,7 +223,7 @@ export function VocabularyTrainerPage() {
           <select
             value={articleFilter}
             onChange={(e) => setArticleFilter(e.target.value)}
-            className="h-10 rounded-2xl border border-[#1F2742] bg-[#11172B] px-3.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"
+            className="h-10 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] px-3.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"
           >
             <option value="">All Articles</option>
             <option value="DER">der (Masculine)</option>
@@ -243,11 +243,11 @@ export function VocabularyTrainerPage() {
 
       {/* 4. MAIN INTERACTIVE CONTENT */}
       {loading ? (
-        <div className="p-12 text-center bg-[#11172B] rounded-3xl border border-[#1F2742]">
+        <div className="p-12 text-center bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)]">
           <Skeleton className="h-48 max-w-md mx-auto rounded-2xl bg-[#0B0F21]" />
         </div>
       ) : words.length === 0 ? (
-        <div className="p-16 text-center bg-[#11172B] rounded-3xl border border-[#1F2742] space-y-2">
+        <div className="p-16 text-center bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)] space-y-2">
           <Layers className="w-12 h-12 text-slate-500 mx-auto" />
           <h3 className="text-lg font-bold text-white">No vocabulary words found</h3>
           <p className="text-xs text-slate-400">Try clearing your search terms or filters above.</p>
@@ -263,7 +263,7 @@ export function VocabularyTrainerPage() {
           {/* 3D Flip Card */}
           <div
             onClick={() => setIsFlipped(!isFlipped)}
-            className="cursor-pointer min-h-[300px] sm:min-h-[340px] rounded-3xl bg-[#11172B] border border-[#1F2742] shadow-2xl shadow-black/60 hover:border-emerald-500/40 p-8 sm:p-10 flex flex-col justify-between transition-all select-none relative overflow-hidden group"
+            className="cursor-pointer min-h-[300px] sm:min-h-[340px] rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)] shadow-2xl shadow-black/60 hover:border-emerald-500/40 p-8 sm:p-10 flex flex-col justify-between transition-all select-none relative overflow-hidden group"
           >
             {!isFlipped ? (
               /* Front of Card: German Term & Gender */
@@ -274,7 +274,7 @@ export function VocabularyTrainerPage() {
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); speakGerman(currentWord.german); }}
-                      className="p-2.5 rounded-xl bg-[#0B0F21] hover:bg-[#161E36] text-slate-300 hover:text-emerald-400 transition-colors border border-[#1F2742]"
+                      className="p-2.5 rounded-xl bg-[#0B0F21] hover:bg-[#101B33] text-slate-300 hover:text-emerald-400 transition-colors border border-[rgba(255,255,255,0.08)]"
                       title="Audio Pronunciation"
                     >
                       <Volume2 className="w-5 h-5" />
@@ -295,8 +295,8 @@ export function VocabularyTrainerPage() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-slate-400 pt-4 border-t border-[#1F2742]">
-                  <span className="bg-[#0B0F21] border border-[#1F2742] px-3 py-1 rounded-lg font-semibold text-slate-300">{currentWord.category}</span>
+                <div className="flex items-center justify-between text-xs text-slate-400 pt-4 border-t border-[rgba(255,255,255,0.08)]">
+                  <span className="bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] px-3 py-1 rounded-lg font-semibold text-slate-300">{currentWord.category}</span>
                   <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">{currentWord.level}</span>
                 </div>
               </>
@@ -316,13 +316,13 @@ export function VocabularyTrainerPage() {
                 </div>
 
                 {/* Example sentence */}
-                <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-xs space-y-1">
+                <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-xs space-y-1">
                   <p className="font-bold text-emerald-400">Beispiel (In Context):</p>
                   <p className="italic text-slate-200 font-medium leading-relaxed">"{currentWord.exampleSentenceDe}"</p>
                   <p className="text-slate-400">{currentWord.exampleSentenceEn}</p>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-[#1F2742]">
+                <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-[rgba(255,255,255,0.08)]">
                   <span>Part of Speech: <strong className="text-slate-300">{currentWord.partOfSpeech}</strong></span>
                   <span className="text-slate-400 italic">Rate your recall below</span>
                 </div>
@@ -370,10 +370,10 @@ export function VocabularyTrainerPage() {
         </div>
       ) : (
         /* WORD BANK TABLE MODE */
-        <div className="bg-[#11172B] rounded-3xl border border-[#1F2742] overflow-hidden shadow-xl shadow-black/40">
+        <div className="bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)] overflow-hidden shadow-xl shadow-black/40">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-[#0B0F21] text-slate-400 text-xs uppercase font-bold tracking-wider border-b border-[#1F2742]">
+              <thead className="bg-[#0B0F21] text-slate-400 text-xs uppercase font-bold tracking-wider border-b border-[rgba(255,255,255,0.08)]">
                 <tr>
                   <th className="p-4">Article</th>
                   <th className="p-4">German Term</th>
@@ -384,9 +384,9 @@ export function VocabularyTrainerPage() {
                   <th className="p-4 text-right">Pronounce</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1F2742] text-slate-200">
+              <tbody className="divide-y divide-[rgba(255,255,255,0.08)] text-slate-200">
                 {words.map((w) => (
-                  <tr key={w.id} className="hover:bg-[#161E36]/60 transition-colors">
+                  <tr key={w.id} className="hover:bg-[#101B33]/60 transition-colors">
                     <td className="p-4">
                       <ArticleBadge article={w.article} size="sm" />
                     </td>

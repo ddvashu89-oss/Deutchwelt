@@ -98,9 +98,9 @@ export function AssignmentsPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="h-96 w-full rounded-3xl bg-[#11172B] border border-[#1F2742]" />
+        <Skeleton className="h-96 w-full rounded-3xl bg-[#0B1325] border border-[rgba(255,255,255,0.08)]" />
       ) : assignments.length === 0 ? (
-        <div className="p-16 text-center bg-[#11172B] rounded-3xl border border-[#1F2742]">
+        <div className="p-16 text-center bg-[#0B1325] rounded-3xl border border-[rgba(255,255,255,0.08)]">
           <FileText className="w-12 h-12 text-slate-500 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-white">No pending assignments</h3>
           <p className="text-xs text-slate-400 mt-1">Your teacher has not published new tasks at this moment.</p>
@@ -121,11 +121,11 @@ export function AssignmentsPage() {
                   className={`w-full p-4 sm:p-5 rounded-3xl border text-left transition-all ${
                     isSelected
                       ? 'border-emerald-500 bg-[#16233B] text-white shadow-xl shadow-black/40 ring-1 ring-emerald-500/30'
-                      : 'border-[#1F2742] bg-[#11172B] text-slate-300 hover:border-slate-600'
+                      : 'border-[rgba(255,255,255,0.08)] bg-[#0B1325] text-slate-300 hover:border-slate-600'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-[#0B0F21] text-emerald-400 border border-[#1F2742]'}`}>
+                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-[#0B0F21] text-emerald-400 border border-[rgba(255,255,255,0.08)]'}`}>
                       {a.level}
                     </span>
                     <span className="text-[11px] text-slate-400">
@@ -133,7 +133,7 @@ export function AssignmentsPage() {
                     </span>
                   </div>
                   <p className="text-sm font-bold text-white leading-snug">{a.title}</p>
-                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#1F2742] text-xs">
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-[rgba(255,255,255,0.08)] text-xs">
                     <span className="text-slate-400">Max: {a.maxPoints} pts</span>
                     {hasSubmitted ? (
                       <span className="text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
@@ -151,7 +151,7 @@ export function AssignmentsPage() {
           {/* Right: Active Assignment Editor & Feedback */}
           {selectedAssignment && (
             <div className="lg:col-span-8 space-y-6">
-              <div className="p-6 sm:p-8 rounded-3xl border border-[#1F2742] bg-[#11172B] shadow-xl shadow-black/40 space-y-6">
+              <div className="p-6 sm:p-8 rounded-3xl border border-[rgba(255,255,255,0.08)] bg-[#0B1325] shadow-xl shadow-black/40 space-y-6">
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
@@ -166,7 +166,7 @@ export function AssignmentsPage() {
                 </div>
 
                 {/* Instructions Box */}
-                <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-xs space-y-1.5">
+                <div className="p-4 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-xs space-y-1.5">
                   <p className="font-bold text-emerald-400">Aufgabenstellung (Instructions):</p>
                   <p className="text-slate-200 whitespace-pre-line leading-relaxed">{selectedAssignment.instructions}</p>
                 </div>
@@ -177,7 +177,7 @@ export function AssignmentsPage() {
                     <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Grading Rubric</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {selectedAssignment.rubricCriteria.map((r: any, idx: number) => (
-                        <div key={idx} className="p-3 rounded-2xl bg-[#0B0F21] border border-[#1F2742] text-xs">
+                        <div key={idx} className="p-3 rounded-2xl bg-[#0B0F21] border border-[rgba(255,255,255,0.08)] text-xs">
                           <p className="font-bold text-white">{r.name}</p>
                           <p className="text-slate-400 text-[11px] mt-0.5">{r.description}</p>
                           <span className="text-[10px] text-emerald-400 font-bold block mt-1">{r.maxPoints} pts</span>
@@ -209,7 +209,7 @@ export function AssignmentsPage() {
                     placeholder="Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich..."
                     value={submissionText}
                     onChange={(e) => setSubmissionText(e.target.value)}
-                    className="w-full rounded-2xl border border-[#1F2742] bg-[#0B0F21] p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 leading-relaxed font-sans transition-all"
+                    className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0B0F21] p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 leading-relaxed font-sans transition-all"
                   />
 
                   <div className="flex items-center justify-between pt-2">

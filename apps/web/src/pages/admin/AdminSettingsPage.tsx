@@ -121,7 +121,7 @@ export function AdminSettingsPage() {
       </div>
 
       {/* SECTION 1: SANDBOX & PRODUCTION ENVIRONMENT CONTROLS */}
-      <div className="bg-[#0D111F] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
+      <div className="bg-[#0B1325] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -228,10 +228,10 @@ export function AdminSettingsPage() {
       </div>
 
       {/* SECTION 2: GLOBAL BRANDING PARAMETERS */}
-      <div className="bg-[#0D111F] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
+      <div className="bg-[#0B1325] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
         <div className="space-y-1 pb-4 border-b border-white/10">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Globe className="w-4 h-4 text-indigo-400" /> Platform Identity & Admissions
+            <Globe className="w-4 h-4 text-purple-400" /> Platform Identity & Admissions
           </h2>
           <p className="text-xs text-slate-400">Public-facing academy name, taglines, and admissions email destinations.</p>
         </div>
@@ -307,15 +307,15 @@ export function AdminAuditLogsPage() {
       {loading ? (
         <Skeleton className="h-64 w-full rounded-3xl bg-white/5" />
       ) : logs.length === 0 ? (
-        <div className="p-12 text-center bg-[#0D111F] rounded-3xl border border-white/10">
+        <div className="p-12 text-center bg-[#0B1325] rounded-3xl border border-white/10">
           <ShieldCheck className="w-12 h-12 text-slate-600 mx-auto mb-2" />
           <p className="text-xs text-slate-400">No audit events recorded yet.</p>
         </div>
       ) : (
-        <div className="bg-[#0D111F] rounded-3xl border border-white/10 overflow-hidden shadow-xl">
+        <div className="bg-[#0B1325] rounded-3xl border border-white/10 overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#11162B] text-slate-300 uppercase font-bold tracking-wider border-b border-white/10">
+              <thead className="bg-[#070D1A] text-slate-300 uppercase font-bold tracking-wider border-b border-white/10">
                 <tr>
                   <th className="p-4">Action</th>
                   <th className="p-4">Entity Type</th>
@@ -327,7 +327,7 @@ export function AdminAuditLogsPage() {
               <tbody className="divide-y divide-white/5 text-slate-200">
                 {logs.map(log => (
                   <tr key={log.id} className="hover:bg-white/5 transition-colors">
-                    <td className="p-4 font-mono font-bold text-indigo-400">{log.action}</td>
+                    <td className="p-4 font-mono font-bold text-purple-400">{log.action}</td>
                     <td className="p-4 text-slate-400">{log.entityType}</td>
                     <td className="p-4 text-slate-200 font-medium">{log.user?.email || 'System'}</td>
                     <td className="p-4 text-slate-400 font-mono text-[11px] truncate max-w-xs">
