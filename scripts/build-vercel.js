@@ -42,7 +42,10 @@ await esbuild.build({
   target: 'node20',
   format: 'esm',
   outfile: 'api/index.js',
-  external: ['@prisma/client', 'prisma', 'node:*']
+  banner: {
+    js: "import * as _nodeModule from 'node:module';\nconst require = _nodeModule.createRequire(import.meta.url);"
+  },
+  external: ['@prisma/client', 'prisma']
 });
 
 // Copy to catch-all and web subdirectories

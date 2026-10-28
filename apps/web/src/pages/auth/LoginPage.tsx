@@ -28,10 +28,17 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema)
   });
+
+  const quickFill = (email: string, pass: string) => {
+    setValue('email', email, { shouldValidate: true });
+    setValue('password', pass, { shouldValidate: true });
+    setServerError(null);
+  };
 
   const from = (location.state as any)?.from?.pathname || '/student';
 
@@ -113,6 +120,39 @@ export function LoginPage() {
               <ArrowRight className="w-4 h-4 text-mint" />
             </button>
           </form>
+
+          {/* 1-Click Demo Login Options */}
+          <div className="pt-4 border-t border-gray-100 space-y-3">
+            <p className="text-[11px] font-bold text-center uppercase tracking-wider text-gray-400">
+              1-Klick Demo Login (Testmodus)
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => quickFill('student@deutschwelt.de', 'StudentDeutschWelt2026!')}
+                className="py-2.5 px-2 rounded-2xl bg-forest-50 hover:bg-forest-100/80 text-forest-950 text-[11px] font-bold border border-forest-200 transition-colors flex flex-col items-center shadow-xs cursor-pointer active:scale-95"
+              >
+                <span>Student</span>
+                <span className="text-[9px] text-forest-700 font-medium">Elena Rostova</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => quickFill('teacher@deutschwelt.de', 'TeacherDeutschWelt2026!')}
+                className="py-2.5 px-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 text-emerald-950 text-[11px] font-bold border border-emerald-200 transition-colors flex flex-col items-center shadow-xs cursor-pointer active:scale-95"
+              >
+                <span>Dozent</span>
+                <span className="text-[9px] text-emerald-700 font-medium">Dr. Weber</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => quickFill('admin@deutschwelt.de', 'AdminDeutschWelt2026!')}
+                className="py-2.5 px-2 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-[11px] font-bold border border-gray-300 transition-colors flex flex-col items-center shadow-xs cursor-pointer active:scale-95"
+              >
+                <span>Admin</span>
+                <span className="text-[9px] text-gray-600 font-medium">Vollzugriff</span>
+              </button>
+            </div>
+          </div>
 
           <div className="text-center text-xs text-gray-500 pt-2">
             {t('login.noAccount')}{' '}
