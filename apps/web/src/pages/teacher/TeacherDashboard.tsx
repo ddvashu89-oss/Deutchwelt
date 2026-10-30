@@ -15,11 +15,6 @@ import {
   PenTool,
   Mic,
   Clock,
-  CheckCircle2,
-  Calendar,
-  Sparkles,
-  ExternalLink,
-  Plus
 } from 'lucide-react';
 
 export function TeacherDashboard() {
@@ -73,14 +68,14 @@ export function TeacherDashboard() {
 
   if (loading) {
     return (
-      <div className="space-y-8 animate-pulse">
-        <div className="flex justify-between items-center">
+      <div className="space-y-6 animate-pulse sm:space-y-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Skeleton className="h-10 w-48 rounded-xl" />
           <Skeleton className="h-10 w-36 rounded-full" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-36 rounded-3xl" />
+            <Skeleton key={i} className="h-32 rounded-2xl sm:h-36 sm:rounded-3xl" />
           ))}
         </div>
         <Skeleton className="h-64 rounded-3xl" />
@@ -89,126 +84,128 @@ export function TeacherDashboard() {
   }
 
   return (
-    <div className="space-y-8 pb-16 font-sans">
+    <div className="space-y-5 pb-8 font-sans sm:space-y-7 sm:pb-12">
       {/* 1. Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-gray-950">
+      <div className="flex flex-col gap-4 rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle sm:rounded-3xl sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#c54346]">Teacher workspace</p>
+          <h1 className="mt-1 font-serif text-[2rem] font-medium leading-tight tracking-tight text-[#14243a] sm:text-4xl">
             {t('tdash.title')}
           </h1>
-          <p className="text-sm font-medium text-gray-500 mt-1">
+          <p className="mt-1 max-w-2xl text-xs leading-relaxed text-[#687487] sm:text-sm">
             {t('tdash.subtitle')}
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:w-auto lg:min-w-[300px]">
           <button
             onClick={handleStartLiveMeeting}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-semibold transition-all shadow-xs"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ddd7cc] bg-white px-4 py-2.5 text-xs font-bold text-[#24364d] shadow-xs transition-colors hover:border-[#c54346]/40 hover:bg-[#fbf8f2] sm:text-sm"
           >
-            <Video className="w-4 h-4 text-forest-700" />
+            <Video className="h-4 w-4 text-[#c54346]" />
             {t('tdash.startLive')}
           </button>
 
           <button
             onClick={() => setUploadModalOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-sm font-semibold transition-all shadow-md hover:shadow-lg"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c54346] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#ad393d] hover:shadow-md sm:text-sm"
           >
-            <Upload className="w-4 h-4 text-mint" />
+            <Upload className="h-4 w-4 text-white/80" />
             {t('tdash.uploadVideo')}
           </button>
         </div>
       </div>
 
       {/* 2. 4 Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {/* Card 1: Featured Forest Green */}
-        <div className="rounded-3xl bg-forest-900 text-white p-6 shadow-sm border border-forest-800 flex flex-col justify-between group">
+        <div className="group flex min-w-0 flex-col justify-between rounded-2xl border border-[#263a53] bg-[#14243a] p-4 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-card sm:rounded-3xl sm:p-6">
           <div className="flex items-start justify-between">
-            <span className="text-sm font-medium text-emerald-100/90">
+            <span className="pr-2 text-xs font-medium leading-snug text-white/75 sm:text-sm">
               {t('tdash.activeBatches')}
             </span>
-            <div className="w-8 h-8 rounded-full bg-forest-800/80 flex items-center justify-center text-white border border-forest-700/50">
-              <ArrowUpRight className="w-4 h-4" />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/10 text-[#f0c6a3] sm:h-8 sm:w-8">
+              <ArrowUpRight className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-4 mb-2">
-            <div className="text-4xl font-heading font-black tracking-tight text-white">
+          <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
+            <div className="font-serif text-3xl font-medium tracking-tight text-white sm:text-4xl">
               {data?.totalBatches || 2}
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-mint/20 text-mint border border-mint/30">
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[9px] font-semibold text-white sm:text-xs">
                 A1 & B1 Intensiv
               </span>
-              <span className="text-xs text-emerald-100/70">{t('tdash.goexams')}</span>
+              <span className="text-[9px] leading-snug text-white/60 sm:text-xs">{t('tdash.goexams')}</span>
             </div>
           </div>
         </div>
 
         {/* Card 2: White Card - Students */}
-        <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
+        <div className="group flex min-w-0 flex-col justify-between rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle transition-all hover:-translate-y-0.5 hover:shadow-card sm:rounded-3xl sm:p-6">
           <div className="flex items-start justify-between">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="pr-2 text-xs font-medium leading-snug text-[#687487] sm:text-sm">
               {t('tdash.students')}
             </span>
-            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 border border-gray-200/60">
-              <ArrowUpRight className="w-4 h-4" />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#e8e3d8] bg-[#f7f4ec] text-[#687487] sm:h-8 sm:w-8">
+              <ArrowUpRight className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-4 mb-2">
-            <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
+          <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
+            <div className="flex flex-wrap items-baseline gap-x-2 font-serif text-3xl font-medium tracking-tight text-[#14243a] sm:text-4xl">
               {data?.totalStudents || 24}
-              <span className="text-base font-bold text-gray-400">{t('tdash.studentsUnit')}</span>
+              <span className="font-sans text-xs font-semibold text-[#9299a2] sm:text-base">{t('tdash.studentsUnit')}</span>
             </div>
-            <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-forest-700">
-              <Users className="w-3.5 h-3.5" />
+            <div className="mt-2 flex items-center gap-1.5 text-[9px] font-medium leading-snug text-[#587a69] sm:text-xs">
+              <Users className="h-3.5 w-3.5 shrink-0" />
               <span>{t('tdash.activeWeek')}</span>
             </div>
           </div>
         </div>
 
         {/* Card 3: White Card - Pending Submissions */}
-        <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
+        <div className="group flex min-w-0 flex-col justify-between rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle transition-all hover:-translate-y-0.5 hover:shadow-card sm:rounded-3xl sm:p-6">
           <div className="flex items-start justify-between">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="pr-2 text-xs font-medium leading-snug text-[#687487] sm:text-sm">
               {t('tdash.pendingSubs')}
             </span>
             <Link
               to="/teacher/submissions"
-              className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 border border-gray-200/60 hover:bg-gray-100"
+              aria-label="Review submissions"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#e8e3d8] bg-[#f7f4ec] text-[#687487] transition-colors hover:bg-[#f8ece9] hover:text-[#c54346] sm:h-8 sm:w-8"
             >
               <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="mt-4 mb-2">
-            <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
+          <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
+            <div className="flex flex-wrap items-baseline gap-x-2 font-serif text-3xl font-medium tracking-tight text-[#14243a] sm:text-4xl">
               {data?.pendingSubmissionsCount || 3}
-              <span className="text-base font-bold text-amber-600">{t('tdash.pendingUnit')}</span>
+              <span className="font-sans text-xs font-semibold text-[#a17736] sm:text-base">{t('tdash.pendingUnit')}</span>
             </div>
-            <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-amber-600">
-              <ClipboardList className="w-3.5 h-3.5" />
+            <div className="mt-2 flex items-center gap-1.5 text-[9px] font-medium leading-snug text-[#a17736] sm:text-xs">
+              <ClipboardList className="h-3.5 w-3.5 shrink-0" />
               <span>{t('tdash.pendingHint')}</span>
             </div>
           </div>
         </div>
 
         {/* Card 4: White Card - Avg Score */}
-        <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between group hover:border-gray-300 transition-all">
+        <div className="group flex min-w-0 flex-col justify-between rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle transition-all hover:-translate-y-0.5 hover:shadow-card sm:rounded-3xl sm:p-6">
           <div className="flex items-start justify-between">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="pr-2 text-xs font-medium leading-snug text-[#687487] sm:text-sm">
               {t('tdash.avgScore')}
             </span>
-            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 border border-gray-200/60">
-              <ArrowUpRight className="w-4 h-4" />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#e8e3d8] bg-[#f7f4ec] text-[#687487] sm:h-8 sm:w-8">
+              <ArrowUpRight className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-4 mb-2">
-            <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
+          <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
+            <div className="flex flex-wrap items-baseline gap-x-2 font-serif text-3xl font-medium tracking-tight text-[#14243a] sm:text-4xl">
               {data?.averageScorePercentage || 88}%
-              <span className="text-base font-bold text-gray-400">{t('tdash.avgUnit')}</span>
+              <span className="font-sans text-xs font-semibold text-[#9299a2] sm:text-base">{t('tdash.avgUnit')}</span>
             </div>
-            <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-emerald-700">
-              <Award className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="mt-2 flex items-center gap-1.5 text-[9px] font-medium leading-snug text-[#587a69] sm:text-xs">
+              <Award className="h-3.5 w-3.5 shrink-0 text-[#587a69]" />
               <span>{t('tdash.avgHint')}</span>
             </div>
           </div>
@@ -216,65 +213,65 @@ export function TeacherDashboard() {
       </div>
 
       {/* 3. Main Review & Quick Upload Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(17rem,0.8fr)] xl:items-start">
         {/* Left 2 Columns: Submissions Queue */}
-        <div className="lg:col-span-2 rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-heading font-bold text-gray-950">
+        <div className="flex min-w-0 flex-col rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle sm:rounded-3xl sm:p-6">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="font-serif text-lg font-medium text-[#14243a] sm:text-xl">
                 {t('tdash.submissionsTitle')}
               </h2>
-              <p className="text-xs text-gray-500">{t('tdash.submissionsSubtitle')}</p>
+              <p className="mt-1 text-xs leading-relaxed text-[#687487]">{t('tdash.submissionsSubtitle')}</p>
             </div>
             <Link
               to="/teacher/submissions"
-              className="text-xs font-bold text-forest-800 hover:text-forest-900"
+              className="shrink-0 text-xs font-bold text-[#c54346] transition-colors hover:text-[#a93236]"
             >
               Alle ansehen →
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="min-w-0 space-y-2.5 sm:space-y-3">
             {data?.recentSubmissions && data.recentSubmissions.length > 0 ? (
               data.recentSubmissions.map((sub: any) => (
                 <div
                   key={sub.id}
-                  className="p-4 rounded-2xl bg-gray-50/70 hover:bg-gray-100/70 border border-gray-100 flex items-center justify-between gap-4 transition-colors"
+                  className="flex min-w-0 flex-col gap-3 rounded-xl border border-[#eee9df] bg-[#faf8f2] p-3 transition-colors hover:bg-[#f6f2e9] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:rounded-2xl sm:p-4"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-start gap-3 sm:items-center">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${
                         sub.type === 'SPEAKING'
-                          ? 'bg-rose-100 text-rose-800'
-                          : 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-[#f8ece9] text-[#b43e40]'
+                          : 'bg-[#e8eee8] text-[#587a69]'
                       }`}
                     >
                       {sub.type === 'SPEAKING' ? (
-                        <Mic className="w-5 h-5" />
+                        <Mic className="h-4 w-4" />
                       ) : (
-                        <PenTool className="w-5 h-5" />
+                        <PenTool className="h-4 w-4" />
                       )}
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-950">
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words text-xs font-bold leading-snug text-[#14243a]">
                         {sub.assignmentTitle}
                       </p>
-                      <p className="text-[11px] text-gray-500">
-                        {t('tdash.participant')} <span className="font-semibold text-gray-800">{sub.studentName}</span> • {t('tdash.submitted')} {new Date(sub.submittedAt).toLocaleDateString()}
+                      <p className="mt-1 break-words text-[10px] leading-relaxed text-[#687487] sm:text-[11px]">
+                        {t('tdash.participant')} <span className="font-semibold text-[#34445a]">{sub.studentName}</span> <span aria-hidden="true">·</span> {t('tdash.submitted')} {new Date(sub.submittedAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
 
                   <Link
                     to="/teacher/submissions"
-                    className="px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-xs font-bold shadow-xs transition-colors shrink-0"
+                    className="inline-flex min-h-10 shrink-0 items-center justify-center self-end rounded-lg border border-[#ddd7cc] bg-white px-4 py-2 text-xs font-bold text-[#24364d] shadow-xs transition-colors hover:border-[#c54346]/40 hover:bg-[#f8ece9] hover:text-[#b43e40] sm:self-auto"
                   >
                     Bewerten
                   </Link>
                 </div>
               ))
             ) : (
-              <div className="p-8 text-center text-xs text-gray-500">
+              <div className="p-8 text-center text-xs text-[#687487]">
                 {t('tdash.noSubs')}
               </div>
             )}
@@ -282,40 +279,40 @@ export function TeacherDashboard() {
         </div>
 
         {/* Right Column: Live Class Schedule Widget */}
-        <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between">
+        <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle sm:rounded-3xl sm:p-6">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-heading font-bold text-gray-950">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-serif text-lg font-medium text-[#14243a] sm:text-xl">
                 Nächste Live-Klasse
               </h2>
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-mint/20 text-forest-900 border border-mint/30">
+              <span className="rounded-full border border-[#efdad4] bg-[#fbefed] px-2 py-1 text-[10px] font-bold text-[#b43e40]">
                 Heute
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-forest-50/50 border border-forest-100 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-forest-700">
+            <div className="space-y-2 rounded-xl border border-[#e9e2d4] bg-[#f8f4eb] p-4 sm:rounded-2xl">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#c54346]">
                 Batch 2026-B1
               </span>
-              <p className="text-sm font-bold text-gray-950">
+              <p className="font-serif text-lg font-medium leading-snug text-[#14243a] sm:text-xl">
                 Konjunktiv II & Berufsdeutsch Intensiv
               </p>
-              <div className="flex items-center gap-2 text-xs text-forest-900 font-medium">
-                <Clock className="w-3.5 h-3.5 text-forest-700" />
+              <div className="flex items-start gap-2 text-xs font-medium text-[#34445a]">
+                <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#c54346]" />
                 <span>18:30 – 19:30 CET (60 Min)</span>
               </div>
             </div>
 
-            <p className="text-xs text-gray-500 mt-4 leading-relaxed">
+            <p className="mt-4 text-xs leading-relaxed text-[#687487]">
               {t('tdash.liveDesc')}
             </p>
           </div>
 
           <button
             onClick={handleStartLiveMeeting}
-            className="w-full mt-6 py-3 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
+            className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#14243a] py-3 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#203853] hover:shadow-md sm:mt-6"
           >
-            <Video className="w-4 h-4 text-mint" />
+            <Video className="h-4 w-4 text-[#f0c6a3]" />
             {t('tdash.openMeet')}
           </button>
         </div>
@@ -323,32 +320,33 @@ export function TeacherDashboard() {
 
       {/* Video Lecture Upload Modal */}
       {uploadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#14243a]/45 p-3 backdrop-blur-sm sm:p-6">
+          <div className="max-h-[calc(100dvh-1.5rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-2xl animate-in fade-in zoom-in-95 sm:max-h-[calc(100dvh-3rem)] sm:rounded-3xl sm:p-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-forest-100 text-forest-800 flex items-center justify-center">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8ece9] text-[#c54346]">
                   <Upload className="w-4 h-4" />
                 </div>
-                <h3 className="text-lg font-heading font-bold text-gray-950">
+                <h3 className="font-serif text-lg font-medium text-[#14243a] sm:text-xl">
                   {t('tdash.uploadTitle')}
                 </h3>
               </div>
               <button
                 onClick={() => setUploadModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 text-sm font-bold p-1"
+                aria-label="Close upload dialog"
+                className="rounded-lg p-2 text-[#9299a2] transition-colors hover:bg-[#f5f2eb] hover:text-[#14243a]"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs leading-relaxed text-[#687487]">
               {t('tdash.uploadDesc')} (<code className="bg-gray-100 px-1 py-0.5 rounded">uploads/</code>).
             </p>
 
             <form onSubmit={handleSimulateLectureUpload} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">
+                <label className="mb-1 block text-xs font-bold text-[#34445a]">
                   {t('tdash.lecTitle')}
                 </label>
                 <input
@@ -357,19 +355,19 @@ export function TeacherDashboard() {
                   placeholder={t('tdash.lecTitlePlaceholder')}
                   value={lectureTitle}
                   onChange={(e) => setLectureTitle(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:ring-2 focus:ring-forest-800 focus:outline-none"
+                  className="w-full rounded-xl border border-[#ddd7cc] bg-white px-4 py-3 text-sm text-[#17243a] focus:outline-none focus:ring-2 focus:ring-[#c54346]/30"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="mb-1 block text-xs font-bold text-[#34445a]">
                     {t('tdash.cefrLevel')}
                   </label>
                   <select
                     value={lectureLevel}
                     onChange={(e) => setLectureLevel(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:ring-2 focus:ring-forest-800 focus:outline-none bg-white"
+                    className="w-full rounded-xl border border-[#ddd7cc] bg-white px-4 py-3 text-sm text-[#17243a] focus:outline-none focus:ring-2 focus:ring-[#c54346]/30"
                   >
                     <option value="A1">A1 (Anfänger)</option>
                     <option value="A2">A2 (Grundlagen)</option>
@@ -379,30 +377,30 @@ export function TeacherDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    <label className="mb-1 block text-xs font-bold text-[#34445a]">
                     {t('tdash.videoFile')}
                   </label>
                   <input
                     type="file"
                     accept="video/*"
                     required
-                    className="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-forest-50 file:text-forest-800 hover:file:bg-forest-100 cursor-pointer"
+                    className="w-full text-xs text-[#687487] file:mr-2 file:cursor-pointer file:rounded-full file:border-0 file:bg-[#f8ece9] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#b43e40] hover:file:bg-[#f4dfda]"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-3">
+              <div className="flex flex-col-reverse gap-2 border-t border-[#eee9df] pt-3 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setUploadModalOpen(false)}
-                  className="px-4 py-2 rounded-full border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-50"
+                  className="min-h-10 rounded-xl border border-[#ddd7cc] px-4 py-2 text-xs font-bold text-[#687487] hover:bg-[#f7f4ec]"
                 >
                   Abbrechen
                 </button>
                 <button
                   type="submit"
                   disabled={uploadSuccess}
-                  className="px-6 py-2 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-sm transition-all"
+                  className="min-h-10 rounded-xl bg-[#c54346] px-6 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#ad393d]"
                 >
                   {uploadSuccess ? t('tdash.saving') : t('tdash.uploadPublish')}
                 </button>
