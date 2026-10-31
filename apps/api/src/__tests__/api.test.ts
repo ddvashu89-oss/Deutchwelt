@@ -48,7 +48,7 @@ describe('DeutschWelt API End-to-End Route Integration Tests', () => {
       .post('/api/v1/auth/login')
       .send({
         email: 'student@deutschwelt.de',
-        password: 'StudentDeutschWelt2026!'
+        password: process.env.TEST_STUDENT_PASSWORD
       });
 
     expect(validRes.status).toBe(200);

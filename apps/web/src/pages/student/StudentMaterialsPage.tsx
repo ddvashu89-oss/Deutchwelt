@@ -148,7 +148,7 @@ export function StudentMaterialsPage() {
                         </span>
                       ) : (
                         <Badge variant="secondary" className="text-[10px]">
-                          {lec.videoUrl?.startsWith('/uploads/') ? 'Uploaded Video' : 'On-Demand Video'}
+                          {(lec.videoUrl?.startsWith('/uploads/') || lec.videoUrl?.startsWith('/api/v1/files/')) ? 'Uploaded Video' : 'On-Demand Video'}
                         </Badge>
                       )}
                     </div>
@@ -315,7 +315,7 @@ export function StudentMaterialsPage() {
             <VideoPlayer url={selectedLecture.videoUrl} title={selectedLecture.title} autoPlay />
             <div className="flex items-center justify-between text-xs text-dark-muted pt-2 border-t border-gray-100">
               <span>Level: <strong className="text-navy">{selectedLecture.level}</strong></span>
-              {(selectedLecture.videoUrl?.startsWith('/uploads/') || selectedLecture.videoUrl?.endsWith('.mp4')) && (
+              {(selectedLecture.videoUrl?.startsWith('/uploads/') || selectedLecture.videoUrl?.startsWith('/api/v1/files/') || selectedLecture.videoUrl?.endsWith('.mp4')) && (
                 <a
                   href={selectedLecture.videoUrl}
                   download

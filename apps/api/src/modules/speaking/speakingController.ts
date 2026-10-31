@@ -3,6 +3,9 @@ import { GermanLevel, SubmissionStatus } from '@deutschwelt/shared';
 import { prisma, isDatabaseConnected } from '../../services/prisma.js';
 import { store } from '../../services/store.js';
 import { AppError } from '../../middleware/errorHandler.js';
+import { discardTemporaryUpload, persistUploadedFile } from '../../services/uploadStorage.js';
+import { trashDriveFile } from '../../services/googleDrive.js';
+import fs from 'node:fs/promises';
 
 export async function getSpeakingPrompts(req: Request, res: Response, next: NextFunction) {
   try {
@@ -66,28 +69,39 @@ export async function submitSpeakingAttempt(req: Request, res: Response, next: N
     const { transcriptText, durationSeconds } = req.body;
     const file = req.file;
 
-    const audioUrl = file ? `/uploads/audio/${file.filename}` : null;
-
-    if (!audioUrl && !transcriptText) {
+    if (!file && !transcriptText) {
       return next(new AppError('Please provide either an audio recording or text response.', 400));
     }
 
-    if (isDatabaseConnected) {
-      const prompt = await prisma.speakingPrompt.findUnique({ where: { id: promptId } });
-      if (!prompt) {
-        return next(new AppError('Speaking prompt not found.', 404));
-      }
+    const prompt = isDatabaseConnected
+      ? await prisma.speakingPrompt.findUnique({ where: { id: promptId } })
+      : store.speakingPrompts.find(item => item.id === promptId);
+    if (!prompt) {
+      await discardTemporaryUpload(file);
+      return next(new AppError('Speaking prompt not found.', 404));
+    }
 
-      const attempt = await prisma.speakingAttempt.create({
-        data: {
-          userId: req.user.id,
-          promptId,
-          audioUrl,
-          durationSeconds: durationSeconds ? parseInt(durationSeconds, 10) : null,
-          transcriptText: transcriptText || null,
-          status: SubmissionStatus.SUBMITTED
-        }
-      });
+    const storedUpload = file ? await persistUploadedFile(file) : null;
+    const audioUrl = storedUpload?.fileUrl || null;
+
+    if (isDatabaseConnected) {
+
+      let attempt;
+      try {
+        attempt = await prisma.speakingAttempt.create({
+          data: {
+            userId: req.user.id,
+            promptId,
+            audioUrl,
+            durationSeconds: durationSeconds ? parseInt(durationSeconds, 10) : null,
+            transcriptText: transcriptText || null,
+            status: SubmissionStatus.SUBMITTED
+          }
+        });
+      } catch (error) {
+        if (storedUpload?.driveFileId) await trashDriveFile(storedUpload.driveFileId).catch(() => undefined);
+        throw error;
+      }
 
       return res.status(201).json({
         success: true,
@@ -151,6 +165,9 @@ export async function analyzeSpeakingAudio(req: Request, res: Response, next: Ne
     const { promptId, durationSeconds, transcriptText } = req.body;
     const file = req.file;
 
+    // Analysis does not retain the recording; remove the temporary multipart file.
+    if (file?.path) await fs.unlink(file.path).catch(() => undefined);
+
     const prompt = store.speakingPrompts.find(p => p.id === promptId);
     const targetText = prompt?.sampleAnswerDe || 'Guten Tag! Ich lerne Deutsch.';
 
@@ -204,7 +221,7 @@ export async function analyzeSpeakingAudio(req: Request, res: Response, next: Ne
         detectedSpeech: transcriptText || 'Recognized high-fidelity German audio input',
         wordFeedback,
         insights,
-        audioUrl: file ? `/uploads/audio/${file.filename}` : null,
+        audioUrl: null,
         durationSeconds: audioDuration,
         evaluatedAt: new Date().toISOString()
       }

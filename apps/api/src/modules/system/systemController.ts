@@ -58,6 +58,9 @@ export async function resetSandboxData(req: Request, res: Response, next: NextFu
 
 export async function toggleSandboxMode(req: Request, res: Response, next: NextFunction) {
   try {
+    if (!env.isSandbox) {
+      return next(new AppError('Sandbox controls are disabled outside the sandbox environment.', 404));
+    }
     const { enabled } = req.body;
     store.isSandboxMode = Boolean(enabled);
 

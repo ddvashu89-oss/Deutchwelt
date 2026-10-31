@@ -85,7 +85,7 @@ describe('Security & Sandbox Testbed Integration Tests', () => {
       .post('/api/v1/auth/login')
       .send({
         email: 'admin@deutschwelt.de',
-        password: 'Admin@1234'
+        password: process.env.TEST_ADMIN_PASSWORD
       });
 
     expect(adminLoginRes.status).toBe(200);

@@ -10,6 +10,7 @@ import { authenticate } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiRateLimiter } from './middleware/rateLimiter.js';
 import { sanitizeInputs } from './middleware/sanitize.js';
+import { isDatabaseConnected } from './services/prisma.js';
 
 import authRoutes from './modules/auth/authRoutes.js';
 import courseRoutes from './modules/courses/courseRoutes.js';
@@ -23,6 +24,8 @@ import teacherRoutes from './modules/teacher/teacherRoutes.js';
 import adminRoutes from './modules/admin/adminRoutes.js';
 import enquiryRoutes from './modules/enquiries/enquiryRoutes.js';
 import systemRoutes from './modules/system/systemRoutes.js';
+import fileRoutes from './modules/files/fileRoutes.js';
+import { googleDriveOAuthCallback } from './modules/admin/driveController.js';
 
 const app = express();
 
@@ -66,9 +69,7 @@ app.use(cors({
     if (!origin) return callback(null, true);
     if (
       origin === env.FRONTEND_URL ||
-      origin.endsWith('.vercel.app') ||
-      origin.includes('localhost') ||
-      origin.includes('127.0.0.1')
+      (!env.isProd && (origin.includes('localhost') || origin.includes('127.0.0.1')))
     ) {
       return callback(null, true);
     }
@@ -104,19 +105,33 @@ app.use('/uploads', express.static(env.UPLOAD_DIR, {
 // Session Authentication
 app.use(authenticate);
 
+// Never serve requests from the volatile demo store in a production deployment.
+app.use((req, res, next) => {
+  if (!env.isProd || isDatabaseConnected || ['/health', '/api/health', '/api/v1/health'].includes(req.path)) {
+    return next();
+  }
+  return res.status(503).json({
+    success: false,
+    error: 'The production database is unavailable. Please try again later.',
+    code: 'DATABASE_UNAVAILABLE'
+  });
+});
+
 // API Rate Limiting
 app.use('/api/', apiRateLimiter);
 
 // Health and Base Root Handlers
 app.get(['/', '/health', '/api', '/api/health', '/api/v1/health', '/api/index', '/api/index.js'], (req, res) => {
-  res.json({
-    status: 'healthy',
+  const healthy = !env.isProd || isDatabaseConnected;
+  res.status(healthy ? 200 : 503).json({
+    status: healthy ? 'healthy' : 'degraded',
     timestamp: new Date().toISOString(),
     service: 'DeutschWelt API',
     version: '1.0.0',
     environment: env.isSandbox ? 'sandbox' : 'production',
     sandboxMode: env.isSandbox,
-    secure: true
+    secure: true,
+    database: isDatabaseConnected ? 'connected' : 'unavailable'
   });
 });
 
@@ -130,7 +145,9 @@ app.use('/api/v1/speaking', speakingRoutes);
 app.use('/api/v1/assignments', assignmentRoutes);
 app.use('/api/v1/student', studentRoutes);
 app.use('/api/v1/teacher', teacherRoutes);
+app.get('/api/v1/admin/drive/callback', googleDriveOAuthCallback);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/files', fileRoutes);
 app.use('/api/v1/enquiries', enquiryRoutes);
 app.use('/api/v1/system', systemRoutes);
 

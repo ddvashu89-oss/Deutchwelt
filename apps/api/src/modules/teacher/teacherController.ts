@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import fs from 'fs';
 import path from 'path';
 import { SubmissionStatus, UserRole } from '@deutschwelt/shared';
 import { prisma, isDatabaseConnected } from '../../services/prisma.js';
 import { store } from '../../services/store.js';
 import { AppError } from '../../middleware/errorHandler.js';
-import { env } from '../../config/env.js';
+import { driveFileUrl, isGoogleDriveConfigured, trashDriveFile } from '../../services/googleDrive.js';
+import { discardTemporaryUpload, persistUploadedFile, removeStoredFile } from '../../services/uploadStorage.js';
 
 /**
  * Resolves the active teacher's TeacherProfile ID
@@ -34,6 +34,48 @@ async function getAssignedBatchIds(teacherProfileId: string, userId: string): Pr
       .filter(tba => tba.teacherId === teacherProfileId || tba.teacherId === `profile-${userId}`)
       .map(tba => tba.batchId);
   }
+}
+
+function formatDriveAssetSize(sizeBytes: bigint | number) {
+  return `${(Number(sizeBytes) / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function driveAssetToLecture(asset: any) {
+  return {
+    id: asset.id,
+    teacherId: asset.teacherProfileId,
+    batchId: asset.batchId,
+    title: asset.title,
+    description: asset.description || '',
+    level: asset.level,
+    videoUrl: driveFileUrl(asset.driveFileId),
+    durationMinutes: asset.durationMinutes || 45,
+    scheduledFor: asset.scheduledFor || asset.createdAt,
+    isLive: false,
+    meetingUrl: asset.meetingUrl || '',
+    fileSize: formatDriveAssetSize(asset.sizeBytes),
+    originalFilename: asset.fileName,
+    status: 'PUBLISHED',
+    createdAt: asset.createdAt,
+    batch: asset.batch
+  };
+}
+
+function driveAssetToMaterial(asset: any) {
+  return {
+    id: asset.id,
+    teacherId: asset.teacherProfileId,
+    batchId: asset.batchId,
+    title: asset.title,
+    category: asset.category || 'WORKSHEET',
+    description: asset.description || '',
+    fileUrl: driveFileUrl(asset.driveFileId),
+    fileType: path.extname(asset.fileName).replace('.', '').toUpperCase() || 'FILE',
+    fileSize: formatDriveAssetSize(asset.sizeBytes),
+    level: asset.level,
+    createdAt: asset.createdAt,
+    batch: asset.batch
+  };
 }
 
 /**
@@ -515,6 +557,23 @@ export async function getTeacherLectures(req: Request, res: Response, next: Next
     const teacherProfileId = resolveTeacherProfileId(req);
     const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user!.id);
 
+    if (isDatabaseConnected) {
+      const [stored, local] = await Promise.all([
+        prisma.driveAsset.findMany({
+          where: {
+            type: 'TEACHER_LECTURE',
+            OR: [{ batchId: { in: assignedBatchIds } }, { teacherProfileId }]
+          },
+          include: { batch: true },
+          orderBy: { createdAt: 'desc' }
+        }),
+        Promise.resolve(store.teacherLectures.filter(l =>
+          (assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId) && !l.videoUrl?.startsWith('/api/v1/files/')
+        ).map(l => ({ ...l, batch: store.batches.find(b => b.id === l.batchId) })))
+      ]);
+      return res.json({ success: true, lectures: [...stored.map(driveAssetToLecture), ...local] });
+    }
+
     const lectures = store.teacherLectures
       .filter(l => assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId)
       .map(l => ({
@@ -533,15 +592,19 @@ export async function uploadLectureVideo(req: Request, res: Response, next: Next
     if (!req.file) {
       return next(new AppError('No video file provided for upload.', 400));
     }
-    const fileUrl = `/uploads/videos/${req.file.filename}`;
-    const sizeMb = (req.file.size / (1024 * 1024)).toFixed(1) + ' MB';
+    if (isGoogleDriveConfigured()) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError('Upload videos through the batch lecture form so each Drive file is linked to its lecture and access rules.', 400));
+    }
+    const upload = await persistUploadedFile(req.file);
+    const sizeMb = (upload.sizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
     return res.json({
       success: true,
       message: 'Video file uploaded successfully.',
-      fileUrl,
-      fileName: req.file.originalname,
+      fileUrl: upload.fileUrl,
+      fileName: upload.fileName,
       fileSize: sizeMb,
-      mimeType: req.file.mimetype
+      mimeType: upload.mimeType
     });
   } catch (error) {
     next(error);
@@ -554,18 +617,62 @@ export async function createTeacherLecture(req: Request, res: Response, next: Ne
     let videoUrl = req.body.videoUrl || '';
     let fileSize = req.body.fileSize;
     let originalFilename = req.body.originalFilename;
-
-    if (req.file) {
-      videoUrl = `/uploads/videos/${req.file.filename}`;
-      fileSize = (req.file.size / (1024 * 1024)).toFixed(1) + ' MB';
-      originalFilename = req.file.originalname;
-    }
-
-    const isLive = req.body.isLive === 'true' || req.body.isLive === true;
     const teacherProfileId = resolveTeacherProfileId(req);
 
     if (!title || !batchId) {
+      await discardTemporaryUpload(req.file);
       return next(new AppError('Lecture title and target batch are required.', 400));
+    }
+
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user!.id);
+    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds.includes(batchId)) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError('You can only publish lectures to your assigned batches.', 403));
+    }
+
+    let storedUpload: Awaited<ReturnType<typeof persistUploadedFile>> | null = null;
+
+    if (req.file) {
+      storedUpload = await persistUploadedFile(req.file);
+      videoUrl = storedUpload.fileUrl;
+      fileSize = (storedUpload.sizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
+      originalFilename = storedUpload.fileName;
+    }
+
+    const isLive = req.body.isLive === 'true' || req.body.isLive === true;
+
+    if (isDatabaseConnected && storedUpload?.driveFileId) {
+      let asset;
+      try {
+        asset = await prisma.driveAsset.create({
+          data: {
+            driveFileId: storedUpload.driveFileId,
+            type: 'TEACHER_LECTURE',
+            ownerId: req.user!.id,
+            teacherProfileId,
+            batchId,
+            title,
+            description: description || '',
+            fileName: storedUpload.fileName,
+            mimeType: storedUpload.mimeType,
+            sizeBytes: BigInt(storedUpload.sizeBytes),
+            level: level || 'A1',
+            durationMinutes: Number(durationMinutes) || 45,
+            scheduledFor: scheduledFor ? new Date(scheduledFor) : null,
+            isLive,
+            meetingUrl: meetingUrl || null
+          },
+          include: { batch: true }
+        });
+      } catch (error) {
+        await trashDriveFile(storedUpload.driveFileId).catch(() => undefined);
+        throw error;
+      }
+      return res.status(201).json({
+        success: true,
+        message: 'Lecture uploaded and saved to Google Drive.',
+        lecture: driveAssetToLecture(asset)
+      });
     }
 
     const newLecture = {
@@ -614,6 +721,20 @@ export async function deleteTeacherLecture(req: Request, res: Response, next: Ne
     const { lectureId } = req.params;
     const teacherProfileId = resolveTeacherProfileId(req);
 
+    if (isDatabaseConnected) {
+      const asset = await prisma.driveAsset.findFirst({
+        where: {
+          id: lectureId,
+          type: 'TEACHER_LECTURE',
+          ...(req.user?.role === UserRole.ADMIN ? {} : { teacherProfileId })
+        }
+      });
+      if (!asset) return next(new AppError('Lecture not found or unauthorized to delete.', 404));
+      await removeStoredFile(driveFileUrl(asset.driveFileId));
+      await prisma.driveAsset.delete({ where: { id: asset.id } });
+      return res.json({ success: true, message: 'Lecture deleted successfully.' });
+    }
+
     const index = store.teacherLectures.findIndex(l => l.id === lectureId && (l.teacherId === teacherProfileId || req.user?.role === UserRole.ADMIN));
     if (index === -1) {
       return next(new AppError('Lecture not found or unauthorized to delete.', 404));
@@ -621,17 +742,7 @@ export async function deleteTeacherLecture(req: Request, res: Response, next: Ne
 
     const [deleted] = store.teacherLectures.splice(index, 1);
 
-    // Clean up local uploaded video file if applicable
-    if (deleted?.videoUrl && deleted.videoUrl.startsWith('/uploads/videos/')) {
-      try {
-        const filePath = path.join(env.UPLOAD_DIR, 'videos', path.basename(deleted.videoUrl));
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      } catch (err) {
-        console.warn('[Cleanup Warning] Could not remove deleted lecture video file:', err);
-      }
-    }
+    await removeStoredFile(deleted?.videoUrl);
 
     return res.json({ success: true, message: 'Lecture deleted successfully.' });
   } catch (error) {
@@ -647,6 +758,23 @@ export async function getTeacherMaterials(req: Request, res: Response, next: Nex
   try {
     const teacherProfileId = resolveTeacherProfileId(req);
     const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user!.id);
+
+    if (isDatabaseConnected) {
+      const [stored, local] = await Promise.all([
+        prisma.driveAsset.findMany({
+          where: {
+            type: 'TEACHER_MATERIAL',
+            OR: [{ batchId: { in: assignedBatchIds } }, { teacherProfileId }]
+          },
+          include: { batch: true },
+          orderBy: { createdAt: 'desc' }
+        }),
+        Promise.resolve(store.teacherMaterials.filter(m =>
+          (assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId) && !m.fileUrl?.startsWith('/api/v1/files/')
+        ).map(m => ({ ...m, batch: store.batches.find(b => b.id === m.batchId) })))
+      ]);
+      return res.json({ success: true, materials: [...stored.map(driveAssetToMaterial), ...local] });
+    }
 
     const materials = store.teacherMaterials
       .filter(m => assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId)
@@ -668,17 +796,56 @@ export async function createTeacherMaterial(req: Request, res: Response, next: N
     let fileType = req.body.fileType || 'PDF';
     let fileSize = req.body.fileSize || '1.0 MB';
 
+    const teacherProfileId = resolveTeacherProfileId(req);
+    if (!title || !batchId) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError('Material title and target batch are required.', 400));
+    }
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user!.id);
+    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds.includes(batchId)) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError('You can only publish materials to your assigned batches.', 403));
+    }
+
+    let storedUpload: Awaited<ReturnType<typeof persistUploadedFile>> | null = null;
+
     if (req.file) {
-      fileUrl = `/uploads/materials/${req.file.filename}`;
-      fileSize = `${(req.file.size / (1024 * 1024)).toFixed(1)} MB`;
-      const ext = path.extname(req.file.originalname).replace('.', '').toUpperCase();
+      storedUpload = await persistUploadedFile(req.file);
+      fileUrl = storedUpload.fileUrl;
+      fileSize = `${(storedUpload.sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+      const ext = path.extname(storedUpload.fileName).replace('.', '').toUpperCase();
       if (ext) fileType = ext;
     }
 
-    const teacherProfileId = resolveTeacherProfileId(req);
-
-    if (!title || !batchId) {
-      return next(new AppError('Material title and target batch are required.', 400));
+    if (isDatabaseConnected && storedUpload?.driveFileId) {
+      let asset;
+      try {
+        asset = await prisma.driveAsset.create({
+          data: {
+            driveFileId: storedUpload.driveFileId,
+            type: 'TEACHER_MATERIAL',
+            ownerId: req.user!.id,
+            teacherProfileId,
+            batchId,
+            title,
+            description: description || '',
+            fileName: storedUpload.fileName,
+            mimeType: storedUpload.mimeType,
+            sizeBytes: BigInt(storedUpload.sizeBytes),
+            level: level || 'A1',
+            category: category || 'WORKSHEET'
+          },
+          include: { batch: true }
+        });
+      } catch (error) {
+        await trashDriveFile(storedUpload.driveFileId).catch(() => undefined);
+        throw error;
+      }
+      return res.status(201).json({
+        success: true,
+        message: 'Material uploaded and saved to Google Drive.',
+        material: driveAssetToMaterial(asset)
+      });
     }
 
     const newMaterial = {
@@ -723,6 +890,20 @@ export async function deleteTeacherMaterial(req: Request, res: Response, next: N
     const { materialId } = req.params;
     const teacherProfileId = resolveTeacherProfileId(req);
 
+    if (isDatabaseConnected) {
+      const asset = await prisma.driveAsset.findFirst({
+        where: {
+          id: materialId,
+          type: 'TEACHER_MATERIAL',
+          ...(req.user?.role === UserRole.ADMIN ? {} : { teacherProfileId })
+        }
+      });
+      if (!asset) return next(new AppError('Material not found or unauthorized to delete.', 404));
+      await removeStoredFile(driveFileUrl(asset.driveFileId));
+      await prisma.driveAsset.delete({ where: { id: asset.id } });
+      return res.json({ success: true, message: 'Material deleted successfully.' });
+    }
+
     const index = store.teacherMaterials.findIndex(m => m.id === materialId && (m.teacherId === teacherProfileId || req.user?.role === UserRole.ADMIN));
     if (index === -1) {
       return next(new AppError('Material not found or unauthorized to delete.', 404));
@@ -730,17 +911,7 @@ export async function deleteTeacherMaterial(req: Request, res: Response, next: N
 
     const [deleted] = store.teacherMaterials.splice(index, 1);
 
-    // Clean up local uploaded material file if applicable
-    if (deleted?.fileUrl && deleted.fileUrl.startsWith('/uploads/materials/')) {
-      try {
-        const filePath = path.join(env.UPLOAD_DIR, 'materials', path.basename(deleted.fileUrl));
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      } catch (err) {
-        console.warn('[Cleanup Warning] Could not remove deleted material file:', err);
-      }
-    }
+    await removeStoredFile(deleted?.fileUrl);
 
     return res.json({ success: true, message: 'Material deleted successfully.' });
   } catch (error) {

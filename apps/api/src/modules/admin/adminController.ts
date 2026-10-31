@@ -905,10 +905,11 @@ export async function getAuditLogs(req: Request, res: Response, next: NextFuncti
 export async function getPlatformSettings(req: Request, res: Response, next: NextFunction) {
   try {
     if (isDatabaseConnected) {
-      const settings = await prisma.siteSetting.findMany();
+      const settings = await prisma.siteSetting.findMany({ where: { key: { not: { startsWith: 'google_drive_' } } } });
       return res.json({ success: true, settings });
     } else {
-      return res.json({ success: true, settings: store.siteSettings });
+      const settings = store.siteSettings.filter(setting => !setting.key.startsWith('google_drive_'));
+      return res.json({ success: true, settings });
     }
   } catch (error) {
     next(error);
@@ -919,6 +920,10 @@ export async function updatePlatformSetting(req: Request, res: Response, next: N
   try {
     const { key } = req.params;
     const { value, description } = req.body;
+
+    if (key.startsWith('google_drive_')) {
+      return next(new AppError('Google Drive connection settings are managed through the Drive setup endpoints.', 400));
+    }
 
     if (isDatabaseConnected) {
       const setting = await prisma.siteSetting.upsert({

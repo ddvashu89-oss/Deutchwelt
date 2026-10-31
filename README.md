@@ -95,7 +95,7 @@ deutschwelt/
 ├── apps/
 │   ├── api/                           # Express.js REST API
 │   │   ├── prisma/
-│   │   │   ├── schema.prisma          # Complete 32-model relational schema
+│   │   │   ├── schema.prisma          # Relational schema, including Drive assets
 │   │   │   └── seed.ts                # A1-B2 curriculum, users, and vocab seed
 │   │   ├── src/
 │   │   │   ├── config/                # Environment and app configuration
@@ -234,12 +234,12 @@ npm run --workspace=@deutschwelt/shared build
 If PostgreSQL is running locally or via Docker:
 ```bash
 # Push Prisma schema to the database
-npm run --workspace=@deutschwelt/api db:push
+npm run db:push
 
-# Seed A1-B2 curriculum, sample vocabulary, exercises, and demo users
+# Development only: set all SEED_* values to unique local credentials in .env, then seed sample data
 npm run --workspace=@deutschwelt/api db:seed
 ```
-*Note: If no PostgreSQL instance is detected, the API automatically falls back to its resilient internal store so all features work immediately out-of-the-box.*
+*The sample seed is disabled in production. The in-memory demo store is available only in development/test mode. Demo accounts do not have shared default passwords; set local sandbox passwords explicitly if you need to sign into the in-memory fixtures. Production requests require a connected PostgreSQL database.*
 
 ### 5. Start Development Servers
 Run both API and Web servers simultaneously from the root:
@@ -251,6 +251,30 @@ npm run --workspace=@deutschwelt/api dev
 npm run --workspace=@deutschwelt/web dev
 ```
 Open **[http://localhost:5173](http://localhost:5173)** in your browser.
+
+### Google Drive File Storage
+
+Teacher lecture videos and study material uploads, plus student speaking submissions, can use Google Drive. Drive files stay private and are served through the API after role and batch access checks. Local disk uploads remain available when Drive OAuth is not configured.
+
+The integration uses OAuth with the `drive.file` scope and an administrator-selected folder. It does not use the service account created for the earlier Shared Drive setup; personal Gmail accounts do not have Shared Drives.
+
+1. In the Google Cloud project, enable **Google Drive API** and **Google Picker API**.
+2. Configure the OAuth consent screen. For a personal Gmail account, choose the external audience and add that account as a test user during setup. While an external consent screen is in **Testing**, Drive refresh tokens expire after seven days; review the publishing status before relying on the connection in production ([Google OAuth token guidance](https://developers.google.com/identity/protocols/oauth2)).
+3. Create an OAuth client of type **Web application**. Add `http://localhost:5173` as an authorized JavaScript origin and `http://localhost:5173/api/v1/admin/drive/callback` as an authorized redirect URI. Add the equivalent production origin and callback path for your deployed site.
+4. Create an API key for Google Picker. Under website restrictions, add `http://localhost:5173/*` and `https://docs.google.com/*`; under API restrictions, allow **Google Picker API** and **Google Drive API**. Add your production site and `https://docs.google.com/*` there too. Copy the project number (not project ID) from Google Cloud. See Google's [Picker API setup](https://developers.google.com/workspace/drive/picker/guides/web-picker).
+5. Set these values in the API environment. Keep the OAuth client secret private and out of source control:
+
+   ```env
+   GOOGLE_DRIVE_CLIENT_ID="your-oauth-client-id"
+   GOOGLE_DRIVE_CLIENT_SECRET="your-oauth-client-secret"
+   GOOGLE_DRIVE_PICKER_API_KEY="your-restricted-picker-api-key"
+   GOOGLE_DRIVE_PROJECT_NUMBER="your-google-cloud-project-number"
+   ```
+
+6. Sign in to DeutschWelt as an administrator, open **Admin → Settings**, connect the academy Google account, and choose the storage folder in My Drive. The app requests the limited `drive.file` scope and uses Google Picker for folder access ([Google Drive scope guidance](https://developers.google.com/workspace/drive/api/guides/api-specific-auth)). The refresh token is encrypted in `SiteSetting`; set a strong, persistent `SESSION_SECRET` before connecting.
+7. Apply the additive `DriveAsset` schema change with `npm run db:push` from the repository root. PostgreSQL is needed to persist Drive asset metadata across restarts.
+
+Deleting an uploaded asset moves it to Google Drive trash. The app does not expose public Drive links.
 
 ---
 
@@ -266,7 +290,7 @@ docker compose ps
 ```
 Once healthy, execute migrations and seeding:
 ```bash
-npm run --workspace=@deutschwelt/api db:push
+npm run db:push
 npm run --workspace=@deutschwelt/api db:seed
 ```
 
@@ -274,7 +298,7 @@ npm run --workspace=@deutschwelt/api db:seed
 
 ## 8. Database Schema & Prisma
 
-The relational database model is declared in [`apps/api/prisma/schema.prisma`](apps/api/prisma/schema.prisma) and includes **32 models**:
+The relational database model is declared in [`apps/api/prisma/schema.prisma`](apps/api/prisma/schema.prisma) and includes models for the following areas:
 
 - **Authentication & Users:** `User`, `StudentProfile`, `TeacherProfile`, `Session`, `PasswordResetToken`, `EmailVerificationToken`.
 - **Courses & Curriculum:** `Course`, `CourseUnit`, `Lesson`, `LessonContentBlock`, `CoursePrerequisite`, `Enrollment`, `LessonProgress`.
@@ -283,6 +307,7 @@ The relational database model is declared in [`apps/api/prisma/schema.prisma`](a
 - **Speaking Lab:** `SpeakingPrompt`, `SpeakingAttempt`.
 - **Assignments & Batches:** `Assignment`, `AssignmentSubmission`, `TeacherBatch`, `BatchMembership`, `TeacherBatchAssignment`.
 - **System & Administration:** `Notification`, `ContactEnquiry`, `SiteSetting`, `AuditLog`.
+- **Private file storage:** `DriveAsset` links private Google Drive files to their owner and, when applicable, a batch.
 
 ---
 
@@ -392,6 +417,22 @@ This produces:
 - `packages/shared/dist`: Compiled ESM modules and TypeScript definitions.
 - `apps/api/dist`: Node.js server bundle.
 - `apps/web/dist`: Static frontend bundle optimized with Vite.
+
+### Production launch checklist
+
+1. Configure `NODE_ENV=production`, an HTTPS `FRONTEND_URL`, PostgreSQL `DATABASE_URL`, and unique `SESSION_SECRET` and `COOKIE_SECRET` values of at least 32 characters. Do not use values from `.env.example` for a live deployment.
+2. Run `npm run db:push` against the production PostgreSQL database.
+3. Create the first real administrator once. Set `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD` (14+ unique characters), `BOOTSTRAP_ADMIN_FIRST_NAME`, and `BOOTSTRAP_ADMIN_LAST_NAME` in the server environment, then run:
+
+   ```bash
+   npm run --workspace=@deutschwelt/api db:create-admin
+   ```
+
+   Remove the `BOOTSTRAP_ADMIN_*` values after the command succeeds. It refuses to run if an administrator already exists. Do not run the development `db:seed` command in production; it contains sample course activity and is intentionally blocked there.
+4. Configure `GOOGLE_DRIVE_CLIENT_ID`, `GOOGLE_DRIVE_CLIENT_SECRET`, `GOOGLE_DRIVE_PICKER_API_KEY`, and `GOOGLE_DRIVE_PROJECT_NUMBER` in the server environment if using Drive storage. Register the exact deployed origin and `/api/v1/admin/drive/callback` redirect URI in Google Cloud.
+5. Build and deploy. Confirm the API health endpoint reports `healthy` with `database: connected`, then sign in with the bootstrap administrator, connect Drive, and select the private storage folder.
+
+The Google OAuth project can stay in **Testing** while you verify the connection. Before opening Drive access to all users, confirm the consent screen branding, production domain, privacy policy URL, and production redirect URI, then publish the OAuth app in Google Cloud. Keep the OAuth client secret out of Git and the frontend bundle.
 
 ### Self-Hosted VPS Deployment (e.g., Ubuntu / Debian)
 1. **Reverse Proxy:** Configure Nginx or Caddy to proxy `/api` traffic to port `5000` and serve static files from `apps/web/dist`.

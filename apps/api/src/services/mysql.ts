@@ -4,16 +4,19 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
-const host = process.env.DB_HOST || 's1-livi.neondns.com';
+const host = process.env.DB_HOST || "";
 const port = parseInt(process.env.DB_PORT || '3306', 10);
-const user = process.env.DB_USER || 'vecosiss_DeutchWelt';
-const password = process.env.DB_PASSWORD || 'x{=Q=]qko2%sxNyX';
-const database = process.env.DB_NAME || 'vecosiss_DeutchWelt';
+const user = process.env.DB_USER || "";
+const password = process.env.DB_PASSWORD || "";
+const database = process.env.DB_DATABASE || "";
+
+const isMySQLEnabled = process.env.ENABLE_MYSQL === "true" && Boolean(host && user && password && database);
 
 let pool: Pool | null = null;
 export let isMySQLConnected = false;
 
 export function getMySQLPool(): Pool {
+  if (!isMySQLEnabled) throw new Error("MySQL is disabled or missing explicit connection settings.");
   if (!pool) {
     pool = mysql.createPool({
       host,
@@ -31,6 +34,11 @@ export function getMySQLPool(): Pool {
 }
 
 export async function checkMySQLConnection(): Promise<boolean> {
+  if (!isMySQLEnabled) {
+    isMySQLConnected = false;
+    console.log("[MySQL] Disabled; only explicitly configured connections are allowed.");
+    return false;
+  }
   try {
     const p = getMySQLPool();
     const connection = await p.getConnection();

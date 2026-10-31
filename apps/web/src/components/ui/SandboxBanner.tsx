@@ -21,10 +21,8 @@ export function SandboxBanner() {
         }
       })
       .catch(() => {
-        // Fallback default
-        if (mounted) {
-          setEnvInfo({ environment: 'sandbox', isSandbox: true, secure: true });
-        }
+        // Do not label an unreachable production API as a sandbox.
+        if (mounted) setEnvInfo(null);
       });
     return () => {
       mounted = false;

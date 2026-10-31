@@ -1,23 +1,40 @@
 import { PrismaClient, UserRole, GermanLevel, PublicationStatus, GermanArticle, PartOfSpeech, ExerciseType, LessonContentType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+import path from 'node:path';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('--- Starting DeutschWelt Database Seed ---');
 
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('The sample seed contains demo users and activity. It is disabled in production. Use `npm run db:create-admin` to create your real first administrator.');
+  }
+
   // 1. Password Hashes
-  const adminPasswordHash = await bcrypt.hash(process.env.SEED_ADMIN_PASSWORD || 'AdminDeutschWelt2026!', 10);
-  const teacherPasswordHash = await bcrypt.hash(process.env.SEED_TEACHER_PASSWORD || 'TeacherDeutschWelt2026!', 10);
-  const studentPasswordHash = await bcrypt.hash(process.env.SEED_STUDENT_PASSWORD || 'StudentDeutschWelt2026!', 10);
+  const seedValue = (key: string) => {
+    const value = process.env[key]?.trim();
+    if (!value) throw new Error(`${key} must be set before running the development sample seed.`);
+    return value;
+  };
+  const adminEmail = seedValue('SEED_ADMIN_EMAIL').toLowerCase();
+  const teacherEmail = seedValue('SEED_TEACHER_EMAIL').toLowerCase();
+  const studentEmail = seedValue('SEED_STUDENT_EMAIL').toLowerCase();
+  const adminPasswordHash = await bcrypt.hash(seedValue('SEED_ADMIN_PASSWORD'), 12);
+  const teacherPasswordHash = await bcrypt.hash(seedValue('SEED_TEACHER_PASSWORD'), 12);
+  const studentPasswordHash = await bcrypt.hash(seedValue('SEED_STUDENT_PASSWORD'), 12);
 
   // 2. Seed Users
   console.log('Seeding core users...');
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@deutschwelt.de' },
+    where: { email: adminEmail },
     update: {},
     create: {
-      email: 'admin@deutschwelt.de',
+      email: adminEmail,
       passwordHash: adminPasswordHash,
       firstName: 'Maximilian',
       lastName: 'Schmidt',
@@ -29,10 +46,10 @@ async function main() {
   });
 
   const teacherUser = await prisma.user.upsert({
-    where: { email: 'teacher@deutschwelt.de' },
+    where: { email: teacherEmail },
     update: {},
     create: {
-      email: 'teacher@deutschwelt.de',
+      email: teacherEmail,
       passwordHash: teacherPasswordHash,
       firstName: 'Dr. Katharina',
       lastName: 'Weber',
@@ -53,10 +70,10 @@ async function main() {
   });
 
   const studentUser = await prisma.user.upsert({
-    where: { email: 'student@deutschwelt.de' },
+    where: { email: studentEmail },
     update: {},
     create: {
-      email: 'student@deutschwelt.de',
+      email: studentEmail,
       passwordHash: studentPasswordHash,
       firstName: 'Elena',
       lastName: 'Rostova',

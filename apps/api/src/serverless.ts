@@ -1,7 +1,12 @@
 import app from './app.js';
+import { checkDatabaseConnection } from './services/prisma.js';
 
-export default function handler(req: any, res: any) {
+let databaseCheck: Promise<boolean> | null = null;
+
+export default async function handler(req: any, res: any) {
   try {
+    if (!databaseCheck) databaseCheck = checkDatabaseConnection();
+    if (!await databaseCheck) databaseCheck = null;
     return app(req, res);
   } catch (err: any) {
     console.error('[Serverless Handler Error]', err);

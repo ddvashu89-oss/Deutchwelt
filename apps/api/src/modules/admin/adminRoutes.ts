@@ -31,6 +31,12 @@ import {
 } from './adminController.js';
 import { requireAuth, requireRole } from '../../middleware/auth.js';
 import { UserRole } from '@deutschwelt/shared';
+import {
+  connectGoogleDrive,
+  getGoogleDrivePickerConfig,
+  getGoogleDriveStatus,
+  saveGoogleDriveFolder
+} from './driveController.js';
 
 const router = Router();
 
@@ -69,6 +75,10 @@ router.patch('/enquiries/:enquiryId', updateEnquiryStatus);
 router.get('/audit-logs', getAuditLogs);
 router.get('/settings', getPlatformSettings);
 router.patch('/settings/:key', updatePlatformSetting);
+router.get('/drive/connect', connectGoogleDrive);
+router.get('/drive/status', getGoogleDriveStatus);
+router.get('/drive/picker-config', getGoogleDrivePickerConfig);
+router.post('/drive/folder', saveGoogleDriveFolder);
 
 // Batches, Payments, Attendance & Announcements
 router.get('/batches', getAdminBatches);

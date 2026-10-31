@@ -3,6 +3,7 @@ import { VocabMasteryStatus } from '@deutschwelt/shared';
 import { prisma, isDatabaseConnected } from '../../services/prisma.js';
 import { store } from '../../services/store.js';
 import { AppError } from '../../middleware/errorHandler.js';
+import { driveFileUrl } from '../../services/googleDrive.js';
 
 export async function getStudentDashboard(req: Request, res: Response, next: NextFunction) {
   try {
@@ -330,6 +331,52 @@ export async function getStudentBatchMaterials(req: Request, res: Response, next
   try {
     if (!req.user) return next(new AppError('Unauthorized', 401));
 
+    if (isDatabaseConnected) {
+      const memberships = await prisma.batchMembership.findMany({
+        where: { userId: req.user.id, status: 'ACTIVE' },
+        select: { batchId: true }
+      });
+      const batchIds = memberships.map((item: any) => item.batchId);
+      const stored = batchIds.length ? await prisma.driveAsset.findMany({
+        where: { type: 'TEACHER_MATERIAL', batchId: { in: batchIds } },
+        include: {
+          batch: { select: { name: true } },
+          owner: { select: { firstName: true, lastName: true } }
+        },
+        orderBy: { createdAt: 'desc' }
+      }) : [];
+      const local = store.teacherMaterials.filter(m => batchIds.includes(m.batchId) && !m.fileUrl?.startsWith('/api/v1/files/'));
+      const materials = [
+        ...stored.map((asset: any) => ({
+          id: asset.id,
+          teacherId: asset.teacherProfileId,
+          batchId: asset.batchId,
+          title: asset.title,
+          category: asset.category || 'WORKSHEET',
+          description: asset.description || '',
+          fileUrl: driveFileUrl(asset.driveFileId),
+          fileType: asset.fileName.split('.').pop()?.toUpperCase() || 'FILE',
+          fileSize: `${(Number(asset.sizeBytes) / (1024 * 1024)).toFixed(1)} MB`,
+          level: asset.level,
+          createdAt: asset.createdAt,
+          batchName: asset.batch?.name || 'Class Materials',
+          teacherName: `${asset.owner?.firstName || ''} ${asset.owner?.lastName || ''}`.trim() || 'Course Instructor'
+        })),
+        ...local.map((m: any) => {
+          const batch = store.batches.find(b => b.id === m.batchId);
+          const teacher = store.teacherProfiles.find(tp => tp.id === m.teacherId);
+          const teacherUser = teacher ? store.users.find(u => u.id === teacher.userId) : null;
+          return {
+            ...m,
+            batchName: batch?.name || 'Class Materials',
+            teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : 'Course Instructor'
+          };
+        })
+      ];
+      const announcements = store.batchAnnouncements.filter(a => batchIds.includes(a.batchId));
+      return res.json({ success: true, materials, announcements });
+    }
+
     const myBatchIds = store.batchMemberships
       .filter(bm => bm.userId === req.user!.id)
       .map(bm => bm.batchId);
@@ -375,6 +422,55 @@ export async function getStudentBatchMaterials(req: Request, res: Response, next
 export async function getStudentBatchLectures(req: Request, res: Response, next: NextFunction) {
   try {
     if (!req.user) return next(new AppError('Unauthorized', 401));
+
+    if (isDatabaseConnected) {
+      const memberships = await prisma.batchMembership.findMany({
+        where: { userId: req.user.id, status: 'ACTIVE' },
+        select: { batchId: true }
+      });
+      const batchIds = memberships.map((item: any) => item.batchId);
+      const stored = batchIds.length ? await prisma.driveAsset.findMany({
+        where: { type: 'TEACHER_LECTURE', batchId: { in: batchIds } },
+        include: {
+          batch: { select: { name: true } },
+          owner: { select: { firstName: true, lastName: true } }
+        },
+        orderBy: { createdAt: 'desc' }
+      }) : [];
+      const local = store.teacherLectures.filter(l => batchIds.includes(l.batchId) && !l.videoUrl?.startsWith('/api/v1/files/'));
+      const lectures = [
+        ...stored.map((asset: any) => ({
+          id: asset.id,
+          teacherId: asset.teacherProfileId,
+          batchId: asset.batchId,
+          title: asset.title,
+          description: asset.description || '',
+          level: asset.level,
+          videoUrl: driveFileUrl(asset.driveFileId),
+          durationMinutes: asset.durationMinutes || 45,
+          scheduledFor: asset.scheduledFor || asset.createdAt,
+          isLive: asset.isLive,
+          meetingUrl: asset.meetingUrl || '',
+          fileSize: `${(Number(asset.sizeBytes) / (1024 * 1024)).toFixed(1)} MB`,
+          originalFilename: asset.fileName,
+          status: 'PUBLISHED',
+          createdAt: asset.createdAt,
+          batchName: asset.batch?.name || 'Class Lecture',
+          teacherName: `${asset.owner?.firstName || ''} ${asset.owner?.lastName || ''}`.trim() || 'Course Instructor'
+        })),
+        ...local.map((l: any) => {
+          const batch = store.batches.find(b => b.id === l.batchId);
+          const teacher = store.teacherProfiles.find(tp => tp.id === l.teacherId);
+          const teacherUser = teacher ? store.users.find(u => u.id === teacher.userId) : null;
+          return {
+            ...l,
+            batchName: batch?.name || 'Class Lecture',
+            teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : 'Course Instructor'
+          };
+        })
+      ];
+      return res.json({ success: true, lectures });
+    }
 
     const myBatchIds = store.batchMemberships
       .filter(bm => bm.userId === req.user!.id)

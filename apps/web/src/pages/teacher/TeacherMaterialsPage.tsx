@@ -380,7 +380,7 @@ export function TeacherMaterialsPage() {
                             </span>
                           ) : (
                             <Badge variant="secondary" className="text-[10px]">
-                              {lec.videoUrl?.startsWith('/uploads/') ? 'Uploaded Video' : 'Video Lesson'}
+                              {(lec.videoUrl?.startsWith('/uploads/') || lec.videoUrl?.startsWith('/api/v1/files/')) ? 'Uploaded Video' : 'Video Lesson'}
                             </Badge>
                           )}
                         </div>
@@ -414,7 +414,7 @@ export function TeacherMaterialsPage() {
                           </button>
                         )}
                         <div className="flex items-center gap-2">
-                          {lec.videoUrl && (lec.videoUrl.startsWith('/uploads/') || lec.videoUrl.endsWith('.mp4')) && (
+                          {lec.videoUrl && (lec.videoUrl.startsWith('/uploads/') || lec.videoUrl.startsWith('/api/v1/files/') || lec.videoUrl.endsWith('.mp4')) && (
                             <a
                               href={lec.videoUrl}
                               download
@@ -996,7 +996,7 @@ export function TeacherMaterialsPage() {
             <VideoPlayer url={previewLecture.videoUrl} title={previewLecture.title} autoPlay />
             <div className="flex items-center justify-between text-xs text-dark-muted pt-2 border-t border-gray-100">
               <span>Level: <strong className="text-navy">{previewLecture.level}</strong></span>
-              {(previewLecture.videoUrl?.startsWith('/uploads/') || previewLecture.videoUrl?.endsWith('.mp4')) && (
+              {(previewLecture.videoUrl?.startsWith('/uploads/') || previewLecture.videoUrl?.startsWith('/api/v1/files/') || previewLecture.videoUrl?.endsWith('.mp4')) && (
                 <a
                   href={previewLecture.videoUrl}
                   download

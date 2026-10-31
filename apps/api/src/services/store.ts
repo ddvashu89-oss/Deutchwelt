@@ -1,5 +1,7 @@
 import { UserRole, GermanLevel, PublicationStatus, GermanArticle, PartOfSpeech, ExerciseType, LessonContentType, SubmissionStatus, EnquiryStatus, VocabMasteryStatus } from '@deutschwelt/shared';
 import bcrypt from 'bcryptjs';
+import { randomBytes } from 'node:crypto';
+import { env } from '../config/env.js';
 
 // Stateful mock/cache store for zero-friction local development and automated testing
 export class DataStore {
@@ -40,10 +42,10 @@ export class DataStore {
   payments: any[] = [];
   attendance: any[] = [];
   lessonReports: any[] = [];
-  isSandboxMode: boolean = true;
+  isSandboxMode: boolean = env.isSandbox;
 
   constructor() {
-    this.seedInitialData();
+    if (env.isSandbox || env.isTest) this.seedInitialData();
   }
 
   resetSandbox() {
@@ -55,9 +57,14 @@ export class DataStore {
   }
 
   seedInitialData() {
-    const adminPasswordHash = bcrypt.hashSync('AdminDeutschWelt2026!', 10);
-    const teacherPasswordHash = bcrypt.hashSync('TeacherDeutschWelt2026!', 10);
-    const studentPasswordHash = bcrypt.hashSync('StudentDeutschWelt2026!', 10);
+    if (!env.isSandbox && !env.isTest) return;
+    const sandboxPasswords = env.isTest
+      ? [process.env.TEST_ADMIN_PASSWORD, process.env.TEST_TEACHER_PASSWORD, process.env.TEST_STUDENT_PASSWORD]
+      : [process.env.SANDBOX_ADMIN_PASSWORD, process.env.SANDBOX_TEACHER_PASSWORD, process.env.SANDBOX_STUDENT_PASSWORD];
+    const [adminPassword, teacherPassword, studentPassword] = sandboxPasswords.map(value => value || randomBytes(32).toString('base64url'));
+    const adminPasswordHash = bcrypt.hashSync(adminPassword, 12);
+    const teacherPasswordHash = bcrypt.hashSync(teacherPassword, 12);
+    const studentPasswordHash = bcrypt.hashSync(studentPassword, 12);
 
     const admin = {
       id: 'user-admin-1',

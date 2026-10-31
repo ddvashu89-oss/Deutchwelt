@@ -1296,8 +1296,8 @@ var require_node = __commonJS({
           }
           break;
         case "FILE":
-          var fs3 = __require("fs");
-          stream2 = new fs3.SyncWriteStream(fd2, { autoClose: false });
+          var fs4 = __require("fs");
+          stream2 = new fs4.SyncWriteStream(fd2, { autoClose: false });
           stream2._type = "fs";
           break;
         case "PIPE":
@@ -4723,13 +4723,13 @@ var require_extend_node = __commonJS({
           return length;
         };
         if (iconv.supportsStreams) {
-          var Readable = __require("stream").Readable;
-          original.ReadableSetEncoding = Readable.prototype.setEncoding;
-          Readable.prototype.setEncoding = function setEncoding(enc, options) {
+          var Readable2 = __require("stream").Readable;
+          original.ReadableSetEncoding = Readable2.prototype.setEncoding;
+          Readable2.prototype.setEncoding = function setEncoding(enc, options) {
             this._readableState.decoder = iconv.getDecoder(enc, options);
             this._readableState.encoding = enc;
           };
-          Readable.prototype.collect = iconv._collect;
+          Readable2.prototype.collect = iconv._collect;
         }
       };
       iconv.undoExtendNodeEncodings = function undoExtendNodeEncodings() {
@@ -4746,9 +4746,9 @@ var require_extend_node = __commonJS({
         Buffer3.prototype.toString = original.BufferToString;
         Buffer3.prototype.write = original.BufferWrite;
         if (iconv.supportsStreams) {
-          var Readable = __require("stream").Readable;
-          Readable.prototype.setEncoding = original.ReadableSetEncoding;
-          delete Readable.prototype.collect;
+          var Readable2 = __require("stream").Readable;
+          Readable2.prototype.setEncoding = original.ReadableSetEncoding;
+          delete Readable2.prototype.collect;
         }
         original = void 0;
       };
@@ -14084,11 +14084,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path4) {
-      if (!path4 || typeof path4 !== "string") {
+    function lookup(path7) {
+      if (!path7 || typeof path7 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path4).toLowerCase().substr(1);
+      var extension2 = extname("x." + path7).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -17912,8 +17912,8 @@ var require_node2 = __commonJS({
           }
           break;
         case "FILE":
-          var fs3 = __require("fs");
-          stream2 = new fs3.SyncWriteStream(fd2, { autoClose: false });
+          var fs4 = __require("fs");
+          stream2 = new fs4.SyncWriteStream(fd2, { autoClose: false });
           stream2._type = "fs";
           break;
         case "PIPE":
@@ -18631,8 +18631,8 @@ var require_node3 = __commonJS({
           }
           break;
         case "FILE":
-          var fs3 = __require("fs");
-          stream2 = new fs3.SyncWriteStream(fd2, { autoClose: false });
+          var fs4 = __require("fs");
+          stream2 = new fs4.SyncWriteStream(fd2, { autoClose: false });
           stream2._type = "fs";
           break;
         case "PIPE":
@@ -18720,7 +18720,7 @@ var require_path_to_regexp = __commonJS({
   "node_modules/path-to-regexp/index.js"(exports, module) {
     module.exports = pathToRegexp;
     var MATCHING_GROUP_REGEXP = /\\.|\((?:\?<(.*?)>)?(?!\?)/g;
-    function pathToRegexp(path4, keys, options) {
+    function pathToRegexp(path7, keys, options) {
       options = options || {};
       keys = keys || [];
       var strict = options.strict;
@@ -18734,8 +18734,8 @@ var require_path_to_regexp = __commonJS({
       var pos = 0;
       var backtrack = "";
       var m;
-      if (path4 instanceof RegExp) {
-        while (m = MATCHING_GROUP_REGEXP.exec(path4.source)) {
+      if (path7 instanceof RegExp) {
+        while (m = MATCHING_GROUP_REGEXP.exec(path7.source)) {
           if (m[0][0] === "\\") continue;
           keys.push({
             name: m[1] || name++,
@@ -18743,18 +18743,18 @@ var require_path_to_regexp = __commonJS({
             offset: m.index
           });
         }
-        return path4;
+        return path7;
       }
-      if (Array.isArray(path4)) {
-        path4 = path4.map(function(value) {
+      if (Array.isArray(path7)) {
+        path7 = path7.map(function(value) {
           return pathToRegexp(value, keys, options).source;
         });
-        return new RegExp(path4.join("|"), flags);
+        return new RegExp(path7.join("|"), flags);
       }
-      if (typeof path4 !== "string") {
+      if (typeof path7 !== "string") {
         throw new TypeError("path must be a string, array of strings, or regular expression");
       }
-      path4 = path4.replace(
+      path7 = path7.replace(
         /\\.|(\/)?(\.)?:(\w+)(\(.*?\))?(\*)?(\?)?|[.*]|\/\(/g,
         function(match, slash, format, key, capture, star, optional, offset) {
           if (match[0] === "\\") {
@@ -18771,7 +18771,7 @@ var require_path_to_regexp = __commonJS({
           if (slash || format) {
             backtrack = "";
           } else {
-            backtrack += path4.slice(pos, offset);
+            backtrack += path7.slice(pos, offset);
           }
           pos = offset + match.length;
           if (match === "*") {
@@ -18801,7 +18801,7 @@ var require_path_to_regexp = __commonJS({
           return result;
         }
       );
-      while (m = MATCHING_GROUP_REGEXP.exec(path4)) {
+      while (m = MATCHING_GROUP_REGEXP.exec(path7)) {
         if (m[0][0] === "\\") continue;
         if (keysOffset + i === keys.length || keys[keysOffset + i].offset > m.index) {
           keys.splice(keysOffset + i, 0, {
@@ -18813,13 +18813,13 @@ var require_path_to_regexp = __commonJS({
         }
         i++;
       }
-      path4 += strict ? "" : path4[path4.length - 1] === "/" ? "?" : "/?";
+      path7 += strict ? "" : path7[path7.length - 1] === "/" ? "?" : "/?";
       if (end) {
-        path4 += "$";
-      } else if (path4[path4.length - 1] !== "/") {
-        path4 += lookahead ? "(?=/|$)" : "(?:/|$)";
+        path7 += "$";
+      } else if (path7[path7.length - 1] !== "/") {
+        path7 += lookahead ? "(?=/|$)" : "(?:/|$)";
       }
-      return new RegExp("^" + path4, flags);
+      return new RegExp("^" + path7, flags);
     }
   }
 });
@@ -18832,19 +18832,19 @@ var require_layer = __commonJS({
     var debug = require_src3()("express:router:layer");
     var hasOwnProperty = Object.prototype.hasOwnProperty;
     module.exports = Layer;
-    function Layer(path4, options, fn) {
+    function Layer(path7, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path4, options, fn);
+        return new Layer(path7, options, fn);
       }
-      debug("new %o", path4);
+      debug("new %o", path7);
       var opts = options || {};
       this.handle = fn;
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.regexp = pathRegexp(path4, this.keys = [], opts);
-      this.regexp.fast_star = path4 === "*";
-      this.regexp.fast_slash = path4 === "/" && opts.end === false;
+      this.regexp = pathRegexp(path7, this.keys = [], opts);
+      this.regexp.fast_star = path7 === "*";
+      this.regexp.fast_slash = path7 === "/" && opts.end === false;
     }
     Layer.prototype.handle_error = function handle_error(error, req, res, next) {
       var fn = this.handle;
@@ -18868,20 +18868,20 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path4) {
+    Layer.prototype.match = function match(path7) {
       var match2;
-      if (path4 != null) {
+      if (path7 != null) {
         if (this.regexp.fast_slash) {
           this.params = {};
           this.path = "";
           return true;
         }
         if (this.regexp.fast_star) {
-          this.params = { "0": decode_param(path4) };
-          this.path = path4;
+          this.params = { "0": decode_param(path7) };
+          this.path = path7;
           return true;
         }
-        match2 = this.regexp.exec(path4);
+        match2 = this.regexp.exec(path7);
       }
       if (!match2) {
         this.params = void 0;
@@ -18974,10 +18974,10 @@ var require_route = __commonJS({
     var slice = Array.prototype.slice;
     var toString = Object.prototype.toString;
     module.exports = Route;
-    function Route(path4) {
-      this.path = path4;
+    function Route(path7) {
+      this.path = path7;
       this.stack = [];
-      debug("new %o", path4);
+      debug("new %o", path7);
       this.methods = {};
     }
     Route.prototype._handles_method = function _handles_method(method) {
@@ -19107,17 +19107,17 @@ var require_router = __commonJS({
     var toString = Object.prototype.toString;
     var proto = module.exports = function(options) {
       var opts = options || {};
-      function router13(req, res, next) {
-        router13.handle(req, res, next);
+      function router14(req, res, next) {
+        router14.handle(req, res, next);
       }
-      setPrototypeOf(router13, proto);
-      router13.params = {};
-      router13._params = [];
-      router13.caseSensitive = opts.caseSensitive;
-      router13.mergeParams = opts.mergeParams;
-      router13.strict = opts.strict;
-      router13.stack = [];
-      return router13;
+      setPrototypeOf(router14, proto);
+      router14.params = {};
+      router14._params = [];
+      router14.caseSensitive = opts.caseSensitive;
+      router14.mergeParams = opts.mergeParams;
+      router14.strict = opts.strict;
+      router14.stack = [];
+      return router14;
     };
     proto.param = function param(name, fn) {
       if (typeof name === "function") {
@@ -19189,8 +19189,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        var path4 = getPathname(req);
-        if (path4 == null) {
+        var path7 = getPathname(req);
+        if (path7 == null) {
           return done(layerError);
         }
         var layer;
@@ -19198,7 +19198,7 @@ var require_router = __commonJS({
         var route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path4);
+          match = matchLayer(layer, path7);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -19236,18 +19236,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handle_request(req, res, next);
           } else {
-            trim_prefix(layer, layerError, layerPath, path4);
+            trim_prefix(layer, layerError, layerPath, path7);
           }
           sync = 0;
         });
       }
-      function trim_prefix(layer, layerError, layerPath, path4) {
+      function trim_prefix(layer, layerError, layerPath, path7) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path4.slice(0, layerPath.length)) {
+          if (layerPath !== path7.slice(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          var c = path4[layerPath.length];
+          var c = path7[layerPath.length];
           if (c && c !== "/" && c !== ".") return next(layerError);
           debug("trim prefix (%s) from url %s", layerPath, req.url);
           removed = layerPath;
@@ -19325,7 +19325,7 @@ var require_router = __commonJS({
     };
     proto.use = function use(fn) {
       var offset = 0;
-      var path4 = "/";
+      var path7 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -19333,7 +19333,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path4 = fn;
+          path7 = fn;
         }
       }
       var callbacks = flatten(slice.call(arguments, offset));
@@ -19345,8 +19345,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("Router.use() requires a middleware function but got a " + gettype(fn));
         }
-        debug("use %o %s", path4, fn.name || "<anonymous>");
-        var layer = new Layer(path4, {
+        debug("use %o %s", path7, fn.name || "<anonymous>");
+        var layer = new Layer(path7, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -19356,9 +19356,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    proto.route = function route(path4) {
-      var route2 = new Route(path4);
-      var layer = new Layer(path4, {
+    proto.route = function route(path7) {
+      var route2 = new Route(path7);
+      var layer = new Layer(path7, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -19368,8 +19368,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      proto[method] = function(path4) {
-        var route = this.route(path4);
+      proto[method] = function(path7) {
+        var route = this.route(path7);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -19405,9 +19405,9 @@ var require_router = __commonJS({
       }
       return toString.call(obj).replace(objectRegExp, "$1");
     }
-    function matchLayer(layer, path4) {
+    function matchLayer(layer, path7) {
       try {
-        return layer.match(path4);
+        return layer.match(path7);
       } catch (err) {
         return err;
       }
@@ -19525,13 +19525,13 @@ var require_view = __commonJS({
   "node_modules/express/lib/view.js"(exports, module) {
     "use strict";
     var debug = require_src3()("express:view");
-    var path4 = __require("path");
-    var fs3 = __require("fs");
-    var dirname = path4.dirname;
-    var basename = path4.basename;
-    var extname = path4.extname;
-    var join = path4.join;
-    var resolve = path4.resolve;
+    var path7 = __require("path");
+    var fs4 = __require("fs");
+    var dirname = path7.dirname;
+    var basename = path7.basename;
+    var extname = path7.extname;
+    var join = path7.join;
+    var resolve = path7.resolve;
     module.exports = View;
     function View(name, options) {
       var opts = options || {};
@@ -19560,17 +19560,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup(name) {
-      var path5;
+      var path8;
       var roots = [].concat(this.root);
       debug('lookup "%s"', name);
-      for (var i = 0; i < roots.length && !path5; i++) {
+      for (var i = 0; i < roots.length && !path8; i++) {
         var root = roots[i];
         var loc = resolve(root, name);
         var dir = dirname(loc);
         var file = basename(loc);
-        path5 = this.resolve(dir, file);
+        path8 = this.resolve(dir, file);
       }
-      return path5;
+      return path8;
     };
     View.prototype.render = function render(options, callback) {
       debug('render "%s"', this.path);
@@ -19578,21 +19578,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve2(dir, file) {
       var ext = this.ext;
-      var path5 = join(dir, file);
-      var stat = tryStat(path5);
+      var path8 = join(dir, file);
+      var stat = tryStat(path8);
       if (stat && stat.isFile()) {
-        return path5;
+        return path8;
       }
-      path5 = join(dir, basename(file, ext), "index" + ext);
-      stat = tryStat(path5);
+      path8 = join(dir, basename(file, ext), "index" + ext);
+      stat = tryStat(path8);
       if (stat && stat.isFile()) {
-        return path5;
+        return path8;
       }
     };
-    function tryStat(path5) {
-      debug('stat "%s"', path5);
+    function tryStat(path8) {
+      debug('stat "%s"', path8);
       try {
-        return fs3.statSync(path5);
+        return fs4.statSync(path8);
       } catch (e) {
         return void 0;
       }
@@ -20197,8 +20197,8 @@ var require_node4 = __commonJS({
           }
           break;
         case "FILE":
-          var fs3 = __require("fs");
-          stream2 = new fs3.SyncWriteStream(fd2, { autoClose: false });
+          var fs4 = __require("fs");
+          stream2 = new fs4.SyncWriteStream(fd2, { autoClose: false });
           stream2._type = "fs";
           break;
         case "PIPE":
@@ -20370,8 +20370,8 @@ var require_types = __commonJS({
 // node_modules/mime/mime.js
 var require_mime = __commonJS({
   "node_modules/mime/mime.js"(exports, module) {
-    var path4 = __require("path");
-    var fs3 = __require("fs");
+    var path7 = __require("path");
+    var fs4 = __require("fs");
     function Mime() {
       this.types = /* @__PURE__ */ Object.create(null);
       this.extensions = /* @__PURE__ */ Object.create(null);
@@ -20392,7 +20392,7 @@ var require_mime = __commonJS({
     };
     Mime.prototype.load = function(file) {
       this._loading = file;
-      var map = {}, content = fs3.readFileSync(file, "ascii"), lines = content.split(/[\r\n]+/);
+      var map = {}, content = fs4.readFileSync(file, "ascii"), lines = content.split(/[\r\n]+/);
       lines.forEach(function(line) {
         var fields = line.replace(/\s*#.*|^\s*|\s*$/g, "").split(/\s+/);
         map[fields.shift()] = fields;
@@ -20400,8 +20400,8 @@ var require_mime = __commonJS({
       this.define(map);
       this._loading = null;
     };
-    Mime.prototype.lookup = function(path5, fallback) {
-      var ext = path5.replace(/^.*[\.\/\\]/, "").toLowerCase();
+    Mime.prototype.lookup = function(path8, fallback) {
+      var ext = path8.replace(/^.*[\.\/\\]/, "").toLowerCase();
       return this.types[ext] || fallback || this.default_type;
     };
     Mime.prototype.extension = function(mimeType) {
@@ -20630,33 +20630,33 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs3 = __require("fs");
+    var fs4 = __require("fs");
     var mime = require_mime();
     var ms = require_ms5();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path4 = __require("path");
+    var path7 = __require("path");
     var statuses = require_statuses();
     var Stream = __require("stream");
     var util2 = __require("util");
-    var extname = path4.extname;
-    var join = path4.join;
-    var normalize = path4.normalize;
-    var resolve = path4.resolve;
-    var sep = path4.sep;
+    var extname = path7.extname;
+    var join = path7.join;
+    var normalize = path7.normalize;
+    var resolve = path7.resolve;
+    var sep = path7.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module.exports = send;
     module.exports.mime = mime;
-    function send(req, path5, options) {
-      return new SendStream(req, path5, options);
+    function send(req, path8, options) {
+      return new SendStream(req, path8, options);
     }
-    function SendStream(req, path5, options) {
+    function SendStream(req, path8, options) {
       Stream.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path5;
+      this.path = path8;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -20702,8 +20702,8 @@ var require_send = __commonJS({
       this._index = index2;
       return this;
     }, "send.index: pass index as option");
-    SendStream.prototype.root = function root(path5) {
-      this._root = resolve(String(path5));
+    SendStream.prototype.root = function root(path8) {
+      this._root = resolve(String(path8));
       debug("root %s", this._root);
       return this;
     };
@@ -20816,10 +20816,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path5) {
+    SendStream.prototype.redirect = function redirect(path8) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path5);
+        this.emit("directory", res, path8);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -20839,42 +20839,42 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe(res) {
       var root = this._root;
       this.res = res;
-      var path5 = decode(this.path);
-      if (path5 === -1) {
+      var path8 = decode(this.path);
+      if (path8 === -1) {
         this.error(400);
         return res;
       }
-      if (~path5.indexOf("\0")) {
+      if (~path8.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root !== null) {
-        if (path5) {
-          path5 = normalize("." + sep + path5);
+        if (path8) {
+          path8 = normalize("." + sep + path8);
         }
-        if (UP_PATH_REGEXP.test(path5)) {
-          debug('malicious path "%s"', path5);
+        if (UP_PATH_REGEXP.test(path8)) {
+          debug('malicious path "%s"', path8);
           this.error(403);
           return res;
         }
-        parts = path5.split(sep);
-        path5 = normalize(join(root, path5));
+        parts = path8.split(sep);
+        path8 = normalize(join(root, path8));
       } else {
-        if (UP_PATH_REGEXP.test(path5)) {
-          debug('malicious path "%s"', path5);
+        if (UP_PATH_REGEXP.test(path8)) {
+          debug('malicious path "%s"', path8);
           this.error(403);
           return res;
         }
-        parts = normalize(path5).split(sep);
-        path5 = resolve(path5);
+        parts = normalize(path8).split(sep);
+        path8 = resolve(path8);
       }
       if (containsDotFile(parts)) {
         var access = this._dotfiles;
         if (access === void 0) {
           access = parts[parts.length - 1][0] === "." ? this._hidden ? "allow" : "ignore" : "allow";
         }
-        debug('%s dotfile "%s"', access, path5);
+        debug('%s dotfile "%s"', access, path8);
         switch (access) {
           case "allow":
             break;
@@ -20888,13 +20888,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path5);
+        this.sendIndex(path8);
         return res;
       }
-      this.sendFile(path5);
+      this.sendFile(path8);
       return res;
     };
-    SendStream.prototype.send = function send2(path5, stat) {
+    SendStream.prototype.send = function send2(path8, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -20906,9 +20906,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug('pipe "%s"', path5);
-      this.setHeader(path5, stat);
-      this.type(path5);
+      debug('pipe "%s"', path8);
+      this.setHeader(path8, stat);
+      this.type(path8);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -20957,28 +20957,28 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path5, opts);
+      this.stream(path8, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path5) {
+    SendStream.prototype.sendFile = function sendFile(path8) {
       var i = 0;
       var self2 = this;
-      debug('stat "%s"', path5);
-      fs3.stat(path5, function onstat(err, stat) {
-        if (err && err.code === "ENOENT" && !extname(path5) && path5[path5.length - 1] !== sep) {
+      debug('stat "%s"', path8);
+      fs4.stat(path8, function onstat(err, stat) {
+        if (err && err.code === "ENOENT" && !extname(path8) && path8[path8.length - 1] !== sep) {
           return next(err);
         }
         if (err) return self2.onStatError(err);
-        if (stat.isDirectory()) return self2.redirect(path5);
-        self2.emit("file", path5, stat);
-        self2.send(path5, stat);
+        if (stat.isDirectory()) return self2.redirect(path8);
+        self2.emit("file", path8, stat);
+        self2.send(path8, stat);
       });
       function next(err) {
         if (self2._extensions.length <= i) {
           return err ? self2.onStatError(err) : self2.error(404);
         }
-        var p = path5 + "." + self2._extensions[i++];
+        var p = path8 + "." + self2._extensions[i++];
         debug('stat "%s"', p);
-        fs3.stat(p, function(err2, stat) {
+        fs4.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p, stat);
@@ -20986,7 +20986,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path5) {
+    SendStream.prototype.sendIndex = function sendIndex(path8) {
       var i = -1;
       var self2 = this;
       function next(err) {
@@ -20994,9 +20994,9 @@ var require_send = __commonJS({
           if (err) return self2.onStatError(err);
           return self2.error(404);
         }
-        var p = join(path5, self2._index[i]);
+        var p = join(path8, self2._index[i]);
         debug('stat "%s"', p);
-        fs3.stat(p, function(err2, stat) {
+        fs4.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p, stat);
@@ -21005,10 +21005,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream(path5, options) {
+    SendStream.prototype.stream = function stream(path8, options) {
       var self2 = this;
       var res = this.res;
-      var stream2 = fs3.createReadStream(path5, options);
+      var stream2 = fs4.createReadStream(path8, options);
       this.emit("stream", stream2);
       stream2.pipe(res);
       function cleanup() {
@@ -21023,10 +21023,10 @@ var require_send = __commonJS({
         self2.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path5) {
+    SendStream.prototype.type = function type(path8) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var type2 = mime.lookup(path5);
+      var type2 = mime.lookup(path8);
       if (!type2) {
         debug("no content-type");
         return;
@@ -21035,9 +21035,9 @@ var require_send = __commonJS({
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2 + (charset ? "; charset=" + charset : ""));
     };
-    SendStream.prototype.setHeader = function setHeader(path5, stat) {
+    SendStream.prototype.setHeader = function setHeader(path8, stat) {
       var res = this.res;
-      this.emit("headers", res, path5, stat);
+      this.emit("headers", res, path8, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -21096,9 +21096,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode(path5) {
+    function decode(path8) {
       try {
-        return decodeURIComponent(path5);
+        return decodeURIComponent(path8);
       } catch (err) {
         return -1;
       }
@@ -22023,10 +22023,10 @@ var require_utils2 = __commonJS({
     var querystring = __require("querystring");
     exports.etag = createETagGenerator({ weak: false });
     exports.wetag = createETagGenerator({ weak: true });
-    exports.isAbsolute = function(path4) {
-      if ("/" === path4[0]) return true;
-      if (":" === path4[1] && ("\\" === path4[2] || "/" === path4[2])) return true;
-      if ("\\\\" === path4.substring(0, 2)) return true;
+    exports.isAbsolute = function(path7) {
+      if ("/" === path7[0]) return true;
+      if (":" === path7[1] && ("\\" === path7[2] || "/" === path7[2])) return true;
+      if ("\\\\" === path7.substring(0, 2)) return true;
     };
     exports.flatten = deprecate.function(
       flatten,
@@ -22150,7 +22150,7 @@ var require_application = __commonJS({
   "node_modules/express/lib/application.js"(exports, module) {
     "use strict";
     var finalhandler = require_finalhandler();
-    var Router13 = require_router();
+    var Router14 = require_router();
     var methods = require_methods();
     var middleware = require_init();
     var query = require_query();
@@ -22215,7 +22215,7 @@ var require_application = __commonJS({
     };
     app2.lazyrouter = function lazyrouter() {
       if (!this._router) {
-        this._router = new Router13({
+        this._router = new Router14({
           caseSensitive: this.enabled("case sensitive routing"),
           strict: this.enabled("strict routing")
         });
@@ -22224,21 +22224,21 @@ var require_application = __commonJS({
       }
     };
     app2.handle = function handle(req, res, callback) {
-      var router13 = this._router;
+      var router14 = this._router;
       var done = callback || finalhandler(req, res, {
         env: this.get("env"),
         onerror: logerror.bind(this)
       });
-      if (!router13) {
+      if (!router14) {
         debug("no routes defined on app");
         done();
         return;
       }
-      router13.handle(req, res, done);
+      router14.handle(req, res, done);
     };
     app2.use = function use(fn) {
       var offset = 0;
-      var path4 = "/";
+      var path7 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -22246,7 +22246,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path4 = fn;
+          path7 = fn;
         }
       }
       var fns = flatten(slice.call(arguments, offset));
@@ -22254,15 +22254,15 @@ var require_application = __commonJS({
         throw new TypeError("app.use() requires a middleware function");
       }
       this.lazyrouter();
-      var router13 = this._router;
+      var router14 = this._router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router13.use(path4, fn2);
+          return router14.use(path7, fn2);
         }
-        debug(".use app under %s", path4);
-        fn2.mountpath = path4;
+        debug(".use app under %s", path7);
+        fn2.mountpath = path7;
         fn2.parent = this;
-        router13.use(path4, function mounted_app(req, res, next) {
+        router14.use(path7, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             setPrototypeOf(req, orig.request);
@@ -22274,9 +22274,9 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app2.route = function route(path4) {
+    app2.route = function route(path7) {
       this.lazyrouter();
-      return this._router.route(path4);
+      return this._router.route(path7);
     };
     app2.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -22327,7 +22327,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.path = function path4() {
+    app2.path = function path7() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app2.enabled = function enabled(setting) {
@@ -22343,19 +22343,19 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app2[method] = function(path4) {
+      app2[method] = function(path7) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path4);
+          return this.set(path7);
         }
         this.lazyrouter();
-        var route = this._router.route(path4);
+        var route = this._router.route(path7);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app2.all = function all(path4) {
+    app2.all = function all(path7) {
       this.lazyrouter();
-      var route = this._router.route(path4);
+      var route = this._router.route(path7);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -23114,7 +23114,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP2(hostname) ? hostname.split(".").reverse() : [hostname];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path4() {
+    defineGetter(req, "path", function path7() {
       return parse(this).pathname;
     });
     defineGetter(req, "hostname", function hostname() {
@@ -23436,7 +23436,7 @@ var require_response = __commonJS({
     var http = __require("http");
     var isAbsolute = require_utils2().isAbsolute;
     var onFinished = require_on_finished();
-    var path4 = __require("path");
+    var path7 = __require("path");
     var statuses = require_statuses();
     var merge = require_utils_merge();
     var sign = require_cookie_signature().sign;
@@ -23445,9 +23445,9 @@ var require_response = __commonJS({
     var setCharset = require_utils2().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path4.extname;
+    var extname = path7.extname;
     var mime = send.mime;
-    var resolve = path4.resolve;
+    var resolve = path7.resolve;
     var vary = require_vary();
     var res = Object.create(http.ServerResponse.prototype);
     module.exports = res;
@@ -23624,26 +23624,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path5, options, callback) {
+    res.sendFile = function sendFile(path8, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path5) {
+      if (!path8) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path5 !== "string") {
+      if (typeof path8 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !isAbsolute(path5)) {
+      if (!opts.root && !isAbsolute(path8)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path5);
+      var pathname = encodeURI(path8);
       var file = send(req, pathname, opts);
       sendfile(res2, file, opts, function(err) {
         if (done) return done(err);
@@ -23653,7 +23653,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.sendfile = function(path5, options, callback) {
+    res.sendfile = function(path8, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
@@ -23663,7 +23663,7 @@ var require_response = __commonJS({
         done = options;
         opts = {};
       }
-      var file = send(req, path5, opts);
+      var file = send(req, path8, opts);
       sendfile(res2, file, opts, function(err) {
         if (done) return done(err);
         if (err && err.code === "EISDIR") return next();
@@ -23676,7 +23676,7 @@ var require_response = __commonJS({
       res.sendfile,
       "res.sendfile: Use res.sendFile instead"
     );
-    res.download = function download(path5, filename, options, callback) {
+    res.download = function download(path8, filename, options, callback) {
       var done = callback;
       var name = filename;
       var opts = options || null;
@@ -23693,7 +23693,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name || path5)
+        "Content-Disposition": contentDisposition(name || path8)
       };
       if (opts && opts.headers) {
         var keys = Object.keys(opts.headers);
@@ -23706,7 +23706,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve(path5) : path5;
+      var fullPath = !opts.root ? resolve(path8) : path8;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -24007,11 +24007,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl.original(req);
-        var path4 = parseUrl(req).pathname;
-        if (path4 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path4 = "";
+        var path7 = parseUrl(req).pathname;
+        if (path7 === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path7 = "";
         }
-        var stream = send(req, path4, opts);
+        var stream = send(req, path7, opts);
         stream.on("directory", onDirectory);
         if (setHeaders) {
           stream.on("headers", setHeaders);
@@ -24079,7 +24079,7 @@ var require_express = __commonJS({
     var mixin = require_merge_descriptors();
     var proto = require_application();
     var Route = require_route();
-    var Router13 = require_router();
+    var Router14 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -24102,7 +24102,7 @@ var require_express = __commonJS({
     exports.request = req;
     exports.response = res;
     exports.Route = Route;
-    exports.Router = Router13;
+    exports.Router = Router14;
     exports.json = bodyParser.json;
     exports.query = require_query();
     exports.raw = bodyParser.raw;
@@ -24999,8 +24999,8 @@ var require_node5 = __commonJS({
           }
           break;
         case "FILE":
-          var fs3 = __require("fs");
-          stream2 = new fs3.SyncWriteStream(fd2, { autoClose: false });
+          var fs4 = __require("fs");
+          stream2 = new fs4.SyncWriteStream(fd2, { autoClose: false });
           stream2._type = "fs";
           break;
         case "PIPE":
@@ -25476,8 +25476,8 @@ var require_package = __commonJS({
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports, module) {
-    var fs3 = __require("fs");
-    var path4 = __require("path");
+    var fs4 = __require("fs");
+    var path7 = __require("path");
     var os = __require("os");
     var crypto3 = __require("crypto");
     var packageJson = require_package();
@@ -25585,7 +25585,7 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0) {
         if (Array.isArray(options.path)) {
           for (const filepath of options.path) {
-            if (fs3.existsSync(filepath)) {
+            if (fs4.existsSync(filepath)) {
               possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
             }
           }
@@ -25593,15 +25593,15 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path4.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path7.resolve(process.cwd(), ".env.vault");
       }
-      if (fs3.existsSync(possibleVaultPath)) {
+      if (fs4.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
       }
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path4.join(os.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path7.join(os.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = Boolean(options && options.debug);
@@ -25618,7 +25618,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path4.resolve(process.cwd(), ".env");
+      const dotenvPath = path7.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       const debug = Boolean(options && options.debug);
       const quiet = options && "quiet" in options ? options.quiet : true;
@@ -25642,13 +25642,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path5 of optionPaths) {
+      for (const path8 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs3.readFileSync(path5, { encoding }));
+          const parsed = DotenvModule.parse(fs4.readFileSync(path8, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e) {
           if (debug) {
-            _debug(`Failed to load ${path5} ${e.message}`);
+            _debug(`Failed to load ${path8} ${e.message}`);
           }
           lastError = e;
         }
@@ -25663,7 +25663,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative = path4.relative(process.cwd(), filePath);
+            const relative = path7.relative(process.cwd(), filePath);
             shortPaths.push(relative);
           } catch (e) {
             if (debug) {
@@ -25691,7 +25691,7 @@ var require_main = __commonJS({
       }
       return DotenvModule._configVault(options);
     }
-    function decrypt(encrypted, keyStr) {
+    function decrypt2(encrypted, keyStr) {
       const key = Buffer.from(keyStr.slice(-64), "hex");
       let ciphertext = Buffer.from(encrypted, "base64");
       const nonce = ciphertext.subarray(0, 12);
@@ -25748,7 +25748,7 @@ var require_main = __commonJS({
       _configVault,
       _parseVault,
       config,
-      decrypt,
+      decrypt: decrypt2,
       parse,
       populate
     };
@@ -26136,19 +26136,19 @@ var require_utils3 = __commonJS({
       if (decode)
         return decode(data, hint);
     }
-    function basename(path4) {
-      if (typeof path4 !== "string")
+    function basename(path7) {
+      if (typeof path7 !== "string")
         return "";
-      for (let i = path4.length - 1; i >= 0; --i) {
-        switch (path4.charCodeAt(i)) {
+      for (let i = path7.length - 1; i >= 0; --i) {
+        switch (path7.charCodeAt(i)) {
           case 47:
           // '/'
           case 92:
-            path4 = path4.slice(i + 1);
-            return path4 === ".." || path4 === "." ? "" : path4;
+            path7 = path7.slice(i + 1);
+            return path7 === ".." || path7 === "." ? "" : path7;
         }
       }
-      return path4 === ".." || path4 === "." ? "" : path4;
+      return path7 === ".." || path7 === "." ? "" : path7;
     }
     var TOKEN = [
       0,
@@ -27851,7 +27851,7 @@ var require_sbmh = __commonJS({
 var require_multipart = __commonJS({
   "node_modules/busboy/lib/types/multipart.js"(exports, module) {
     "use strict";
-    var { Readable, Writable } = __require("stream");
+    var { Readable: Readable2, Writable } = __require("stream");
     var StreamSearch = require_sbmh();
     var {
       basename,
@@ -28007,7 +28007,7 @@ var require_multipart = __commonJS({
         return pos;
       }
     };
-    var FileStream = class extends Readable {
+    var FileStream = class extends Readable2 {
       constructor(opts, owner) {
         super(opts);
         this.truncated = false;
@@ -29950,8 +29950,8 @@ var require_make_middleware = __commonJS({
 // node_modules/mkdirp/index.js
 var require_mkdirp = __commonJS({
   "node_modules/mkdirp/index.js"(exports, module) {
-    var path4 = __require("path");
-    var fs3 = __require("fs");
+    var path7 = __require("path");
+    var fs4 = __require("fs");
     var _0777 = parseInt("0777", 8);
     module.exports = mkdirP.mkdirp = mkdirP.mkdirP = mkdirP;
     function mkdirP(p, opts, f, made) {
@@ -29962,7 +29962,7 @@ var require_mkdirp = __commonJS({
         opts = { mode: opts };
       }
       var mode = opts.mode;
-      var xfs = opts.fs || fs3;
+      var xfs = opts.fs || fs4;
       if (mode === void 0) {
         mode = _0777;
       }
@@ -29970,7 +29970,7 @@ var require_mkdirp = __commonJS({
       var cb = f || /* istanbul ignore next */
       function() {
       };
-      p = path4.resolve(p);
+      p = path7.resolve(p);
       xfs.mkdir(p, mode, function(er) {
         if (!er) {
           made = made || p;
@@ -29978,8 +29978,8 @@ var require_mkdirp = __commonJS({
         }
         switch (er.code) {
           case "ENOENT":
-            if (path4.dirname(p) === p) return cb(er);
-            mkdirP(path4.dirname(p), opts, function(er2, made2) {
+            if (path7.dirname(p) === p) return cb(er);
+            mkdirP(path7.dirname(p), opts, function(er2, made2) {
               if (er2) cb(er2, made2);
               else mkdirP(p, opts, cb, made2);
             });
@@ -30001,19 +30001,19 @@ var require_mkdirp = __commonJS({
         opts = { mode: opts };
       }
       var mode = opts.mode;
-      var xfs = opts.fs || fs3;
+      var xfs = opts.fs || fs4;
       if (mode === void 0) {
         mode = _0777;
       }
       if (!made) made = null;
-      p = path4.resolve(p);
+      p = path7.resolve(p);
       try {
         xfs.mkdirSync(p, mode);
         made = made || p;
       } catch (err0) {
         switch (err0.code) {
           case "ENOENT":
-            made = sync(path4.dirname(p), opts, made);
+            made = sync(path7.dirname(p), opts, made);
             sync(p, opts, made);
             break;
           // In the case of any other error, just see if there's a dir
@@ -30038,9 +30038,9 @@ var require_mkdirp = __commonJS({
 // node_modules/multer/storage/disk.js
 var require_disk = __commonJS({
   "node_modules/multer/storage/disk.js"(exports, module) {
-    var fs3 = __require("fs");
+    var fs4 = __require("fs");
     var os = __require("os");
-    var path4 = __require("path");
+    var path7 = __require("path");
     var crypto3 = __require("crypto");
     var mkdirp = require_mkdirp();
     function getFilename(req, file, cb) {
@@ -30068,8 +30068,8 @@ var require_disk = __commonJS({
         if (err) return cb(err);
         that.getFilename(req, file, function(err2, filename) {
           if (err2) return cb(err2);
-          var finalPath = path4.join(destination, filename);
-          var outStream = fs3.createWriteStream(finalPath);
+          var finalPath = path7.join(destination, filename);
+          var outStream = fs4.createWriteStream(finalPath);
           file.stream.pipe(outStream);
           outStream.on("error", cb);
           outStream.on("finish", function() {
@@ -30084,11 +30084,11 @@ var require_disk = __commonJS({
       });
     };
     DiskStorage.prototype._removeFile = function _removeFile(req, file, cb) {
-      var path5 = file.path;
+      var path8 = file.path;
       delete file.destination;
       delete file.filename;
       delete file.path;
-      fs3.unlink(path5, cb);
+      fs4.unlink(path8, cb);
     };
     module.exports = function(opts) {
       return new DiskStorage(opts);
@@ -30894,9 +30894,9 @@ var require_stream_duplex = __commonJS({
     module.exports = Duplex;
     var util2 = Object.create(require_util());
     util2.inherits = require_inherits();
-    var Readable = require_stream_readable();
+    var Readable2 = require_stream_readable();
     var Writable = require_stream_writable();
-    util2.inherits(Duplex, Readable);
+    util2.inherits(Duplex, Readable2);
     {
       keys = objectKeys(Writable.prototype);
       for (v = 0; v < keys.length; v++) {
@@ -30909,7 +30909,7 @@ var require_stream_duplex = __commonJS({
     var v;
     function Duplex(options) {
       if (!(this instanceof Duplex)) return new Duplex(options);
-      Readable.call(this, options);
+      Readable2.call(this, options);
       Writable.call(this, options);
       if (options && options.readable === false) this.readable = false;
       if (options && options.writable === false) this.writable = false;
@@ -31256,10 +31256,10 @@ var require_stream_readable = __commonJS({
   "node_modules/readable-stream/lib/_stream_readable.js"(exports, module) {
     "use strict";
     var pna = require_process_nextick_args();
-    module.exports = Readable;
+    module.exports = Readable2;
     var isArray = require_isarray();
     var Duplex;
-    Readable.ReadableState = ReadableState;
+    Readable2.ReadableState = ReadableState;
     var EE = __require("events").EventEmitter;
     var EElistenerCount = function(emitter, type) {
       return emitter.listeners(type).length;
@@ -31287,7 +31287,7 @@ var require_stream_readable = __commonJS({
     var BufferList = require_BufferList();
     var destroyImpl = require_destroy2();
     var StringDecoder;
-    util2.inherits(Readable, Stream);
+    util2.inherits(Readable2, Stream);
     var kProxyEvents = ["error", "close", "destroy", "pause", "resume"];
     function prependListener(emitter, event, fn) {
       if (typeof emitter.prependListener === "function") return emitter.prependListener(event, fn);
@@ -31333,9 +31333,9 @@ var require_stream_readable = __commonJS({
         this.encoding = options.encoding;
       }
     }
-    function Readable(options) {
+    function Readable2(options) {
       Duplex = Duplex || require_stream_duplex();
-      if (!(this instanceof Readable)) return new Readable(options);
+      if (!(this instanceof Readable2)) return new Readable2(options);
       this._readableState = new ReadableState(options, this);
       this.readable = true;
       if (options) {
@@ -31344,7 +31344,7 @@ var require_stream_readable = __commonJS({
       }
       Stream.call(this);
     }
-    Object.defineProperty(Readable.prototype, "destroyed", {
+    Object.defineProperty(Readable2.prototype, "destroyed", {
       get: function() {
         if (this._readableState === void 0) {
           return false;
@@ -31358,13 +31358,13 @@ var require_stream_readable = __commonJS({
         this._readableState.destroyed = value;
       }
     });
-    Readable.prototype.destroy = destroyImpl.destroy;
-    Readable.prototype._undestroy = destroyImpl.undestroy;
-    Readable.prototype._destroy = function(err, cb) {
+    Readable2.prototype.destroy = destroyImpl.destroy;
+    Readable2.prototype._undestroy = destroyImpl.undestroy;
+    Readable2.prototype._destroy = function(err, cb) {
       this.push(null);
       cb(err);
     };
-    Readable.prototype.push = function(chunk, encoding) {
+    Readable2.prototype.push = function(chunk, encoding) {
       var state = this._readableState;
       var skipChunkCheck;
       if (!state.objectMode) {
@@ -31381,7 +31381,7 @@ var require_stream_readable = __commonJS({
       }
       return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
     };
-    Readable.prototype.unshift = function(chunk) {
+    Readable2.prototype.unshift = function(chunk) {
       return readableAddChunk(this, chunk, null, true, false);
     };
     function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
@@ -31441,10 +31441,10 @@ var require_stream_readable = __commonJS({
     function needMoreData(state) {
       return !state.ended && (state.needReadable || state.length < state.highWaterMark || state.length === 0);
     }
-    Readable.prototype.isPaused = function() {
+    Readable2.prototype.isPaused = function() {
       return this._readableState.flowing === false;
     };
-    Readable.prototype.setEncoding = function(enc) {
+    Readable2.prototype.setEncoding = function(enc) {
       if (!StringDecoder) StringDecoder = require_string_decoder().StringDecoder;
       this._readableState.decoder = new StringDecoder(enc);
       this._readableState.encoding = enc;
@@ -31480,7 +31480,7 @@ var require_stream_readable = __commonJS({
       }
       return state.length;
     }
-    Readable.prototype.read = function(n) {
+    Readable2.prototype.read = function(n) {
       debug("read", n);
       n = parseInt(n, 10);
       var state = this._readableState;
@@ -31575,10 +31575,10 @@ var require_stream_readable = __commonJS({
       }
       state.readingMore = false;
     }
-    Readable.prototype._read = function(n) {
+    Readable2.prototype._read = function(n) {
       this.emit("error", new Error("_read() is not implemented"));
     };
-    Readable.prototype.pipe = function(dest, pipeOpts) {
+    Readable2.prototype.pipe = function(dest, pipeOpts) {
       var src = this;
       var state = this._readableState;
       switch (state.pipesCount) {
@@ -31683,7 +31683,7 @@ var require_stream_readable = __commonJS({
         }
       };
     }
-    Readable.prototype.unpipe = function(dest) {
+    Readable2.prototype.unpipe = function(dest) {
       var state = this._readableState;
       var unpipeInfo = { hasUnpiped: false };
       if (state.pipesCount === 0) return this;
@@ -31715,7 +31715,7 @@ var require_stream_readable = __commonJS({
       dest.emit("unpipe", this, unpipeInfo);
       return this;
     };
-    Readable.prototype.on = function(ev, fn) {
+    Readable2.prototype.on = function(ev, fn) {
       var res = Stream.prototype.on.call(this, ev, fn);
       if (ev === "data") {
         if (this._readableState.flowing !== false) this.resume();
@@ -31733,12 +31733,12 @@ var require_stream_readable = __commonJS({
       }
       return res;
     };
-    Readable.prototype.addListener = Readable.prototype.on;
+    Readable2.prototype.addListener = Readable2.prototype.on;
     function nReadingNextTick(self2) {
       debug("readable nexttick read 0");
       self2.read(0);
     }
-    Readable.prototype.resume = function() {
+    Readable2.prototype.resume = function() {
       var state = this._readableState;
       if (!state.flowing) {
         debug("resume");
@@ -31764,7 +31764,7 @@ var require_stream_readable = __commonJS({
       flow(stream);
       if (state.flowing && !state.reading) stream.read(0);
     }
-    Readable.prototype.pause = function() {
+    Readable2.prototype.pause = function() {
       debug("call pause flowing=%j", this._readableState.flowing);
       if (false !== this._readableState.flowing) {
         debug("pause");
@@ -31779,7 +31779,7 @@ var require_stream_readable = __commonJS({
       while (state.flowing && stream.read() !== null) {
       }
     }
-    Readable.prototype.wrap = function(stream) {
+    Readable2.prototype.wrap = function(stream) {
       var _this = this;
       var state = this._readableState;
       var paused = false;
@@ -31823,7 +31823,7 @@ var require_stream_readable = __commonJS({
       };
       return this;
     };
-    Object.defineProperty(Readable.prototype, "readableHighWaterMark", {
+    Object.defineProperty(Readable2.prototype, "readableHighWaterMark", {
       // making it explicit this property is not enumerable
       // because otherwise some prototype manipulation in
       // userland will fail
@@ -31832,7 +31832,7 @@ var require_stream_readable = __commonJS({
         return this._readableState.highWaterMark;
       }
     });
-    Readable._fromList = fromList;
+    Readable2._fromList = fromList;
     function fromList(n, state) {
       if (state.length === 0) return null;
       var ret;
@@ -32907,7 +32907,7 @@ var require_multer = __commonJS({
 });
 
 // apps/api/src/app.ts
-var import_express13 = __toESM(require_express2(), 1);
+var import_express14 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 
 // node_modules/helmet/index.mjs
@@ -33487,7 +33487,8 @@ import path from "path";
 import_dotenv.default.config({ path: path.resolve(process.cwd(), ".env") });
 import_dotenv.default.config({ path: path.resolve(process.cwd(), "../../.env") });
 var nodeEnv = process.env.NODE_ENV || "development";
-var appEnv = (process.env.APP_ENV || (process.env.VERCEL ? "production" : "sandbox")).toLowerCase();
+var appEnv = (process.env.APP_ENV || (nodeEnv === "production" || process.env.VERCEL ? "production" : "sandbox")).toLowerCase();
+var isProd = nodeEnv === "production" || process.env.VERCEL === "1";
 var env = {
   NODE_ENV: nodeEnv,
   APP_ENV: appEnv,
@@ -33499,11 +33500,34 @@ var env = {
   FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",
   UPLOAD_DIR: process.env.UPLOAD_DIR || (process.env.VERCEL ? path.join("/tmp", "uploads") : path.resolve(process.cwd(), "uploads")),
   MAX_FILE_SIZE_MB: parseInt(process.env.MAX_FILE_SIZE_MB || "10", 10),
+  GOOGLE_DRIVE_CLIENT_ID: process.env.GOOGLE_DRIVE_CLIENT_ID || "",
+  GOOGLE_DRIVE_CLIENT_SECRET: process.env.GOOGLE_DRIVE_CLIENT_SECRET || "",
+  GOOGLE_DRIVE_PICKER_API_KEY: process.env.GOOGLE_DRIVE_PICKER_API_KEY || "",
+  GOOGLE_DRIVE_PROJECT_NUMBER: process.env.GOOGLE_DRIVE_PROJECT_NUMBER || "",
   isDev: nodeEnv === "development" && !process.env.VERCEL,
   isTest: nodeEnv === "test",
-  isProd: nodeEnv === "production" || process.env.VERCEL === "1",
-  isSandbox: appEnv === "sandbox" || !process.env.VERCEL && nodeEnv !== "production"
+  isProd,
+  isSandbox: !isProd && appEnv === "sandbox"
 };
+if (isProd) {
+  const problems = [];
+  if (!env.DATABASE_URL || !/^postgres(?:ql)?:\/\//.test(env.DATABASE_URL)) {
+    problems.push("DATABASE_URL must point to the PostgreSQL database used by the API.");
+  }
+  if (env.SESSION_SECRET.length < 32 || env.SESSION_SECRET.startsWith("deutschwelt-insecure-") || env.SESSION_SECRET.startsWith("super-secret-")) {
+    problems.push("SESSION_SECRET must be a unique secret of at least 32 characters.");
+  }
+  if (env.COOKIE_SECRET.length < 32 || env.COOKIE_SECRET.startsWith("deutschwelt-insecure-") || env.COOKIE_SECRET.startsWith("super-secret-")) {
+    problems.push("COOKIE_SECRET must be a unique secret of at least 32 characters.");
+  }
+  if (!env.FRONTEND_URL.startsWith("https://")) {
+    problems.push("FRONTEND_URL must use HTTPS in production.");
+  }
+  if (problems.length) {
+    throw new Error(`Invalid production configuration:
+- ${problems.join("\n- ")}`);
+  }
+}
 
 // apps/api/src/services/prisma.ts
 import { createRequire } from "node:module";
@@ -33541,6 +33565,25 @@ var prisma = new Proxy({}, {
   }
 });
 var isDatabaseConnected = false;
+async function checkDatabaseConnection() {
+  const c = initPrismaClient();
+  if (!isPostgresUrl || !c || typeof c.$queryRaw !== "function") {
+    isDatabaseConnected = false;
+    console.log("[Database] PostgreSQL URL not configured. Operating in high-performance in-memory mode.");
+    return false;
+  }
+  try {
+    await c.$queryRaw`SELECT 1`;
+    isDatabaseConnected = true;
+    console.log("[Database] Successfully connected to PostgreSQL via Prisma.");
+    return true;
+  } catch (error) {
+    isDatabaseConnected = false;
+    const sanitizedUrl = env.DATABASE_URL.replace(/:[^:@]+@/, ":****@");
+    console.warn(`[Database Warning] Could not connect to PostgreSQL at ${sanitizedUrl}.`);
+    return false;
+  }
+}
 
 // packages/shared/dist/types/enums.js
 var UserRole;
@@ -34109,8 +34152,8 @@ function getErrorMap() {
 
 // node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = (params) => {
-  const { data, path: path4, errorMaps, issueData } = params;
-  const fullPath = [...path4, ...issueData.path || []];
+  const { data, path: path7, errorMaps, issueData } = params;
+  const fullPath = [...path7, ...issueData.path || []];
   const fullIssue = {
     ...issueData,
     path: fullPath
@@ -34226,11 +34269,11 @@ var errorUtil;
 
 // node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
-  constructor(parent, value, path4, key) {
+  constructor(parent, value, path7, key) {
     this._cachedPath = [];
     this.parent = parent;
     this.data = value;
-    this._path = path4;
+    this._path = path7;
     this._key = key;
   }
   get path() {
@@ -39677,6 +39720,7 @@ var bcryptjs_default = {
 };
 
 // apps/api/src/services/store.ts
+import { randomBytes as randomBytes2 } from "node:crypto";
 var DataStore = class {
   users = [];
   studentProfiles = [];
@@ -39715,9 +39759,9 @@ var DataStore = class {
   payments = [];
   attendance = [];
   lessonReports = [];
-  isSandboxMode = true;
+  isSandboxMode = env.isSandbox;
   constructor() {
-    this.seedInitialData();
+    if (env.isSandbox || env.isTest) this.seedInitialData();
   }
   resetSandbox() {
     this.seedInitialData();
@@ -39727,9 +39771,12 @@ var DataStore = class {
     };
   }
   seedInitialData() {
-    const adminPasswordHash = bcryptjs_default.hashSync("AdminDeutschWelt2026!", 10);
-    const teacherPasswordHash = bcryptjs_default.hashSync("TeacherDeutschWelt2026!", 10);
-    const studentPasswordHash = bcryptjs_default.hashSync("StudentDeutschWelt2026!", 10);
+    if (!env.isSandbox && !env.isTest) return;
+    const sandboxPasswords = env.isTest ? [process.env.TEST_ADMIN_PASSWORD, process.env.TEST_TEACHER_PASSWORD, process.env.TEST_STUDENT_PASSWORD] : [process.env.SANDBOX_ADMIN_PASSWORD, process.env.SANDBOX_TEACHER_PASSWORD, process.env.SANDBOX_STUDENT_PASSWORD];
+    const [adminPassword, teacherPassword, studentPassword] = sandboxPasswords.map((value) => value || randomBytes2(32).toString("base64url"));
+    const adminPasswordHash = bcryptjs_default.hashSync(adminPassword, 12);
+    const teacherPasswordHash = bcryptjs_default.hashSync(teacherPassword, 12);
+    const studentPasswordHash = bcryptjs_default.hashSync(studentPassword, 12);
     const admin = {
       id: "user-admin-1",
       email: "admin@deutschwelt.de",
@@ -41898,18 +41945,7 @@ async function login(req, res, next) {
       if (!user.isActive) {
         return next(new AppError("Your account has been suspended or blocked by an administrator. Please contact admissions for assistance.", 403, "ACCOUNT_BLOCKED"));
       }
-      const validFallbacks = [
-        "AdminDeutschWelt2026!",
-        "TeacherDeutschWelt2026!",
-        "StudentDeutschWelt2026!",
-        "password123",
-        "admin123",
-        "teacher123",
-        "student123",
-        "Admin@1234",
-        "123456"
-      ];
-      const isMatch = await bcryptjs_default.compare(password, user.passwordHash) || validFallbacks.includes(password);
+      const isMatch = await bcryptjs_default.compare(password, user.passwordHash);
       if (!isMatch) {
         return next(new AppError("Invalid email or password.", 401, "INVALID_CREDENTIALS"));
       }
@@ -41949,18 +41985,7 @@ async function login(req, res, next) {
       if (!user.isActive) {
         return next(new AppError("Your account has been suspended or blocked by an administrator. Please contact admissions for assistance.", 403, "ACCOUNT_BLOCKED"));
       }
-      const validFallbacks = [
-        "AdminDeutschWelt2026!",
-        "TeacherDeutschWelt2026!",
-        "StudentDeutschWelt2026!",
-        "password123",
-        "admin123",
-        "teacher123",
-        "student123",
-        "Admin@1234",
-        "123456"
-      ];
-      const isMatch = await bcryptjs_default.compare(password, user.passwordHash) || validFallbacks.includes(password);
+      const isMatch = await bcryptjs_default.compare(password, user.passwordHash);
       if (!isMatch) {
         return next(new AppError("Invalid email or password.", 401, "INVALID_CREDENTIALS"));
       }
@@ -42975,7 +43000,357 @@ var vocabularyRoutes_default = router5;
 // apps/api/src/modules/speaking/speakingRoutes.ts
 var import_express6 = __toESM(require_express2(), 1);
 
+// apps/api/src/services/uploadStorage.ts
+import fs from "node:fs/promises";
+import path3 from "node:path";
+
+// apps/api/src/services/googleDrive.ts
+import { createCipheriv, createDecipheriv, createHash as createHash2, createHmac, randomBytes as randomBytes3, timingSafeEqual } from "node:crypto";
+import { createReadStream } from "node:fs";
+import path2 from "node:path";
+var DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+var TOKEN_URL = "https://oauth2.googleapis.com/token";
+var DRIVE_API = "https://www.googleapis.com/drive/v3";
+var CONNECTION_KEY = "google_drive_connection_v1";
+var FOLDER_KEY = "google_drive_folder_v1";
+var accessTokenCache;
+var GoogleDriveError = class extends AppError {
+  constructor(message, statusCode = 502) {
+    super(message, statusCode);
+    this.name = "GoogleDriveError";
+  }
+};
+function hasOAuthConfiguration() {
+  return Boolean(env.GOOGLE_DRIVE_CLIENT_ID && env.GOOGLE_DRIVE_CLIENT_SECRET);
+}
+function isGoogleDriveConfigured() {
+  return hasOAuthConfiguration();
+}
+function getDriveCallbackUrl() {
+  return new URL("/api/v1/admin/drive/callback", env.FRONTEND_URL).toString();
+}
+function encryptionKey() {
+  return createHash2("sha256").update(`${env.SESSION_SECRET}:deutschwelt-google-drive-token`).digest();
+}
+function encrypt(value) {
+  const iv = randomBytes3(12);
+  const cipher = createCipheriv("aes-256-gcm", encryptionKey(), iv);
+  const ciphertext = Buffer.concat([cipher.update(value, "utf8"), cipher.final()]);
+  return [iv.toString("base64url"), cipher.getAuthTag().toString("base64url"), ciphertext.toString("base64url")].join(".");
+}
+function decrypt(value) {
+  const [ivText, tagText, ciphertextText] = value.split(".");
+  if (!ivText || !tagText || !ciphertextText) throw new GoogleDriveError("Saved Google Drive connection is invalid. Reconnect Drive from Admin settings.", 503);
+  try {
+    const decipher = createDecipheriv("aes-256-gcm", encryptionKey(), Buffer.from(ivText, "base64url"));
+    decipher.setAuthTag(Buffer.from(tagText, "base64url"));
+    return Buffer.concat([decipher.update(Buffer.from(ciphertextText, "base64url")), decipher.final()]).toString("utf8");
+  } catch {
+    throw new GoogleDriveError("Google Drive credentials could not be decrypted. Check SESSION_SECRET and reconnect Drive.", 503);
+  }
+}
+async function getSetting(key) {
+  if (isDatabaseConnected) {
+    const setting = await prisma.siteSetting.findUnique({ where: { key }, select: { value: true } });
+    return setting?.value || null;
+  }
+  return store.siteSettings.find((setting) => setting.key === key)?.value || null;
+}
+async function setSetting(key, value, description) {
+  if (isDatabaseConnected) {
+    await prisma.siteSetting.upsert({
+      where: { key },
+      update: { value, description },
+      create: { key, value, description }
+    });
+    return;
+  }
+  const setting = store.siteSettings.find((item) => item.key === key);
+  if (setting) {
+    setting.value = value;
+    setting.description = description;
+    setting.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+  } else {
+    store.siteSettings.push({ id: `set-${Date.now()}`, key, value, description, updatedAt: (/* @__PURE__ */ new Date()).toISOString() });
+  }
+}
+async function getConnection() {
+  const encrypted = await getSetting(CONNECTION_KEY);
+  if (!encrypted) return null;
+  try {
+    return JSON.parse(decrypt(encrypted));
+  } catch (error) {
+    if (error instanceof GoogleDriveError) throw error;
+    throw new GoogleDriveError("Saved Google Drive connection is invalid. Reconnect Drive from Admin settings.", 503);
+  }
+}
+function signState(payload) {
+  return createHmac("sha256", env.SESSION_SECRET).update(payload).digest("base64url");
+}
+function createDriveOAuthState(userId) {
+  const payload = Buffer.from(JSON.stringify({ userId, expiresAt: Date.now() + 10 * 60 * 1e3, nonce: randomBytes3(16).toString("base64url") })).toString("base64url");
+  return `${payload}.${signState(payload)}`;
+}
+function driveOAuthStateUserId(state) {
+  const [payload, signature] = state.split(".");
+  if (!payload || !signature) return null;
+  const expected = Buffer.from(signState(payload));
+  const actual = Buffer.from(signature);
+  if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) return null;
+  try {
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    return typeof data.userId === "string" && typeof data.expiresAt === "number" && data.expiresAt > Date.now() ? data.userId : null;
+  } catch {
+    return null;
+  }
+}
+function verifyDriveOAuthState(state, userId) {
+  return driveOAuthStateUserId(state) === userId;
+}
+function buildDriveAuthorizationUrl(state) {
+  if (!hasOAuthConfiguration()) throw new GoogleDriveError("Google Drive OAuth credentials are not configured on the API.", 503);
+  const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  url.searchParams.set("client_id", env.GOOGLE_DRIVE_CLIENT_ID);
+  url.searchParams.set("redirect_uri", getDriveCallbackUrl());
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("scope", DRIVE_SCOPE);
+  url.searchParams.set("access_type", "offline");
+  url.searchParams.set("include_granted_scopes", "true");
+  url.searchParams.set("prompt", "consent");
+  url.searchParams.set("state", state);
+  return url.toString();
+}
+async function tokenRequest(params) {
+  const body = new URLSearchParams({
+    client_id: env.GOOGLE_DRIVE_CLIENT_ID,
+    client_secret: env.GOOGLE_DRIVE_CLIENT_SECRET,
+    ...params
+  });
+  const response = await fetch(TOKEN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new GoogleDriveError(data.error_description || "Google could not complete the Drive authorization.", response.status === 400 ? 400 : 502);
+  }
+  return data;
+}
+async function completeDriveOAuth(code) {
+  const tokenData = await tokenRequest({
+    code,
+    grant_type: "authorization_code",
+    redirect_uri: getDriveCallbackUrl()
+  });
+  const previous = await getConnection();
+  const refreshToken = tokenData.refresh_token || previous?.refreshToken;
+  if (!refreshToken) throw new GoogleDriveError("Google did not return a refresh token. Reconnect Drive and approve offline access.", 400);
+  await setSetting(CONNECTION_KEY, encrypt(JSON.stringify({ refreshToken })), "Encrypted Google Drive OAuth refresh token");
+  accessTokenCache = tokenData.access_token && tokenData.expires_in ? { token: tokenData.access_token, expiresAt: Date.now() + Number(tokenData.expires_in) * 1e3 } : void 0;
+}
+async function getDriveAccessToken() {
+  if (!hasOAuthConfiguration()) throw new GoogleDriveError("Google Drive OAuth credentials are not configured on the API.", 503);
+  if (accessTokenCache && accessTokenCache.expiresAt > Date.now() + 6e4) return accessTokenCache.token;
+  const connection = await getConnection();
+  if (!connection?.refreshToken) throw new GoogleDriveError("Connect the academy Google account from Admin settings first.", 503);
+  const data = await tokenRequest({ refresh_token: connection.refreshToken, grant_type: "refresh_token" });
+  if (!data.access_token) throw new GoogleDriveError("Google did not return an access token.", 502);
+  accessTokenCache = { token: data.access_token, expiresAt: Date.now() + Number(data.expires_in || 3600) * 1e3 };
+  return accessTokenCache.token;
+}
+async function getDriveStatus() {
+  const [connection, savedFolder] = await Promise.all([getConnection(), getSetting(FOLDER_KEY)]);
+  let folder = null;
+  if (savedFolder) {
+    try {
+      folder = JSON.parse(savedFolder);
+    } catch {
+      folder = null;
+    }
+  }
+  return {
+    databaseReady: isDatabaseConnected,
+    configured: hasOAuthConfiguration(),
+    connected: Boolean(connection?.refreshToken),
+    folder,
+    pickerReady: Boolean(env.GOOGLE_DRIVE_PICKER_API_KEY && env.GOOGLE_DRIVE_PROJECT_NUMBER)
+  };
+}
+async function driveRequest(url, init = {}) {
+  const token = await getDriveAccessToken();
+  const response = await fetch(url, {
+    ...init,
+    headers: { Authorization: `Bearer ${token}`, ...init.headers || {} }
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    const message = body?.error?.message || `Google Drive request failed (${response.status}).`;
+    const status = response.status === 404 ? 404 : response.status === 403 ? 403 : response.status >= 400 && response.status < 500 ? 400 : 502;
+    throw new GoogleDriveError(message, status);
+  }
+  return response;
+}
+async function getDrivePickerConfig() {
+  if (!env.GOOGLE_DRIVE_PICKER_API_KEY || !env.GOOGLE_DRIVE_PROJECT_NUMBER) {
+    throw new GoogleDriveError("Google Picker API key and Google Cloud project number are required to select the storage folder.", 503);
+  }
+  return {
+    accessToken: await getDriveAccessToken(),
+    apiKey: env.GOOGLE_DRIVE_PICKER_API_KEY,
+    projectNumber: env.GOOGLE_DRIVE_PROJECT_NUMBER
+  };
+}
+async function selectDriveFolder(id) {
+  const file = await driveRequest(`${DRIVE_API}/files/${encodeURIComponent(id)}?supportsAllDrives=true&fields=id,name,mimeType`);
+  const details = await file.json();
+  if (details.mimeType !== "application/vnd.google-apps.folder") {
+    throw new GoogleDriveError("Choose a Google Drive folder for file storage.", 400);
+  }
+  const folder = { id: details.id, name: details.name };
+  await setSetting(FOLDER_KEY, JSON.stringify(folder), "Google Drive folder used for DeutschWelt uploads");
+  return folder;
+}
+async function getSelectedDriveFolder() {
+  const value = await getSetting(FOLDER_KEY);
+  if (!value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+async function uploadDriveFile(localPath, originalName, mimeType) {
+  const folder = await getSelectedDriveFolder();
+  if (!folder) throw new GoogleDriveError("Select the Google Drive storage folder from Admin settings first.", 503);
+  const safeName = path2.basename(originalName.replace(/\\/g, "/")).replace(/[\u0000-\u001f]/g, "_");
+  const stat = await import("node:fs/promises").then((fs4) => fs4.stat(localPath));
+  const token = await getDriveAccessToken();
+  const start = await fetch(`${DRIVE_API}/files?uploadType=resumable&supportsAllDrives=true&fields=id,name,mimeType,size`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json; charset=UTF-8",
+      "X-Upload-Content-Type": mimeType || "application/octet-stream",
+      "X-Upload-Content-Length": String(stat.size)
+    },
+    body: JSON.stringify({ name: safeName, mimeType: mimeType || "application/octet-stream", parents: [folder.id] })
+  });
+  if (!start.ok) {
+    const body = await start.json().catch(() => ({}));
+    const status = start.status === 403 ? 403 : start.status >= 400 && start.status < 500 ? 400 : 502;
+    throw new GoogleDriveError(body?.error?.message || `Could not start the Drive upload (${start.status}).`, status);
+  }
+  const sessionUrl = start.headers.get("location");
+  if (!sessionUrl) throw new GoogleDriveError("Google Drive did not return an upload session.", 502);
+  const stream = createReadStream(localPath);
+  let uploaded;
+  try {
+    uploaded = await fetch(sessionUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": mimeType || "application/octet-stream",
+        "Content-Length": String(stat.size)
+      },
+      body: stream,
+      duplex: "half"
+    });
+  } catch (error) {
+    stream.destroy();
+    throw new GoogleDriveError(error instanceof Error ? error.message : "Drive upload was interrupted.", 502);
+  }
+  const result = await uploaded.json().catch(() => ({}));
+  if (!uploaded.ok || !result.id) {
+    const status = uploaded.status === 403 ? 403 : uploaded.status >= 400 && uploaded.status < 500 ? 400 : 502;
+    throw new GoogleDriveError(result?.error?.message || `Google Drive upload failed (${uploaded.status}).`, status);
+  }
+  return {
+    driveFileId: result.id,
+    fileName: result.name || safeName,
+    mimeType: result.mimeType || mimeType,
+    sizeBytes: Number(result.size || stat.size)
+  };
+}
+function driveFileUrl(fileId) {
+  return `/api/v1/files/${encodeURIComponent(fileId)}`;
+}
+async function streamDriveFile(fileId, range) {
+  const url = new URL(`${DRIVE_API}/files/${encodeURIComponent(fileId)}`);
+  url.searchParams.set("alt", "media");
+  url.searchParams.set("supportsAllDrives", "true");
+  const headers = {};
+  if (range) headers.Range = range;
+  const token = await getDriveAccessToken();
+  const response = await fetch(url, { headers: { Authorization: `Bearer ${token}`, ...headers } });
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    const status = response.status === 404 ? 404 : response.status === 403 ? 403 : response.status >= 400 && response.status < 500 ? 400 : 502;
+    throw new GoogleDriveError(body?.error?.message || `Could not download the Drive file (${response.status}).`, status);
+  }
+  return response;
+}
+async function trashDriveFile(fileId) {
+  const token = await getDriveAccessToken();
+  const response = await fetch(`${DRIVE_API}/files/${encodeURIComponent(fileId)}?supportsAllDrives=true&fields=id,trashed`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ trashed: true })
+  });
+  if (!response.ok && response.status !== 404) {
+    const body = await response.json().catch(() => ({}));
+    const status = response.status === 403 ? 403 : response.status >= 400 && response.status < 500 ? 400 : 502;
+    throw new GoogleDriveError(body?.error?.message || `Could not move the Drive file to trash (${response.status}).`, status);
+  }
+}
+
+// apps/api/src/services/uploadStorage.ts
+async function discardTemporaryUpload(file) {
+  if (file?.path) await fs.unlink(file.path).catch(() => void 0);
+}
+function localUploadUrl(file) {
+  const relative = path3.relative(env.UPLOAD_DIR, file.path).split(path3.sep).join("/");
+  return `/uploads/${relative}`;
+}
+async function persistUploadedFile(file) {
+  if (!isGoogleDriveConfigured()) {
+    return {
+      fileUrl: localUploadUrl(file),
+      driveFileId: null,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      sizeBytes: file.size
+    };
+  }
+  try {
+    const driveFile = await uploadDriveFile(file.path, file.originalname, file.mimetype);
+    return {
+      fileUrl: driveFileUrl(driveFile.driveFileId),
+      driveFileId: driveFile.driveFileId,
+      fileName: driveFile.fileName,
+      mimeType: driveFile.mimeType,
+      sizeBytes: driveFile.sizeBytes
+    };
+  } finally {
+    await discardTemporaryUpload(file);
+  }
+}
+async function removeStoredFile(fileUrl) {
+  if (!fileUrl) return;
+  const driveMatch = fileUrl.match(/^\/api\/v1\/files\/([a-zA-Z0-9_-]+)$/);
+  if (driveMatch) {
+    await trashDriveFile(driveMatch[1]);
+    return;
+  }
+  if (!fileUrl.startsWith("/uploads/")) return;
+  const filePath = path3.resolve(env.UPLOAD_DIR, fileUrl.slice("/uploads/".length));
+  const root = path3.resolve(env.UPLOAD_DIR) + path3.sep;
+  if (!filePath.startsWith(root)) return;
+  await fs.unlink(filePath).catch(() => void 0);
+}
+
 // apps/api/src/modules/speaking/speakingController.ts
+import fs2 from "node:fs/promises";
 async function getSpeakingPrompts(req, res, next) {
   try {
     const { level } = req.query;
@@ -43030,25 +43405,33 @@ async function submitSpeakingAttempt(req, res, next) {
     const { promptId } = req.params;
     const { transcriptText, durationSeconds } = req.body;
     const file = req.file;
-    const audioUrl = file ? `/uploads/audio/${file.filename}` : null;
-    if (!audioUrl && !transcriptText) {
+    if (!file && !transcriptText) {
       return next(new AppError("Please provide either an audio recording or text response.", 400));
     }
+    const prompt = isDatabaseConnected ? await prisma.speakingPrompt.findUnique({ where: { id: promptId } }) : store.speakingPrompts.find((item) => item.id === promptId);
+    if (!prompt) {
+      await discardTemporaryUpload(file);
+      return next(new AppError("Speaking prompt not found.", 404));
+    }
+    const storedUpload = file ? await persistUploadedFile(file) : null;
+    const audioUrl = storedUpload?.fileUrl || null;
     if (isDatabaseConnected) {
-      const prompt = await prisma.speakingPrompt.findUnique({ where: { id: promptId } });
-      if (!prompt) {
-        return next(new AppError("Speaking prompt not found.", 404));
+      let attempt;
+      try {
+        attempt = await prisma.speakingAttempt.create({
+          data: {
+            userId: req.user.id,
+            promptId,
+            audioUrl,
+            durationSeconds: durationSeconds ? parseInt(durationSeconds, 10) : null,
+            transcriptText: transcriptText || null,
+            status: SubmissionStatus.SUBMITTED
+          }
+        });
+      } catch (error) {
+        if (storedUpload?.driveFileId) await trashDriveFile(storedUpload.driveFileId).catch(() => void 0);
+        throw error;
       }
-      const attempt = await prisma.speakingAttempt.create({
-        data: {
-          userId: req.user.id,
-          promptId,
-          audioUrl,
-          durationSeconds: durationSeconds ? parseInt(durationSeconds, 10) : null,
-          transcriptText: transcriptText || null,
-          status: SubmissionStatus.SUBMITTED
-        }
-      });
       return res.status(201).json({
         success: true,
         message: "Speaking attempt submitted successfully for teacher review!",
@@ -43103,6 +43486,7 @@ async function analyzeSpeakingAudio(req, res, next) {
   try {
     const { promptId, durationSeconds, transcriptText } = req.body;
     const file = req.file;
+    if (file?.path) await fs2.unlink(file.path).catch(() => void 0);
     const prompt = store.speakingPrompts.find((p) => p.id === promptId);
     const targetText = prompt?.sampleAnswerDe || "Guten Tag! Ich lerne Deutsch.";
     const audioDuration = durationSeconds ? parseInt(durationSeconds, 10) : 15;
@@ -43140,7 +43524,7 @@ async function analyzeSpeakingAudio(req, res, next) {
         detectedSpeech: transcriptText || "Recognized high-fidelity German audio input",
         wordFeedback,
         insights,
-        audioUrl: file ? `/uploads/audio/${file.filename}` : null,
+        audioUrl: null,
         durationSeconds: audioDuration,
         evaluatedAt: (/* @__PURE__ */ new Date()).toISOString()
       }
@@ -43152,17 +43536,17 @@ async function analyzeSpeakingAudio(req, res, next) {
 
 // apps/api/src/middleware/upload.ts
 var import_multer = __toESM(require_multer(), 1);
-import path2 from "path";
-import fs from "fs";
+import path4 from "path";
+import fs3 from "fs";
 var uploadDir = env.UPLOAD_DIR;
-var audioDir = path2.join(uploadDir, "audio");
-var videoDir = path2.join(uploadDir, "videos");
-var materialsDir = path2.join(uploadDir, "materials");
-var certificatesDir = path2.join(uploadDir, "certificates");
+var audioDir = path4.join(uploadDir, "audio");
+var videoDir = path4.join(uploadDir, "videos");
+var materialsDir = path4.join(uploadDir, "materials");
+var certificatesDir = path4.join(uploadDir, "certificates");
 [audioDir, videoDir, materialsDir, certificatesDir].forEach((dir) => {
   try {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    if (!fs3.existsSync(dir)) {
+      fs3.mkdirSync(dir, { recursive: true });
     }
   } catch (e) {
     console.warn(`[Upload Directory Warning] Could not create directory ${dir}:`, e);
@@ -43173,7 +43557,7 @@ var audioStorage = import_multer.default.diskStorage({
     cb(null, audioDir);
   },
   filename: (req, file, cb) => {
-    const ext = path2.extname(file.originalname) || ".webm";
+    const ext = path4.extname(file.originalname) || ".webm";
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     cb(null, `speaking-${uniqueSuffix}${ext}`);
   }
@@ -43208,8 +43592,8 @@ var videoStorage = import_multer.default.diskStorage({
     cb(null, videoDir);
   },
   filename: (req, file, cb) => {
-    const ext = path2.extname(file.originalname) || ".mp4";
-    const safeBase = path2.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_").substring(0, 40);
+    const ext = path4.extname(file.originalname) || ".mp4";
+    const safeBase = path4.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_").substring(0, 40);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     cb(null, `video-${safeBase}-${uniqueSuffix}${ext}`);
   }
@@ -43243,8 +43627,8 @@ var materialStorage = import_multer.default.diskStorage({
     cb(null, materialsDir);
   },
   filename: (req, file, cb) => {
-    const ext = path2.extname(file.originalname) || ".pdf";
-    const safeBase = path2.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_").substring(0, 40);
+    const ext = path4.extname(file.originalname) || ".pdf";
+    const safeBase = path4.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_").substring(0, 40);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     cb(null, `doc-${safeBase}-${uniqueSuffix}${ext}`);
   }
@@ -43294,7 +43678,7 @@ var uploadMaterial = (0, import_multer.default)({
     // 50MB max document
   },
   fileFilter: (req, file, cb) => {
-    const ext = path2.extname(file.originalname).toLowerCase();
+    const ext = path4.extname(file.originalname).toLowerCase();
     if (disallowedMaterialExtensions.includes(ext)) {
       return cb(new AppError(`File type blocked for security (${ext}). Executables and scripts are strictly prohibited.`, 400));
     }
@@ -43763,6 +44147,51 @@ async function updateProfile(req, res, next) {
 async function getStudentBatchMaterials(req, res, next) {
   try {
     if (!req.user) return next(new AppError("Unauthorized", 401));
+    if (isDatabaseConnected) {
+      const memberships = await prisma.batchMembership.findMany({
+        where: { userId: req.user.id, status: "ACTIVE" },
+        select: { batchId: true }
+      });
+      const batchIds = memberships.map((item) => item.batchId);
+      const stored = batchIds.length ? await prisma.driveAsset.findMany({
+        where: { type: "TEACHER_MATERIAL", batchId: { in: batchIds } },
+        include: {
+          batch: { select: { name: true } },
+          owner: { select: { firstName: true, lastName: true } }
+        },
+        orderBy: { createdAt: "desc" }
+      }) : [];
+      const local = store.teacherMaterials.filter((m) => batchIds.includes(m.batchId) && !m.fileUrl?.startsWith("/api/v1/files/"));
+      const materials2 = [
+        ...stored.map((asset) => ({
+          id: asset.id,
+          teacherId: asset.teacherProfileId,
+          batchId: asset.batchId,
+          title: asset.title,
+          category: asset.category || "WORKSHEET",
+          description: asset.description || "",
+          fileUrl: driveFileUrl(asset.driveFileId),
+          fileType: asset.fileName.split(".").pop()?.toUpperCase() || "FILE",
+          fileSize: `${(Number(asset.sizeBytes) / (1024 * 1024)).toFixed(1)} MB`,
+          level: asset.level,
+          createdAt: asset.createdAt,
+          batchName: asset.batch?.name || "Class Materials",
+          teacherName: `${asset.owner?.firstName || ""} ${asset.owner?.lastName || ""}`.trim() || "Course Instructor"
+        })),
+        ...local.map((m) => {
+          const batch = store.batches.find((b) => b.id === m.batchId);
+          const teacher = store.teacherProfiles.find((tp) => tp.id === m.teacherId);
+          const teacherUser = teacher ? store.users.find((u) => u.id === teacher.userId) : null;
+          return {
+            ...m,
+            batchName: batch?.name || "Class Materials",
+            teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : "Course Instructor"
+          };
+        })
+      ];
+      const announcements2 = store.batchAnnouncements.filter((a) => batchIds.includes(a.batchId));
+      return res.json({ success: true, materials: materials2, announcements: announcements2 });
+    }
     const myBatchIds = store.batchMemberships.filter((bm) => bm.userId === req.user.id).map((bm) => bm.batchId);
     const effectiveBatchIds = myBatchIds.length > 0 ? myBatchIds : ["batch-1"];
     const materials = store.teacherMaterials.filter((m) => effectiveBatchIds.includes(m.batchId)).map((m) => {
@@ -43793,6 +44222,54 @@ async function getStudentBatchMaterials(req, res, next) {
 async function getStudentBatchLectures(req, res, next) {
   try {
     if (!req.user) return next(new AppError("Unauthorized", 401));
+    if (isDatabaseConnected) {
+      const memberships = await prisma.batchMembership.findMany({
+        where: { userId: req.user.id, status: "ACTIVE" },
+        select: { batchId: true }
+      });
+      const batchIds = memberships.map((item) => item.batchId);
+      const stored = batchIds.length ? await prisma.driveAsset.findMany({
+        where: { type: "TEACHER_LECTURE", batchId: { in: batchIds } },
+        include: {
+          batch: { select: { name: true } },
+          owner: { select: { firstName: true, lastName: true } }
+        },
+        orderBy: { createdAt: "desc" }
+      }) : [];
+      const local = store.teacherLectures.filter((l) => batchIds.includes(l.batchId) && !l.videoUrl?.startsWith("/api/v1/files/"));
+      const lectures2 = [
+        ...stored.map((asset) => ({
+          id: asset.id,
+          teacherId: asset.teacherProfileId,
+          batchId: asset.batchId,
+          title: asset.title,
+          description: asset.description || "",
+          level: asset.level,
+          videoUrl: driveFileUrl(asset.driveFileId),
+          durationMinutes: asset.durationMinutes || 45,
+          scheduledFor: asset.scheduledFor || asset.createdAt,
+          isLive: asset.isLive,
+          meetingUrl: asset.meetingUrl || "",
+          fileSize: `${(Number(asset.sizeBytes) / (1024 * 1024)).toFixed(1)} MB`,
+          originalFilename: asset.fileName,
+          status: "PUBLISHED",
+          createdAt: asset.createdAt,
+          batchName: asset.batch?.name || "Class Lecture",
+          teacherName: `${asset.owner?.firstName || ""} ${asset.owner?.lastName || ""}`.trim() || "Course Instructor"
+        })),
+        ...local.map((l) => {
+          const batch = store.batches.find((b) => b.id === l.batchId);
+          const teacher = store.teacherProfiles.find((tp) => tp.id === l.teacherId);
+          const teacherUser = teacher ? store.users.find((u) => u.id === teacher.userId) : null;
+          return {
+            ...l,
+            batchName: batch?.name || "Class Lecture",
+            teacherName: teacherUser ? `${teacherUser.firstName} ${teacherUser.lastName}` : "Course Instructor"
+          };
+        })
+      ];
+      return res.json({ success: true, lectures: lectures2 });
+    }
     const myBatchIds = store.batchMemberships.filter((bm) => bm.userId === req.user.id).map((bm) => bm.batchId);
     const effectiveBatchIds = myBatchIds.length > 0 ? myBatchIds : ["batch-1"];
     const lectures = store.teacherLectures.filter((l) => effectiveBatchIds.includes(l.batchId)).map((l) => {
@@ -43916,8 +44393,7 @@ var studentRoutes_default = router8;
 var import_express9 = __toESM(require_express2(), 1);
 
 // apps/api/src/modules/teacher/teacherController.ts
-import fs2 from "fs";
-import path3 from "path";
+import path5 from "path";
 function resolveTeacherProfileId(req) {
   if (req.user?.teacherProfile?.id) return req.user.teacherProfile.id;
   if (req.user?.id === "user-teacher-1") return "profile-teacher-1";
@@ -43926,24 +44402,63 @@ function resolveTeacherProfileId(req) {
   if (found) return found.id;
   return `profile-${req.user?.id}`;
 }
-async function getAssignedBatchIds(teacherProfileId, userId) {
+async function getAssignedBatchIds(teacherProfileId2, userId) {
   if (isDatabaseConnected) {
     const assignments = await prisma.teacherBatchAssignment.findMany({
-      where: { teacherId: teacherProfileId },
+      where: { teacherId: teacherProfileId2 },
       select: { batchId: true }
     });
     return assignments.map((a) => a.batchId);
   } else {
-    return store.teacherBatchAssignments.filter((tba) => tba.teacherId === teacherProfileId || tba.teacherId === `profile-${userId}`).map((tba) => tba.batchId);
+    return store.teacherBatchAssignments.filter((tba) => tba.teacherId === teacherProfileId2 || tba.teacherId === `profile-${userId}`).map((tba) => tba.batchId);
   }
+}
+function formatDriveAssetSize(sizeBytes) {
+  return `${(Number(sizeBytes) / (1024 * 1024)).toFixed(1)} MB`;
+}
+function driveAssetToLecture(asset) {
+  return {
+    id: asset.id,
+    teacherId: asset.teacherProfileId,
+    batchId: asset.batchId,
+    title: asset.title,
+    description: asset.description || "",
+    level: asset.level,
+    videoUrl: driveFileUrl(asset.driveFileId),
+    durationMinutes: asset.durationMinutes || 45,
+    scheduledFor: asset.scheduledFor || asset.createdAt,
+    isLive: false,
+    meetingUrl: asset.meetingUrl || "",
+    fileSize: formatDriveAssetSize(asset.sizeBytes),
+    originalFilename: asset.fileName,
+    status: "PUBLISHED",
+    createdAt: asset.createdAt,
+    batch: asset.batch
+  };
+}
+function driveAssetToMaterial(asset) {
+  return {
+    id: asset.id,
+    teacherId: asset.teacherProfileId,
+    batchId: asset.batchId,
+    title: asset.title,
+    category: asset.category || "WORKSHEET",
+    description: asset.description || "",
+    fileUrl: driveFileUrl(asset.driveFileId),
+    fileType: path5.extname(asset.fileName).replace(".", "").toUpperCase() || "FILE",
+    fileSize: formatDriveAssetSize(asset.sizeBytes),
+    level: asset.level,
+    createdAt: asset.createdAt,
+    batch: asset.batch
+  };
 }
 async function getTeacherDashboard(req, res, next) {
   try {
     if (!req.user) {
       return next(new AppError("Unauthorized", 401));
     }
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const batches = await prisma.teacherBatch.findMany({
         where: { id: { in: assignedBatchIds } },
@@ -44050,8 +44565,8 @@ async function getTeacherDashboard(req, res, next) {
 }
 async function getTeacherBatches(req, res, next) {
   try {
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const batches = await prisma.teacherBatch.findMany({
         where: { id: { in: assignedBatchIds } },
@@ -44082,8 +44597,8 @@ async function getTeacherBatches(req, res, next) {
 }
 async function getTeacherStudents(req, res, next) {
   try {
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const memberships = await prisma.batchMembership.findMany({
         where: { batchId: { in: assignedBatchIds } },
@@ -44144,8 +44659,8 @@ async function getTeacherStudents(req, res, next) {
 }
 async function getTeacherSubmissions(req, res, next) {
   try {
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const myMemberships = await prisma.batchMembership.findMany({
         where: { batchId: { in: assignedBatchIds } },
@@ -44193,11 +44708,11 @@ async function getTeacherSubmissions(req, res, next) {
 async function createAssignment(req, res, next) {
   try {
     const { title, description, level, dueDate, maxPoints = 100, instructions, rubricCriteria, batchId } = req.body;
-    const teacherProfileId = resolveTeacherProfileId(req);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
     if (isDatabaseConnected) {
       const assignment = await prisma.assignment.create({
         data: {
-          teacherId: teacherProfileId,
+          teacherId: teacherProfileId2,
           batchId: batchId || null,
           title,
           description,
@@ -44212,7 +44727,7 @@ async function createAssignment(req, res, next) {
     } else {
       const assignment = {
         id: `assign-${Date.now()}`,
-        teacherId: teacherProfileId,
+        teacherId: teacherProfileId2,
         batchId: batchId || "batch-1",
         title,
         description,
@@ -44284,7 +44799,7 @@ async function gradeSpeakingAttempt(req, res, next) {
   try {
     const { attemptId } = req.params;
     const { score, teacherFeedback, rubricScores } = req.body;
-    const teacherProfileId = resolveTeacherProfileId(req);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
     if (isDatabaseConnected) {
       const attempt = await prisma.speakingAttempt.update({
         where: { id: attemptId },
@@ -44294,7 +44809,7 @@ async function gradeSpeakingAttempt(req, res, next) {
           rubricScores,
           status: SubmissionStatus.GRADED,
           evaluatedAt: /* @__PURE__ */ new Date(),
-          teacherId: teacherProfileId
+          teacherId: teacherProfileId2
         }
       });
       await prisma.notification.create({
@@ -44315,7 +44830,7 @@ async function gradeSpeakingAttempt(req, res, next) {
       att.rubricScores = rubricScores;
       att.status = SubmissionStatus.GRADED;
       att.evaluatedAt = (/* @__PURE__ */ new Date()).toISOString();
-      att.teacherId = teacherProfileId;
+      att.teacherId = teacherProfileId2;
       store.notifications.push({
         id: `notif-${Date.now()}`,
         userId: att.userId,
@@ -44334,9 +44849,25 @@ async function gradeSpeakingAttempt(req, res, next) {
 }
 async function getTeacherLectures(req, res, next) {
   try {
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
-    const lectures = store.teacherLectures.filter((l) => assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId).map((l) => ({
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (isDatabaseConnected) {
+      const [stored, local] = await Promise.all([
+        prisma.driveAsset.findMany({
+          where: {
+            type: "TEACHER_LECTURE",
+            OR: [{ batchId: { in: assignedBatchIds } }, { teacherProfileId: teacherProfileId2 }]
+          },
+          include: { batch: true },
+          orderBy: { createdAt: "desc" }
+        }),
+        Promise.resolve(store.teacherLectures.filter(
+          (l) => (assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId2) && !l.videoUrl?.startsWith("/api/v1/files/")
+        ).map((l) => ({ ...l, batch: store.batches.find((b) => b.id === l.batchId) })))
+      ]);
+      return res.json({ success: true, lectures: [...stored.map(driveAssetToLecture), ...local] });
+    }
+    const lectures = store.teacherLectures.filter((l) => assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId2).map((l) => ({
       ...l,
       batch: store.batches.find((b) => b.id === l.batchId)
     }));
@@ -44350,15 +44881,19 @@ async function uploadLectureVideo(req, res, next) {
     if (!req.file) {
       return next(new AppError("No video file provided for upload.", 400));
     }
-    const fileUrl = `/uploads/videos/${req.file.filename}`;
-    const sizeMb = (req.file.size / (1024 * 1024)).toFixed(1) + " MB";
+    if (isGoogleDriveConfigured()) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError("Upload videos through the batch lecture form so each Drive file is linked to its lecture and access rules.", 400));
+    }
+    const upload = await persistUploadedFile(req.file);
+    const sizeMb = (upload.sizeBytes / (1024 * 1024)).toFixed(1) + " MB";
     return res.json({
       success: true,
       message: "Video file uploaded successfully.",
-      fileUrl,
-      fileName: req.file.originalname,
+      fileUrl: upload.fileUrl,
+      fileName: upload.fileName,
       fileSize: sizeMb,
-      mimeType: req.file.mimetype
+      mimeType: upload.mimeType
     });
   } catch (error) {
     next(error);
@@ -44370,19 +44905,60 @@ async function createTeacherLecture(req, res, next) {
     let videoUrl = req.body.videoUrl || "";
     let fileSize = req.body.fileSize;
     let originalFilename = req.body.originalFilename;
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    if (!title || !batchId) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError("Lecture title and target batch are required.", 400));
+    }
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds.includes(batchId)) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError("You can only publish lectures to your assigned batches.", 403));
+    }
+    let storedUpload = null;
     if (req.file) {
-      videoUrl = `/uploads/videos/${req.file.filename}`;
-      fileSize = (req.file.size / (1024 * 1024)).toFixed(1) + " MB";
-      originalFilename = req.file.originalname;
+      storedUpload = await persistUploadedFile(req.file);
+      videoUrl = storedUpload.fileUrl;
+      fileSize = (storedUpload.sizeBytes / (1024 * 1024)).toFixed(1) + " MB";
+      originalFilename = storedUpload.fileName;
     }
     const isLive = req.body.isLive === "true" || req.body.isLive === true;
-    const teacherProfileId = resolveTeacherProfileId(req);
-    if (!title || !batchId) {
-      return next(new AppError("Lecture title and target batch are required.", 400));
+    if (isDatabaseConnected && storedUpload?.driveFileId) {
+      let asset;
+      try {
+        asset = await prisma.driveAsset.create({
+          data: {
+            driveFileId: storedUpload.driveFileId,
+            type: "TEACHER_LECTURE",
+            ownerId: req.user.id,
+            teacherProfileId: teacherProfileId2,
+            batchId,
+            title,
+            description: description || "",
+            fileName: storedUpload.fileName,
+            mimeType: storedUpload.mimeType,
+            sizeBytes: BigInt(storedUpload.sizeBytes),
+            level: level || "A1",
+            durationMinutes: Number(durationMinutes) || 45,
+            scheduledFor: scheduledFor ? new Date(scheduledFor) : null,
+            isLive,
+            meetingUrl: meetingUrl || null
+          },
+          include: { batch: true }
+        });
+      } catch (error) {
+        await trashDriveFile(storedUpload.driveFileId).catch(() => void 0);
+        throw error;
+      }
+      return res.status(201).json({
+        success: true,
+        message: "Lecture uploaded and saved to Google Drive.",
+        lecture: driveAssetToLecture(asset)
+      });
     }
     const newLecture = {
       id: `lec-${Date.now()}`,
-      teacherId: teacherProfileId,
+      teacherId: teacherProfileId2,
       batchId,
       title,
       description: description || "",
@@ -44419,22 +44995,26 @@ async function createTeacherLecture(req, res, next) {
 async function deleteTeacherLecture(req, res, next) {
   try {
     const { lectureId } = req.params;
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const index = store.teacherLectures.findIndex((l) => l.id === lectureId && (l.teacherId === teacherProfileId || req.user?.role === UserRole.ADMIN));
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    if (isDatabaseConnected) {
+      const asset = await prisma.driveAsset.findFirst({
+        where: {
+          id: lectureId,
+          type: "TEACHER_LECTURE",
+          ...req.user?.role === UserRole.ADMIN ? {} : { teacherProfileId: teacherProfileId2 }
+        }
+      });
+      if (!asset) return next(new AppError("Lecture not found or unauthorized to delete.", 404));
+      await removeStoredFile(driveFileUrl(asset.driveFileId));
+      await prisma.driveAsset.delete({ where: { id: asset.id } });
+      return res.json({ success: true, message: "Lecture deleted successfully." });
+    }
+    const index = store.teacherLectures.findIndex((l) => l.id === lectureId && (l.teacherId === teacherProfileId2 || req.user?.role === UserRole.ADMIN));
     if (index === -1) {
       return next(new AppError("Lecture not found or unauthorized to delete.", 404));
     }
     const [deleted] = store.teacherLectures.splice(index, 1);
-    if (deleted?.videoUrl && deleted.videoUrl.startsWith("/uploads/videos/")) {
-      try {
-        const filePath = path3.join(env.UPLOAD_DIR, "videos", path3.basename(deleted.videoUrl));
-        if (fs2.existsSync(filePath)) {
-          fs2.unlinkSync(filePath);
-        }
-      } catch (err) {
-        console.warn("[Cleanup Warning] Could not remove deleted lecture video file:", err);
-      }
-    }
+    await removeStoredFile(deleted?.videoUrl);
     return res.json({ success: true, message: "Lecture deleted successfully." });
   } catch (error) {
     next(error);
@@ -44442,9 +45022,25 @@ async function deleteTeacherLecture(req, res, next) {
 }
 async function getTeacherMaterials(req, res, next) {
   try {
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
-    const materials = store.teacherMaterials.filter((m) => assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId).map((m) => ({
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (isDatabaseConnected) {
+      const [stored, local] = await Promise.all([
+        prisma.driveAsset.findMany({
+          where: {
+            type: "TEACHER_MATERIAL",
+            OR: [{ batchId: { in: assignedBatchIds } }, { teacherProfileId: teacherProfileId2 }]
+          },
+          include: { batch: true },
+          orderBy: { createdAt: "desc" }
+        }),
+        Promise.resolve(store.teacherMaterials.filter(
+          (m) => (assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId2) && !m.fileUrl?.startsWith("/api/v1/files/")
+        ).map((m) => ({ ...m, batch: store.batches.find((b) => b.id === m.batchId) })))
+      ]);
+      return res.json({ success: true, materials: [...stored.map(driveAssetToMaterial), ...local] });
+    }
+    const materials = store.teacherMaterials.filter((m) => assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId2).map((m) => ({
       ...m,
       batch: store.batches.find((b) => b.id === m.batchId)
     }));
@@ -44459,19 +45055,57 @@ async function createTeacherMaterial(req, res, next) {
     let fileUrl = req.body.fileUrl || "";
     let fileType = req.body.fileType || "PDF";
     let fileSize = req.body.fileSize || "1.0 MB";
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    if (!title || !batchId) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError("Material title and target batch are required.", 400));
+    }
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds.includes(batchId)) {
+      await discardTemporaryUpload(req.file);
+      return next(new AppError("You can only publish materials to your assigned batches.", 403));
+    }
+    let storedUpload = null;
     if (req.file) {
-      fileUrl = `/uploads/materials/${req.file.filename}`;
-      fileSize = `${(req.file.size / (1024 * 1024)).toFixed(1)} MB`;
-      const ext = path3.extname(req.file.originalname).replace(".", "").toUpperCase();
+      storedUpload = await persistUploadedFile(req.file);
+      fileUrl = storedUpload.fileUrl;
+      fileSize = `${(storedUpload.sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+      const ext = path5.extname(storedUpload.fileName).replace(".", "").toUpperCase();
       if (ext) fileType = ext;
     }
-    const teacherProfileId = resolveTeacherProfileId(req);
-    if (!title || !batchId) {
-      return next(new AppError("Material title and target batch are required.", 400));
+    if (isDatabaseConnected && storedUpload?.driveFileId) {
+      let asset;
+      try {
+        asset = await prisma.driveAsset.create({
+          data: {
+            driveFileId: storedUpload.driveFileId,
+            type: "TEACHER_MATERIAL",
+            ownerId: req.user.id,
+            teacherProfileId: teacherProfileId2,
+            batchId,
+            title,
+            description: description || "",
+            fileName: storedUpload.fileName,
+            mimeType: storedUpload.mimeType,
+            sizeBytes: BigInt(storedUpload.sizeBytes),
+            level: level || "A1",
+            category: category || "WORKSHEET"
+          },
+          include: { batch: true }
+        });
+      } catch (error) {
+        await trashDriveFile(storedUpload.driveFileId).catch(() => void 0);
+        throw error;
+      }
+      return res.status(201).json({
+        success: true,
+        message: "Material uploaded and saved to Google Drive.",
+        material: driveAssetToMaterial(asset)
+      });
     }
     const newMaterial = {
       id: `mat-${Date.now()}`,
-      teacherId: teacherProfileId,
+      teacherId: teacherProfileId2,
       batchId,
       title,
       category: category || "WORKSHEET",
@@ -44504,22 +45138,26 @@ async function createTeacherMaterial(req, res, next) {
 async function deleteTeacherMaterial(req, res, next) {
   try {
     const { materialId } = req.params;
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const index = store.teacherMaterials.findIndex((m) => m.id === materialId && (m.teacherId === teacherProfileId || req.user?.role === UserRole.ADMIN));
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    if (isDatabaseConnected) {
+      const asset = await prisma.driveAsset.findFirst({
+        where: {
+          id: materialId,
+          type: "TEACHER_MATERIAL",
+          ...req.user?.role === UserRole.ADMIN ? {} : { teacherProfileId: teacherProfileId2 }
+        }
+      });
+      if (!asset) return next(new AppError("Material not found or unauthorized to delete.", 404));
+      await removeStoredFile(driveFileUrl(asset.driveFileId));
+      await prisma.driveAsset.delete({ where: { id: asset.id } });
+      return res.json({ success: true, message: "Material deleted successfully." });
+    }
+    const index = store.teacherMaterials.findIndex((m) => m.id === materialId && (m.teacherId === teacherProfileId2 || req.user?.role === UserRole.ADMIN));
     if (index === -1) {
       return next(new AppError("Material not found or unauthorized to delete.", 404));
     }
     const [deleted] = store.teacherMaterials.splice(index, 1);
-    if (deleted?.fileUrl && deleted.fileUrl.startsWith("/uploads/materials/")) {
-      try {
-        const filePath = path3.join(env.UPLOAD_DIR, "materials", path3.basename(deleted.fileUrl));
-        if (fs2.existsSync(filePath)) {
-          fs2.unlinkSync(filePath);
-        }
-      } catch (err) {
-        console.warn("[Cleanup Warning] Could not remove deleted material file:", err);
-      }
-    }
+    await removeStoredFile(deleted?.fileUrl);
     return res.json({ success: true, message: "Material deleted successfully." });
   } catch (error) {
     next(error);
@@ -44527,9 +45165,9 @@ async function deleteTeacherMaterial(req, res, next) {
 }
 async function getTeacherAnnouncements(req, res, next) {
   try {
-    const teacherProfileId = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user.id);
-    const announcements = store.batchAnnouncements.filter((a) => assignedBatchIds.includes(a.batchId) || a.teacherId === teacherProfileId).map((a) => ({
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const announcements = store.batchAnnouncements.filter((a) => assignedBatchIds.includes(a.batchId) || a.teacherId === teacherProfileId2).map((a) => ({
       ...a,
       batch: store.batches.find((b) => b.id === a.batchId)
     }));
@@ -44541,13 +45179,13 @@ async function getTeacherAnnouncements(req, res, next) {
 async function createBatchAnnouncement(req, res, next) {
   try {
     const { title, content, batchId } = req.body;
-    const teacherProfileId = resolveTeacherProfileId(req);
+    const teacherProfileId2 = resolveTeacherProfileId(req);
     if (!title || !content || !batchId) {
       return next(new AppError("Title, content, and batchId are required.", 400));
     }
     const announcement = {
       id: `anc-${Date.now()}`,
-      teacherId: teacherProfileId,
+      teacherId: teacherProfileId2,
       batchId,
       title,
       content,
@@ -45561,10 +46199,11 @@ async function getAuditLogs(req, res, next) {
 async function getPlatformSettings(req, res, next) {
   try {
     if (isDatabaseConnected) {
-      const settings = await prisma.siteSetting.findMany();
+      const settings = await prisma.siteSetting.findMany({ where: { key: { not: { startsWith: "google_drive_" } } } });
       return res.json({ success: true, settings });
     } else {
-      return res.json({ success: true, settings: store.siteSettings });
+      const settings = store.siteSettings.filter((setting) => !setting.key.startsWith("google_drive_"));
+      return res.json({ success: true, settings });
     }
   } catch (error) {
     next(error);
@@ -45574,6 +46213,9 @@ async function updatePlatformSetting(req, res, next) {
   try {
     const { key } = req.params;
     const { value, description } = req.body;
+    if (key.startsWith("google_drive_")) {
+      return next(new AppError("Google Drive connection settings are managed through the Drive setup endpoints.", 400));
+    }
     if (isDatabaseConnected) {
       const setting = await prisma.siteSetting.upsert({
         where: { key },
@@ -45615,7 +46257,7 @@ async function getAdminBatches(req, res, next) {
 }
 async function createAdminBatch(req, res, next) {
   try {
-    const { name, level, description, startDate, endDate, maxStudents, teacherProfileId } = req.body;
+    const { name, level, description, startDate, endDate, maxStudents, teacherProfileId: teacherProfileId2 } = req.body;
     const newBatch = {
       id: `batch-${Date.now()}`,
       name: name || "Neue DeutschWelt Kohorte",
@@ -45629,11 +46271,11 @@ async function createAdminBatch(req, res, next) {
       updatedAt: (/* @__PURE__ */ new Date()).toISOString()
     };
     store.batches.push(newBatch);
-    if (teacherProfileId) {
+    if (teacherProfileId2) {
       store.teacherBatchAssignments.push({
         id: `tba-${Date.now()}`,
         batchId: newBatch.id,
-        teacherId: teacherProfileId,
+        teacherId: teacherProfileId2,
         isPrimary: true,
         assignedAt: (/* @__PURE__ */ new Date()).toISOString()
       });
@@ -45715,6 +46357,85 @@ async function createAdminAnnouncement(req, res, next) {
   }
 }
 
+// apps/api/src/modules/admin/driveController.ts
+function settingsUrl(status) {
+  const url = new URL("/admin/settings", env.FRONTEND_URL);
+  url.searchParams.set("drive", status);
+  return url.toString();
+}
+function connectGoogleDrive(req, res, next) {
+  try {
+    if (!isDatabaseConnected) {
+      return next(new AppError("Connect PostgreSQL before enabling Drive so the encrypted authorization and file access records can be saved durably.", 503));
+    }
+    const state = createDriveOAuthState(req.user.id);
+    res.cookie("dw_drive_oauth_state", state, {
+      httpOnly: true,
+      secure: env.isProd,
+      sameSite: "lax",
+      path: "/api/v1/admin/drive/callback",
+      maxAge: 10 * 60 * 1e3
+    });
+    return res.redirect(buildDriveAuthorizationUrl(state));
+  } catch (error) {
+    next(error);
+  }
+}
+async function googleDriveOAuthCallback(req, res, next) {
+  try {
+    const state = String(req.query.state || "");
+    const code = String(req.query.code || "");
+    const stateCookie = req.cookies?.dw_drive_oauth_state;
+    res.clearCookie("dw_drive_oauth_state", {
+      httpOnly: true,
+      secure: env.isProd,
+      sameSite: "lax",
+      path: "/api/v1/admin/drive/callback"
+    });
+    if (!stateCookie || stateCookie !== state) {
+      return next(new AppError("Google Drive authorization expired or did not match your admin session. Please reconnect.", 400));
+    }
+    if (req.query.error) return res.redirect(settingsUrl("cancelled"));
+    const adminId = driveOAuthStateUserId(state);
+    if (!adminId) return next(new AppError("Google Drive authorization expired. Please reconnect.", 400));
+    const isCurrentAdmin = isDatabaseConnected ? Boolean(await prisma.user.findFirst({ where: { id: adminId, role: UserRole.ADMIN, isActive: true }, select: { id: true } })) : store.users.some((user) => user.id === adminId && user.role === UserRole.ADMIN && user.isActive);
+    if (!isCurrentAdmin) return next(new AppError("An active administrator must connect Google Drive.", 403));
+    if (!verifyDriveOAuthState(state, adminId)) return next(new AppError("Google Drive authorization state is invalid.", 400));
+    if (!code) return next(new AppError("Google did not return an authorization code.", 400));
+    if (!isDatabaseConnected) return res.redirect(settingsUrl("database-required"));
+    await completeDriveOAuth(code);
+    return res.redirect(settingsUrl("connected"));
+  } catch (error) {
+    next(error);
+  }
+}
+async function getGoogleDriveStatus(_req, res, next) {
+  try {
+    return res.json({ success: true, drive: await getDriveStatus() });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getGoogleDrivePickerConfig(_req, res, next) {
+  try {
+    if (!isDatabaseConnected) return next(new AppError("Connect PostgreSQL before configuring Google Drive storage.", 503));
+    return res.json({ success: true, picker: await getDrivePickerConfig() });
+  } catch (error) {
+    next(error);
+  }
+}
+async function saveGoogleDriveFolder(req, res, next) {
+  try {
+    if (!isDatabaseConnected) return next(new AppError("Connect PostgreSQL before configuring Google Drive storage.", 503));
+    const id = typeof req.body?.id === "string" ? req.body.id.trim() : "";
+    if (!id) return next(new AppError("Choose a Google Drive folder first.", 400));
+    const folder = await selectDriveFolder(id);
+    return res.json({ success: true, folder });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // apps/api/src/modules/admin/adminRoutes.ts
 var router10 = (0, import_express10.Router)();
 router10.use(requireAuth);
@@ -45740,6 +46461,10 @@ router10.patch("/enquiries/:enquiryId", updateEnquiryStatus);
 router10.get("/audit-logs", getAuditLogs);
 router10.get("/settings", getPlatformSettings);
 router10.patch("/settings/:key", updatePlatformSetting);
+router10.get("/drive/connect", connectGoogleDrive);
+router10.get("/drive/status", getGoogleDriveStatus);
+router10.get("/drive/picker-config", getGoogleDrivePickerConfig);
+router10.post("/drive/folder", saveGoogleDriveFolder);
 router10.get("/batches", getAdminBatches);
 router10.post("/batches", createAdminBatch);
 router10.get("/payments", getAdminPayments);
@@ -45852,6 +46577,9 @@ async function resetSandboxData(req, res, next) {
 }
 async function toggleSandboxMode(req, res, next) {
   try {
+    if (!env.isSandbox) {
+      return next(new AppError("Sandbox controls are disabled outside the sandbox environment.", 404));
+    }
     const { enabled } = req.body;
     store.isSandboxMode = Boolean(enabled);
     return res.json({
@@ -45871,8 +46599,116 @@ router12.post("/sandbox/reset", resetSandboxData);
 router12.post("/sandbox/toggle", toggleSandboxMode);
 var systemRoutes_default = router12;
 
+// apps/api/src/modules/files/fileRoutes.ts
+var import_express13 = __toESM(require_express2(), 1);
+
+// apps/api/src/modules/files/fileController.ts
+import path6 from "node:path";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+function teacherProfileId(user) {
+  return user.teacherProfile?.id || (user.id === "user-teacher-1" ? "profile-teacher-1" : user.id === "user-teacher-2" ? "profile-teacher-2" : `profile-${user.id}`);
+}
+async function isAuthorizedForSpeakingAttempt(user, attempt) {
+  if (user.role === UserRole.ADMIN || attempt.userId === user.id) return true;
+  if (user.role !== UserRole.TEACHER) return false;
+  if (isDatabaseConnected) {
+    const [memberships, assignments] = await Promise.all([
+      prisma.batchMembership.findMany({ where: { userId: attempt.userId, status: "ACTIVE" }, select: { batchId: true } }),
+      prisma.teacherBatchAssignment.findMany({ where: { teacherId: teacherProfileId(user) }, select: { batchId: true } })
+    ]);
+    const teacherBatches2 = new Set(assignments.map((item) => item.batchId));
+    return memberships.some((item) => teacherBatches2.has(item.batchId));
+  }
+  const studentBatches = store.batchMemberships.filter((item) => item.userId === attempt.userId).map((item) => item.batchId);
+  const teacherBatches = store.teacherBatchAssignments.filter((item) => item.teacherId === teacherProfileId(user)).map((item) => item.batchId);
+  return studentBatches.some((batchId) => teacherBatches.includes(batchId));
+}
+async function authorizeDriveAsset(req, fileId) {
+  const user = req.user;
+  const url = driveFileUrl(fileId);
+  if (isDatabaseConnected) {
+    const asset = await prisma.driveAsset.findUnique({ where: { driveFileId: fileId } });
+    if (asset) {
+      if (user.role === UserRole.ADMIN || asset.ownerId === user.id) {
+        return { fileName: asset.fileName, mimeType: asset.mimeType };
+      }
+      if (user.role === UserRole.STUDENT) {
+        const membership = await prisma.batchMembership.findFirst({
+          where: { batchId: asset.batchId, userId: user.id, status: "ACTIVE" },
+          select: { id: true }
+        });
+        return membership ? { fileName: asset.fileName, mimeType: asset.mimeType } : null;
+      }
+      if (user.role === UserRole.TEACHER) {
+        const assignment = await prisma.teacherBatchAssignment.findFirst({
+          where: { teacherId: teacherProfileId(user), batchId: asset.batchId },
+          select: { id: true }
+        });
+        return assignment ? { fileName: asset.fileName, mimeType: asset.mimeType } : null;
+      }
+      return null;
+    }
+    const attempt2 = await prisma.speakingAttempt.findFirst({ where: { audioUrl: url } });
+    if (attempt2 && await isAuthorizedForSpeakingAttempt(user, attempt2)) return { fileName: `speaking-${attempt2.id}.webm` };
+    return null;
+  }
+  const material = store.teacherMaterials.find((item) => item.fileUrl === url);
+  const lecture = store.teacherLectures.find((item) => item.videoUrl === url);
+  const resource = material || lecture;
+  if (resource) {
+    if (user.role === UserRole.ADMIN || resource.teacherId === teacherProfileId(user)) {
+      return { fileName: material?.originalFilename || lecture?.originalFilename || resource.title, mimeType: material ? void 0 : "video/mp4" };
+    }
+    if (user.role === UserRole.STUDENT) {
+      const hasBatchAccess = store.batchMemberships.some((item) => item.userId === user.id && item.batchId === resource.batchId) || user.id === "user-student-1" && resource.batchId === "batch-1";
+      return hasBatchAccess ? { fileName: material?.originalFilename || lecture?.originalFilename || resource.title } : null;
+    }
+    if (user.role === UserRole.TEACHER) {
+      const assigned = store.teacherBatchAssignments.some((item) => item.teacherId === teacherProfileId(user) && item.batchId === resource.batchId);
+      return assigned ? { fileName: material?.originalFilename || lecture?.originalFilename || resource.title } : null;
+    }
+    return null;
+  }
+  const attempt = store.speakingAttempts.find((item) => item.audioUrl === url);
+  if (attempt && await isAuthorizedForSpeakingAttempt(user, attempt)) return { fileName: `speaking-${attempt.id}.webm` };
+  return null;
+}
+async function streamAuthorizedDriveFile(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    const { fileId } = req.params;
+    if (!fileId || fileId.length > 200 || /[^a-zA-Z0-9_-]/.test(fileId)) {
+      return next(new AppError("File not found.", 404));
+    }
+    const asset = await authorizeDriveAsset(req, fileId);
+    if (!asset) return next(new AppError("File not found or you do not have permission to view it.", 404));
+    const upstream = await streamDriveFile(fileId, req.headers.range);
+    res.status(upstream.status);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Content-Type", asset.mimeType || upstream.headers.get("content-type") || "application/octet-stream");
+    const filename = path6.basename(asset.fileName || "download").replace(/[\r\n"\\]/g, "_");
+    res.setHeader("Content-Disposition", `inline; filename*=UTF-8''${encodeURIComponent(filename)}`);
+    for (const header of ["content-length", "content-range", "accept-ranges", "etag"]) {
+      const value = upstream.headers.get(header);
+      if (value) res.setHeader(header, value);
+    }
+    if (!upstream.body) return res.end();
+    await pipeline(Readable.fromWeb(upstream.body), res);
+  } catch (error) {
+    if (!res.headersSent) return next(error);
+    res.destroy(error);
+  }
+}
+
+// apps/api/src/modules/files/fileRoutes.ts
+var router13 = (0, import_express13.Router)();
+router13.get("/:fileId", requireAuth, streamAuthorizedDriveFile);
+var fileRoutes_default = router13;
+
 // apps/api/src/app.ts
-var app = (0, import_express13.default)();
+var app = (0, import_express14.default)();
 app.set("trust proxy", 1);
 app.use((req, res, next) => {
   const matchedPath = req.headers["x-matched-path"] || req.headers["x-original-url"] || req.originalUrl || req.url;
@@ -45898,7 +46734,7 @@ app.use(helmet({
 app.use((0, import_cors.default)({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (origin === env.FRONTEND_URL || origin.endsWith(".vercel.app") || origin.includes("localhost") || origin.includes("127.0.0.1")) {
+    if (origin === env.FRONTEND_URL || !env.isProd && (origin.includes("localhost") || origin.includes("127.0.0.1"))) {
       return callback(null, true);
     }
     return callback(new Error("Cross-origin request blocked by DeutschWelt security policy."));
@@ -45908,13 +46744,13 @@ app.use((0, import_cors.default)({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 app.use((0, import_cookie_parser.default)(env.COOKIE_SECRET));
-app.use(import_express13.default.json({ limit: "2mb" }));
-app.use(import_express13.default.urlencoded({ extended: true, limit: "2mb" }));
+app.use(import_express14.default.json({ limit: "2mb" }));
+app.use(import_express14.default.urlencoded({ extended: true, limit: "2mb" }));
 app.use(sanitizeInputs);
 if (!env.isTest) {
   app.use((0, import_morgan.default)("dev"));
 }
-app.use("/uploads", import_express13.default.static(env.UPLOAD_DIR, {
+app.use("/uploads", import_express14.default.static(env.UPLOAD_DIR, {
   setHeaders: (res, filePath) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     if (filePath.endsWith(".html") || filePath.endsWith(".htm") || filePath.endsWith(".svg") || filePath.endsWith(".js")) {
@@ -45923,16 +46759,28 @@ app.use("/uploads", import_express13.default.static(env.UPLOAD_DIR, {
   }
 }));
 app.use(authenticate);
+app.use((req, res, next) => {
+  if (!env.isProd || isDatabaseConnected || ["/health", "/api/health", "/api/v1/health"].includes(req.path)) {
+    return next();
+  }
+  return res.status(503).json({
+    success: false,
+    error: "The production database is unavailable. Please try again later.",
+    code: "DATABASE_UNAVAILABLE"
+  });
+});
 app.use("/api/", apiRateLimiter);
 app.get(["/", "/health", "/api", "/api/health", "/api/v1/health", "/api/index", "/api/index.js"], (req, res) => {
-  res.json({
-    status: "healthy",
+  const healthy = !env.isProd || isDatabaseConnected;
+  res.status(healthy ? 200 : 503).json({
+    status: healthy ? "healthy" : "degraded",
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),
     service: "DeutschWelt API",
     version: "1.0.0",
     environment: env.isSandbox ? "sandbox" : "production",
     sandboxMode: env.isSandbox,
-    secure: true
+    secure: true,
+    database: isDatabaseConnected ? "connected" : "unavailable"
   });
 });
 app.use("/api/v1/auth", authRoutes_default);
@@ -45944,7 +46792,9 @@ app.use("/api/v1/speaking", speakingRoutes_default);
 app.use("/api/v1/assignments", assignmentRoutes_default);
 app.use("/api/v1/student", studentRoutes_default);
 app.use("/api/v1/teacher", teacherRoutes_default);
+app.get("/api/v1/admin/drive/callback", googleDriveOAuthCallback);
 app.use("/api/v1/admin", adminRoutes_default);
+app.use("/api/v1/files", fileRoutes_default);
 app.use("/api/v1/enquiries", enquiryRoutes_default);
 app.use("/api/v1/system", systemRoutes_default);
 app.all("/api/*", (req, res) => {
@@ -45957,8 +46807,11 @@ app.use(errorHandler);
 var app_default = app;
 
 // apps/api/src/serverless.ts
-function handler(req, res) {
+var databaseCheck = null;
+async function handler(req, res) {
   try {
+    if (!databaseCheck) databaseCheck = checkDatabaseConnection();
+    if (!await databaseCheck) databaseCheck = null;
     return app_default(req, res);
   } catch (err) {
     console.error("[Serverless Handler Error]", err);
