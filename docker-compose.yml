@@ -1,21 +1,22 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: deutschwelt_postgres
+  mysql:
+    image: mysql:8.4
+    container_name: deutschwelt_mysql
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: deutschwelt
+      MYSQL_ROOT_PASSWORD: local_root_password
+      MYSQL_USER: deutschwelt
+      MYSQL_PASSWORD: deutschwelt_pass
+      MYSQL_DATABASE: deutschwelt
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d deutschwelt"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  postgres_data:
+  mysql_data:

@@ -33511,8 +33511,17 @@ var env = {
 };
 if (isProd) {
   const problems = [];
-  if (!env.DATABASE_URL || !/^postgres(?:ql)?:\/\//.test(env.DATABASE_URL)) {
-    problems.push("DATABASE_URL must point to the PostgreSQL database used by the API.");
+  if (!env.DATABASE_URL || !/^mysql:\/\//.test(env.DATABASE_URL)) {
+    problems.push("DATABASE_URL must be a MySQL connection URL used by the API.");
+  } else {
+    try {
+      const databaseHost = new URL(env.DATABASE_URL).hostname;
+      if (!databaseHost || ["localhost", "127.0.0.1", "::1", "[::1]"].includes(databaseHost)) {
+        problems.push("DATABASE_URL must use the remote MySQL host in production.");
+      }
+    } catch {
+      problems.push("DATABASE_URL must be a valid MySQL connection URL.");
+    }
   }
   if (env.SESSION_SECRET.length < 32 || env.SESSION_SECRET.startsWith("deutschwelt-insecure-") || env.SESSION_SECRET.startsWith("super-secret-")) {
     problems.push("SESSION_SECRET must be a unique secret of at least 32 characters.");
@@ -33532,10 +33541,18 @@ if (isProd) {
 // apps/api/src/services/prisma.ts
 import { createRequire } from "node:module";
 var require2 = createRequire(import.meta.url);
-var isPostgresUrl = Boolean(env.DATABASE_URL) && typeof env.DATABASE_URL === "string" && (env.DATABASE_URL.startsWith("postgresql://") || env.DATABASE_URL.startsWith("postgres://")) && !(process.env.VERCEL && env.DATABASE_URL.includes("localhost"));
+var isMySQLUrl = (() => {
+  if (!env.DATABASE_URL || typeof env.DATABASE_URL !== "string" || !env.DATABASE_URL.startsWith("mysql://")) return false;
+  try {
+    const host = new URL(env.DATABASE_URL).hostname;
+    return !(process.env.VERCEL && ["localhost", "127.0.0.1", "::1", "[::1]"].includes(host));
+  } catch {
+    return false;
+  }
+})();
 var client = null;
 function initPrismaClient() {
-  if (!client && isPostgresUrl) {
+  if (!client && isMySQLUrl) {
     try {
       const { PrismaClient } = require2("@prisma/client");
       client = global.prismaInstance || new PrismaClient({
@@ -33558,7 +33575,7 @@ var prisma = new Proxy({}, {
     }
     if (prop === "$queryRaw" || prop === "$connect" || prop === "$disconnect") {
       return async () => {
-        throw new Error("PostgreSQL database URL is not configured. Running in memory mode.");
+        throw new Error("MySQL database URL is not configured. Running in memory mode.");
       };
     }
     return void 0;
@@ -33567,20 +33584,20 @@ var prisma = new Proxy({}, {
 var isDatabaseConnected = false;
 async function checkDatabaseConnection() {
   const c = initPrismaClient();
-  if (!isPostgresUrl || !c || typeof c.$queryRaw !== "function") {
+  if (!isMySQLUrl || !c || typeof c.$queryRaw !== "function") {
     isDatabaseConnected = false;
-    console.log("[Database] PostgreSQL URL not configured. Operating in high-performance in-memory mode.");
+    console.log("[Database] MySQL URL not configured. Operating in high-performance in-memory mode.");
     return false;
   }
   try {
     await c.$queryRaw`SELECT 1`;
     isDatabaseConnected = true;
-    console.log("[Database] Successfully connected to PostgreSQL via Prisma.");
+    console.log("[Database] Successfully connected to MySQL via Prisma.");
     return true;
   } catch (error) {
     isDatabaseConnected = false;
     const sanitizedUrl = env.DATABASE_URL.replace(/:[^:@]+@/, ":****@");
-    console.warn(`[Database Warning] Could not connect to PostgreSQL at ${sanitizedUrl}.`);
+    console.warn(`[Database Warning] Could not connect to MySQL at ${sanitizedUrl}.`);
     return false;
   }
 }
@@ -46366,7 +46383,7 @@ function settingsUrl(status) {
 function connectGoogleDrive(req, res, next) {
   try {
     if (!isDatabaseConnected) {
-      return next(new AppError("Connect PostgreSQL before enabling Drive so the encrypted authorization and file access records can be saved durably.", 503));
+      return next(new AppError("Connect the MySQL database before enabling Drive so the encrypted authorization and file access records can be saved durably.", 503));
     }
     const state = createDriveOAuthState(req.user.id);
     res.cookie("dw_drive_oauth_state", state, {
@@ -46418,7 +46435,7 @@ async function getGoogleDriveStatus(_req, res, next) {
 }
 async function getGoogleDrivePickerConfig(_req, res, next) {
   try {
-    if (!isDatabaseConnected) return next(new AppError("Connect PostgreSQL before configuring Google Drive storage.", 503));
+    if (!isDatabaseConnected) return next(new AppError("Connect the MySQL database before configuring Google Drive storage.", 503));
     return res.json({ success: true, picker: await getDrivePickerConfig() });
   } catch (error) {
     next(error);
@@ -46426,7 +46443,7 @@ async function getGoogleDrivePickerConfig(_req, res, next) {
 }
 async function saveGoogleDriveFolder(req, res, next) {
   try {
-    if (!isDatabaseConnected) return next(new AppError("Connect PostgreSQL before configuring Google Drive storage.", 503));
+    if (!isDatabaseConnected) return next(new AppError("Connect the MySQL database before configuring Google Drive storage.", 503));
     const id = typeof req.body?.id === "string" ? req.body.id.trim() : "";
     if (!id) return next(new AppError("Choose a Google Drive folder first.", 400));
     const folder = await selectDriveFolder(id);
@@ -46538,7 +46555,7 @@ async function getEnvironmentStatus(req, res, next) {
       isSandbox: env.isSandbox,
       isProduction: env.isProd,
       nodeEnv: env.NODE_ENV,
-      databaseMode: isDatabaseConnected ? "PostgreSQL" : "Isolated Memory Sandbox",
+      databaseMode: isDatabaseConnected ? "MySQL" : env.isProd ? "Unavailable" : "Isolated Memory Sandbox",
       securityControls: {
         xssSanitization: true,
         strictCors: true,

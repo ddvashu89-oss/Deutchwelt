@@ -70,8 +70,8 @@ DeutschWelt combines the structured methodology of a premier German language ins
 
 ### Backend (`apps/api`)
 - **Node.js** (v18+) & **Express.js** with TypeScript
-- **Prisma ORM** with **PostgreSQL**
-- Dual data layer: Connects directly to PostgreSQL with Prisma, with a resilient in-memory fallback store (`services/store.ts`) ensuring immediate out-of-the-box local execution even without an external database instance.
+- **Prisma ORM** with **MySQL/MariaDB**
+- Dual data layer: Connects directly to MySQL with Prisma, with a resilient in-memory fallback store (`services/store.ts`) for local development without a database.
 - **Argon2 / BCrypt** password hashing
 - **Cookie-Parser** with HTTP-only, secure session cookies
 - **Multer** for audio and media upload handling
@@ -152,7 +152,7 @@ deutschwelt/
 │       ├── test.js                    # Contract validation test suite
 │       └── package.json
 │
-├── docker-compose.yml                 # Local PostgreSQL container service
+├── docker-compose.yml                 # Local MySQL container service
 ├── package.json                       # Monorepo workspaces definition
 ├── tsconfig.base.json                 # Shared TypeScript compiler options
 ├── .env.example                       # Documented environment variables
@@ -201,7 +201,7 @@ The platform is pre-configured with three role-based accounts. On the **Login pa
 ### Prerequisites
 - **Node.js** v18.0.0 or higher (`node -v`)
 - **npm** v9.0.0 or higher (`npm -v`)
-- (Optional) **Docker** & **Docker Compose** for running PostgreSQL locally
+- (Optional) **Docker** & **Docker Compose** for running MySQL locally
 
 ### 1. Clone & Install Dependencies
 From the repository root:
@@ -219,7 +219,7 @@ Default `.env` settings:
 PORT=5000
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
-DATABASE_URL=postgresql://deutschwelt:deutschwelt_pass@localhost:5432/deutschwelt_db?schema=public
+DATABASE_URL=mysql://deutschwelt:deutschwelt_pass@127.0.0.1:3306/deutschwelt
 SESSION_SECRET=super-secret-session-key-at-least-32-chars-long!
 RATE_LIMIT_MAX=100
 ```
@@ -230,16 +230,17 @@ The shared schemas and types must be compiled before starting the application:
 npm run --workspace=@deutschwelt/shared build
 ```
 
-### 4. Database Setup (Optional if using PostgreSQL)
-If PostgreSQL is running locally or via Docker:
+### 4. Database Setup
+Start local MySQL with Docker Compose, then apply the Prisma schema:
 ```bash
+docker compose up -d mysql
 # Push Prisma schema to the database
 npm run db:push
 
 # Development only: set all SEED_* values to unique local credentials in .env, then seed sample data
 npm run --workspace=@deutschwelt/api db:seed
 ```
-*The sample seed is disabled in production. The in-memory demo store is available only in development/test mode. Demo accounts do not have shared default passwords; set local sandbox passwords explicitly if you need to sign into the in-memory fixtures. Production requests require a connected PostgreSQL database.*
+*The sample seed is disabled in production. The in-memory demo store is available only in development/test mode. Demo accounts do not have shared default passwords; set local sandbox passwords explicitly if you need to sign into the in-memory fixtures. Production requests require a connected MySQL database.*
 
 ### 5. Start Development Servers
 Run both API and Web servers simultaneously from the root:
@@ -272,7 +273,7 @@ The integration uses OAuth with the `drive.file` scope and an administrator-sele
    ```
 
 6. Sign in to DeutschWelt as an administrator, open **Admin → Settings**, connect the academy Google account, and choose the storage folder in My Drive. The app requests the limited `drive.file` scope and uses Google Picker for folder access ([Google Drive scope guidance](https://developers.google.com/workspace/drive/api/guides/api-specific-auth)). The refresh token is encrypted in `SiteSetting`; set a strong, persistent `SESSION_SECRET` before connecting.
-7. Apply the additive `DriveAsset` schema change with `npm run db:push` from the repository root. PostgreSQL is needed to persist Drive asset metadata across restarts.
+7. Apply the `DriveAsset` schema change with `npm run db:push` from the repository root. MySQL is needed to persist Drive asset metadata across restarts.
 
 Deleting an uploaded asset moves it to Google Drive trash. The app does not expose public Drive links.
 
@@ -280,9 +281,9 @@ Deleting an uploaded asset moves it to Google Drive trash. The app does not expo
 
 ## 7. Running with Docker Compose
 
-To launch a containerized PostgreSQL database:
+To launch a containerized MySQL database:
 ```bash
-docker compose up -d postgres
+docker compose up -d mysql
 ```
 To verify the container status:
 ```bash
@@ -420,8 +421,8 @@ This produces:
 
 ### Production launch checklist
 
-1. Configure `NODE_ENV=production`, an HTTPS `FRONTEND_URL`, PostgreSQL `DATABASE_URL`, and unique `SESSION_SECRET` and `COOKIE_SECRET` values of at least 32 characters. Do not use values from `.env.example` for a live deployment.
-2. Run `npm run db:push` against the production PostgreSQL database.
+1. Configure `NODE_ENV=production`, an HTTPS `FRONTEND_URL`, a MySQL `DATABASE_URL`, and unique `SESSION_SECRET` and `COOKIE_SECRET` values of at least 32 characters. Do not use values from `.env.example` for a live deployment.
+2. Back up the production database. Inspect it before applying the Prisma schema; run `npm run db:push` only after confirming it will preserve existing tables and data.
 3. Create the first real administrator once. Set `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD` (14+ unique characters), `BOOTSTRAP_ADMIN_FIRST_NAME`, and `BOOTSTRAP_ADMIN_LAST_NAME` in the server environment, then run:
 
    ```bash
@@ -432,6 +433,13 @@ This produces:
 4. Configure `GOOGLE_DRIVE_CLIENT_ID`, `GOOGLE_DRIVE_CLIENT_SECRET`, `GOOGLE_DRIVE_PICKER_API_KEY`, and `GOOGLE_DRIVE_PROJECT_NUMBER` in the server environment if using Drive storage. Register the exact deployed origin and `/api/v1/admin/drive/callback` redirect URI in Google Cloud.
 5. Build and deploy. Confirm the API health endpoint reports `healthy` with `database: connected`, then sign in with the bootstrap administrator, connect Drive, and select the private storage folder.
 
+### cPanel MySQL with a Vercel deployment
+
+1. In cPanel, create a database and a database user, grant that user access to the database, and note the **Remote MySQL host** shown by your hosting provider. Use that host and port `3306`; the cPanel login URL is not the database host.
+2. In Vercel, enable Static IPs for the region used by the API and add the displayed outbound IP addresses to cPanel's **Remote MySQL / Remote Database Access** allowlist. Vercel's outbound addresses are dynamic by default; do not use `%` as a wide-open cPanel allowlist entry. Static IP availability depends on your Vercel plan. If you cannot get a stable allowed IP, host the API where it can connect to MySQL over the hosting provider's local network.
+3. Add `DATABASE_URL` in Vercel Project Settings → Environment Variables using `mysql://DB_USER:DB_PASSWORD@DB_HOST:3306/DB_NAME`. URL-encode special characters in the username and password. Keep the value in Vercel; never commit or paste it into chat.
+4. Before pointing the live app at an existing database, take a backup and inspect its tables. The old `deutschwelt_mysql_schema.sql` includes table drops and must not be imported into a database with data.
+
 The Google OAuth project can stay in **Testing** while you verify the connection. Before opening Drive access to all users, confirm the consent screen branding, production domain, privacy policy URL, and production redirect URI, then publish the OAuth app in Google Cloud. Keep the OAuth client secret out of Git and the frontend bundle.
 
 ### Self-Hosted VPS Deployment (e.g., Ubuntu / Debian)
@@ -440,7 +448,7 @@ The Google OAuth project can stay in **Testing** while you verify the connection
    ```bash
    pm2 start apps/api/dist/server.js --name deutschwelt-api
    ```
-3. **Database:** Host PostgreSQL locally or on a private managed node.
+3. **Database:** Use the cPanel MySQL host from the same network or a MySQL server with a restricted network allowlist.
 
 ---
 

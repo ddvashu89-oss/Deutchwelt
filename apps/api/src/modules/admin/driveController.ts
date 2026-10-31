@@ -24,7 +24,7 @@ function settingsUrl(status: string) {
 export function connectGoogleDrive(req: Request, res: Response, next: NextFunction) {
   try {
     if (!isDatabaseConnected) {
-      return next(new AppError('Connect PostgreSQL before enabling Drive so the encrypted authorization and file access records can be saved durably.', 503));
+      return next(new AppError('Connect the MySQL database before enabling Drive so the encrypted authorization and file access records can be saved durably.', 503));
     }
     const state = createDriveOAuthState(req.user!.id);
     res.cookie('dw_drive_oauth_state', state, {
@@ -82,7 +82,7 @@ export async function getGoogleDriveStatus(_req: Request, res: Response, next: N
 
 export async function getGoogleDrivePickerConfig(_req: Request, res: Response, next: NextFunction) {
   try {
-    if (!isDatabaseConnected) return next(new AppError('Connect PostgreSQL before configuring Google Drive storage.', 503));
+    if (!isDatabaseConnected) return next(new AppError('Connect the MySQL database before configuring Google Drive storage.', 503));
     return res.json({ success: true, picker: await getDrivePickerConfig() });
   } catch (error) {
     next(error);
@@ -91,7 +91,7 @@ export async function getGoogleDrivePickerConfig(_req: Request, res: Response, n
 
 export async function saveGoogleDriveFolder(req: Request, res: Response, next: NextFunction) {
   try {
-    if (!isDatabaseConnected) return next(new AppError('Connect PostgreSQL before configuring Google Drive storage.', 503));
+    if (!isDatabaseConnected) return next(new AppError('Connect the MySQL database before configuring Google Drive storage.', 503));
     const id = typeof req.body?.id === 'string' ? req.body.id.trim() : '';
     if (!id) return next(new AppError('Choose a Google Drive folder first.', 400));
     const folder = await selectDriveFolder(id);

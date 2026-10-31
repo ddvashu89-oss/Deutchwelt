@@ -93,7 +93,7 @@ export function AdminSettingsPage() {
     const driveState = new URLSearchParams(window.location.search).get('drive');
     if (driveState === 'connected') setDriveMessage('Google Drive connected. Select the folder for course files.');
     if (driveState === 'cancelled') setDriveError('Google Drive connection was cancelled.');
-    if (driveState === 'database-required') setDriveError('PostgreSQL disconnected during setup. Start the database and connect Google Drive again.');
+    if (driveState === 'database-required') setDriveError('MySQL disconnected during setup. Start the database and connect Google Drive again.');
   }, []);
 
   const connectDrive = () => {
@@ -254,7 +254,7 @@ export function AdminSettingsPage() {
           </div>
         )}
         {driveStatus && !driveStatus.databaseReady && (
-          <p className="text-[11px] text-amber-800">Start PostgreSQL before connecting Drive. DeutschWelt needs it to save the encrypted connection and file access records.</p>
+          <p className="text-[11px] text-amber-800">Connect MySQL before connecting Drive. DeutschWelt needs it to save the encrypted connection and file access records.</p>
         )}
         {driveStatus?.connected && !driveStatus.pickerReady && (
           <p className="text-[11px] text-dark-muted">Add the Google Picker API key and project number to the API environment to enable folder selection.</p>

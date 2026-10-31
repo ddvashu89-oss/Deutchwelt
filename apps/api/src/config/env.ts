@@ -32,8 +32,17 @@ export const env = {
 
 if (isProd) {
   const problems: string[] = [];
-  if (!env.DATABASE_URL || !/^postgres(?:ql)?:\/\//.test(env.DATABASE_URL)) {
-    problems.push('DATABASE_URL must point to the PostgreSQL database used by the API.');
+  if (!env.DATABASE_URL || !/^mysql:\/\//.test(env.DATABASE_URL)) {
+    problems.push('DATABASE_URL must be a MySQL connection URL used by the API.');
+  } else {
+    try {
+      const databaseHost = new URL(env.DATABASE_URL).hostname;
+      if (!databaseHost || ['localhost', '127.0.0.1', '::1', '[::1]'].includes(databaseHost)) {
+        problems.push('DATABASE_URL must use the remote MySQL host in production.');
+      }
+    } catch {
+      problems.push('DATABASE_URL must be a valid MySQL connection URL.');
+    }
   }
   if (env.SESSION_SECRET.length < 32 || env.SESSION_SECRET.startsWith('deutschwelt-insecure-') || env.SESSION_SECRET.startsWith('super-secret-')) {
     problems.push('SESSION_SECRET must be a unique secret of at least 32 characters.');

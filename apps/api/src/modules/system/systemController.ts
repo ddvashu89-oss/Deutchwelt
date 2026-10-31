@@ -13,7 +13,7 @@ export async function getEnvironmentStatus(req: Request, res: Response, next: Ne
       isSandbox: env.isSandbox,
       isProduction: env.isProd,
       nodeEnv: env.NODE_ENV,
-      databaseMode: isDatabaseConnected ? 'PostgreSQL' : 'Isolated Memory Sandbox',
+      databaseMode: isDatabaseConnected ? 'MySQL' : env.isProd ? 'Unavailable' : 'Isolated Memory Sandbox',
       securityControls: {
         xssSanitization: true,
         strictCors: true,
