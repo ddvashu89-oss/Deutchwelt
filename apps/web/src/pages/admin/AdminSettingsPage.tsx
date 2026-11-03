@@ -274,16 +274,22 @@ export function AdminSettingsPage() {
 }
 
 export function AdminAuditLogsPage() {
-  const [logs, setLogs] = useState<any[]>([]);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [systemLogs, setSystemLogs] = useState<any[]>([]);
+  const [ipLogs, setIpLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadLogs() {
       try {
-        const res: any = await api.get('/admin/audit-logs');
-        if (res.success) {
-          setLogs(res.logs);
-        }
+        const [audit, system, ip]: any[] = await Promise.all([
+          api.get('/admin/audit-logs'),
+          api.get('/admin/system-logs'),
+          api.get('/admin/ip-access-logs')
+        ]);
+        if (audit.success) setAuditLogs(audit.logs);
+        if (system.success) setSystemLogs(system.logs);
+        if (ip.success) setIpLogs(ip.logs);
       } catch (e) {
         console.error('Error loading audit logs:', e);
       } finally {
@@ -300,45 +306,29 @@ export function AdminAuditLogsPage() {
         <p className="text-xs text-dark-muted">Historical audit trail of administrative modifications, role changes, and course publications.</p>
       </div>
 
-      {loading ? (
-        <Skeleton className="h-64 w-full rounded-2xl" />
-      ) : logs.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-3xl border border-gray-200">
-          <ShieldCheck className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-          <p className="text-xs text-dark-muted">No audit events recorded yet.</p>
-        </div>
-      ) : (
-        <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-subtle">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-navy text-white uppercase font-bold tracking-wider">
-                <tr>
-                  <th className="p-4">Action</th>
-                  <th className="p-4">Entity Type</th>
-                  <th className="p-4">Performed By</th>
-                  <th className="p-4">Details</th>
-                  <th className="p-4 text-right">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-dark">
-                {logs.map(log => (
-                  <tr key={log.id} className="hover:bg-gray-50/80">
-                    <td className="p-4 font-mono font-bold text-navy">{log.action}</td>
-                    <td className="p-4 text-dark-muted">{log.entityType}</td>
-                    <td className="p-4 text-dark font-medium">{log.user?.email || 'System'}</td>
-                    <td className="p-4 text-gray-500 font-mono text-[11px] truncate max-w-xs">
-                      {JSON.stringify(log.details || {})}
-                    </td>
-                    <td className="p-4 text-right text-gray-400">
-                      {new Date(log.createdAt).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {loading ? <Skeleton className="h-64 w-full rounded-2xl" /> : (
+        <div className="space-y-8">
+          <LogTable title="System Logs" empty="No system events recorded yet." headers={['Level', 'Event', 'Message', 'User', 'Timestamp']} rows={systemLogs.map(log => [log.level, log.event, log.message, log.user?.email || 'System', new Date(log.createdAt).toLocaleString()])} />
+          <LogTable title="IP Access Logs" empty="No requests recorded yet." headers={['IP Address', 'Request', 'Status', 'User', 'Timestamp']} rows={ipLogs.map(log => [log.ipAddress, `${log.method} ${log.requestPath}`, `${log.statusCode} · ${log.durationMs}ms`, log.user?.email || 'Guest', new Date(log.createdAt).toLocaleString()])} />
+          <LogTable title="Admin Audit Logs" empty="No audit actions recorded yet." headers={['Action', 'Entity Type', 'Performed By', 'Details', 'Timestamp']} rows={auditLogs.map(log => [log.action, log.entityType, log.user?.email || 'System', JSON.stringify(log.details || {}), new Date(log.createdAt).toLocaleString()])} />
         </div>
       )}
     </div>
+  );
+}
+
+function LogTable({ title, empty, headers, rows }: { title: string; empty: string; headers: string[]; rows: string[][] }) {
+  return (
+    <section className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-subtle">
+      <div className="p-5 border-b border-gray-100"><h2 className="text-lg font-bold text-navy">{title}</h2></div>
+      {rows.length === 0 ? <p className="p-8 text-center text-xs text-dark-muted">{empty}</p> : (
+        <div className="overflow-x-auto"><table className="w-full text-left text-xs">
+          <thead className="bg-navy text-white uppercase font-bold tracking-wider"><tr>{headers.map(header => <th key={header} className="p-4">{header}</th>)}</tr></thead>
+          <tbody className="divide-y divide-gray-100 text-dark">{rows.map((row, index) => (
+            <tr key={`${title}-${index}`} className="hover:bg-gray-50/80">{row.map((cell, column) => <td key={column} className="p-4 max-w-xs truncate text-dark-muted" title={cell}>{cell}</td>)}</tr>
+          ))}</tbody>
+        </table></div>
+      )}
+    </section>
   );
 }

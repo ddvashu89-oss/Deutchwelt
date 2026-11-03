@@ -895,6 +895,34 @@ export async function getAuditLogs(req: Request, res: Response, next: NextFuncti
   }
 }
 
+export async function getSystemLogs(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!isDatabaseConnected) return res.json({ success: true, logs: [] });
+    const logs = await prisma.systemLog.findMany({
+      take: 200,
+      orderBy: { createdAt: 'desc' },
+      include: { user: { select: { email: true, firstName: true, lastName: true } } }
+    });
+    return res.json({ success: true, logs });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getIpAccessLogs(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!isDatabaseConnected) return res.json({ success: true, logs: [] });
+    const logs = await prisma.ipAccessLog.findMany({
+      take: 200,
+      orderBy: { createdAt: 'desc' },
+      include: { user: { select: { email: true, firstName: true, lastName: true } } }
+    });
+    return res.json({ success: true, logs });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getPlatformSettings(req: Request, res: Response, next: NextFunction) {
   try {
     if (isDatabaseConnected) {

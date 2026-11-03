@@ -127,6 +127,8 @@ model User {
   batchMemberships        BatchMembership[]
   notifications           Notification[]
   auditLogs               AuditLog[]
+  systemLogs              SystemLog[]
+  ipAccessLogs            IpAccessLog[]
   driveAssets             DriveAsset[]
   placementAttempts       PlacementAttempt[]
   courseCertificates      CourseCertificate[]
@@ -848,5 +850,45 @@ model AuditLog {
 
   @@index([action])
   @@index([entityType])
+  @@index([createdAt])
+}
+
+model SystemLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  level     String   @default("INFO") @db.VarChar(16)
+  source    String   @db.VarChar(64)
+  event     String   @db.VarChar(100)
+  message   String   @db.Text
+  context   Json?
+  requestId String?  @db.VarChar(64)
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([level, createdAt])
+  @@index([event, createdAt])
+  @@index([userId, createdAt])
+  @@index([requestId])
+  @@index([createdAt])
+}
+
+model IpAccessLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  ipAddress   String   @db.VarChar(45)
+  method      String   @db.VarChar(12)
+  requestPath String   @db.VarChar(512)
+  statusCode  Int
+  userAgent   String?  @db.VarChar(512)
+  requestId   String   @db.VarChar(64)
+  durationMs  Int
+  createdAt   DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([ipAddress, createdAt])
+  @@index([userId, createdAt])
+  @@index([statusCode, createdAt])
   @@index([createdAt])
 }

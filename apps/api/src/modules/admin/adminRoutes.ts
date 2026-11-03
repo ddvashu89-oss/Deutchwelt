@@ -19,6 +19,8 @@ import {
   getAdminEnquiries,
   updateEnquiryStatus,
   getAuditLogs,
+  getSystemLogs,
+  getIpAccessLogs,
   getPlatformSettings,
   updatePlatformSetting,
   getAdminBatches,
@@ -73,6 +75,8 @@ router.post('/users/:userId/toggle-status', toggleUserActiveStatus);
 router.get('/enquiries', getAdminEnquiries);
 router.patch('/enquiries/:enquiryId', updateEnquiryStatus);
 router.get('/audit-logs', getAuditLogs);
+router.get('/system-logs', getSystemLogs);
+router.get('/ip-access-logs', getIpAccessLogs);
 router.get('/settings', getPlatformSettings);
 router.patch('/settings/:key', updatePlatformSetting);
 router.get('/drive/connect', connectGoogleDrive);

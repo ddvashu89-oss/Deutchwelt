@@ -41770,6 +41770,69 @@ function sanitizeInputs(req, res, next) {
   }
 }
 
+// apps/api/src/services/systemLogging.ts
+import { randomUUID } from "node:crypto";
+async function writeSystemLog(input) {
+  if (!isDatabaseConnected) return;
+  try {
+    await prisma.systemLog.create({
+      data: {
+        userId: input.userId || null,
+        level: input.level || "INFO",
+        source: input.source.slice(0, 64),
+        event: input.event.slice(0, 100),
+        message: input.message.slice(0, 6e4),
+        context: input.context,
+        requestId: input.requestId?.slice(0, 64)
+      }
+    });
+  } catch (error) {
+    console.error("[System Log Error]", error);
+  }
+}
+function requestLoggingMiddleware(req, res, next) {
+  const requestId = randomUUID();
+  const startedAt = Date.now();
+  res.setHeader("X-Request-Id", requestId);
+  res.once("finish", () => {
+    if (!isDatabaseConnected) return;
+    const durationMs = Math.max(0, Date.now() - startedAt);
+    const statusCode = res.statusCode;
+    const level = statusCode >= 500 ? "ERROR" : statusCode >= 400 ? "WARN" : "INFO";
+    const requestPath = (req.originalUrl.split("?")[0] || req.path).slice(0, 512);
+    const method = req.method.slice(0, 12);
+    const userId = req.user?.id || null;
+    const ipAddress = (req.ip || req.socket.remoteAddress || "unknown").slice(0, 45);
+    const userAgent = req.get("user-agent")?.slice(0, 512) || null;
+    void Promise.allSettled([
+      writeSystemLog({
+        userId,
+        level,
+        source: "http",
+        event: "HTTP_REQUEST",
+        message: `${method} ${requestPath} completed with ${statusCode}`,
+        context: { method, path: requestPath, statusCode, durationMs },
+        requestId
+      }),
+      prisma.ipAccessLog.create({
+        data: {
+          userId,
+          ipAddress,
+          method,
+          requestPath,
+          statusCode,
+          userAgent,
+          requestId,
+          durationMs
+        }
+      })
+    ]).then((results) => {
+      if (results[1].status === "rejected") console.error("[IP Access Log Error]", results[1].reason);
+    });
+  });
+  next();
+}
+
 // apps/api/src/modules/auth/authRoutes.ts
 var import_express = __toESM(require_express2(), 1);
 
@@ -45621,15 +45684,25 @@ async function recordAuditLog(input) {
           action: input.action,
           entityType: input.entityType,
           entityId: input.entityId,
-          details: input.details,
-          ipAddress: input.ipAddress,
-          userAgent: input.userAgent
+          details: input.details
         }
+      });
+      await writeSystemLog({
+        userId: input.userId,
+        level: "INFO",
+        source: "audit",
+        event: input.action,
+        message: `${input.action} on ${input.entityType}`,
+        context: { entityType: input.entityType, entityId: input.entityId || null, details: input.details }
       });
     } else {
       store.auditLogs.unshift({
         id: `audit-${Date.now()}-${Math.round(Math.random() * 1e3)}`,
-        ...input,
+        userId: input.userId,
+        action: input.action,
+        entityType: input.entityType,
+        entityId: input.entityId,
+        details: input.details,
         createdAt: (/* @__PURE__ */ new Date()).toISOString()
       });
     }
@@ -46442,6 +46515,32 @@ async function getAuditLogs(req, res, next) {
     next(error);
   }
 }
+async function getSystemLogs(req, res, next) {
+  try {
+    if (!isDatabaseConnected) return res.json({ success: true, logs: [] });
+    const logs = await prisma.systemLog.findMany({
+      take: 200,
+      orderBy: { createdAt: "desc" },
+      include: { user: { select: { email: true, firstName: true, lastName: true } } }
+    });
+    return res.json({ success: true, logs });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getIpAccessLogs(req, res, next) {
+  try {
+    if (!isDatabaseConnected) return res.json({ success: true, logs: [] });
+    const logs = await prisma.ipAccessLog.findMany({
+      take: 200,
+      orderBy: { createdAt: "desc" },
+      include: { user: { select: { email: true, firstName: true, lastName: true } } }
+    });
+    return res.json({ success: true, logs });
+  } catch (error) {
+    next(error);
+  }
+}
 async function getPlatformSettings(req, res, next) {
   try {
     if (isDatabaseConnected) {
@@ -46747,6 +46846,8 @@ router10.post("/users/:userId/toggle-status", toggleUserActiveStatus);
 router10.get("/enquiries", getAdminEnquiries);
 router10.patch("/enquiries/:enquiryId", updateEnquiryStatus);
 router10.get("/audit-logs", getAuditLogs);
+router10.get("/system-logs", getSystemLogs);
+router10.get("/ip-access-logs", getIpAccessLogs);
 router10.get("/settings", getPlatformSettings);
 router10.patch("/settings/:key", updatePlatformSetting);
 router10.get("/drive/connect", connectGoogleDrive);
@@ -47527,6 +47628,7 @@ app.use("/uploads", import_express18.default.static(env.UPLOAD_DIR, {
   }
 }));
 app.use(authenticate);
+app.use("/api", requestLoggingMiddleware);
 app.use((req, res, next) => {
   if (!env.isProd || isDatabaseConnected || ["/health", "/api/health", "/api/v1/health"].includes(req.path)) {
     return next();

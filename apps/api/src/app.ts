@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { apiRateLimiter } from './middleware/rateLimiter.js';
 import { sanitizeInputs } from './middleware/sanitize.js';
 import { isDatabaseConnected } from './services/prisma.js';
+import { requestLoggingMiddleware } from './services/systemLogging.js';
 
 import authRoutes from './modules/auth/authRoutes.js';
 import courseRoutes from './modules/courses/courseRoutes.js';
@@ -108,6 +109,7 @@ app.use('/uploads', express.static(env.UPLOAD_DIR, {
 
 // Session Authentication
 app.use(authenticate);
+app.use('/api', requestLoggingMiddleware);
 
 // Never serve requests from the volatile demo store in a production deployment.
 app.use((req, res, next) => {
