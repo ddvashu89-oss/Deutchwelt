@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { CheckCircle2, Clock3, Mail, RefreshCw, ShieldCheck } from 'lucide-react';
+import { countryCallingCodes, splitPhoneCountryCode } from '../../lib/phoneCountryCodes.js';
 
 export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -46,7 +47,8 @@ export function StudentRegistrationPage() {
   const [resending, setResending] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const [phone, setPhone] = useState(user?.phone || '');
+  const [phone, setPhone] = useState(() => splitPhoneCountryCode(user?.phone).phone);
+  const [countryCode, setCountryCode] = useState(() => splitPhoneCountryCode(user?.phone).countryCode);
   const [currentLevel, setCurrentLevel] = useState(profile.currentLevel || GermanLevel.A1);
   const [learningGoal, setLearningGoal] = useState(profile.learningGoal || '');
   const [preferredLanguage, setPreferredLanguage] = useState(profile.preferredLanguage || 'en');
@@ -56,9 +58,11 @@ export function StudentRegistrationPage() {
   const loadState = async () => {
     const result: any = await api.get('/student/registration');
     const nextProfile = result.profile || {};
+    const phoneDetails = splitPhoneCountryCode(result.phone || user?.phone);
     setProfile(nextProfile);
     setVerified(Boolean(result.isEmailVerified));
-    setPhone(result.phone || user?.phone || '');
+    setPhone(phoneDetails.phone);
+    setCountryCode(phoneDetails.countryCode);
     setCurrentLevel(nextProfile.currentLevel || GermanLevel.A1);
     setLearningGoal(nextProfile.learningGoal || '');
     setPreferredLanguage(nextProfile.preferredLanguage || 'en');
@@ -93,7 +97,8 @@ export function StudentRegistrationPage() {
   async function submitForApproval(event: React.FormEvent) {
     event.preventDefault(); setSaving(true); setError(''); setNotice('');
     try {
-      await api.patch('/student/registration', { phone: phone || null, currentLevel, learningGoal, preferredLanguage });
+      const mobileNumber = phone.trim();
+      await api.patch('/student/registration', { phone: mobileNumber ? `${countryCode} ${mobileNumber}` : null, currentLevel, learningGoal, preferredLanguage });
       const result: any = await api.post('/student/registration/request-approval');
       setProfile(result.profile);
       await refreshUser();
@@ -134,7 +139,23 @@ export function StudentRegistrationPage() {
       <Button type="button" variant="outline" className="mt-5" onClick={refreshApproval}>Refresh status</Button>
     </section> : <form onSubmit={submitForApproval} className="space-y-4">
       {profile.registrationStatus === 'REJECTED' && <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4"><h2 className="font-bold text-rose-900">Please update your registration</h2><p className="mt-1 text-sm text-rose-800">Admin note: {profile.registrationReviewNote || 'Please review and update your details.'}</p></div>}
-      <Input label="Mobile number (optional)" type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+49 151 12345678" />
+      <div>
+        <label htmlFor="studentCountryCallingCode" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">Mobile number (optional)</label>
+        <div className="grid grid-cols-[minmax(125px,0.8fr)_minmax(0,2fr)] gap-2">
+          <select
+            id="studentCountryCallingCode"
+            value={countryCode}
+            onChange={e => setCountryCode(e.target.value)}
+            aria-label="Country calling code"
+            className="h-11 w-full rounded-xl border border-gray-300 bg-white px-3 text-sm focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/15"
+          >
+            {!countryCallingCodes.some(({ code }) => code === countryCode) && <option value={countryCode}>Other ({countryCode})</option>}
+            {countryCallingCodes.map(({ country, code }) => <option key={country} value={code}>{country} ({code})</option>)}
+          </select>
+          <Input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="98765 43210" autoComplete="tel-national" aria-label="Mobile number" />
+        </div>
+        <p className="mt-1.5 text-xs text-slate-500">India (+91) is selected by default.</p>
+      </div>
       <label className="block space-y-1.5"><span className="text-xs font-semibold uppercase tracking-wider text-slate-700">Current German level</span><select value={currentLevel} onChange={e => setCurrentLevel(e.target.value)} className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm"><option value={GermanLevel.BEGINNER}>Beginner (no German yet)</option><option value={GermanLevel.A1}>A1 — Starter</option><option value={GermanLevel.A2}>A2 — Elementary</option><option value={GermanLevel.B1}>B1 — Intermediate</option><option value={GermanLevel.B2}>B2 — Upper intermediate</option><option value={GermanLevel.UNSURE}>Unsure — I need a level check</option></select></label>
       <label className="block space-y-1.5"><span className="text-xs font-semibold uppercase tracking-wider text-slate-700">What is your main learning goal?</span><textarea required minLength={3} maxLength={250} value={learningGoal} onChange={e => setLearningGoal(e.target.value)} placeholder="For example: prepare for a Goethe exam, work, study, or everyday conversation" className="min-h-24 w-full rounded-xl border border-gray-300 bg-white p-3 text-sm" /></label>
       <label className="block space-y-1.5"><span className="text-xs font-semibold uppercase tracking-wider text-slate-700">Language for explanations</span><select value={preferredLanguage} onChange={e => setPreferredLanguage(e.target.value)} className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm"><option value="en">English</option><option value="hi">Hindi and English</option><option value="de">German</option></select></label>

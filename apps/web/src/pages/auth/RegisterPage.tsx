@@ -9,6 +9,7 @@ import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Input } from '../../components/ui/Input.js';
 import { ArrowRight, BadgeCheck, Check, ChevronLeft, Eye, EyeOff, Lock, MailCheck, UserRound } from 'lucide-react';
+import { countryCallingCodes } from '../../lib/phoneCountryCodes.js';
 
 const registrationSteps = [
   { title: 'Your details', description: 'Tell us a little about yourself.', icon: UserRound },
@@ -26,6 +27,7 @@ export function RegisterPage() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [step, setStep] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const [countryCode, setCountryCode] = useState('+91');
 
   const {
     register,
@@ -61,7 +63,11 @@ export function RegisterPage() {
   const onSubmit = async (data: RegisterInput) => {
     try {
       setServerError(null);
-      const result: any = await registerUser(data);
+      const mobileNumber = data.phone?.trim();
+      const result: any = await registerUser({
+        ...data,
+        phone: mobileNumber ? `${countryCode} ${mobileNumber}` : undefined
+      });
       navigate('/student/registration', { replace: true, state: { verificationEmailSent: result?.verificationEmailSent, devVerificationToken: result?.devVerificationToken } });
     } catch (err: any) {
       setServerError(err.message || 'Registration failed. Please try again.');
@@ -152,7 +158,30 @@ export function RegisterPage() {
                       <Input label={t('reg.lastName')} placeholder="Rostova" required error={errors.lastName?.message} autoComplete="family-name" {...register('lastName')} />
                     </div>
                     <Input label={t('reg.email')} type="email" placeholder="elena@example.com" required error={errors.email?.message} autoComplete="email" {...register('email')} />
-                    <Input label={t('reg.mobile')} type="tel" placeholder="+49 151 12345678" error={errors.phone?.message} autoComplete="tel" {...register('phone')} />
+                    <div>
+                      <label htmlFor="countryCallingCode" className="mb-1.5 block text-xs font-bold tracking-wide text-gray-700">{t('reg.mobile')}</label>
+                      <div className="grid grid-cols-[minmax(125px,0.8fr)_minmax(0,2fr)] gap-2">
+                        <select
+                          id="countryCallingCode"
+                          value={countryCode}
+                          onChange={(event) => setCountryCode(event.target.value)}
+                          aria-label="Country calling code"
+                          className="h-11 w-full rounded-2xl border border-gray-200 bg-white px-3 text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-forest-800/15 focus:border-forest-800"
+                        >
+                          {countryCallingCodes.map(({ country, code }) => (
+                            <option key={country} value={code}>{country} ({code})</option>
+                          ))}
+                        </select>
+                        <Input
+                          type="tel"
+                          placeholder="98765 43210"
+                          error={errors.phone?.message}
+                          autoComplete="tel-national"
+                          {...register('phone')}
+                        />
+                      </div>
+                      <p className="mt-1.5 text-xs text-gray-500">India (+91) is selected by default.</p>
+                    </div>
                   </div>
                 )}
 
@@ -190,7 +219,7 @@ export function RegisterPage() {
                         <MailCheck className="h-5 w-5 shrink-0 text-forest-800" />
                         <div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Email</p><p className="truncate text-sm font-semibold text-gray-900">{formValues.email}</p></div>
                       </div>
-                      {formValues.phone && <div className="flex items-center gap-3 p-4"><div className="h-5 w-5 shrink-0" /><div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Mobile</p><p className="truncate text-sm font-semibold text-gray-900">{formValues.phone}</p></div></div>}
+                      {formValues.phone && <div className="flex items-center gap-3 p-4"><div className="h-5 w-5 shrink-0" /><div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Mobile</p><p className="truncate text-sm font-semibold text-gray-900">{countryCode} {formValues.phone}</p></div></div>}
                     </div>
                     <div className="flex items-start gap-3 rounded-2xl bg-gray-50 p-4">
                       <input type="checkbox" id="terms" className="mt-0.5 h-4 w-4 rounded border-gray-300 text-forest-800 focus:ring-forest-700" {...register('consentToTerms')} />
