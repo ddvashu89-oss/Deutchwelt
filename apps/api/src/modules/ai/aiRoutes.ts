@@ -38,6 +38,35 @@ router.post('/chat', requireAuth, authRateLimiter, async (req, res, next) => {
   }
 });
 
+router.post('/help-chat', requireAuth, authRateLimiter, async (req, res, next) => {
+  try {
+    if (!env.GEMINI_API_KEY) return next(new AppError('The help assistant is temporarily unavailable. Please use the FAQ or contact the academy.', 503, 'AI_NOT_CONFIGURED'));
+    const role = req.user?.role;
+    if (!role || !['STUDENT', 'TEACHER'].includes(role)) return next(new AppError('The help assistant is available to student and teacher accounts.', 403));
+    const rawTurns = Array.isArray(req.body?.messages) ? req.body.messages.slice(-10) : [];
+    const messages = rawTurns
+      .filter((turn: any) => ['user', 'model'].includes(turn?.role) && typeof turn?.text === 'string')
+      .map((turn: any) => ({ role: turn.role as 'user' | 'model', text: turn.text.trim().slice(0, 700) }))
+      .filter((turn: any) => turn.text.length > 0);
+    if (!messages.length || messages[messages.length - 1].role !== 'user') {
+      return next(new AppError('Type your question to get help.', 400));
+    }
+
+    const roleGuide = role === 'TEACHER'
+      ? 'Teacher tools include the teacher dashboard, batches, schedule, assignment creation, submissions, materials, and community Q&A.'
+      : 'Student tools include courses, lessons, schedule, assignments, materials, placement test, vocabulary, speaking lab, and community Q&A.';
+    const reply = await generateGeminiText(messages, [
+      'You are the DeutschWelt platform help assistant. Help users get unstuck with practical, short, step-by-step guidance.',
+      roleGuide,
+      'Explain how to use platform features, but do not claim you can inspect an account, change data, approve registrations, make payments, or fix a server issue yourself.',
+      'For account access, enrollment, payment, missing content, or technical failures that need staff action, direct the user to /contact and suggest what non-sensitive details to include.',
+      'Never ask for passwords, verification links, session tokens, payment card details, or other secrets. Do not invent pages or settings; when unsure, say so and point to the FAQ or contact page.',
+      'Reply in the language the user used. Keep each answer under 120 words.'
+    ].join(' '));
+    return res.json({ success: true, reply });
+  } catch (error) { next(error); }
+});
+
 router.post('/speaking-feedback', requireAuth, authRateLimiter, async (req, res, next) => {
   try {
     if (!env.GEMINI_API_KEY) return next(new AppError('AI pronunciation feedback is not configured yet.', 503, 'AI_NOT_CONFIGURED'));

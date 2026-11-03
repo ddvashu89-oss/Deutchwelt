@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
 import { LanguageProvider } from './context/LanguageContext.js';
@@ -52,12 +52,14 @@ import { AdminTeachersPage } from './pages/admin/AdminTeachersPage.js';
 import { AdminCoursesPage } from './pages/admin/AdminCoursesPage.js';
 import { AdminEnquiriesPage } from './pages/admin/AdminEnquiriesPage.js';
 import { AdminSettingsPage, AdminAuditLogsPage } from './pages/admin/AdminSettingsPage.js';
+import { StudentRegistrationPage, VerifyEmailPage } from './pages/auth/StudentRegistrationPage.js';
 
 const queryClient = new QueryClient();
 
 // Protected Route Guard
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: string[] }) {
   const { user, isLoading } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -82,6 +84,16 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
+  }
+
+  if (user.role === 'STUDENT') {
+    const registrationStatus = user.studentProfile?.registrationStatus || 'APPROVED';
+    if (registrationStatus !== 'APPROVED' && location.pathname !== '/student/registration') {
+      return <Navigate to="/student/registration" replace />;
+    }
+    if (registrationStatus === 'APPROVED' && location.pathname === '/student/registration') {
+      return <Navigate to="/student/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;
@@ -112,6 +124,8 @@ export function App() {
               {/* Auth Routes */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
+              <Route path="/student/registration" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentRegistrationPage /></ProtectedRoute>} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
 

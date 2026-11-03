@@ -17979,8 +17979,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports, module) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module.exports = escapeHtml2;
-    function escapeHtml2(string) {
+    module.exports = escapeHtml3;
+    function escapeHtml3(string) {
       var str = "" + string;
       var match = matchHtmlRegExp.exec(str);
       if (!match) {
@@ -18111,7 +18111,7 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src2()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
@@ -18123,7 +18123,7 @@ var require_finalhandler = __commonJS({
     };
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message) {
-      var body = escapeHtml2(message).replace(NEWLINE_REGEXP, "<br>").replace(DOUBLE_SPACE_REGEXP, " &nbsp;");
+      var body = escapeHtml3(message).replace(NEWLINE_REGEXP, "<br>").replace(DOUBLE_SPACE_REGEXP, " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module.exports = finalhandler;
@@ -20627,7 +20627,7 @@ var require_send = __commonJS({
     var deprecate = require_depd()("send");
     var destroy = require_destroy();
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = __require("fs");
@@ -20727,7 +20727,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml2(msg));
+      var doc = createHtmlDocument("Error", escapeHtml3(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -20827,7 +20827,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml3(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -23432,7 +23432,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var http = __require("http");
     var isAbsolute = require_utils2().isAbsolute;
     var onFinished = require_on_finished();
@@ -23838,7 +23838,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml2(address);
+          var u = escapeHtml3(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -23970,7 +23970,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports, module) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml2 = require_escape_html();
+    var escapeHtml3 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = __require("path").resolve;
     var send = require_send();
@@ -24057,7 +24057,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml3(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -33620,6 +33620,13 @@ var UserRole;
   UserRole2["TEACHER"] = "TEACHER";
   UserRole2["ADMIN"] = "ADMIN";
 })(UserRole || (UserRole = {}));
+var StudentRegistrationStatus;
+(function(StudentRegistrationStatus2) {
+  StudentRegistrationStatus2["ONBOARDING"] = "ONBOARDING";
+  StudentRegistrationStatus2["PENDING_APPROVAL"] = "PENDING_APPROVAL";
+  StudentRegistrationStatus2["APPROVED"] = "APPROVED";
+  StudentRegistrationStatus2["REJECTED"] = "REJECTED";
+})(StudentRegistrationStatus || (StudentRegistrationStatus = {}));
 var GermanLevel;
 (function(GermanLevel2) {
   GermanLevel2["BEGINNER"] = "BEGINNER";
@@ -37748,15 +37755,18 @@ var registerSchema = external_exports.object({
   firstName: external_exports.string().trim().min(1, "First name is required").max(50),
   lastName: external_exports.string().trim().min(1, "Last name is required").max(50),
   email: external_exports.string().trim().email("Invalid email address").toLowerCase(),
-  phone: external_exports.string().trim().min(5, "Mobile number is required").max(30),
-  address: external_exports.string().trim().min(3, "Address is required").max(300),
+  phone: external_exports.string().trim().max(30).optional().nullable(),
   password: external_exports.string().min(8, "Password must be at least 8 characters long").max(100).regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[0-9]/, "Password must contain at least one number"),
-  currentLevel: external_exports.nativeEnum(GermanLevel).default(GermanLevel.A1),
-  learningGoal: external_exports.string().trim().max(250).optional().nullable(),
-  preferredLanguage: external_exports.string().trim().default("en"),
   consentToTerms: external_exports.boolean().refine((val) => val === true, {
     message: "You must agree to the Terms of Service and Privacy Policy"
   })
+});
+var emailVerificationSchema = external_exports.object({ token: external_exports.string().trim().min(32).max(200) });
+var studentOnboardingSchema = external_exports.object({
+  phone: external_exports.string().trim().max(30).optional().nullable(),
+  currentLevel: external_exports.nativeEnum(GermanLevel),
+  learningGoal: external_exports.string().trim().min(3).max(250),
+  preferredLanguage: external_exports.enum(["en", "hi", "de"])
 });
 var loginSchema = external_exports.object({
   email: external_exports.string().trim().email("Invalid email address").toLowerCase(),
@@ -39754,6 +39764,7 @@ var DataStore = class {
   studentProfiles = [];
   teacherProfiles = [];
   sessions = [];
+  emailVerificationTokens = [];
   courses = [];
   units = [];
   lessons = [];
@@ -40866,6 +40877,7 @@ async function authenticate(req, res, next) {
             email: session.user.email,
             firstName: session.user.firstName,
             lastName: session.user.lastName,
+            phone: session.user.phone,
             role: session.user.role,
             isActive: session.user.isActive,
             isEmailVerified: session.user.isEmailVerified,
@@ -40889,6 +40901,7 @@ async function authenticate(req, res, next) {
               email: user.email,
               firstName: user.firstName,
               lastName: user.lastName,
+              phone: user.phone,
               role: user.role,
               isActive: user.isActive,
               isEmailVerified: user.isEmailVerified,
@@ -41838,6 +41851,48 @@ var import_express = __toESM(require_express2(), 1);
 
 // apps/api/src/modules/auth/authController.ts
 import crypto2 from "crypto";
+
+// apps/api/src/services/emailDelivery.ts
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
+}
+async function sendTransactionalEmail(to, subject, heading, message, actionLabel, actionUrl) {
+  if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) return false;
+  const html = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#17243a"><h2>${escapeHtml(heading)}</h2><p>${escapeHtml(message)}</p><p><a href="${escapeHtml(actionUrl)}" style="display:inline-block;padding:12px 18px;background:#14243a;color:#fff;text-decoration:none;border-radius:8px">${escapeHtml(actionLabel)}</a></p><p style="color:#687487;font-size:12px">If you did not request this, you can ignore this email.</p></div>`;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from: env.RESEND_FROM_EMAIL, to: [to], subject, html }),
+    signal: AbortSignal.timeout(12e3)
+  });
+  if (!response.ok) throw new Error(`Transactional email provider returned ${response.status}`);
+  return true;
+}
+
+// apps/api/src/modules/auth/authController.ts
+function hashVerificationToken(token) {
+  return crypto2.createHash("sha256").update(token).digest("hex");
+}
+async function issueVerificationEmail(userId, email) {
+  const token = crypto2.randomBytes(32).toString("hex");
+  const tokenHash = hashVerificationToken(token);
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1e3);
+  if (isDatabaseConnected) {
+    await prisma.emailVerificationToken.updateMany({ where: { userId, usedAt: null }, data: { usedAt: /* @__PURE__ */ new Date() } });
+    await prisma.emailVerificationToken.create({ data: { userId, tokenHash, expiresAt } });
+  } else {
+    store.emailVerificationTokens = store.emailVerificationTokens.filter((item) => item.userId !== userId || item.usedAt);
+    store.emailVerificationTokens.push({ id: `verify-${Date.now()}`, userId, tokenHash, expiresAt, usedAt: null, createdAt: /* @__PURE__ */ new Date() });
+  }
+  const verifyUrl = `${env.FRONTEND_URL}/verify-email?token=${encodeURIComponent(token)}`;
+  try {
+    const emailSent = await sendTransactionalEmail(email, "Verify your DeutschWelt email", "Verify your email address", "Please verify your email to continue your student registration. This link expires in 24 hours.", "Verify email", verifyUrl);
+    return { emailSent, devVerificationToken: env.isProd ? void 0 : token };
+  } catch (error) {
+    console.error("[Email Verification] Delivery failed:", error);
+    return { emailSent: false, devVerificationToken: env.isProd ? void 0 : token };
+  }
+}
 function setSessionCookie(res, token) {
   res.cookie("dw_session", token, {
     httpOnly: true,
@@ -41855,7 +41910,7 @@ function clearSessionCookie(res) {
 }
 async function register(req, res, next) {
   try {
-    const { firstName, lastName, email, phone, address, password, currentLevel, learningGoal, preferredLanguage } = req.body;
+    const { firstName, lastName, email, phone, password, consentToTerms } = req.body;
     const normalizedEmail = email.toLowerCase().trim();
     const clientIp = req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() || req.socket.remoteAddress || req.ip || "127.0.0.1";
     const userAgent = req.headers["user-agent"] || "Unknown Browser";
@@ -41875,19 +41930,22 @@ async function register(req, res, next) {
           role: UserRole.STUDENT,
           isActive: true,
           isEmailVerified: false,
+          termsAcceptedAt: consentToTerms ? /* @__PURE__ */ new Date() : null,
           studentProfile: {
             create: {
-              currentLevel: currentLevel || GermanLevel.A1,
-              learningGoal: learningGoal || null,
-              preferredLanguage: preferredLanguage || "en",
+              currentLevel: GermanLevel.A1,
+              learningGoal: null,
+              preferredLanguage: "en",
               dailyGoalMinutes: 20,
               streakCount: 1,
-              lastActiveDate: /* @__PURE__ */ new Date()
+              lastActiveDate: /* @__PURE__ */ new Date(),
+              registrationStatus: StudentRegistrationStatus.ONBOARDING
             }
           }
         },
         include: { studentProfile: true }
       });
+      const verification = await issueVerificationEmail(user.id, user.email);
       const token = crypto2.randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1e3);
       await prisma.session.create({
@@ -41909,12 +41967,12 @@ async function register(req, res, next) {
           firstName: user.firstName,
           lastName: user.lastName,
           phone: user.phone,
-          address: address || null,
-          registrationIp: clientIp,
           role: user.role,
           studentProfile: user.studentProfile
         },
-        token
+        token,
+        verificationEmailSent: verification.emailSent,
+        devVerificationToken: verification.devVerificationToken
       });
     } else {
       const existing = store.users.find((u) => u.email === normalizedEmail);
@@ -41930,61 +41988,35 @@ async function register(req, res, next) {
         firstName,
         lastName,
         phone: phone || null,
-        address: address || null,
-        registrationIp: clientIp,
         lastLoginIp: clientIp,
         userAgent,
         role: UserRole.STUDENT,
         isActive: true,
         isEmailVerified: false,
+        termsAcceptedAt: consentToTerms ? (/* @__PURE__ */ new Date()).toISOString() : null,
         createdAt: (/* @__PURE__ */ new Date()).toISOString(),
         updatedAt: (/* @__PURE__ */ new Date()).toISOString()
       };
       const studentProfile = {
         id: `profile-${Date.now()}`,
         userId,
-        currentLevel: currentLevel || GermanLevel.A1,
-        learningGoal: learningGoal || null,
-        preferredLanguage: preferredLanguage || "en",
+        currentLevel: GermanLevel.A1,
+        learningGoal: null,
+        preferredLanguage: "en",
         dailyGoalMinutes: 20,
         streakCount: 1,
+        registrationStatus: StudentRegistrationStatus.ONBOARDING,
+        registrationRequestedAt: null,
+        registrationReviewedAt: null,
+        registrationReviewedById: null,
+        registrationReviewNote: null,
         lastActiveDate: (/* @__PURE__ */ new Date()).toISOString(),
         createdAt: (/* @__PURE__ */ new Date()).toISOString(),
         updatedAt: (/* @__PURE__ */ new Date()).toISOString()
       };
       store.users.push(user);
       store.studentProfiles.push(studentProfile);
-      const targetLevel = currentLevel || GermanLevel.A1;
-      const matchingCourse = store.courses.find((c) => c.level === targetLevel) || store.courses[0];
-      if (matchingCourse) {
-        store.enrollments.push({
-          id: `enr-${Date.now()}`,
-          userId,
-          courseId: matchingCourse.id,
-          enrolledAt: (/* @__PURE__ */ new Date()).toISOString(),
-          status: "ACTIVE",
-          progressPercentage: 0
-        });
-      }
-      const matchingBatch = store.batches.find((b) => b.level === targetLevel) || store.batches[0];
-      if (matchingBatch) {
-        store.batchMemberships.push({
-          id: `bm-${Date.now()}`,
-          batchId: matchingBatch.id,
-          userId,
-          joinedAt: (/* @__PURE__ */ new Date()).toISOString()
-        });
-      }
-      store.notifications.push({
-        id: `notif-${Date.now()}`,
-        userId,
-        title: `Willkommen bei DeutschWelt, ${firstName}!`,
-        message: `Your learning path for German ${targetLevel} is ready. Start your first lesson or practice vocabulary flashcards.`,
-        type: "SUCCESS",
-        linkUrl: "/student/dashboard",
-        isRead: false,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString()
-      });
+      const verification = await issueVerificationEmail(userId, normalizedEmail);
       const token = crypto2.randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1e3).toISOString();
       store.sessions.push({
@@ -42006,14 +42038,52 @@ async function register(req, res, next) {
           firstName: user.firstName,
           lastName: user.lastName,
           phone: user.phone,
-          address: user.address,
-          registrationIp: user.registrationIp,
           role: user.role,
           studentProfile
         },
-        token
+        token,
+        verificationEmailSent: verification.emailSent,
+        devVerificationToken: verification.devVerificationToken
       });
     }
+  } catch (error) {
+    next(error);
+  }
+}
+async function verifyEmail(req, res, next) {
+  try {
+    const token = String(req.body?.token || "");
+    const tokenHash = hashVerificationToken(token);
+    const now = /* @__PURE__ */ new Date();
+    if (isDatabaseConnected) {
+      const record = await prisma.emailVerificationToken.findUnique({ where: { tokenHash } });
+      if (!record || record.usedAt || record.expiresAt <= now) {
+        return next(new AppError("This verification link is invalid or expired. Request a new link and try again.", 400, "VERIFICATION_LINK_INVALID"));
+      }
+      await prisma.$transaction(async (tx) => {
+        const consumed = await tx.emailVerificationToken.updateMany({ where: { id: record.id, usedAt: null, expiresAt: { gt: now } }, data: { usedAt: now } });
+        if (consumed.count !== 1) throw new AppError("This verification link has already been used or expired.", 400, "VERIFICATION_LINK_INVALID");
+        await tx.user.update({ where: { id: record.userId }, data: { isEmailVerified: true } });
+      });
+    } else {
+      const record = store.emailVerificationTokens.find((item) => item.tokenHash === tokenHash && !item.usedAt && new Date(item.expiresAt) > now);
+      if (!record) return next(new AppError("This verification link is invalid or expired. Request a new link and try again.", 400, "VERIFICATION_LINK_INVALID"));
+      record.usedAt = now;
+      const user = store.users.find((item) => item.id === record.userId);
+      if (!user) return next(new AppError("This account could not be found.", 404));
+      user.isEmailVerified = true;
+    }
+    return res.json({ success: true, message: "Email verified. Continue your registration to request admin approval." });
+  } catch (error) {
+    next(error);
+  }
+}
+async function resendVerificationEmail(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (req.user.isEmailVerified) return res.json({ success: true, emailSent: false, alreadyVerified: true });
+    const result = await issueVerificationEmail(req.user.id, req.user.email);
+    return res.json({ success: true, ...result });
   } catch (error) {
     next(error);
   }
@@ -42210,6 +42280,8 @@ function validateBody(schema) {
 // apps/api/src/modules/auth/authRoutes.ts
 var router = (0, import_express.Router)();
 router.post("/register", authRateLimiter, validateBody(registerSchema), register);
+router.post("/verify-email", authRateLimiter, validateBody(emailVerificationSchema), verifyEmail);
+router.post("/resend-verification", requireAuth, authRateLimiter, resendVerificationEmail);
 router.post("/login", authRateLimiter, validateBody(loginSchema), login);
 router.post("/logout", logout);
 router.get("/me", getMe);
@@ -44708,8 +44780,96 @@ async function updateNotificationPreferences(req, res, next) {
   }
 }
 
+// apps/api/src/modules/student/registrationController.ts
+function currentProfile(userId) {
+  return store.studentProfiles.find((profile) => profile.userId === userId);
+}
+async function getRegistrationState(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (isDatabaseConnected) {
+      const profile = await prisma.studentProfile.findUnique({ where: { userId: req.user.id } });
+      return res.json({ success: true, isEmailVerified: req.user.isEmailVerified, phone: req.user.phone || "", profile });
+    }
+    return res.json({ success: true, isEmailVerified: req.user.isEmailVerified, phone: req.user.phone || "", profile: currentProfile(req.user.id) || null });
+  } catch (error) {
+    next(error);
+  }
+}
+async function updateRegistrationOnboarding(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (req.user.isEmailVerified === false) return next(new AppError("Verify your email before submitting your student application.", 403, "EMAIL_VERIFICATION_REQUIRED"));
+    const { phone, currentLevel, learningGoal, preferredLanguage } = req.body;
+    if (isDatabaseConnected) {
+      const profile2 = await prisma.studentProfile.update({
+        where: { userId: req.user.id },
+        data: { currentLevel, learningGoal, preferredLanguage }
+      });
+      if (phone !== void 0) await prisma.user.update({ where: { id: req.user.id }, data: { phone: phone || null } });
+      return res.json({ success: true, profile: profile2 });
+    }
+    const profile = currentProfile(req.user.id);
+    const user = store.users.find((item) => item.id === req.user.id);
+    if (!profile || !user) return next(new AppError("Student registration profile was not found.", 404));
+    Object.assign(profile, { currentLevel, learningGoal, preferredLanguage, updatedAt: (/* @__PURE__ */ new Date()).toISOString() });
+    if (phone !== void 0) user.phone = phone || null;
+    return res.json({ success: true, profile });
+  } catch (error) {
+    next(error);
+  }
+}
+async function requestRegistrationApproval(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!req.user.isEmailVerified) return next(new AppError("Verify your email before requesting admin approval.", 403, "EMAIL_VERIFICATION_REQUIRED"));
+    const now = /* @__PURE__ */ new Date();
+    if (isDatabaseConnected) {
+      const profile2 = await prisma.studentProfile.findUnique({ where: { userId: req.user.id } });
+      if (!profile2) return next(new AppError("Student registration profile was not found.", 404));
+      if (!profile2.learningGoal?.trim()) return next(new AppError("Complete your learning goal before submitting for approval.", 400, "ONBOARDING_INCOMPLETE"));
+      if (profile2.registrationStatus === StudentRegistrationStatus.PENDING_APPROVAL) {
+        return res.json({ success: true, profile: profile2, alreadyPending: true });
+      }
+      if (profile2.registrationStatus === StudentRegistrationStatus.APPROVED) {
+        return next(new AppError("This student registration has already been approved.", 409));
+      }
+      const updated = await prisma.studentProfile.update({
+        where: { userId: req.user.id },
+        data: {
+          registrationStatus: StudentRegistrationStatus.PENDING_APPROVAL,
+          registrationRequestedAt: now,
+          registrationReviewedAt: null,
+          registrationReviewedById: null,
+          registrationReviewNote: null
+        }
+      });
+      return res.json({ success: true, profile: updated, message: "Your registration is with the academy admin for review." });
+    }
+    const profile = currentProfile(req.user.id);
+    if (!profile) return next(new AppError("Student registration profile was not found.", 404));
+    if (!profile.learningGoal?.trim()) return next(new AppError("Complete your learning goal before submitting for approval.", 400, "ONBOARDING_INCOMPLETE"));
+    if (profile.registrationStatus === StudentRegistrationStatus.PENDING_APPROVAL) return res.json({ success: true, profile, alreadyPending: true });
+    if (profile.registrationStatus === StudentRegistrationStatus.APPROVED) return next(new AppError("This student registration has already been approved.", 409));
+    Object.assign(profile, {
+      registrationStatus: StudentRegistrationStatus.PENDING_APPROVAL,
+      registrationRequestedAt: now.toISOString(),
+      registrationReviewedAt: null,
+      registrationReviewedById: null,
+      registrationReviewNote: null,
+      updatedAt: now.toISOString()
+    });
+    return res.json({ success: true, profile, message: "Your registration is with the academy admin for review." });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // apps/api/src/modules/student/studentRoutes.ts
 var router8 = (0, import_express8.Router)();
+router8.get("/registration", requireAuth, getRegistrationState);
+router8.patch("/registration", requireAuth, validateBody(studentOnboardingSchema), updateRegistrationOnboarding);
+router8.post("/registration/request-approval", requireAuth, requestRegistrationApproval);
 router8.get("/dashboard", requireAuth, getStudentDashboard);
 router8.get("/notifications", requireAuth, getStudentNotifications);
 router8.patch("/notifications/:notificationId/read", requireAuth, markNotificationRead);
@@ -45849,6 +46009,69 @@ async function getStudents(req, res, next) {
     next(error);
   }
 }
+async function reviewStudentRegistration(req, res, next) {
+  try {
+    const { studentId } = req.params;
+    const decision = req.body?.decision;
+    const reviewNote = typeof req.body?.reviewNote === "string" ? req.body.reviewNote.trim().slice(0, 2e3) : "";
+    if (!["APPROVE", "REJECT"].includes(decision)) return next(new AppError("Choose approve or reject.", 400));
+    if (decision === "REJECT" && reviewNote.length < 3) return next(new AppError("Add a short reason so the student knows what to update.", 400));
+    let student;
+    let updatedProfile;
+    if (isDatabaseConnected) {
+      student = await prisma.user.findFirst({ where: { id: studentId, role: UserRole.STUDENT }, include: { studentProfile: true } });
+      if (!student?.studentProfile) return next(new AppError("Student registration was not found.", 404));
+      if (student.studentProfile.registrationStatus !== StudentRegistrationStatus.PENDING_APPROVAL) {
+        return next(new AppError("This registration is not waiting for review.", 409));
+      }
+      updatedProfile = await prisma.studentProfile.update({
+        where: { userId: studentId },
+        data: {
+          registrationStatus: decision === "APPROVE" ? StudentRegistrationStatus.APPROVED : StudentRegistrationStatus.REJECTED,
+          registrationReviewedAt: /* @__PURE__ */ new Date(),
+          registrationReviewedById: req.user?.id || null,
+          registrationReviewNote: decision === "REJECT" ? reviewNote : null
+        }
+      });
+    } else {
+      student = store.users.find((user) => user.id === studentId && user.role === UserRole.STUDENT);
+      const profile = store.studentProfiles.find((item) => item.userId === studentId);
+      if (!student || !profile) return next(new AppError("Student registration was not found.", 404));
+      if (profile.registrationStatus !== StudentRegistrationStatus.PENDING_APPROVAL) return next(new AppError("This registration is not waiting for review.", 409));
+      Object.assign(profile, {
+        registrationStatus: decision === "APPROVE" ? StudentRegistrationStatus.APPROVED : StudentRegistrationStatus.REJECTED,
+        registrationReviewedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        registrationReviewedById: req.user?.id || null,
+        registrationReviewNote: decision === "REJECT" ? reviewNote : null
+      });
+      updatedProfile = profile;
+    }
+    await recordAuditLog({
+      userId: req.user?.id,
+      action: decision === "APPROVE" ? "STUDENT_REGISTRATION_APPROVED" : "STUDENT_REGISTRATION_REJECTED",
+      entityType: "StudentProfile",
+      entityId: studentId,
+      details: { decision, reviewNote: decision === "REJECT" ? reviewNote : void 0 }
+    });
+    let emailSent = false;
+    try {
+      const approved = decision === "APPROVE";
+      emailSent = await sendTransactionalEmail(
+        student.email,
+        approved ? "Your DeutschWelt registration is approved" : "Update your DeutschWelt registration",
+        approved ? "You are approved to begin learning" : "Your registration needs an update",
+        approved ? "Your student registration has been approved. Sign in to choose a course and start learning." : `The academy admin left this note: ${reviewNote}. Sign in to update your registration and request review again.`,
+        approved ? "Sign in" : "Update registration",
+        approved ? `${env.FRONTEND_URL}/login` : `${env.FRONTEND_URL}/student/registration`
+      );
+    } catch (error) {
+      console.error("[Registration Review Email] Delivery failed:", error);
+    }
+    return res.json({ success: true, profile: updatedProfile, emailSent });
+  } catch (error) {
+    next(error);
+  }
+}
 async function createStudent(req, res, next) {
   try {
     const { firstName, lastName, email, phone, address, password, currentLevel, learningGoal } = req.body;
@@ -46829,6 +47052,7 @@ router10.use(requireAuth);
 router10.use(requireRole(UserRole.ADMIN));
 router10.get("/analytics", getAdminAnalytics);
 router10.get("/students", getStudents);
+router10.post("/students/:studentId/registration-review", reviewStudentRegistration);
 router10.post("/students", createStudent);
 router10.put("/students/:studentId", updateStudent);
 router10.delete("/students/:studentId", deleteStudent);
@@ -47122,6 +47346,30 @@ router14.post("/chat", requireAuth, authRateLimiter, async (req, res, next) => {
     next(error);
   }
 });
+router14.post("/help-chat", requireAuth, authRateLimiter, async (req, res, next) => {
+  try {
+    if (!env.GEMINI_API_KEY) return next(new AppError("The help assistant is temporarily unavailable. Please use the FAQ or contact the academy.", 503, "AI_NOT_CONFIGURED"));
+    const role = req.user?.role;
+    if (!role || !["STUDENT", "TEACHER"].includes(role)) return next(new AppError("The help assistant is available to student and teacher accounts.", 403));
+    const rawTurns = Array.isArray(req.body?.messages) ? req.body.messages.slice(-10) : [];
+    const messages = rawTurns.filter((turn) => ["user", "model"].includes(turn?.role) && typeof turn?.text === "string").map((turn) => ({ role: turn.role, text: turn.text.trim().slice(0, 700) })).filter((turn) => turn.text.length > 0);
+    if (!messages.length || messages[messages.length - 1].role !== "user") {
+      return next(new AppError("Type your question to get help.", 400));
+    }
+    const roleGuide = role === "TEACHER" ? "Teacher tools include the teacher dashboard, batches, schedule, assignment creation, submissions, materials, and community Q&A." : "Student tools include courses, lessons, schedule, assignments, materials, placement test, vocabulary, speaking lab, and community Q&A.";
+    const reply = await generateGeminiText(messages, [
+      "You are the DeutschWelt platform help assistant. Help users get unstuck with practical, short, step-by-step guidance.",
+      roleGuide,
+      "Explain how to use platform features, but do not claim you can inspect an account, change data, approve registrations, make payments, or fix a server issue yourself.",
+      "For account access, enrollment, payment, missing content, or technical failures that need staff action, direct the user to /contact and suggest what non-sensitive details to include.",
+      "Never ask for passwords, verification links, session tokens, payment card details, or other secrets. Do not invent pages or settings; when unsure, say so and point to the FAQ or contact page.",
+      "Reply in the language the user used. Keep each answer under 120 words."
+    ].join(" "));
+    return res.json({ success: true, reply });
+  } catch (error) {
+    next(error);
+  }
+});
 router14.post("/speaking-feedback", requireAuth, authRateLimiter, async (req, res, next) => {
   try {
     if (!env.GEMINI_API_KEY) return next(new AppError("AI pronunciation feedback is not configured yet.", 503, "AI_NOT_CONFIGURED"));
@@ -47345,12 +47593,12 @@ var paymentRoutes_default = router16;
 var import_express17 = __toESM(require_express2(), 1);
 
 // apps/api/src/services/notifications.ts
-function escapeHtml(text) {
+function escapeHtml2(text) {
   return text.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
 }
 async function sendEmail(to, subject, message, linkUrl) {
   if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) return;
-  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+  const safeMessage = escapeHtml2(message).replace(/\n/g, "<br>");
   const safeLink = linkUrl && linkUrl.startsWith("/") ? `${env.FRONTEND_URL}${linkUrl}` : "";
   const html = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#17243a"><h2>DeutschWelt update</h2><p>${safeMessage}</p>${safeLink ? `<p><a href="${safeLink}">Open DeutschWelt</a></p>` : ""}<p style="color:#687487;font-size:12px">You received this class reminder because you enabled email notifications in your account.</p></div>`;
   const response = await fetch("https://api.resend.com/emails", {
@@ -47629,6 +47877,18 @@ app.use("/uploads", import_express18.default.static(env.UPLOAD_DIR, {
 }));
 app.use(authenticate);
 app.use("/api", requestLoggingMiddleware);
+app.use((req, res, next) => {
+  const registrationStatus = req.user?.studentProfile?.registrationStatus || "APPROVED";
+  if (req.user?.role !== "STUDENT" || registrationStatus === "APPROVED") return next();
+  const allowedWhileRegistrationPending = /^\/api\/v1\/auth\/(me|login|logout|verify-email|resend-verification|forgot-password|reset-password)$/.test(req.path) || /^\/api\/v1\/student\/registration(?:\/.*)?$/.test(req.path) || req.path === "/api/v1/ai/help-chat" || req.path === "/api/v1/enquiries" || ["/api/v1/health", "/api/v1/health/"].includes(req.path);
+  if (allowedWhileRegistrationPending) return next();
+  return res.status(403).json({
+    success: false,
+    error: "Complete your student registration and wait for admin approval before accessing learning features.",
+    code: "STUDENT_APPROVAL_REQUIRED",
+    registrationStatus
+  });
+});
 app.use((req, res, next) => {
   if (!env.isProd || isDatabaseConnected || ["/health", "/api/health", "/api/v1/health"].includes(req.path)) {
     return next();

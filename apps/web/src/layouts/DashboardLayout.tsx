@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext.js';
 import { Logo } from '../components/brand/Logo.js';
 import { Button } from '../components/ui/Button.js';
 import { LanguageToggle } from '../components/ui/LanguageToggle.js';
+import { HelpChatWidget } from '../components/HelpChatWidget.js';
 import {
   LayoutDashboard,
   CheckSquare,
@@ -331,6 +332,7 @@ export function DashboardLayout() {
           </div>
         </main>
       </div>
+      {(isStudent || isTeacher) && <HelpChatWidget />}
     </div>
   );
 }

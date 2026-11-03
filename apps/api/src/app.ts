@@ -111,6 +111,26 @@ app.use('/uploads', express.static(env.UPLOAD_DIR, {
 app.use(authenticate);
 app.use('/api', requestLoggingMiddleware);
 
+app.use((req, res, next) => {
+  const registrationStatus = req.user?.studentProfile?.registrationStatus || 'APPROVED';
+  if (req.user?.role !== 'STUDENT' || registrationStatus === 'APPROVED') return next();
+
+  const allowedWhileRegistrationPending =
+    /^\/api\/v1\/auth\/(me|login|logout|verify-email|resend-verification|forgot-password|reset-password)$/.test(req.path) ||
+    /^\/api\/v1\/student\/registration(?:\/.*)?$/.test(req.path) ||
+    req.path === '/api/v1/ai/help-chat' ||
+    req.path === '/api/v1/enquiries' ||
+    ['/api/v1/health', '/api/v1/health/'].includes(req.path);
+
+  if (allowedWhileRegistrationPending) return next();
+  return res.status(403).json({
+    success: false,
+    error: 'Complete your student registration and wait for admin approval before accessing learning features.',
+    code: 'STUDENT_APPROVAL_REQUIRED',
+    registrationStatus
+  });
+});
+
 // Never serve requests from the volatile demo store in a production deployment.
 app.use((req, res, next) => {
   if (!env.isProd || isDatabaseConnected || ['/health', '/api/health', '/api/v1/health'].includes(req.path)) {

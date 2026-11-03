@@ -4,6 +4,13 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
+export enum StudentRegistrationStatus {
+  ONBOARDING = 'ONBOARDING',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
+}
+
 export enum GermanLevel {
   BEGINNER = 'BEGINNER',
   A1 = 'A1',

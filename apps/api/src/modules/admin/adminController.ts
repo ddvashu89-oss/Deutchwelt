@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import { UserRole, GermanLevel, PublicationStatus } from '@deutschwelt/shared';
+import { UserRole, GermanLevel, PublicationStatus, StudentRegistrationStatus } from '@deutschwelt/shared';
 import { prisma, isDatabaseConnected } from '../../services/prisma.js';
 import { store } from '../../services/store.js';
 import { recordAuditLog } from '../../services/auditService.js';
 import { AppError } from '../../middleware/errorHandler.js';
+import { sendTransactionalEmail } from '../../services/emailDelivery.js';
+import { env } from '../../config/env.js';
 
 export async function getAdminAnalytics(req: Request, res: Response, next: NextFunction) {
   try {
@@ -157,6 +159,72 @@ export async function getStudents(req: Request, res: Response, next: NextFunctio
   } catch (error) {
     next(error);
   }
+}
+
+export async function reviewStudentRegistration(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { studentId } = req.params;
+    const decision = req.body?.decision;
+    const reviewNote = typeof req.body?.reviewNote === 'string' ? req.body.reviewNote.trim().slice(0, 2000) : '';
+    if (!['APPROVE', 'REJECT'].includes(decision)) return next(new AppError('Choose approve or reject.', 400));
+    if (decision === 'REJECT' && reviewNote.length < 3) return next(new AppError('Add a short reason so the student knows what to update.', 400));
+
+    let student: any;
+    let updatedProfile: any;
+    if (isDatabaseConnected) {
+      student = await prisma.user.findFirst({ where: { id: studentId, role: UserRole.STUDENT }, include: { studentProfile: true } });
+      if (!student?.studentProfile) return next(new AppError('Student registration was not found.', 404));
+      if (student.studentProfile.registrationStatus !== StudentRegistrationStatus.PENDING_APPROVAL) {
+        return next(new AppError('This registration is not waiting for review.', 409));
+      }
+      updatedProfile = await prisma.studentProfile.update({
+        where: { userId: studentId },
+        data: {
+          registrationStatus: decision === 'APPROVE' ? StudentRegistrationStatus.APPROVED : StudentRegistrationStatus.REJECTED,
+          registrationReviewedAt: new Date(),
+          registrationReviewedById: req.user?.id || null,
+          registrationReviewNote: decision === 'REJECT' ? reviewNote : null
+        }
+      });
+    } else {
+      student = store.users.find(user => user.id === studentId && user.role === UserRole.STUDENT);
+      const profile = store.studentProfiles.find(item => item.userId === studentId);
+      if (!student || !profile) return next(new AppError('Student registration was not found.', 404));
+      if (profile.registrationStatus !== StudentRegistrationStatus.PENDING_APPROVAL) return next(new AppError('This registration is not waiting for review.', 409));
+      Object.assign(profile, {
+        registrationStatus: decision === 'APPROVE' ? StudentRegistrationStatus.APPROVED : StudentRegistrationStatus.REJECTED,
+        registrationReviewedAt: new Date().toISOString(),
+        registrationReviewedById: req.user?.id || null,
+        registrationReviewNote: decision === 'REJECT' ? reviewNote : null
+      });
+      updatedProfile = profile;
+    }
+
+    await recordAuditLog({
+      userId: req.user?.id,
+      action: decision === 'APPROVE' ? 'STUDENT_REGISTRATION_APPROVED' : 'STUDENT_REGISTRATION_REJECTED',
+      entityType: 'StudentProfile',
+      entityId: studentId,
+      details: { decision, reviewNote: decision === 'REJECT' ? reviewNote : undefined }
+    });
+
+    let emailSent = false;
+    try {
+      const approved = decision === 'APPROVE';
+      emailSent = await sendTransactionalEmail(
+        student.email,
+        approved ? 'Your DeutschWelt registration is approved' : 'Update your DeutschWelt registration',
+        approved ? 'You are approved to begin learning' : 'Your registration needs an update',
+        approved ? 'Your student registration has been approved. Sign in to choose a course and start learning.' : `The academy admin left this note: ${reviewNote}. Sign in to update your registration and request review again.`,
+        approved ? 'Sign in' : 'Update registration',
+        approved ? `${env.FRONTEND_URL}/login` : `${env.FRONTEND_URL}/student/registration`
+      );
+    } catch (error) {
+      console.error('[Registration Review Email] Delivery failed:', error);
+    }
+
+    return res.json({ success: true, profile: updatedProfile, emailSent });
+  } catch (error) { next(error); }
 }
 
 export async function createStudent(req: Request, res: Response, next: NextFunction) {

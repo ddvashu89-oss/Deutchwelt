@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerSchema, RegisterInput, GermanLevel } from '@deutschwelt/shared';
+import { registerSchema, RegisterInput } from '@deutschwelt/shared';
 import { useAuth } from '../../context/AuthContext.js';
 import { useLanguage } from '../../context/LanguageContext.js';
 import { LanguageToggle } from '../../components/ui/LanguageToggle.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
-import { ArrowRight, Lock, MapPin, Phone, Mail, User, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 
 export function RegisterPage() {
   const { register: registerUser } = useAuth();
@@ -27,17 +27,15 @@ export function RegisterPage() {
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      currentLevel: GermanLevel.A1,
-      preferredLanguage: 'en',
-      consentToTerms: true
+      consentToTerms: false
     }
   });
 
   const onSubmit = async (data: RegisterInput) => {
     try {
       setServerError(null);
-      await registerUser(data);
-      navigate('/student/dashboard');
+      const result: any = await registerUser(data);
+      navigate('/student/registration', { replace: true, state: { verificationEmailSent: result?.verificationEmailSent, devVerificationToken: result?.devVerificationToken } });
     } catch (err: any) {
       setServerError(err.message || 'Registration failed. Please try again.');
     }
@@ -106,8 +104,8 @@ export function RegisterPage() {
               />
             </div>
 
-            {/* Email Address & Mobile Number */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Email Address and optional mobile number */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label={t('reg.email')}
                 type="email"
@@ -120,20 +118,10 @@ export function RegisterPage() {
                 label={t('reg.mobile')}
                 type="tel"
                 placeholder="+49 151 12345678"
-                required
                 error={errors.phone?.message}
                 {...register('phone')}
               />
             </div>
-
-            {/* Address */}
-            <Input
-              label={t('reg.address')}
-              placeholder="e.g. Friedrichstraße 45, 10117 Berlin, Germany"
-              required
-              error={errors.address?.message}
-              {...register('address')}
-            />
 
             {/* Password */}
             <Input
@@ -143,48 +131,6 @@ export function RegisterPage() {
               required
               error={errors.password?.message}
               {...register('password')}
-            />
-
-            {/* German Level & Preferred Language */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-                  {t('reg.level')}
-                </label>
-                <select
-                  className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
-                  {...register('currentLevel')}
-                >
-                  <option value={GermanLevel.BEGINNER}>Beginner (Zero German)</option>
-                  <option value={GermanLevel.A1}>A1 — Starter</option>
-                  <option value={GermanLevel.A2}>A2 — Elementary</option>
-                  <option value={GermanLevel.B1}>B1 — Intermediate</option>
-                  <option value={GermanLevel.B2}>B2 — Upper Intermediate</option>
-                  <option value={GermanLevel.UNSURE}>Unsure / Take placement test</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-                  Explanation Language
-                </label>
-                <select
-                  className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
-                  {...register('preferredLanguage')}
-                >
-                  <option value="en">English explanations</option>
-                  <option value="hi">English + Hindi explanations (हिंदी)</option>
-                  <option value="de">Deutsch immersiv (All German)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Learning Goal */}
-            <Input
-              label={t('reg.goal')}
-              placeholder="e.g. Master's in Germany, Goethe-Zertifikat A1, Job Relocation"
-              error={errors.learningGoal?.message}
-              {...register('learningGoal')}
             />
 
             {/* Terms & Consent */}

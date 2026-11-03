@@ -9,6 +9,7 @@ export interface AuthenticatedUser {
   email: string;
   firstName: string;
   lastName: string;
+  phone?: string | null;
   role: UserRole;
   isActive: boolean;
   isEmailVerified: boolean;
@@ -58,6 +59,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
             email: session.user.email,
             firstName: session.user.firstName,
             lastName: session.user.lastName,
+            phone: session.user.phone,
             role: session.user.role as UserRole,
             isActive: session.user.isActive,
             isEmailVerified: session.user.isEmailVerified,
@@ -82,6 +84,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
               email: user.email,
               firstName: user.firstName,
               lastName: user.lastName,
+              phone: user.phone,
               role: user.role,
               isActive: user.isActive,
               isEmailVerified: user.isEmailVerified,

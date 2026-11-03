@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getAdminAnalytics,
   getStudents,
+  reviewStudentRegistration,
   createStudent,
   updateStudent,
   deleteStudent,
@@ -50,6 +51,7 @@ router.get('/analytics', getAdminAnalytics);
 
 // Students CRUD
 router.get('/students', getStudents);
+router.post('/students/:studentId/registration-review', reviewStudentRegistration);
 router.post('/students', createStudent);
 router.put('/students/:studentId', updateStudent);
 router.delete('/students/:studentId', deleteStudent);

@@ -15,8 +15,14 @@ import { validateBody } from '../../middleware/validate.js';
 import { updateProfileSchema } from '@deutschwelt/shared';
 import { getPlacementTest, getPersonalLearningPlan, submitPlacementTest } from './placementController.js';
 import { getNotificationPreferences, updateNotificationPreferences } from './notificationPreferenceController.js';
+import { getRegistrationState, updateRegistrationOnboarding, requestRegistrationApproval } from './registrationController.js';
+import { studentOnboardingSchema } from '@deutschwelt/shared';
 
 const router = Router();
+
+router.get('/registration', requireAuth, getRegistrationState);
+router.patch('/registration', requireAuth, validateBody(studentOnboardingSchema), updateRegistrationOnboarding);
+router.post('/registration/request-approval', requireAuth, requestRegistrationApproval);
 
 router.get('/dashboard', requireAuth, getStudentDashboard);
 router.get('/notifications', requireAuth, getStudentNotifications);

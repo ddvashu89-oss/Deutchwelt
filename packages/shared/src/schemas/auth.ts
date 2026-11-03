@@ -5,8 +5,7 @@ export const registerSchema = z.object({
   firstName: z.string().trim().min(1, 'First name is required').max(50),
   lastName: z.string().trim().min(1, 'Last name is required').max(50),
   email: z.string().trim().email('Invalid email address').toLowerCase(),
-  phone: z.string().trim().min(5, 'Mobile number is required').max(30),
-  address: z.string().trim().min(3, 'Address is required').max(300),
+  phone: z.string().trim().max(30).optional().nullable(),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters long')
@@ -14,12 +13,17 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
     .regex(/[0-9]/, 'Password must contain at least one number'),
-  currentLevel: z.nativeEnum(GermanLevel).default(GermanLevel.A1),
-  learningGoal: z.string().trim().max(250).optional().nullable(),
-  preferredLanguage: z.string().trim().default('en'),
   consentToTerms: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the Terms of Service and Privacy Policy'
   })
+});
+
+export const emailVerificationSchema = z.object({ token: z.string().trim().min(32).max(200) });
+export const studentOnboardingSchema = z.object({
+  phone: z.string().trim().max(30).optional().nullable(),
+  currentLevel: z.nativeEnum(GermanLevel),
+  learningGoal: z.string().trim().min(3).max(250),
+  preferredLanguage: z.enum(['en', 'hi', 'de'])
 });
 
 export const loginSchema = z.object({

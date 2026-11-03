@@ -25,7 +25,7 @@ import {
 export function AdminStudentsPage() {
   const [students, setStudents] = useState<any[]>([]);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'blocked'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'blocked' | 'pending'>('all');
   const [loading, setLoading] = useState(true);
 
   // Add Student Modal State
@@ -54,6 +54,7 @@ export function AdminStudentsPage() {
 
   // Delete Action State
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
 
   const fetchStudents = async () => {
     try {
@@ -189,6 +190,21 @@ export function AdminStudentsPage() {
     }
   };
 
+  const handleReviewRegistration = async (student: any, decision: 'APPROVE' | 'REJECT') => {
+    const reviewNote = decision === 'REJECT' ? window.prompt('Tell the student what they need to update:')?.trim() : '';
+    if (decision === 'REJECT' && (!reviewNote || reviewNote.length < 3)) return;
+    if (decision === 'APPROVE' && !window.confirm(`Approve ${student.firstName} ${student.lastName}'s registration?`)) return;
+    setReviewingId(student.id);
+    try {
+      await api.post(`/admin/students/${student.id}/registration-review`, { decision, reviewNote });
+      await fetchStudents();
+    } catch (error: any) {
+      window.alert(error.message || 'Could not review this registration.');
+    } finally {
+      setReviewingId(null);
+    }
+  };
+
   const exportCSV = () => {
     const headers = ['ID,First Name,Last Name,Email,Phone,Address,Level,Streak,Joined Date,Status'];
     const rows = students.map(s =>
@@ -273,6 +289,13 @@ export function AdminStudentsPage() {
             <span className="w-2 h-2 rounded-full bg-rose-500" />
             Blocked ({students.filter(s => !s.isActive).length})
           </button>
+          <button
+            type="button"
+            onClick={() => setStatusFilter('pending')}
+            className={`px-3 py-1.5 rounded-lg transition-colors ${statusFilter === 'pending' ? 'bg-white text-amber-700 shadow-xs' : 'text-gray-500 hover:text-dark'}`}
+          >
+            Needs approval ({students.filter(s => s.studentProfile?.registrationStatus === 'PENDING_APPROVAL').length})
+          </button>
         </div>
       </div>
 
@@ -299,6 +322,7 @@ export function AdminStudentsPage() {
                   .filter(s => {
                     if (statusFilter === 'active') return s.isActive;
                     if (statusFilter === 'blocked') return !s.isActive;
+                    if (statusFilter === 'pending') return s.studentProfile?.registrationStatus === 'PENDING_APPROVAL';
                     return true;
                   })
                   .map(s => (
@@ -315,6 +339,11 @@ export function AdminStudentsPage() {
                           {!s.isActive && (
                             <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded-md bg-rose-100 text-rose-800">
                               Blocked
+                            </span>
+                          )}
+                          {s.studentProfile?.registrationStatus && s.studentProfile.registrationStatus !== 'APPROVED' && (
+                            <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-800">
+                              {s.studentProfile.registrationStatus.replace('_', ' ')}
                             </span>
                           )}
                         </div>
@@ -375,6 +404,16 @@ export function AdminStudentsPage() {
                     {/* Action Buttons: Block/Unblock, Edit & Delete */}
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
+                        {s.studentProfile?.registrationStatus === 'PENDING_APPROVAL' && (
+                          <>
+                            <button onClick={() => handleReviewRegistration(s, 'APPROVE')} disabled={reviewingId === s.id} className="rounded-lg border border-emerald-200 bg-emerald-50 p-1.5 text-emerald-700 hover:bg-emerald-600 hover:text-white disabled:opacity-50" title="Approve registration">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                            </button>
+                            <button onClick={() => handleReviewRegistration(s, 'REJECT')} disabled={reviewingId === s.id} className="rounded-lg border border-rose-200 bg-rose-50 p-1.5 text-rose-700 hover:bg-rose-600 hover:text-white disabled:opacity-50" title="Request changes">
+                              <XCircle className="h-3.5 w-3.5" />
+                            </button>
+                          </>
+                        )}
                         <button
                           onClick={() => handleToggleBlock(s.id, `${s.firstName} ${s.lastName}`, s.isActive)}
                           className={`p-1.5 rounded-lg border transition-colors ${

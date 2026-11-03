@@ -99,6 +99,13 @@ enum DriveAssetType {
   TEACHER_MATERIAL
 }
 
+enum StudentRegistrationStatus {
+  ONBOARDING
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+}
+
 model User {
   id               String    @id @default(uuid())
   email            String    @unique
@@ -109,6 +116,7 @@ model User {
   role             UserRole  @default(STUDENT)
   isActive         Boolean   @default(true)
   isEmailVerified  Boolean   @default(false)
+  termsAcceptedAt  DateTime?
   avatarUrl        String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
@@ -152,6 +160,11 @@ model StudentProfile {
   dailyGoalMinutes  Int         @default(20)
   streakCount       Int         @default(0)
   lastActiveDate    DateTime?
+  registrationStatus StudentRegistrationStatus @default(APPROVED)
+  registrationRequestedAt DateTime?
+  registrationReviewedAt DateTime?
+  registrationReviewedById String?
+  registrationReviewNote String? @db.Text
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 

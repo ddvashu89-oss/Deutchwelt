@@ -9,6 +9,7 @@ export interface User {
   lastName: string;
   phone?: string | null;
   address?: string | null;
+  isEmailVerified?: boolean;
   role: UserRole;
   studentProfile?: any;
   teacherProfile?: any;
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (res.success && res.user) {
       setUser(res.user);
     }
+    return res;
   };
 
   const logout = async () => {
