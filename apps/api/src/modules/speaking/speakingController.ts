@@ -6,6 +6,8 @@ import { AppError } from '../../middleware/errorHandler.js';
 import { discardTemporaryUpload, persistUploadedFile } from '../../services/uploadStorage.js';
 import { trashDriveFile } from '../../services/googleDrive.js';
 import fs from 'node:fs/promises';
+import { env } from '../../config/env.js';
+import { generateGeminiText } from '../../services/gemini.js';
 
 export async function getSpeakingPrompts(req: Request, res: Response, next: NextFunction) {
   try {
@@ -168,61 +170,33 @@ export async function analyzeSpeakingAudio(req: Request, res: Response, next: Ne
     // Analysis does not retain the recording; remove the temporary multipart file.
     if (file?.path) await fs.unlink(file.path).catch(() => undefined);
 
-    const prompt = store.speakingPrompts.find(p => p.id === promptId);
-    const targetText = prompt?.sampleAnswerDe || 'Guten Tag! Ich lerne Deutsch.';
-
-    // Base score calculation with realistic pedagogical breakdown
-    const audioDuration = durationSeconds ? parseInt(durationSeconds, 10) : 15;
-
-    // Word-by-word phonetic analysis based on German phonological rules
-    const targetWords = targetText.replace(/[.,!?;:]/g, '').split(/\s+/).slice(0, 12);
-
-    const wordFeedback = targetWords.map((word, idx) => {
-      const lower = word.toLowerCase();
-      // Words with tricky German sounds (Umlauts, ch, ie/ei, Auslautverhärtung)
-      const hasUmlautOrSpecial = /[äöüß]|ch|sch|sp|st|ei|ie|eu/.test(lower);
-      const isDifficult = hasUmlautOrSpecial && idx % 3 === 0;
-
-      return {
-        word,
-        status: isDifficult ? 'needs_practice' : (idx % 2 === 0 ? 'mastered' : 'acceptable'),
-        score: isDifficult ? 78 : (idx % 2 === 0 ? 98 : 91),
-        phoneticTip: isDifficult
-          ? lower.includes('ch')
-            ? 'Pay attention to the soft ich-Laut [ç] — tongue pressed lightly against palate.'
-            : lower.includes('ö') || lower.includes('ü')
-            ? 'Round your lips tightly into an O-shape while voicing "ee" for clean umlauts.'
-            : 'Articulate the consonants crisply at the end of the syllable.'
-          : 'Clean and natural pronunciation.'
-      };
-    });
-
-    const masteredCount = wordFeedback.filter(w => w.status === 'mastered').length;
-    const pronunciationScore = Math.min(98, Math.max(82, Math.round(85 + (masteredCount / wordFeedback.length) * 12)));
-    const fluencyScore = Math.min(96, Math.max(80, Math.round(82 + (Math.min(audioDuration, 30) / 30) * 12)));
-    const grammarScore = 94;
-    const overallScore = Math.round((pronunciationScore * 0.5) + (fluencyScore * 0.3) + (grammarScore * 0.2));
-
-    const insights = [
-      `CEFR Oral Proficiency: ${prompt?.level || 'A1'} Standard (${overallScore}% accuracy).`,
-      'Excellent articulation of vowels and initial consonants.',
-      'Sentence melody (Satzmelodie) is clear with natural German cadences.',
-      'Key Tip: Keep practicing the distinction between "ie" (long /i:/) and "ei" (diphthong /aɪ/).'
-    ];
+    if (!req.user) return next(new AppError('Unauthorized', 401));
+    if (!env.GEMINI_API_KEY) return next(new AppError('AI speaking feedback is not configured yet. You can still submit your response to your teacher.', 503, 'AI_NOT_CONFIGURED'));
+    const transcript = typeof transcriptText === 'string' ? transcriptText.trim().slice(0, 1200) : '';
+    if (!transcript) return next(new AppError('Enter the words you spoke so the tutor can give accurate transcript feedback. Audio alone is not scored.', 400));
+    const prompt = isDatabaseConnected
+      ? await prisma.speakingPrompt.findUnique({ where: { id: promptId } })
+      : store.speakingPrompts.find(item => item.id === promptId);
+    const targetText = prompt?.sampleAnswerDe || prompt?.scenario || '';
+    if (!targetText) return next(new AppError('Speaking prompt not found.', 404));
+    const raw = await generateGeminiText([{ role: 'user', text: `Target phrase: ${targetText}\nLearner transcript: ${transcript}` }], 'You are a patient German tutor. You cannot hear audio. Do not claim to score pronunciation, accent or fluency. Return JSON only with overallScore integer 0-100 for transcript match and language accuracy, correctedTranscript string, strengths array of short strings, practiceTips array of short strings, nextPhrase string.', true);
+    let feedback: any;
+    try { feedback = JSON.parse(raw); } catch { throw new Error('AI feedback could not be formatted. Please try again.'); }
+    const overallScore = Number(feedback.overallScore);
 
     return res.json({
       success: true,
       analysis: {
-        overallScore,
-        pronunciationScore,
-        fluencyScore,
-        grammarScore,
+        overallScore: Number.isFinite(overallScore) ? Math.max(0, Math.min(100, Math.round(overallScore))) : null,
         targetPhrase: targetText,
-        detectedSpeech: transcriptText || 'Recognized high-fidelity German audio input',
-        wordFeedback,
-        insights,
+        detectedSpeech: transcript,
+        correctedTranscript: String(feedback.correctedTranscript || transcript).slice(0, 1200),
+        strengths: Array.isArray(feedback.strengths) ? feedback.strengths.slice(0, 4) : [],
+        practiceTips: Array.isArray(feedback.practiceTips) ? feedback.practiceTips.slice(0, 4) : [],
+        nextPhrase: String(feedback.nextPhrase || '').slice(0, 300),
+        evaluationType: 'Transcript feedback only; acoustic pronunciation was not measured.',
         audioUrl: null,
-        durationSeconds: audioDuration,
+        durationSeconds: durationSeconds ? Math.max(0, parseInt(durationSeconds, 10)) : null,
         evaluatedAt: new Date().toISOString()
       }
     });

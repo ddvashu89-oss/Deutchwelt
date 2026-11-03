@@ -37,6 +37,18 @@ export function AdminEnquiriesPage() {
     }
   };
 
+  const handleUpdateDetails = async (enq: any, form: HTMLFormElement) => {
+    const data = new FormData(form);
+    try {
+      await api.patch(`/admin/enquiries/${enq.id}`, {
+        adminNotes: String(data.get('adminNotes') || ''),
+        priority: String(data.get('priority') || 'NORMAL'),
+        followUpAt: String(data.get('followUpAt') || '') || null
+      });
+      await fetchEnquiries();
+    } catch (e) { console.error('Error saving enquiry follow-up:', e); }
+  };
+
   return (
     <div className="space-y-8 pb-16">
       <div className="space-y-1">
@@ -60,6 +72,7 @@ export function AdminEnquiriesPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-bold text-base text-navy">{enq.name}</span>
                     <Badge variant="outline" className="text-[10px]">Target: {enq.level}</Badge>
+                    <Badge variant={enq.priority === 'HIGH' ? 'germanRed' : 'outline'} className="text-[10px]">{enq.priority || 'NORMAL'} priority</Badge>
                     <Badge variant={enq.status === 'NEW' ? 'germanRed' : enq.status === 'CONTACTED' ? 'warning' : 'success'} className="text-[10px]">
                       {enq.status}
                     </Badge>
@@ -96,6 +109,12 @@ export function AdminEnquiriesPage() {
                   <span className="font-bold">Staff Note: </span>{enq.adminNotes}
                 </p>
               )}
+              <form onSubmit={e => { e.preventDefault(); void handleUpdateDetails(enq, e.currentTarget); }} className="grid gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:grid-cols-2">
+                <label className="text-xs font-semibold text-dark">Priority<select name="priority" defaultValue={enq.priority || 'NORMAL'} className="mt-1 block w-full rounded-lg border border-gray-300 bg-white p-2"><option value="LOW">Low</option><option value="NORMAL">Normal</option><option value="HIGH">High</option></select></label>
+                <label className="text-xs font-semibold text-dark">Follow up on<input name="followUpAt" type="datetime-local" defaultValue={enq.followUpAt ? new Date(enq.followUpAt).toISOString().slice(0,16) : ''} className="mt-1 block w-full rounded-lg border border-gray-300 bg-white p-2"/></label>
+                <label className="text-xs font-semibold text-dark sm:col-span-2">Staff notes<textarea name="adminNotes" rows={2} defaultValue={enq.adminNotes || ''} maxLength={4000} className="mt-1 block w-full rounded-lg border border-gray-300 bg-white p-2" placeholder="Call outcome or next step"/></label>
+                <Button type="submit" size="sm" className="sm:col-span-2">Save follow-up</Button>
+              </form>
             </div>
           ))}
         </div>

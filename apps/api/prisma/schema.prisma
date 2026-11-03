@@ -128,6 +128,14 @@ model User {
   notifications           Notification[]
   auditLogs               AuditLog[]
   driveAssets             DriveAsset[]
+  placementAttempts       PlacementAttempt[]
+  courseCertificates      CourseCertificate[]
+  paymentOrders           PaymentOrder[]
+  discussionPosts         DiscussionPost[]
+  discussionReplies       DiscussionReply[]
+  classAttendance         LiveClassAttendance[] @relation("AttendanceStudent")
+  attendanceMarked        LiveClassAttendance[] @relation("AttendanceMarker")
+  notificationPreference  NotificationPreference?
 
   @@index([email])
   @@index([role])
@@ -162,6 +170,7 @@ model TeacherProfile {
   assignmentsCreated    Assignment[]
   batchAssignments      TeacherBatchAssignment[]
   speakingEvaluated     SpeakingAttempt[]        @relation("EvaluatedSpeaking")
+  liveClasses           LiveClass[]
 }
 
 model Session {
@@ -216,6 +225,7 @@ model Course {
   thumbnailUrl       String?
   status             PublicationStatus @default(DRAFT)
   order              Int               @default(0)
+  pricePaise         Int               @default(0)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
 
@@ -224,6 +234,8 @@ model Course {
   prerequisites      CoursePrerequisite[] @relation("CoursePrerequisites")
   prerequisiteFor    CoursePrerequisite[] @relation("PrerequisiteCourse")
   assignments        Assignment[]
+  certificates       CourseCertificate[]
+  paymentOrders      PaymentOrder[]
 
   @@index([level])
   @@index([status])
@@ -590,6 +602,7 @@ model TeacherBatch {
   enrollments  Enrollment[]
   assignments  Assignment[]
   driveAssets  DriveAsset[]
+  liveClasses  LiveClass[]
 }
 
 model DriveAsset {
@@ -614,7 +627,6 @@ model DriveAsset {
 
   owner User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   batch TeacherBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
-
   @@index([ownerId])
   @@index([batchId, type])
 }
@@ -665,6 +677,133 @@ model Notification {
   @@index([isRead])
 }
 
+model NotificationPreference {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  emailReminders Boolean  @default(false)
+  whatsappReminders Boolean @default(false)
+  reminderPhone  String?
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PlacementAttempt {
+  id              String      @id @default(uuid())
+  userId          String
+  recommendedLevel GermanLevel
+  score           Int
+  maxScore        Int
+  answerSummary   Json
+  createdAt       DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model CourseCertificate {
+  id                 String   @id @default(uuid())
+  certificateNumber  String   @unique
+  verificationCode  String   @unique
+  userId             String
+  courseId           String
+  gradeScore         Float
+  issuedAt           DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+model LiveClassAttendance {
+  id          String   @id @default(uuid())
+  sessionId   String
+  studentId   String
+  status      String   @default("PRESENT")
+  markedById  String?
+  markedAt    DateTime @default(now())
+
+  session  LiveClass @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student  User       @relation("AttendanceStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  markedBy User?      @relation("AttendanceMarker", fields: [markedById], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, studentId])
+  @@index([studentId, markedAt])
+}
+
+model LiveClass {
+  id               String   @id @default(uuid())
+  batchId          String
+  teacherProfileId String
+  title            String   @db.VarChar(180)
+  description      String?  @db.Text
+  startsAt         DateTime
+  durationMinutes  Int      @default(45)
+  meetingUrl       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  batch    TeacherBatch   @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  teacher  TeacherProfile @relation(fields: [teacherProfileId], references: [id], onDelete: Cascade)
+  attendance LiveClassAttendance[]
+
+  @@index([batchId, startsAt])
+  @@index([teacherProfileId, startsAt])
+}
+
+model PaymentOrder {
+  id                String   @id @default(uuid())
+  userId            String
+  courseId          String
+  amountPaise       Int
+  currency          String   @default("INR")
+  providerOrderId   String   @unique
+  providerPaymentId String?  @unique
+  status            String   @default("CREATED")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([courseId])
+}
+
+model DiscussionPost {
+  id        String   @id @default(uuid())
+  authorId  String
+  title     String   @db.VarChar(180)
+  body      String   @db.Text
+  category  String   @default("GENERAL")
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author  User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  replies DiscussionReply[]
+
+  @@index([createdAt])
+  @@index([category])
+}
+
+model DiscussionReply {
+  id         String   @id @default(uuid())
+  postId     String
+  authorId   String
+  body       String   @db.Text
+  instructorAnswer Boolean @default(false)
+  createdAt  DateTime @default(now())
+
+  post   DiscussionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+}
+
 model ContactEnquiry {
   id         String        @id @default(uuid())
   name       String
@@ -674,11 +813,14 @@ model ContactEnquiry {
   message    String        @db.Text
   status     EnquiryStatus @default(NEW)
   adminNotes String?       @db.Text
+  followUpAt DateTime?
+  priority   String        @default("NORMAL")
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
   @@index([status])
   @@index([email])
+  @@index([followUpAt])
 }
 
 model SiteSetting {

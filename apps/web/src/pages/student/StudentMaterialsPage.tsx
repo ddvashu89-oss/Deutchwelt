@@ -27,6 +27,24 @@ export function StudentMaterialsPage() {
   const [materials, setMaterials] = useState<any[]>([]);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [selectedLecture, setSelectedLecture] = useState<any | null>(null);
+  const [offlineSaved, setOfflineSaved] = useState<Record<string, boolean>>({});
+  const [offlineError, setOfflineError] = useState('');
+
+  useEffect(() => {
+    try { setOfflineSaved(JSON.parse(localStorage.getItem('dw-offline-materials') || '{}')); } catch { setOfflineSaved({}); }
+  }, []);
+
+  async function saveOffline(material: any) {
+    setOfflineError('');
+    try {
+      const response = await fetch(material.fileUrl, { credentials: 'include' });
+      if (!response.ok) throw new Error('This file could not be downloaded for offline use.');
+      const cache = await caches.open('deutschwelt-private-materials-v1');
+      await cache.put(new Request(new URL(material.fileUrl, location.origin).href), response);
+      const next = { ...offlineSaved, [material.id]: true }; setOfflineSaved(next);
+      localStorage.setItem('dw-offline-materials', JSON.stringify(next));
+    } catch (e: any) { setOfflineError(e.message || 'Offline saving is not available in this browser.'); }
+  }
 
   useEffect(() => {
     async function loadStudentBatchResources() {
@@ -72,6 +90,7 @@ export function StudentMaterialsPage() {
       </div>
 
       {/* Tabs */}
+      {offlineError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{offlineError}</p>}
       <div className="flex items-center gap-2 border-b border-gray-200">
         <button
           onClick={() => setActiveTab('lectures')}
@@ -248,7 +267,7 @@ export function StudentMaterialsPage() {
                     </Badge>
                   </div>
 
-                  <div className="pt-2 border-t border-gray-100">
+                  <div className="pt-2 border-t border-gray-100 space-y-2">
                     <a
                       href={mat.fileUrl}
                       download
@@ -258,6 +277,9 @@ export function StudentMaterialsPage() {
                     >
                       <Download className="w-3.5 h-3.5" /> Download Resource
                     </a>
+                    <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => saveOffline(mat)} disabled={offlineSaved[mat.id]}>
+                      {offlineSaved[mat.id] ? 'Saved for offline use' : 'Save offline'}
+                    </Button>
                   </div>
                 </div>
               ))}

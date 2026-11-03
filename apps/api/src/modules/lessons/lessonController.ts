@@ -145,9 +145,16 @@ export async function markLessonComplete(req: Request, res: Response, next: Next
     }
 
     const { lessonId } = req.params;
-    const { timeSpentSeconds = 600 } = req.body;
+    const requestedTime = Number(req.body?.timeSpentSeconds ?? 600);
+    const timeSpentSeconds = Number.isFinite(requestedTime) ? Math.max(0, Math.min(14400, Math.floor(requestedTime))) : 600;
 
     if (isDatabaseConnected) {
+      const lesson = await prisma.lesson.findUnique({ where: { id: lessonId }, include: { unit: { select: { courseId: true } } } });
+      if (!lesson) return next(new AppError('Lesson not found.', 404));
+      const enrollment = await prisma.enrollment.findUnique({ where: { userId_courseId: { userId: req.user.id, courseId: lesson.unit.courseId } } });
+      if (!enrollment || !['ACTIVE', 'COMPLETED'].includes(enrollment.status)) {
+        return next(new AppError('Enroll in this course to save lesson progress.', 403));
+      }
       const progress = await prisma.lessonProgress.upsert({
         where: {
           userId_lessonId: {
@@ -169,7 +176,17 @@ export async function markLessonComplete(req: Request, res: Response, next: Next
         }
       });
 
-      return res.json({ success: true, message: 'Lesson marked as completed!', progress });
+      const [totalLessons, completedLessons] = await Promise.all([
+        prisma.lesson.count({ where: { unit: { courseId: lesson.unit.courseId }, status: 'PUBLISHED' } }),
+        prisma.lessonProgress.count({ where: { userId: req.user.id, isCompleted: true, lesson: { unit: { courseId: lesson.unit.courseId } } } })
+      ]);
+      const progressPercentage = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+      await prisma.enrollment.update({
+        where: { id: enrollment.id },
+        data: { progressPercentage, status: progressPercentage >= 100 ? 'COMPLETED' : 'ACTIVE', completedAt: progressPercentage >= 100 ? new Date() : null }
+      });
+
+      return res.json({ success: true, message: 'Lesson marked as completed!', progress, progressPercentage });
     } else {
       let progress = store.lessonProgress.find(lp => lp.userId === req.user?.id && lp.lessonId === lessonId);
       if (progress) {

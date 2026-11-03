@@ -32,6 +32,10 @@ import { AssignmentsPage } from './pages/student/AssignmentsPage.js';
 import { StudentProfilePage } from './pages/student/StudentProfilePage.js';
 import { StudentMaterialsPage } from './pages/student/StudentMaterialsPage.js';
 import { StudentCoursesPage } from './pages/student/StudentCoursesPage.js';
+import { StudentSchedulePage } from './pages/student/StudentSchedulePage.js';
+import { PlacementTestPage } from './pages/student/PlacementTestPage.js';
+import { AiTutorPage } from './pages/student/AiTutorPage.js';
+import { CommunityPage } from './pages/community/CommunityPage.js';
 
 // Teacher Pages
 import { TeacherDashboard } from './pages/teacher/TeacherDashboard.js';
@@ -39,6 +43,7 @@ import { TeacherSubmissionsPage } from './pages/teacher/TeacherSubmissionsPage.j
 import { TeacherBatchesPage } from './pages/teacher/TeacherBatchesPage.js';
 import { TeacherAssignmentCreator } from './pages/teacher/TeacherAssignmentCreator.js';
 import { TeacherMaterialsPage } from './pages/teacher/TeacherMaterialsPage.js';
+import { TeacherSchedulePage } from './pages/teacher/TeacherSchedulePage.js';
 
 // Admin Pages
 import { AdminDashboard } from './pages/admin/AdminDashboard.js';
@@ -127,6 +132,10 @@ export function App() {
               <Route path="speaking" element={<SpeakingLabPage />} />
               <Route path="assignments" element={<AssignmentsPage />} />
               <Route path="profile" element={<StudentProfilePage />} />
+              <Route path="schedule" element={<StudentSchedulePage />} />
+              <Route path="placement-test" element={<PlacementTestPage />} />
+              <Route path="ai-tutor" element={<AiTutorPage />} />
+              <Route path="community" element={<CommunityPage />} />
             </Route>
 
             {/* Interactive Lesson Player */}
@@ -154,6 +163,8 @@ export function App() {
               <Route path="batches" element={<TeacherBatchesPage />} />
               <Route path="materials" element={<TeacherMaterialsPage />} />
               <Route path="assignments/new" element={<TeacherAssignmentCreator />} />
+              <Route path="schedule" element={<TeacherSchedulePage />} />
+              <Route path="community" element={<CommunityPage />} />
             </Route>
 
             {/* Admin Protected Routes */}

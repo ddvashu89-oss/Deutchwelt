@@ -48,24 +48,27 @@ export function DashboardLayout() {
   // Student Navigation mapped to Donezo menu structure
   const studentMenu = [
     { label: t('dash.menu.dashboard'), href: '/student/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/student/courses', icon: CheckSquare, badge: '12+' },
-    { label: t('dash.menu.calendar'), href: '/student/materials', icon: Calendar },
-    { label: t('dash.menu.analytics'), href: '/student/vocabulary', icon: BarChart2 },
-    { label: t('dash.menu.team'), href: '/student/speaking', icon: Users },
+    { label: 'My courses', href: '/student/courses', icon: BookOpen },
+    { label: 'Live schedule', href: '/student/schedule', icon: Calendar },
+    { label: 'Placement & plan', href: '/student/placement-test', icon: GraduationCap },
+    { label: 'AI tutor', href: '/student/ai-tutor', icon: Sparkles },
+    { label: 'Community Q&A', href: '/student/community', icon: Users },
+    { label: 'Speaking lab', href: '/student/speaking', icon: Mic },
   ];
 
   const teacherMenu = [
     { label: t('dash.menu.dashboard'), href: '/teacher/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/teacher/submissions', icon: CheckSquare, badge: '5' },
-    { label: t('dash.menu.calendar'), href: '/teacher/materials', icon: Calendar },
+    { label: t('dash.menu.tasks'), href: '/teacher/submissions', icon: CheckSquare },
+    { label: 'Class schedule', href: '/teacher/schedule', icon: Calendar },
     { label: t('dash.menu.analytics'), href: '/teacher/assignments/new', icon: BarChart2 },
     { label: t('dash.menu.team'), href: '/teacher/batches', icon: Users },
+    { label: 'Community Q&A', href: '/teacher/community', icon: Users },
   ];
 
   const adminMenu = [
     { label: t('dash.menu.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
     { label: t('dash.menu.tasks'), href: '/admin/courses', icon: CheckSquare },
-    { label: t('dash.menu.calendar'), href: '/admin/enquiries', icon: Calendar, badge: '3' },
+    { label: t('dash.menu.calendar'), href: '/admin/enquiries', icon: Calendar },
     { label: t('dash.menu.analytics'), href: '/admin/audit-logs', icon: BarChart2 },
     { label: t('dash.menu.team'), href: '/admin/students', icon: Users },
   ];
@@ -75,7 +78,7 @@ export function DashboardLayout() {
     { label: t('dash.menu.help'), href: '/faq', icon: HelpCircle },
   ];
 
-  const currentMenu = isAdmin ? adminMenu : isTeacher ? teacherMenu : studentMenu;
+  const currentMenu: Array<{ label: string; href: string; icon: React.ComponentType<any>; badge?: string }> = isAdmin ? adminMenu : isTeacher ? teacherMenu : studentMenu;
   const dashboardRoot = isAdmin ? '/admin' : isTeacher ? '/teacher' : '/student';
   const isActivePath = (href: string) => {
     const currentPath = location.pathname === dashboardRoot ? `${dashboardRoot}/dashboard` : location.pathname;

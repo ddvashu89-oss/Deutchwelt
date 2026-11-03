@@ -19,7 +19,10 @@ export async function getAdminAnalytics(req: Request, res: Response, next: NextF
         totalCompletedLessons,
         exerciseAttempts,
         enquiriesCount,
-        recentUsers
+        recentUsers,
+        activeStudentsLast30Days,
+        levelGroups,
+        enrollmentGroups
       ] = await Promise.all([
         prisma.user.count({ where: { role: UserRole.STUDENT } }),
         prisma.user.count({ where: { role: UserRole.TEACHER } }),
@@ -31,12 +34,15 @@ export async function getAdminAnalytics(req: Request, res: Response, next: NextF
         prisma.user.findMany({
           where: { createdAt: { gte: thirtyDaysAgo } },
           select: { createdAt: true }
-        })
+        }),
+        prisma.user.count({ where: { role: UserRole.STUDENT, OR: [{ lessonProgresses: { some: { updatedAt: { gte: thirtyDaysAgo } } } }, { exerciseAttempts: { some: { startedAt: { gte: thirtyDaysAgo } } } }] } }),
+        prisma.studentProfile.groupBy({ by: ['currentLevel'], _count: { _all: true } }),
+        prisma.enrollment.groupBy({ by: ['courseId'], _count: { _all: true } })
       ]);
 
       const avgScore = exerciseAttempts.length > 0
         ? Math.round(exerciseAttempts.reduce((acc, c) => acc + c.percentage, 0) / exerciseAttempts.length)
-        : 85;
+        : 0;
 
       const dateMap: Record<string, number> = {};
       for (let i = 6; i >= 0; i--) {
@@ -52,18 +58,16 @@ export async function getAdminAnalytics(req: Request, res: Response, next: NextF
 
       const registrationTrend = Object.entries(dateMap).map(([date, count]) => ({ date, count }));
 
-      const levelDistribution = [
-        { level: 'A1 Beginner', count: Math.max(1, Math.round(totalStudents * 0.45)) },
-        { level: 'A2 Elementary', count: Math.max(1, Math.round(totalStudents * 0.30)) },
-        { level: 'B1 Intermediate', count: Math.max(0, Math.round(totalStudents * 0.18)) },
-        { level: 'B2 Advanced', count: Math.max(0, Math.round(totalStudents * 0.07)) }
-      ];
+      const levelLabel: Record<string, string> = { A1: 'A1 Beginner', A2: 'A2 Elementary', B1: 'B1 Intermediate', B2: 'B2 Upper Intermediate' };
+      const [enrolledCourses] = await Promise.all([prisma.course.findMany({ where: { id: { in: enrollmentGroups.map((group: any) => group.courseId) } }, select: { id: true, title: true } })]);
+      const courseTitles = new Map(enrolledCourses.map(course => [course.id, course.title]));
+      const levelDistribution = levelGroups.map((group: any) => ({ level: levelLabel[group.currentLevel] || group.currentLevel, count: group._count._all }));
 
       return res.json({
         success: true,
         analytics: {
           totalStudents,
-          activeStudentsLast30Days: totalStudents,
+          activeStudentsLast30Days,
           totalTeachers,
           totalCourses,
           totalEnrollments,
@@ -72,11 +76,7 @@ export async function getAdminAnalytics(req: Request, res: Response, next: NextF
           enquiriesCount,
           registrationTrend,
           levelDistribution,
-          courseEnrollmentBreakdown: [
-            { courseTitle: 'Deutsch A1: Beginner Intensiv', enrollments: Math.max(1, Math.round(totalEnrollments * 0.55)) },
-            { courseTitle: 'Deutsch A2: Elementary Fluency', enrollments: Math.max(1, Math.round(totalEnrollments * 0.30)) },
-            { courseTitle: 'Deutsch B1: Intermediate', enrollments: Math.max(0, Math.round(totalEnrollments * 0.15)) }
-          ]
+          courseEnrollmentBreakdown: enrollmentGroups.map((group: any) => ({ courseTitle: courseTitles.get(group.courseId) || 'Course', enrollments: group._count._all }))
         }
       });
     } else {
@@ -86,34 +86,17 @@ export async function getAdminAnalytics(req: Request, res: Response, next: NextF
       return res.json({
         success: true,
         analytics: {
-          totalStudents: students.length || 18,
-          activeStudentsLast30Days: students.length || 15,
-          totalTeachers: teachers.length || 3,
-          totalCourses: store.courses.length || 4,
-          totalEnrollments: store.enrollments.length || 24,
-          totalCompletedLessons: store.lessonProgress.length || 42,
-          averageExerciseScore: 89,
+          totalStudents: students.length,
+          activeStudentsLast30Days: new Set([...store.lessonProgress.filter(p => new Date(p.updatedAt || p.completedAt || 0).getTime() >= Date.now() - 30 * 86400000).map(p => p.userId), ...store.attempts.filter(a => new Date(a.startedAt).getTime() >= Date.now() - 30 * 86400000).map(a => a.userId)]).size,
+          totalTeachers: teachers.length,
+          totalCourses: store.courses.length,
+          totalEnrollments: store.enrollments.length,
+          totalCompletedLessons: store.lessonProgress.filter(progress => progress.isCompleted).length,
+          averageExerciseScore: store.attempts.length ? Math.round(store.attempts.reduce((sum, attempt) => sum + attempt.percentage, 0) / store.attempts.length) : 0,
           enquiriesCount: store.enquiries.length,
-          registrationTrend: [
-            { date: 'Oct 13', count: 2 },
-            { date: 'Oct 14', count: 4 },
-            { date: 'Oct 15', count: 3 },
-            { date: 'Oct 16', count: 6 },
-            { date: 'Oct 17', count: 5 },
-            { date: 'Oct 18', count: 8 },
-            { date: 'Oct 19', count: 4 }
-          ],
-          levelDistribution: [
-            { level: 'A1 Beginner', count: 12 },
-            { level: 'A2 Elementary', count: 6 },
-            { level: 'B1 Intermediate', count: 4 },
-            { level: 'B2 Advanced', count: 2 }
-          ],
-          courseEnrollmentBreakdown: [
-            { courseTitle: 'Deutsch A1: Complete Beginner to Breakthrough', enrollments: 14 },
-            { courseTitle: 'Deutsch A2: Elementary Fluency & Real-World Dialogues', enrollments: 7 },
-            { courseTitle: 'Deutsch B1: Independent Communication', enrollments: 3 }
-          ]
+          registrationTrend: [],
+          levelDistribution: [],
+          courseEnrollmentBreakdown: []
         }
       });
     }
@@ -676,6 +659,7 @@ export async function getAdminCourses(req: Request, res: Response, next: NextFun
 export async function createCourse(req: Request, res: Response, next: NextFunction) {
   try {
     const { slug, title, description, level, learningObjectives, estimatedHours, thumbnailUrl, status, order } = req.body;
+    const pricePaise = Number.isInteger(Number(req.body?.pricePaise)) ? Math.max(0, Math.min(100000000, Number(req.body.pricePaise))) : 0;
 
     if (isDatabaseConnected) {
       const course = await prisma.course.create({
@@ -688,7 +672,8 @@ export async function createCourse(req: Request, res: Response, next: NextFuncti
           estimatedHours: Number(estimatedHours) || 40,
           thumbnailUrl,
           status: status || PublicationStatus.PUBLISHED,
-          order: Number(order) || 0
+          order: Number(order) || 0,
+          pricePaise
         }
       });
 
@@ -713,6 +698,7 @@ export async function createCourse(req: Request, res: Response, next: NextFuncti
         thumbnailUrl,
         status: status || PublicationStatus.PUBLISHED,
         order: Number(order) || 0,
+        pricePaise,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -728,6 +714,7 @@ export async function updateCourse(req: Request, res: Response, next: NextFuncti
   try {
     const { courseId } = req.params;
     const { title, slug, description, level, estimatedHours, status, order } = req.body;
+    const pricePaise = req.body?.pricePaise !== undefined ? Math.max(0, Math.min(100000000, Math.round(Number(req.body.pricePaise) || 0))) : undefined;
 
     if (isDatabaseConnected) {
       const course = await prisma.course.update({
@@ -739,7 +726,8 @@ export async function updateCourse(req: Request, res: Response, next: NextFuncti
           level,
           estimatedHours: estimatedHours !== undefined ? Number(estimatedHours) : undefined,
           status,
-          order: order !== undefined ? Number(order) : undefined
+          order: order !== undefined ? Number(order) : undefined,
+          pricePaise
         }
       });
       return res.json({ success: true, message: 'Course updated successfully.', course });
@@ -754,6 +742,7 @@ export async function updateCourse(req: Request, res: Response, next: NextFuncti
       if (estimatedHours !== undefined) course.estimatedHours = Number(estimatedHours);
       if (status !== undefined) course.status = status;
       if (order !== undefined) course.order = Number(order);
+      if (pricePaise !== undefined) course.pricePaise = pricePaise;
       course.updatedAt = new Date().toISOString();
 
       return res.json({ success: true, message: 'Course updated successfully.', course });
@@ -859,14 +848,16 @@ export async function getAdminEnquiries(req: Request, res: Response, next: NextF
 export async function updateEnquiryStatus(req: Request, res: Response, next: NextFunction) {
   try {
     const { enquiryId } = req.params;
-    const { status, adminNotes } = req.body;
+    const { status, adminNotes, followUpAt, priority } = req.body;
 
     if (isDatabaseConnected) {
       const enquiry = await prisma.contactEnquiry.update({
         where: { id: enquiryId },
         data: {
           status,
-          adminNotes: adminNotes !== undefined ? adminNotes : undefined
+          adminNotes: adminNotes !== undefined ? adminNotes : undefined,
+          followUpAt: followUpAt !== undefined ? (followUpAt ? new Date(followUpAt) : null) : undefined,
+          priority: priority !== undefined && ['LOW', 'NORMAL', 'HIGH'].includes(priority) ? priority : undefined
         }
       });
       return res.json({ success: true, enquiry });
@@ -876,6 +867,8 @@ export async function updateEnquiryStatus(req: Request, res: Response, next: Nex
 
       enquiry.status = status;
       if (adminNotes !== undefined) enquiry.adminNotes = adminNotes;
+      if (followUpAt !== undefined) enquiry.followUpAt = followUpAt ? new Date(followUpAt).toISOString() : null;
+      if (priority !== undefined) enquiry.priority = ['LOW', 'NORMAL', 'HIGH'].includes(priority) ? priority : 'NORMAL';
       enquiry.updatedAt = new Date().toISOString();
 
       return res.json({ success: true, enquiry });
@@ -1007,12 +1000,30 @@ export async function createAdminBatch(req: Request, res: Response, next: NextFu
 
 export async function getAdminPayments(req: Request, res: Response, next: NextFunction) {
   try {
+    if (isDatabaseConnected) {
+      const [payments, feePlans] = await Promise.all([
+        prisma.paymentOrder.findMany({
+          take: 100,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            user: { select: { firstName: true, lastName: true, email: true } },
+            course: { select: { title: true, level: true } }
+          }
+        }),
+        prisma.course.findMany({ where: { pricePaise: { gt: 0 } }, select: { id: true, title: true, level: true, pricePaise: true, status: true } })
+      ]);
+      const captured = payments.filter((payment: any) => payment.status === 'PAID');
+      const totalVolume = captured.reduce((sum: number, payment: any) => sum + payment.amountPaise, 0);
+      const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+      const monthlyVolume = captured.filter((payment: any) => payment.createdAt >= monthStart).reduce((sum: number, payment: any) => sum + payment.amountPaise, 0);
+      return res.json({ success: true, payments, feePlans, totalVolume, monthlyVolume, currency: 'INR' });
+    }
     return res.json({
       success: true,
       payments: store.payments || [],
       feePlans: store.feePlans || [],
-      totalVolume: 750000,
-      monthlyVolume: 48500
+      totalVolume: 0,
+      monthlyVolume: 0
     });
   } catch (error) {
     next(error);
@@ -1021,6 +1032,13 @@ export async function getAdminPayments(req: Request, res: Response, next: NextFu
 
 export async function createAdminFeePlan(req: Request, res: Response, next: NextFunction) {
   try {
+    if (isDatabaseConnected) {
+      const courseId = typeof req.body?.courseId === 'string' ? req.body.courseId : '';
+      const pricePaise = Math.round(Number(req.body?.pricePaise) || 0);
+      if (!courseId || pricePaise < 0 || pricePaise > 100000000) return next(new AppError('Choose a course and enter a valid price in paise.', 400));
+      const course = await prisma.course.update({ where: { id: courseId }, data: { pricePaise } });
+      return res.json({ success: true, feePlan: { id: course.id, name: course.title, pricePaise: course.pricePaise, currency: 'INR' } });
+    }
     const { name, price, currency, billingCycle, features } = req.body;
     const newPlan = {
       id: `fee-${Date.now()}`,
@@ -1040,10 +1058,25 @@ export async function createAdminFeePlan(req: Request, res: Response, next: Next
 
 export async function getAdminAttendance(req: Request, res: Response, next: NextFunction) {
   try {
+    if (isDatabaseConnected) {
+      const sessions = await prisma.liveClass.findMany({
+        take: 100,
+        orderBy: { startsAt: 'desc' },
+        include: { batch: { select: { id: true, name: true, _count: { select: { memberships: { where: { status: 'ACTIVE' } } } } } }, attendance: true }
+      });
+      const attendance = sessions.map((session: any) => {
+        const presentCount = session.attendance.filter((record: any) => ['PRESENT', 'LATE'].includes(record.status)).length;
+        const totalEnrolled = session.batch._count.memberships;
+        return { id: session.id, title: session.title, date: session.startsAt, batchName: session.batch.name, totalEnrolled, presentCount, attendanceRate: totalEnrolled ? Math.round(presentCount / totalEnrolled * 100) : 0 };
+      });
+      const records = attendance.reduce((sum: number, item: any) => sum + item.totalEnrolled, 0);
+      const present = attendance.reduce((sum: number, item: any) => sum + item.presentCount, 0);
+      return res.json({ success: true, attendance, overallRate: records ? Math.round(present / records * 100) : 0 });
+    }
     return res.json({
       success: true,
       attendance: store.attendance || [],
-      overallRate: 95
+      overallRate: 0
     });
   } catch (error) {
     next(error);

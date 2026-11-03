@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { randomBytes } from 'node:crypto';
 import { VocabMasteryStatus } from '@deutschwelt/shared';
 import { prisma, isDatabaseConnected } from '../../services/prisma.js';
 import { store } from '../../services/store.js';
@@ -20,7 +21,8 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
         completedLessons,
         vocabStats,
         exerciseAttempts,
-        assignments
+        assignments,
+        upcomingClasses
       ] = await Promise.all([
         prisma.studentProfile.findUnique({ where: { userId } }),
         prisma.enrollment.findMany({
@@ -37,7 +39,7 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
             }
           }
         }),
-        prisma.lessonProgress.findMany({ where: { userId, isCompleted: true } }),
+        prisma.lessonProgress.findMany({ where: { userId } }),
         prisma.studentVocabularyProgress.findMany({ where: { userId } }),
         prisma.exerciseAttempt.findMany({ where: { userId }, orderBy: { startedAt: 'desc' } }),
         prisma.assignment.findMany({
@@ -46,6 +48,12 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
           include: {
             submissions: { where: { userId } }
           }
+        }),
+        prisma.liveClass.findMany({
+          where: { startsAt: { gte: new Date() }, batch: { memberships: { some: { userId, status: 'ACTIVE' } } } },
+          orderBy: { startsAt: 'asc' },
+          take: 5,
+          include: { batch: { select: { name: true } } }
         })
       ]);
 
@@ -54,13 +62,18 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
 
       const avgAccuracy = exerciseAttempts.length > 0
         ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length)
-        : 100;
+        : 0;
+
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const minutesSpentToday = Math.round(completedLessons.reduce((sum, lesson) => sum + (lesson.updatedAt >= startOfDay ? lesson.timeSpentSeconds : 0), 0) / 60);
+      const completedLessonCount = completedLessons.filter(lesson => lesson.isCompleted).length;
 
       // Recommended / Continue learning lesson
       const activeEnrollment = enrollments[0];
       let continueLesson: any = null;
       if (activeEnrollment && activeEnrollment.course.units.length > 0) {
-        const completedIds = new Set(completedLessons.map(cl => cl.lessonId));
+        const completedIds = new Set(completedLessons.filter(cl => cl.isCompleted).map(cl => cl.lessonId));
         for (const unit of activeEnrollment.course.units) {
           for (const lesson of unit.lessons) {
             if (!completedIds.has(lesson.id)) {
@@ -82,16 +95,17 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
         success: true,
         stats: {
           currentLevel: profile?.currentLevel || 'A1',
-          streakDays: profile?.streakCount || 1,
+          streakDays: profile?.streakCount || 0,
           dailyGoalMinutes: profile?.dailyGoalMinutes || 20,
-          minutesSpentToday: 15,
+          minutesSpentToday,
           wordsLearned,
           wordsMastered,
           exerciseAccuracy: avgAccuracy,
-          completedLessonsCount: completedLessons.length,
+          completedLessonsCount: completedLessonCount,
           enrolledCoursesCount: enrollments.length,
           upcomingAssignmentsCount: assignments.filter(a => a.submissions.length === 0).length,
           continueLesson,
+          upcomingClasses: upcomingClasses.map((item: any) => ({ id: item.id, title: item.title, startsAt: item.startsAt, durationMinutes: item.durationMinutes, meetingUrl: item.meetingUrl, batchName: item.batch.name })),
           enrollments: enrollments.map(e => ({
             id: e.id,
             courseId: e.courseId,
@@ -135,7 +149,7 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
       const exerciseAttempts = store.attempts.filter(a => a.userId === userId);
       const avgAccuracy = exerciseAttempts.length > 0
         ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length)
-        : 95;
+        : 0;
 
       const completedIds = new Set(completedLessons.map(cl => cl.lessonId));
       const targetLevel = profile?.currentLevel || 'A1';
@@ -160,58 +174,30 @@ export async function getStudentDashboard(req: Request, res: Response, next: Nex
         }
       }
 
-      if (!continueLesson) {
-        continueLesson = {
-          id: 'lesson-a1-1-1',
-          title: 'Lektion 1.1: Sich vorstellen (Introducing Yourself)',
-          unitTitle: 'Einheit 1: Hallo und Willkommen',
-          courseSlug: 'deutsch-a1-beginner-intensiv',
-          courseTitle: 'Deutsch A1: Complete Beginner to Breakthrough'
-        };
-      }
+      const startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
+      const minutesSpentToday = Math.round(completedLessons.filter(lesson => new Date(lesson.completedAt || lesson.updatedAt || 0) >= startOfDay).reduce((sum, lesson) => sum + (lesson.timeSpentSeconds || 0), 0) / 60);
 
       return res.json({
         success: true,
         stats: {
           currentLevel: profile?.currentLevel || 'A1',
           currentLevelName: 'A1 - Beginner',
-          streakDays: profile?.streakCount || 7,
+          streakDays: profile?.streakCount || 0,
           dailyGoalMinutes: profile?.dailyGoalMinutes || 25,
-          minutesSpentToday: 180,
-          studyTimeMinutes: 180,
-          wordsLearned: wordsLearned || 25,
-          wordsMastered: wordsMastered || 18,
-          exerciseAccuracy: avgAccuracy || 95,
-          exercisesDone: exerciseAttempts.length || 12,
-          levelProgressPercentage: 20,
-          completedLessonsCount: completedLessons.length || 3,
-          enrolledCoursesCount: enrollments.length || 1,
-          upcomingAssignmentsCount: 1,
+          minutesSpentToday,
+          studyTimeMinutes: minutesSpentToday,
+          wordsLearned,
+          wordsMastered,
+          exerciseAccuracy: avgAccuracy,
+          exercisesDone: exerciseAttempts.length,
+          levelProgressPercentage: 0,
+          completedLessonsCount: completedLessons.length,
+          enrolledCoursesCount: enrollments.length,
+          upcomingAssignmentsCount: 0,
           continueLesson,
-          enrollments: enrollments.length > 0 ? enrollments : [{
-            id: 'enr-1',
-            courseId: 'course-a1',
-            courseTitle: 'Deutsch A1: Complete Beginner to Breakthrough',
-            courseSlug: 'deutsch-a1-beginner-intensiv',
-            level: 'A1',
-            progressPercentage: 35,
-            status: 'ACTIVE'
-          }],
-          recentActivity: [
-            {
-              id: 'act-1',
-              type: 'LESSON_COMPLETED',
-              title: 'Completed: Lektion 1.1: Sich vorstellen',
-              timestamp: new Date().toISOString(),
-              score: 100
-            },
-            {
-              id: 'act-2',
-              type: 'VOCAB_PRACTICED',
-              title: 'Practiced 5 vocabulary words',
-              timestamp: new Date(Date.now() - 3600000).toISOString()
-            }
-          ]
+          enrollments,
+          upcomingClasses: [],
+          recentActivity: []
         }
       });
     }
@@ -504,6 +490,23 @@ export async function getStudentCertificates(req: Request, res: Response, next: 
   try {
     if (!req.user) return next(new AppError('Unauthorized', 401));
 
+    if (isDatabaseConnected) {
+      const certificates = await prisma.courseCertificate.findMany({
+        where: { userId: req.user.id },
+        include: { course: true, user: { select: { firstName: true, lastName: true } } },
+        orderBy: { issuedAt: 'desc' }
+      });
+      return res.json({ success: true, certificates: certificates.map((certificate: any) => ({
+        ...certificate,
+        userFullName: `${certificate.user.firstName} ${certificate.user.lastName}`,
+        courseTitle: certificate.course.title,
+        level: certificate.course.level,
+        gradeClassification: certificate.gradeScore >= 90 ? 'With Distinction' : certificate.gradeScore >= 75 ? 'Pass' : 'Completed',
+        instructorName: 'DeutschWelt Academic Team',
+        directorName: 'DeutschWelt Academic Team',
+        directorTitle: 'Academic Director'
+      })) });
+    }
     const certificates = store.certificates.filter(c => c.userId === req.user!.id);
     return res.json({ success: true, certificates });
   } catch (error) {
@@ -518,6 +521,40 @@ export async function claimCourseCertificate(req: Request, res: Response, next: 
   try {
     if (!req.user) return next(new AppError('Unauthorized', 401));
     const { courseId } = req.params;
+
+    if (isDatabaseConnected) {
+      const course = await prisma.course.findFirst({ where: { OR: [{ id: courseId }, { slug: courseId }] } });
+      if (!course) return next(new AppError('Course not found.', 404));
+      const enrollment = await prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId: req.user.id, courseId: course.id } }
+      });
+      if (!enrollment) return next(new AppError('Enroll in this course before claiming a certificate.', 403));
+      const [totalLessons, completedLessons] = await Promise.all([
+        prisma.lesson.count({ where: { unit: { courseId: course.id }, status: 'PUBLISHED' } }),
+        prisma.lessonProgress.count({ where: { userId: req.user.id, isCompleted: true, lesson: { unit: { courseId: course.id } } } })
+      ]);
+      if (totalLessons === 0 || completedLessons < totalLessons) {
+        return next(new AppError('Complete every published lesson in this course before claiming its certificate.', 409, 'COURSE_NOT_COMPLETE'));
+      }
+
+      const existing = await prisma.courseCertificate.findUnique({ where: { userId_courseId: { userId: req.user.id, courseId: course.id } } });
+      if (existing) return res.json({ success: true, certificate: { ...existing, userFullName: `${req.user.firstName} ${req.user.lastName}`, courseTitle: course.title, level: course.level, gradeClassification: 'Completed' }, message: 'Certificate already issued.' });
+
+      const certificateNumber = `DW-${new Date().getFullYear()}-${course.level}-${randomBytes(4).toString('hex').toUpperCase()}`;
+      const verificationCode = `DWV-${randomBytes(8).toString('hex').toUpperCase()}`;
+      const certificate = await prisma.courseCertificate.create({
+        data: { certificateNumber, verificationCode, userId: req.user.id, courseId: course.id, gradeScore: 100 },
+        include: { course: true }
+      });
+      await prisma.notification.create({
+        data: { userId: req.user.id, title: 'Course certificate issued', message: `Your certificate for ${course.title} is ready.`, type: 'CERTIFICATE', linkUrl: '/student/courses' }
+      });
+      return res.status(201).json({
+        success: true,
+        message: 'Certificate of Completion generated successfully!',
+        certificate: { ...certificate, userFullName: `${req.user.firstName} ${req.user.lastName}`, courseTitle: course.title, level: course.level, gradeClassification: 'Completed', instructorName: 'DeutschWelt Academic Team', directorName: 'DeutschWelt Academic Team', directorTitle: 'Academic Director' }
+      });
+    }
 
     const course = store.courses.find(c => c.id === courseId);
     if (!course) {
@@ -579,6 +616,22 @@ export async function claimCourseCertificate(req: Request, res: Response, next: 
 export async function verifyCertificate(req: Request, res: Response, next: NextFunction) {
   try {
     const { certificateNumber } = req.params;
+    if (isDatabaseConnected) {
+      const cert = await prisma.courseCertificate.findFirst({
+        where: { OR: [{ certificateNumber }, { verificationCode: certificateNumber }] },
+        include: { user: { select: { firstName: true, lastName: true } }, course: true }
+      });
+      if (!cert) return res.status(404).json({ success: false, message: 'No active DeutschWelt certificate found with this verification number.' });
+      return res.json({ success: true, certificate: {
+        certificateNumber: cert.certificateNumber,
+        recipient: `${cert.user.firstName} ${cert.user.lastName}`,
+        courseTitle: cert.course.title,
+        level: cert.course.level,
+        gradeScore: cert.gradeScore,
+        issuedAt: cert.issuedAt,
+        isValid: true
+      } });
+    }
     const cert = store.certificates.find(
       c => c.certificateNumber.toLowerCase() === certificateNumber.toLowerCase() ||
            c.verificationCode?.toLowerCase() === certificateNumber.toLowerCase()

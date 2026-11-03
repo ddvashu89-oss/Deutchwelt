@@ -20,6 +20,7 @@ export function AdminCoursesPage() {
   const [description, setDescription] = useState('');
   const [level, setLevel] = useState(GermanLevel.A1);
   const [estimatedHours, setEstimatedHours] = useState(60);
+  const [priceRupees, setPriceRupees] = useState(0);
   const [saving, setSaving] = useState(false);
 
   // Edit Course State
@@ -29,6 +30,7 @@ export function AdminCoursesPage() {
   const [editDescription, setEditDescription] = useState('');
   const [editLevel, setEditLevel] = useState(GermanLevel.A1);
   const [editHours, setEditHours] = useState(60);
+  const [editPriceRupees, setEditPriceRupees] = useState(0);
   const [editStatus, setEditStatus] = useState<PublicationStatus>(PublicationStatus.PUBLISHED);
   const [savingEdit, setSavingEdit] = useState(false);
 
@@ -64,6 +66,7 @@ export function AdminCoursesPage() {
         description,
         level,
         estimatedHours: Number(estimatedHours),
+        pricePaise: Math.round(Number(priceRupees) * 100),
         learningObjectives: ['Master fundamental conversation', 'Understand core case grammar'],
         status: PublicationStatus.PUBLISHED
       });
@@ -90,6 +93,7 @@ export function AdminCoursesPage() {
     setEditDescription(course.description || '');
     setEditLevel(course.level || GermanLevel.A1);
     setEditHours(course.estimatedHours || 60);
+    setEditPriceRupees((course.pricePaise || 0) / 100);
     setEditStatus(course.status || PublicationStatus.PUBLISHED);
   };
 
@@ -106,6 +110,7 @@ export function AdminCoursesPage() {
         description: editDescription,
         level: editLevel,
         estimatedHours: Number(editHours),
+        pricePaise: Math.round(Number(editPriceRupees) * 100),
         status: editStatus
       });
 
@@ -178,6 +183,7 @@ export function AdminCoursesPage() {
                 <div className="flex items-center gap-4 text-xs text-gray-500 pt-1">
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> ~{course.estimatedHours} Hours</span>
                   <span className="flex items-center gap-1"><Layers className="w-3.5 h-3.5" /> {course.units?.length || 0} Units</span>
+                  <span className="font-bold text-emerald-800">{(course.pricePaise || 0) > 0 ? `₹${(course.pricePaise / 100).toLocaleString('en-IN')}` : 'Free'}</span>
                   <span className="text-gray-400 font-mono text-[11px]">/{course.slug}</span>
                 </div>
               </div>
@@ -261,6 +267,8 @@ export function AdminCoursesPage() {
             required
           />
 
+          <Input label="Course price (INR; 0 for free)" type="number" min="0" step="1" value={priceRupees} onChange={e => setPriceRupees(Number(e.target.value))} required />
+
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
               Course Description & Syllabus Summary
@@ -335,6 +343,8 @@ export function AdminCoursesPage() {
               onChange={(e) => setEditHours(Number(e.target.value))}
               required
             />
+
+            <Input label="Course price (INR; 0 for free)" type="number" min="0" step="1" value={editPriceRupees} onChange={e => setEditPriceRupees(Number(e.target.value))} required />
 
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-dark uppercase tracking-wider">

@@ -21,10 +21,6 @@ export function TeacherDashboard() {
   const { t } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [lectureTitle, setLectureTitle] = useState('');
-  const [lectureLevel, setLectureLevel] = useState('B1');
-  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   useEffect(() => {
     async function loadStats() {
@@ -41,30 +37,6 @@ export function TeacherDashboard() {
     }
     loadStats();
   }, []);
-
-  const handleStartLiveMeeting = () => {
-    const confirmed = window.confirm(
-      '🎥 Google Meet / Zoom Host Launcher\n\n' +
-      'Start faculty live meeting room for Deutsch B1 / A2 batch.\n' +
-      'Meeting link: https://meet.google.com/dw-deutsch-live\n\n' +
-      'Click OK to open host meeting room.'
-    );
-    if (confirmed) {
-      window.open('https://meet.google.com/dw-deutsch-live', '_blank');
-    }
-  };
-
-  const handleSimulateLectureUpload = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!lectureTitle) return;
-    setUploadSuccess(true);
-    setTimeout(() => {
-      setUploadSuccess(false);
-      setUploadModalOpen(false);
-      setLectureTitle('');
-      alert(`✅ Video lecture "${lectureTitle}" (${lectureLevel}) saved directly into uploads folder!`);
-    }, 1200);
-  };
 
   if (loading) {
     return (
@@ -98,21 +70,15 @@ export function TeacherDashboard() {
         </div>
 
         <div className="grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:w-auto lg:min-w-[300px]">
-          <button
-            onClick={handleStartLiveMeeting}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ddd7cc] bg-white px-4 py-2.5 text-xs font-bold text-[#24364d] shadow-xs transition-colors hover:border-[#c54346]/40 hover:bg-[#fbf8f2] sm:text-sm"
-          >
+          <Link to="/teacher/schedule" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#ddd7cc] bg-white px-4 py-2.5 text-xs font-bold text-[#24364d] shadow-xs sm:text-sm">
             <Video className="h-4 w-4 text-[#c54346]" />
-            {t('tdash.startLive')}
-          </button>
+            Manage live classes
+          </Link>
 
-          <button
-            onClick={() => setUploadModalOpen(true)}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c54346] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#ad393d] hover:shadow-md sm:text-sm"
-          >
+          <Link to="/teacher/materials" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c54346] px-4 py-2.5 text-xs font-bold text-white shadow-sm sm:text-sm">
             <Upload className="h-4 w-4 text-white/80" />
-            {t('tdash.uploadVideo')}
-          </button>
+            Upload resources
+          </Link>
         </div>
       </div>
 
@@ -130,11 +96,11 @@ export function TeacherDashboard() {
           </div>
           <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
             <div className="font-serif text-3xl font-medium tracking-tight text-white sm:text-4xl">
-              {data?.totalBatches || 2}
+              {data?.totalBatches ?? 0}
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
               <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[9px] font-semibold text-white sm:text-xs">
-                A1 & B1 Intensiv
+                Assigned batches
               </span>
               <span className="text-[9px] leading-snug text-white/60 sm:text-xs">{t('tdash.goexams')}</span>
             </div>
@@ -153,12 +119,12 @@ export function TeacherDashboard() {
           </div>
           <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
             <div className="flex flex-wrap items-baseline gap-x-2 font-serif text-3xl font-medium tracking-tight text-[#14243a] sm:text-4xl">
-              {data?.totalStudents || 24}
+              {data?.totalStudents ?? 0}
               <span className="font-sans text-xs font-semibold text-[#9299a2] sm:text-base">{t('tdash.studentsUnit')}</span>
             </div>
             <div className="mt-2 flex items-center gap-1.5 text-[9px] font-medium leading-snug text-[#587a69] sm:text-xs">
               <Users className="h-3.5 w-3.5 shrink-0" />
-              <span>{t('tdash.activeWeek')}</span>
+              <span>Enrolled in your assigned batches</span>
             </div>
           </div>
         </div>
@@ -179,7 +145,7 @@ export function TeacherDashboard() {
           </div>
           <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
             <div className="flex flex-wrap items-baseline gap-x-2 font-serif text-3xl font-medium tracking-tight text-[#14243a] sm:text-4xl">
-              {data?.pendingSubmissionsCount || 3}
+              {data?.pendingSubmissionsCount ?? 0}
               <span className="font-sans text-xs font-semibold text-[#a17736] sm:text-base">{t('tdash.pendingUnit')}</span>
             </div>
             <div className="mt-2 flex items-center gap-1.5 text-[9px] font-medium leading-snug text-[#a17736] sm:text-xs">
@@ -201,7 +167,7 @@ export function TeacherDashboard() {
           </div>
           <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
             <div className="flex flex-wrap items-baseline gap-x-2 font-serif text-3xl font-medium tracking-tight text-[#14243a] sm:text-4xl">
-              {data?.averageScorePercentage || 88}%
+              {data?.averageScorePercentage ?? 0}%
               <span className="font-sans text-xs font-semibold text-[#9299a2] sm:text-base">{t('tdash.avgUnit')}</span>
             </div>
             <div className="mt-2 flex items-center gap-1.5 text-[9px] font-medium leading-snug text-[#587a69] sm:text-xs">
@@ -290,125 +256,20 @@ export function TeacherDashboard() {
               </span>
             </div>
 
-            <div className="space-y-2 rounded-xl border border-[#e9e2d4] bg-[#f8f4eb] p-4 sm:rounded-2xl">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#c54346]">
-                Batch 2026-B1
-              </span>
-              <p className="font-serif text-lg font-medium leading-snug text-[#14243a] sm:text-xl">
-                Konjunktiv II & Berufsdeutsch Intensiv
-              </p>
-              <div className="flex items-start gap-2 text-xs font-medium text-[#34445a]">
-                <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#c54346]" />
-                <span>18:30 – 19:30 CET (60 Min)</span>
-              </div>
-            </div>
+            <div className="space-y-2 rounded-xl border border-[#e9e2d4] bg-[#f8f4eb] p-4 sm:rounded-2xl">{(data?.upcomingClasses || []).slice(0, 2).map((session: any) => <article key={session.id}><span className="text-[10px] font-bold uppercase tracking-wider text-[#c54346]">{session.batch?.name || 'Batch'}</span><p className="font-serif text-lg font-medium leading-snug text-[#14243a]">{session.title}</p><p className="flex items-center gap-2 text-xs"><Clock className="h-3.5 w-3.5 text-[#c54346]" />{new Date(session.startsAt).toLocaleString()} · {session.durationMinutes} min</p></article>)}{!data?.upcomingClasses?.length && <p className="text-sm text-[#687487]">No upcoming sessions. Create a class to notify your batch.</p>}</div>
 
             <p className="mt-4 text-xs leading-relaxed text-[#687487]">
               {t('tdash.liveDesc')}
             </p>
           </div>
 
-          <button
-            onClick={handleStartLiveMeeting}
-            className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#14243a] py-3 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#203853] hover:shadow-md sm:mt-6"
-          >
+          <Link to="/teacher/schedule" className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#14243a] py-3 text-xs font-bold text-white shadow-sm sm:mt-6">
             <Video className="h-4 w-4 text-[#f0c6a3]" />
-            {t('tdash.openMeet')}
-          </button>
+            Manage schedule and attendance
+          </Link>
         </div>
       </div>
 
-      {/* Video Lecture Upload Modal */}
-      {uploadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#14243a]/45 p-3 backdrop-blur-sm sm:p-6">
-          <div className="max-h-[calc(100dvh-1.5rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-2xl animate-in fade-in zoom-in-95 sm:max-h-[calc(100dvh-3rem)] sm:rounded-3xl sm:p-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f8ece9] text-[#c54346]">
-                  <Upload className="w-4 h-4" />
-                </div>
-                <h3 className="font-serif text-lg font-medium text-[#14243a] sm:text-xl">
-                  {t('tdash.uploadTitle')}
-                </h3>
-              </div>
-              <button
-                onClick={() => setUploadModalOpen(false)}
-                aria-label="Close upload dialog"
-                className="rounded-lg p-2 text-[#9299a2] transition-colors hover:bg-[#f5f2eb] hover:text-[#14243a]"
-              >
-                ✕
-              </button>
-            </div>
-
-            <p className="text-xs leading-relaxed text-[#687487]">
-              {t('tdash.uploadDesc')} (<code className="bg-gray-100 px-1 py-0.5 rounded">uploads/</code>).
-            </p>
-
-            <form onSubmit={handleSimulateLectureUpload} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-xs font-bold text-[#34445a]">
-                  {t('tdash.lecTitle')}
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder={t('tdash.lecTitlePlaceholder')}
-                  value={lectureTitle}
-                  onChange={(e) => setLectureTitle(e.target.value)}
-                  className="w-full rounded-xl border border-[#ddd7cc] bg-white px-4 py-3 text-sm text-[#17243a] focus:outline-none focus:ring-2 focus:ring-[#c54346]/30"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div>
-                    <label className="mb-1 block text-xs font-bold text-[#34445a]">
-                    {t('tdash.cefrLevel')}
-                  </label>
-                  <select
-                    value={lectureLevel}
-                    onChange={(e) => setLectureLevel(e.target.value)}
-                    className="w-full rounded-xl border border-[#ddd7cc] bg-white px-4 py-3 text-sm text-[#17243a] focus:outline-none focus:ring-2 focus:ring-[#c54346]/30"
-                  >
-                    <option value="A1">A1 (Anfänger)</option>
-                    <option value="A2">A2 (Grundlagen)</option>
-                    <option value="B1">B1 (Mittelstufe)</option>
-                    <option value="B2">B2 (Fortgeschritten)</option>
-                  </select>
-                </div>
-
-                <div>
-                    <label className="mb-1 block text-xs font-bold text-[#34445a]">
-                    {t('tdash.videoFile')}
-                  </label>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    required
-                    className="w-full text-xs text-[#687487] file:mr-2 file:cursor-pointer file:rounded-full file:border-0 file:bg-[#f8ece9] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#b43e40] hover:file:bg-[#f4dfda]"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col-reverse gap-2 border-t border-[#eee9df] pt-3 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
-                <button
-                  type="button"
-                  onClick={() => setUploadModalOpen(false)}
-                  className="min-h-10 rounded-xl border border-[#ddd7cc] px-4 py-2 text-xs font-bold text-[#687487] hover:bg-[#f7f4ec]"
-                >
-                  Abbrechen
-                </button>
-                <button
-                  type="submit"
-                  disabled={uploadSuccess}
-                  className="min-h-10 rounded-xl bg-[#c54346] px-6 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#ad393d]"
-                >
-                  {uploadSuccess ? t('tdash.saving') : t('tdash.uploadPublish')}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

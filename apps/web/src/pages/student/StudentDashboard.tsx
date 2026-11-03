@@ -37,27 +37,6 @@ export function StudentDashboard() {
   const [selectedCert, setSelectedCert] = useState<any | null>(null);
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
-  // Time Tracker State
-  const [timerSeconds, setTimerSeconds] = useState(5048); // 01:24:08
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-
-  useEffect(() => {
-    let interval: any = null;
-    if (isTimerRunning) {
-      interval = setInterval(() => {
-        setTimerSeconds((prev) => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isTimerRunning]);
-
-  const formatTimer = (totalSeconds: number) => {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   useEffect(() => {
     async function loadDashboard() {
       try {
@@ -80,37 +59,14 @@ export function StudentDashboard() {
     loadDashboard();
   }, []);
 
-  const handleOpenLiveClass = () => {
-    // Google Meet / Zoom alert modal for test provision
-    const confirmed = window.confirm(
-      '🎥 Google Meet / Zoom Live Session\n\n' +
-      'Deutsch Coaching B1: "Konjunktiv II & Berufsdeutsch"\n' +
-      'Teacher: Frau Elena Schmidt\n' +
-      'Platform: Google Meet (meet.google.com/dw-live-2026)\n\n' +
-      'Click OK to open the meeting room in a new tab.'
-    );
-    if (confirmed) {
-      window.open('https://meet.google.com/dw-deutsch-live', '_blank');
-    }
-  };
-
   const handleOpenCert = (cert?: any) => {
     if (cert) {
       setSelectedCert(cert);
     } else if (certificates.length > 0) {
       setSelectedCert(certificates[0]);
     } else {
-      setSelectedCert({
-        certificateNumber: 'DW-B1-2026-DEMO',
-        studentName: user ? `${user.firstName} ${user.lastName}` : 'Max Mustermann',
-        courseTitle: 'Deutsch B1 Intensivkurs — Beruf & Alltag',
-        cefrLevel: 'B1',
-        issueDate: new Date().toISOString(),
-        grade: 'Sehr Gut (94%)',
-        instructorName: 'Frau Elena Schmidt',
-        instructorTitle: 'Head of German Faculty (Goethe-Prüferin)',
-        isVerified: true
-      });
+      if (!certificates.length) return;
+      setSelectedCert(certificates[0]);
     }
     setIsCertModalOpen(true);
   };
@@ -136,23 +92,15 @@ export function StudentDashboard() {
     );
   }
 
-  const streakDays = data?.streakDays || 10;
-  const currentLevel = data?.currentLevel || 'B1';
-  const minutesToday = data?.minutesSpentToday || 18;
-  const dailyGoal = data?.dailyGoalMinutes || 25;
-  const completedLessons = data?.completedLessons || 24;
-  const certCount = certificates.length > 0 ? certificates.length : 2;
+  const streakDays = data?.streakDays || 0;
+  const currentLevel = data?.currentLevel || user?.studentProfile?.currentLevel || 'A1';
+  const minutesToday = data?.minutesSpentToday || 0;
+  const dailyGoal = data?.dailyGoalMinutes || 20;
+  const completedLessons = data?.completedLessonsCount || 0;
+  const certCount = certificates.length;
+  const progressPercent = data?.enrollments?.length ? Math.round(data.enrollments.reduce((sum: number, item: any) => sum + (item.progressPercentage || 0), 0) / data.enrollments.length) : 0;
 
-  // 7-day pill bar mock data
-  const weeklyData = [
-    { day: 'S', height: 40, active: false },
-    { day: 'M', height: 60, active: false },
-    { day: 'T', height: 95, active: true, pct: '74%' }, // highlighted
-    { day: 'W', height: 45, active: false },
-    { day: 'T', height: 70, active: false },
-    { day: 'F', height: 85, active: false },
-    { day: 'S', height: 50, active: false }
-  ];
+  const weeklyData: any[] = [];
 
   return (
     <div className="space-y-8 pb-16 font-sans">
@@ -172,6 +120,8 @@ export function StudentDashboard() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => handleOpenCert()}
+            disabled={certificates.length === 0}
+            title={certificates.length === 0 ? 'Complete all lessons in a course to earn a certificate' : 'View your certificate'}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-semibold transition-all shadow-xs"
           >
             <Award className="w-4 h-4 text-forest-700" />
@@ -216,7 +166,7 @@ export function StudentDashboard() {
                 Level {currentLevel}
               </span>
               <span className="text-xs text-emerald-100/70 font-medium">
-                41% {t('sdash.completed')}
+              {progressPercent}% {t('sdash.completed')}
               </span>
             </div>
           </div>
@@ -276,6 +226,8 @@ export function StudentDashboard() {
             </span>
             <button
               onClick={() => handleOpenCert()}
+              disabled={certificates.length === 0}
+              title={certificates.length === 0 ? 'Complete every lesson in a course to earn a certificate' : 'View your certificate'}
               className="w-8 h-8 rounded-full bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors border border-gray-200/60"
             >
               <ArrowUpRight className="w-4 h-4" />
@@ -312,7 +264,7 @@ export function StudentDashboard() {
 
           {/* 7 Pill Bars matching Donezo aesthetic */}
           <div className="relative pt-8 pb-3 px-2 flex items-end justify-between gap-2 h-44">
-            {weeklyData.map((item, idx) => (
+            {weeklyData.length ? weeklyData.map((item, idx) => (
               <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
                 {/* Floating Tooltip Bubble for Tuesday */}
                 {item.active && (
@@ -336,7 +288,7 @@ export function StudentDashboard() {
                   {item.day}
                 </span>
               </div>
-            ))}
+            )) : <p className="m-auto text-center text-sm text-gray-500">Your weekly activity will appear after lessons and exercises are completed.</p>}
           </div>
 
           <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
@@ -351,7 +303,7 @@ export function StudentDashboard() {
           </div>
         </div>
 
-        {/* Column 2: Reminders & Live Class (Google Meet / Zoom) */}
+        {/* Column 2: Upcoming classes */}
         <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-heading font-bold text-gray-950">
@@ -362,40 +314,8 @@ export function StudentDashboard() {
             </span>
           </div>
 
-          <div className="space-y-3">
-            <div className="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-forest-700">
-                  {t('sdash.liveCoach')}
-                </span>
-                <span className="text-xs font-semibold text-gray-500">
-                  18:30 – 19:30 CET
-                </span>
-              </div>
-              <p className="text-sm font-bold text-gray-900 leading-tight">
-                Sprechen & Argumentieren: Meinung äußern im Beruf
-              </p>
-              <div className="flex items-center gap-2 pt-1 text-xs text-gray-500">
-                <div className="w-5 h-5 rounded-full bg-forest-900 text-white text-[10px] font-bold flex items-center justify-center">
-                  ES
-                </div>
-                <span>Frau Elena Schmidt (Goethe-Dozentin)</span>
-              </div>
-            </div>
-
-            <p className="text-xs text-gray-500 px-1">
-              Live-Übertragung via Google Meet / Zoom. Interaktive Aussprache-Korrektur.
-            </p>
-          </div>
-
-          {/* Big Meeting Pill Button */}
-          <button
-            onClick={handleOpenLiveClass}
-            className="w-full mt-4 py-3 px-4 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-semibold text-sm flex items-center justify-center gap-2.5 shadow-md transition-all"
-          >
-            <Video className="w-4 h-4 text-mint" />
-            {t('sdash.joinSession')}
-          </button>
+          <div className="space-y-3">{(data?.upcomingClasses || []).slice(0, 2).map((item: any) => <article key={item.id} className="rounded-2xl border border-gray-100 bg-gray-50 p-4"><p className="font-bold text-gray-900">{item.title}</p><p className="mt-1 text-xs text-gray-500">{item.batchName} · {new Date(item.startsAt).toLocaleString()}</p><a className="mt-3 inline-block text-sm font-bold text-forest-800 underline" href={item.meetingUrl} target="_blank" rel="noreferrer">Join class</a></article>)}{!data?.upcomingClasses?.length && <p className="rounded-2xl bg-gray-50 p-5 text-sm text-gray-500">No live classes are scheduled for your enrolled batches yet.</p>}</div>
+          <Link to="/student/schedule" className="mt-4 text-sm font-bold text-forest-800 underline">View full schedule</Link>
         </div>
 
         {/* Column 3: Active Lessons / Curriculum */}
@@ -405,71 +325,17 @@ export function StudentDashboard() {
               Lektionsübersicht
             </h2>
             <Link
-              to="/courses"
+              to="/student/courses"
               className="text-xs font-bold text-forest-800 hover:text-forest-900 flex items-center gap-0.5"
             >
               + Alle <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="space-y-2.5">
-            {/* Lesson 1 (Completed) */}
-            <div className="p-3 rounded-2xl bg-gray-50 hover:bg-gray-100/70 border border-gray-100 flex items-center justify-between gap-3 transition-colors">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900">
-                    Wechselpräpositionen im Dativ
-                  </p>
-                  <p className="text-[11px] text-gray-500">Grammatik A2/B1 • 20 Min</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800">
-                Fertig
-              </span>
-            </div>
-
-            {/* Lesson 2 (In Progress / Active) */}
-            <div className="p-3 rounded-2xl bg-forest-50/60 border border-forest-200 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-forest-900 text-mint flex items-center justify-center">
-                  <Play className="w-3.5 h-3.5 fill-mint" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-950">
-                    Konjunktiv II: Höfliche Bitten
-                  </p>
-                  <p className="text-[11px] text-forest-800">Aktuelle Einheit • B1.2</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint text-forest-950">
-                Aktiv
-              </span>
-            </div>
-
-            {/* Lesson 3 (Upcoming) */}
-            <div className="p-3 rounded-2xl bg-gray-50/60 border border-gray-100 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-gray-200/80 text-gray-500 flex items-center justify-center text-xs font-bold">
-                  B2
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-700">
-                    Wortschatz: Beruf & Vorstellungsgespräch
-                  </p>
-                  <p className="text-[11px] text-gray-400">Goethe B2 • 35 Min</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-200 text-gray-600">
-                Gesperrt
-              </span>
-            </div>
-          </div>
+          <div className="rounded-2xl bg-gray-50 p-5">{data?.continueLesson ? <><p className="text-sm font-bold text-gray-900">{data.continueLesson.title}</p><p className="mt-1 text-xs text-gray-500">{data.continueLesson.courseTitle} · {data.continueLesson.unitTitle}</p><Link className="mt-3 inline-block text-sm font-bold text-forest-800 underline" to={`/lessons/${data.continueLesson.id}`}>Continue lesson</Link></> : <p className="text-sm text-gray-500">Enroll in a course to see your next lesson here.</p>}</div>
 
           <Link
-            to="/courses"
+            to="/student/courses"
             className="w-full mt-3 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
           >
             <span>+ Neue Lektion starten</span>
@@ -478,196 +344,9 @@ export function StudentDashboard() {
       </div>
 
       {/* ============================================================== */}
-      {/* 4. BOTTOM ROW (3 Columns): Batchmates | Gauge | Time Tracker   */}
-      {/* ============================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Column 1: Team Collaboration (Student Batchmates) */}
-        <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-heading font-bold text-gray-950">
-              Team Collaboration
-            </h2>
-            <span className="text-xs font-semibold text-gray-400">Batch 2026-B1</span>
-          </div>
-
-          <div className="space-y-3">
-            {/* Peer 1 */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-forest-900 text-white font-bold text-xs flex items-center justify-center">
-                  LW
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900">Lukas Weber</p>
-                  <p className="text-[11px] text-gray-400">A2 Grammatik-Check</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                Completed
-              </span>
-            </div>
-
-            {/* Peer 2 */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-emerald-700 text-white font-bold text-xs flex items-center justify-center">
-                  PS
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900">Priya Sharma</p>
-                  <p className="text-[11px] text-gray-400">Sprechübung B1</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                In Progress
-              </span>
-            </div>
-
-            {/* Peer 3 */}
-            <div className="flex items-center justify-between py-1.5">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xs flex items-center justify-center">
-                  MR
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900">Marco Rossi</p>
-                  <p className="text-[11px] text-gray-400">Aussprache AI-Review</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
-                Pending
-              </span>
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-            <span className="text-xs text-gray-500">Gemeinsam lernen</span>
-            <Link
-              to="/speech"
-              className="text-xs font-bold text-forest-800 hover:text-forest-900"
-            >
-              Sprachlabor öffnen →
-            </Link>
-          </div>
-        </div>
-
-        {/* Column 2: Project Progress (Semi-Circular Radial Gauge) */}
-        <div className="rounded-3xl bg-white p-6 shadow-xs border border-gray-200/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-base font-heading font-bold text-gray-950">
-              Project Progress
-            </h2>
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-              Gesamt
-            </span>
-          </div>
-
-          {/* SVG Semi-Circle Radial Arc */}
-          <div className="relative flex flex-col items-center justify-center py-2">
-            <svg viewBox="0 0 200 115" className="w-48 h-28 overflow-visible">
-              {/* Background Arc */}
-              <path
-                d="M 20 100 A 80 80 0 0 1 180 100"
-                fill="none"
-                stroke="#E5E7EB"
-                strokeWidth="18"
-                strokeLinecap="round"
-              />
-              {/* Active Mint Progress Arc (41% of semi-circle arc length: ~103 of 251) */}
-              <path
-                d="M 20 100 A 80 80 0 0 1 180 100"
-                fill="none"
-                stroke="#34D399"
-                strokeWidth="18"
-                strokeDasharray="251.3"
-                strokeDashoffset={251.3 * (1 - 0.41)}
-                strokeLinecap="round"
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-
-            {/* Large centered metric */}
-            <div className="absolute bottom-2 flex flex-col items-center">
-              <span className="text-3xl font-heading font-black tracking-tight text-gray-950">
-                41%
-              </span>
-              <span className="text-[11px] font-semibold text-gray-400">
-                Mastery B1
-              </span>
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-around text-[11px] text-gray-600 font-medium">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-mint" />
-              Completed (41%)
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-forest-800" />
-              In Progress
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-gray-200" />
-              Pending
-            </span>
-          </div>
-        </div>
-
-        {/* Column 3: Time Tracker (Dark Textured Organic Card) */}
-        <div className="rounded-3xl bg-[#111827] text-white p-6 shadow-md border border-gray-800 flex flex-col justify-between bg-mesh-dark relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              {t('sdash.timerLabel')}
-            </span>
-            <div className="flex items-center gap-1.5">
-              <span className={`w-2 h-2 rounded-full ${isTimerRunning ? 'bg-mint animate-ping' : 'bg-gray-500'}`} />
-              <span className="text-xs text-gray-400">
-                {isTimerRunning ? t('sdash.timerRunning') : t('sdash.timerPaused')}
-              </span>
-            </div>
-          </div>
-
-          {/* Digital Timer Display */}
-          <div className="my-5 flex flex-col items-center justify-center">
-            <div className="text-4xl sm:text-5xl font-mono font-black tracking-widest text-white drop-shadow-sm select-none">
-              {formatTimer(timerSeconds)}
-            </div>
-            <p className="text-xs text-gray-400 mt-2 font-medium">
-              {t('sdash.timerSession')}
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsTimerRunning(!isTimerRunning)}
-              className="flex-1 py-3 px-4 rounded-full bg-mint hover:bg-emerald-400 text-gray-950 font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
-            >
-              {isTimerRunning ? (
-                <>
-                  <Pause className="w-4 h-4 fill-gray-950" /> {t('sdash.pauseTimer')}
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4 fill-gray-950" /> {t('sdash.startTimer')}
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={() => {
-                setIsTimerRunning(false);
-                setTimerSeconds(0);
-              }}
-              className="w-11 h-11 rounded-full bg-gray-800/80 hover:bg-gray-700 flex items-center justify-center text-gray-300 hover:text-white transition-colors border border-gray-700/60"
-              title="Reset Timer"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[['Placement test', '/student/placement-test', 'Check your CEFR level and get a study plan'], ['AI tutor', '/student/ai-tutor', 'Practice German and ask grammar questions'], ['Community Q&A', '/student/community', 'Ask questions and learn with your class'], ['Study materials', '/student/materials', 'Open teacher-shared worksheets and recordings']].map(([title, href, description]) => <Link key={href} to={href} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition hover:border-forest-400"><p className="font-bold text-gray-900">{title}</p><p className="mt-2 text-sm text-gray-500">{description}</p><span className="mt-3 inline-block text-sm font-bold text-forest-800">Open →</span></Link>)}
+      </section>
 
       {/* Certificate Modal */}
       {selectedCert && (

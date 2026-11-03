@@ -134,21 +134,11 @@ export function SpeakingLabPage() {
 
   // Instant AI Pronunciation Evaluation
   const handleAIAnalyze = async () => {
-    if (!selectedPrompt) return;
+    if (!selectedPrompt || !textAlternative.trim()) { setMicError('Type the words you spoke first. AI feedback checks the transcript, not audio pronunciation.'); return; }
     setAnalyzingAI(true);
     setMicError(null);
     try {
-      const formData = new FormData();
-      if (audioBlob) {
-        formData.append('audio', audioBlob, 'speaking-analysis.webm');
-        formData.append('durationSeconds', String(recordingSeconds));
-      }
-      formData.append('promptId', selectedPrompt.id);
-      if (textAlternative) {
-        formData.append('transcriptText', textAlternative);
-      }
-
-      const res: any = await api.upload('/speaking/analyze', formData);
+      const res: any = await api.post('/ai/speaking-feedback', { target: selectedPrompt.sampleAnswerDe || selectedPrompt.scenario, transcript: textAlternative });
       if (res.success && res.analysis) {
         setAiAnalysis(res.analysis);
       }
@@ -359,50 +349,13 @@ export function SpeakingLabPage() {
                                 </div>
                               </div>
                               <div className="text-right">
-                                <span className="text-2xl font-black text-navy">{aiAnalysis.overallScore}%</span>
-                                <p className="text-[10px] uppercase font-bold text-emerald-600">Oral Proficiency</p>
+                                <span className="text-2xl font-black text-navy">{aiAnalysis.overallScore ?? '—'}{aiAnalysis.overallScore == null ? '' : '%'}</span>
+                                <p className="text-[10px] uppercase font-bold text-emerald-600">Transcript match</p>
                               </div>
                             </div>
 
-                            {/* Sub-Scores */}
-                            <div className="grid grid-cols-3 gap-2 text-center">
-                              <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
-                                <p className="text-[10px] text-dark-muted uppercase font-bold">Pronunciation</p>
-                                <p className="text-base font-extrabold text-navy">{aiAnalysis.pronunciationScore}%</p>
-                              </div>
-                              <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
-                                <p className="text-[10px] text-dark-muted uppercase font-bold">Fluency</p>
-                                <p className="text-base font-extrabold text-navy">{aiAnalysis.fluencyScore}%</p>
-                              </div>
-                              <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
-                                <p className="text-[10px] text-dark-muted uppercase font-bold">Grammar</p>
-                                <p className="text-base font-extrabold text-navy">{aiAnalysis.grammarScore}%</p>
-                              </div>
-                            </div>
-
-                            {/* Word-by-Word Phonetic Breakdown */}
-                            <div className="space-y-2">
-                              <label className="text-xs font-bold text-navy uppercase tracking-wider">
-                                Wort-für-Wort Phonetik (Word Feedback):
-                              </label>
-                              <div className="flex flex-wrap gap-2">
-                                {aiAnalysis.wordFeedback.map((wf: any, i: number) => (
-                                  <span
-                                    key={i}
-                                    title={wf.phoneticTip}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-help border transition-all ${
-                                      wf.status === 'mastered'
-                                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                                        : wf.status === 'acceptable'
-                                        ? 'bg-blue-50 text-blue-800 border-blue-200'
-                                        : 'bg-amber-50 text-amber-800 border-amber-300 ring-1 ring-amber-300'
-                                    }`}
-                                  >
-                                    {wf.word} {wf.status === 'mastered' ? '✓' : wf.status === 'needs_practice' ? '⚡' : ''}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
+                            <p className="text-xs text-dark-muted">{aiAnalysis.evaluationType}</p>
+                            <div className="rounded-xl bg-gray-50 p-3 text-sm"><b>Your transcript:</b> {aiAnalysis.detectedSpeech}<br/><b>Suggested correction:</b> {aiAnalysis.correctedTranscript}</div>
 
                             {/* Coach Recommendations */}
                             <div className="p-3.5 rounded-xl bg-navy-50/50 border border-navy-100 space-y-1.5 text-xs">
@@ -410,7 +363,7 @@ export function SpeakingLabPage() {
                                 <Sparkles className="w-3.5 h-3.5 text-germanRed" /> AI Tutor Recommendations:
                               </p>
                               <ul className="list-disc list-inside space-y-1 text-dark-muted leading-relaxed">
-                                {aiAnalysis.insights.map((insight: string, i: number) => (
+                                {[...(aiAnalysis.strengths || []), ...(aiAnalysis.practiceTips || [])].map((insight: string, i: number) => (
                                   <li key={i}>{insight}</li>
                                 ))}
                               </ul>
@@ -438,15 +391,16 @@ export function SpeakingLabPage() {
                   {/* Text alternative */}
                   <div className="space-y-1.5 pt-2">
                     <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-                      Text Alternative (Optional or Backup)
+                      Your German transcript (required for AI feedback)
                     </label>
                     <textarea
                       rows={3}
-                      placeholder="If microphone is unavailable, you can type your German response here..."
+                      placeholder="Type what you said in German. AI feedback compares this text with the target phrase."
                       value={textAlternative}
                       onChange={(e) => setTextAlternative(e.target.value)}
                       className="w-full rounded-xl border border-gray-300 bg-white p-3 text-xs text-dark focus:outline-none focus:ring-2 focus:ring-navy"
                     />
+                    {audioBlob && <Button variant="primary" size="sm" onClick={handleAIAnalyze} isLoading={analyzingAI} className="mt-2">Get transcript feedback</Button>}
                     {!audioBlob && textAlternative.trim().length > 10 && (
                       <Button variant="primary" size="sm" onClick={handleSubmit} isLoading={submitting} className="mt-2">
                         Submit Text Response

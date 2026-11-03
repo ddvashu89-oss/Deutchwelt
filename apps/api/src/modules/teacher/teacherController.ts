@@ -133,9 +133,15 @@ export async function getTeacherDashboard(req: Request, res: Response, next: Nex
         })
       ]);
 
+      const upcomingClasses = await prisma.liveClass.findMany({
+        where: { teacherProfileId, startsAt: { gte: new Date() } },
+        orderBy: { startsAt: 'asc' }, take: 5,
+        include: { batch: { select: { name: true } } }
+      });
+
       const avgScore = evaluatedSubmissions.length > 0
         ? Math.round(evaluatedSubmissions.reduce((acc, s) => acc + (s.score || 0), 0) / evaluatedSubmissions.length)
-        : 88;
+        : 0;
 
       return res.json({
         success: true,
@@ -145,6 +151,7 @@ export async function getTeacherDashboard(req: Request, res: Response, next: Nex
           pendingSubmissionsCount: pendingSubmissions.length + pendingSpeaking.length,
           reviewedThisWeek: evaluatedSubmissions.length,
           averageScorePercentage: avgScore,
+          upcomingClasses,
           recentSubmissions: [
             ...pendingSubmissions.map(s => ({
               id: s.id,
@@ -181,8 +188,9 @@ export async function getTeacherDashboard(req: Request, res: Response, next: Nex
           totalBatches: myBatches.length,
           totalStudents: studentUserIds.length,
           pendingSubmissionsCount: pendingWriting.length + pendingSpeaking.length,
-          reviewedThisWeek: 4,
-          averageScorePercentage: 91,
+          reviewedThisWeek: store.submissions.filter(s => studentUserIds.includes(s.userId) && s.status === SubmissionStatus.GRADED).length,
+          averageScorePercentage: 0,
+          upcomingClasses: [],
           recentSubmissions: [
             ...pendingWriting.map(s => {
               const u = store.users.find(usr => usr.id === s.userId);
@@ -1016,44 +1024,15 @@ export async function enrollStudentInBatch(req: Request, res: Response, next: Ne
 
 export async function getTeacherSchedule(req: Request, res: Response, next: NextFunction) {
   try {
-    return res.json({
-      success: true,
-      upcomingSessions: [
-        {
-          id: 'sess-1',
-          studentName: 'Jason K',
-          topic: 'A1 Phonetics & Pronunciation Coaching',
-          time: '9:30 AM',
-          date: 'Today',
-          status: 'ACTIVE',
-          meetingUrl: 'https://meet.google.com/dw-a1-live'
-        },
-        {
-          id: 'sess-2',
-          studentName: 'Enoch',
-          topic: 'B1 Dativ vs Akkusativ Mastery',
-          time: '4:50 PM',
-          date: 'Today',
-          status: 'ACTIVE',
-          meetingUrl: 'https://meet.google.com/dw-b1-live'
-        },
-        {
-          id: 'sess-3',
-          studentName: 'Mia G',
-          topic: 'A2 Goethe Sprechen Preparation',
-          time: '7:00 PM',
-          date: 'Today',
-          status: 'ACTIVE',
-          meetingUrl: 'https://meet.google.com/dw-a2-live'
-        }
-      ],
-      cancelledSessions: [],
-      stats: {
-        activeStudents: 4,
-        upcomingCount: 4,
-        taughtHoursMonth: 5
-      }
-    });
+    const teacherProfileId = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId, req.user!.id);
+    if (!isDatabaseConnected) return res.json({ success: true, upcomingSessions: [], cancelledSessions: [], stats: { activeStudents: 0, upcomingCount: 0, taughtHoursMonth: 0 } });
+    const [upcomingSessions, activeStudents, taught] = await Promise.all([
+      prisma.liveClass.findMany({ where: { teacherProfileId, startsAt: { gte: new Date() } }, orderBy: { startsAt: 'asc' }, include: { batch: { select: { name: true } } } }),
+      prisma.batchMembership.count({ where: { batchId: { in: assignedBatchIds }, status: 'ACTIVE' } }),
+      prisma.liveClass.aggregate({ where: { teacherProfileId, startsAt: { gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) } }, _sum: { durationMinutes: true } })
+    ]);
+    return res.json({ success: true, upcomingSessions, cancelledSessions: [], stats: { activeStudents, upcomingCount: upcomingSessions.length, taughtHoursMonth: Math.round((taught._sum.durationMinutes || 0) / 60) } });
   } catch (error) {
     next(error);
   }

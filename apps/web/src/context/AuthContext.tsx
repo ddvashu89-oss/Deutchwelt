@@ -71,6 +71,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await api.post('/auth/logout');
     } finally {
+      try {
+        localStorage.removeItem('dw-offline-materials');
+        if ('caches' in window) await caches.delete('deutschwelt-private-materials-v1');
+      } catch { /* Offline cache cleanup should not block sign out. */ }
       setUser(null);
     }
   };

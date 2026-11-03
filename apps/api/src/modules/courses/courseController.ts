@@ -144,6 +144,10 @@ export async function enrollInCourse(req: Request, res: Response, next: NextFunc
 
     const { courseId } = req.params;
 
+    if (!isDatabaseConnected) {
+      return next(new AppError('Course enrollment requires the connected MySQL database. Please try again later.', 503, 'DATABASE_REQUIRED'));
+    }
+
     if (isDatabaseConnected) {
       const course = await prisma.course.findFirst({
         where: {
@@ -152,6 +156,14 @@ export async function enrollInCourse(req: Request, res: Response, next: NextFunc
       });
       if (!course) {
         return next(new AppError('Course not found.', 404, 'NOT_FOUND'));
+      }
+
+      if (course.pricePaise > 0) {
+        const paidOrder = await prisma.paymentOrder.findFirst({
+          where: { userId: req.user.id, courseId: course.id, status: 'PAID' },
+          select: { id: true }
+        });
+        if (!paidOrder) return next(new AppError('Complete course payment before enrolling.', 402, 'PAYMENT_REQUIRED'));
       }
 
       const enrollment = await prisma.enrollment.upsert({

@@ -277,6 +277,30 @@ The integration uses OAuth with the `drive.file` scope and an administrator-sele
 
 Deleting an uploaded asset moves it to Google Drive trash. The app does not expose public Drive links.
 
+### Learning, payments, reminders, and offline access
+
+The student workspace includes a saved CEFR placement assessment and weekly learning plan, AI German tutor, transcript-based speaking feedback, class calendar/check-in, community questions and answers, and opt-in class reminders. Teacher tools schedule sessions and record attendance against the current batch roster. Admins can set course prices and follow up on enquiries. The installable web app can cache selected study files for offline access; signing out clears the local private-material cache.
+
+Optional provider integrations are disabled until configured. Add these server-only values to the deployment environment when you are ready to enable them:
+
+```env
+GEMINI_API_KEY="..."
+GEMINI_MODEL="gemini-2.5-flash"
+RAZORPAY_KEY_ID="..."
+RAZORPAY_KEY_SECRET="..."
+RESEND_API_KEY="..."
+RESEND_FROM_EMAIL="DeutschWelt <classes@example.com>"
+WHATSAPP_CLOUD_API_TOKEN="..."
+WHATSAPP_PHONE_NUMBER_ID="..."
+WHATSAPP_API_VERSION="v23.0"
+WHATSAPP_TEMPLATE_NAME="class_reminder"
+WHATSAPP_TEMPLATE_LANGUAGE="en"
+```
+
+Use Razorpay test keys while verifying checkout, then configure live keys after the merchant account is activated. Verify purchases server-side before course enrollment; the frontend never receives the secret key. Email and WhatsApp reminders remain off per student until they opt in, and WhatsApp needs an approved template. AI speaking feedback evaluates the learner's supplied transcript; it does not claim to measure audio pronunciation. The AI tutor requires `GEMINI_API_KEY`.
+
+The added database tables and `Course.pricePaise` field must be applied to MySQL before deploying these features. Back up production data and inspect the proposed schema change first. This repo currently uses Prisma `db push`; it does not contain a versioned migration for the new tables, so do not run the command against an existing production database without a reviewed backup and schema diff.
+
 ---
 
 ## 7. Running with Docker Compose

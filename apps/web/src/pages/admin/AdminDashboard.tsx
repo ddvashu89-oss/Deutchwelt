@@ -92,9 +92,6 @@ export function AdminDashboard() {
             <h1 className="text-3xl sm:text-4xl font-heading font-black tracking-tight text-gray-950">
               {t('adash.title')}
             </h1>
-            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-              System Online
-            </span>
           </div>
           <p className="text-sm font-medium text-gray-500 mt-1">
             {t('adash.subtitle')}
@@ -137,13 +134,12 @@ export function AdminDashboard() {
           </div>
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-white">
-              {totalStudents || 18}
+              {totalStudents ?? 0}
             </div>
             <div className="flex items-center gap-2 mt-2">
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-mint/20 text-mint border border-mint/30">
-                {activeStudentsLast30Days || 15} aktiv (30T)
+                {activeStudentsLast30Days ?? 0} active (30d)
               </span>
-              <span className="text-xs text-emerald-100/70">Wachstum +18%</span>
             </div>
           </div>
         </div>
@@ -163,7 +159,7 @@ export function AdminDashboard() {
           </div>
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
-              {totalTeachers || 3}
+              {totalTeachers ?? 0}
               <span className="text-base font-bold text-gray-400">Dozenten</span>
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-forest-700">
@@ -188,12 +184,12 @@ export function AdminDashboard() {
           </div>
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
-              {totalEnrollments || 24}
+              {totalEnrollments ?? 0}
               <span className="text-base font-bold text-gray-400">Buchungen</span>
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-forest-700">
               <BookOpen className="w-3.5 h-3.5" />
-              <span>{totalCourses || 4} aktive Kurse (A1–B2)</span>
+              <span>{totalCourses ?? 0} courses</span>
             </div>
           </div>
         </div>
@@ -210,12 +206,12 @@ export function AdminDashboard() {
           </div>
           <div className="mt-4 mb-2">
             <div className="text-4xl font-heading font-black tracking-tight text-gray-950 flex items-baseline gap-2">
-              {totalCompletedLessons || 42}
+              {totalCompletedLessons ?? 0}
               <span className="text-base font-bold text-gray-400">Einheiten</span>
             </div>
             <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-emerald-700">
               <Award className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{averageExerciseScore || 89}% Prüfungsgenauigkeit</span>
+              <span>{averageExerciseScore ?? 0}% average exercise score</span>
             </div>
           </div>
         </div>

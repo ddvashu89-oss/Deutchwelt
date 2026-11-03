@@ -26,6 +26,10 @@ import enquiryRoutes from './modules/enquiries/enquiryRoutes.js';
 import systemRoutes from './modules/system/systemRoutes.js';
 import fileRoutes from './modules/files/fileRoutes.js';
 import { googleDriveOAuthCallback } from './modules/admin/driveController.js';
+import aiRoutes from './modules/ai/aiRoutes.js';
+import communityRoutes from './modules/community/communityRoutes.js';
+import paymentRoutes from './modules/payments/paymentRoutes.js';
+import { studentClassRoutes, teacherClassRoutes } from './modules/classes/classRoutes.js';
 
 const app = express();
 
@@ -144,12 +148,17 @@ app.use('/api/v1/vocabulary', vocabularyRoutes);
 app.use('/api/v1/speaking', speakingRoutes);
 app.use('/api/v1/assignments', assignmentRoutes);
 app.use('/api/v1/student', studentRoutes);
+app.use('/api/v1/student', studentClassRoutes);
 app.use('/api/v1/teacher', teacherRoutes);
+app.use('/api/v1/teacher', teacherClassRoutes);
 app.get('/api/v1/admin/drive/callback', googleDriveOAuthCallback);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/files', fileRoutes);
 app.use('/api/v1/enquiries', enquiryRoutes);
 app.use('/api/v1/system', systemRoutes);
+app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/community', communityRoutes);
+app.use('/api/v1/payments', paymentRoutes);
 
 // Catch-all route for unknown API endpoints
 app.all('/api/*', (req, res) => {

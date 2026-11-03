@@ -14128,7 +14128,7 @@ var require_type_is = __commonJS({
     module.exports = typeofrequest;
     module.exports.is = typeis;
     module.exports.hasBody = hasbody;
-    module.exports.normalize = normalize;
+    module.exports.normalize = normalize2;
     module.exports.match = mimeMatch;
     function typeis(value, types_) {
       var i;
@@ -14148,7 +14148,7 @@ var require_type_is = __commonJS({
       }
       var type;
       for (i = 0; i < types.length; i++) {
-        if (mimeMatch(normalize(type = types[i]), val)) {
+        if (mimeMatch(normalize2(type = types[i]), val)) {
           return type[0] === "+" || type.indexOf("*") !== -1 ? val : type;
         }
       }
@@ -14171,7 +14171,7 @@ var require_type_is = __commonJS({
       var value = req.headers["content-type"];
       return typeis(value, types);
     }
-    function normalize(type) {
+    function normalize2(type) {
       if (typeof type !== "string") {
         return false;
       }
@@ -17979,8 +17979,8 @@ var require_escape_html = __commonJS({
   "node_modules/escape-html/index.js"(exports, module) {
     "use strict";
     var matchHtmlRegExp = /["'&<>]/;
-    module.exports = escapeHtml;
-    function escapeHtml(string) {
+    module.exports = escapeHtml2;
+    function escapeHtml2(string) {
       var str = "" + string;
       var match = matchHtmlRegExp.exec(str);
       if (!match) {
@@ -18111,7 +18111,7 @@ var require_finalhandler = __commonJS({
     "use strict";
     var debug = require_src2()("finalhandler");
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var onFinished = require_on_finished();
     var parseUrl = require_parseurl();
     var statuses = require_statuses();
@@ -18123,7 +18123,7 @@ var require_finalhandler = __commonJS({
     };
     var isFinished = onFinished.isFinished;
     function createHtmlDocument(message) {
-      var body = escapeHtml(message).replace(NEWLINE_REGEXP, "<br>").replace(DOUBLE_SPACE_REGEXP, " &nbsp;");
+      var body = escapeHtml2(message).replace(NEWLINE_REGEXP, "<br>").replace(DOUBLE_SPACE_REGEXP, " &nbsp;");
       return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>Error</title>\n</head>\n<body>\n<pre>' + body + "</pre>\n</body>\n</html>\n";
     }
     module.exports = finalhandler;
@@ -19107,17 +19107,17 @@ var require_router = __commonJS({
     var toString = Object.prototype.toString;
     var proto = module.exports = function(options) {
       var opts = options || {};
-      function router14(req, res, next) {
-        router14.handle(req, res, next);
+      function router17(req, res, next) {
+        router17.handle(req, res, next);
       }
-      setPrototypeOf(router14, proto);
-      router14.params = {};
-      router14._params = [];
-      router14.caseSensitive = opts.caseSensitive;
-      router14.mergeParams = opts.mergeParams;
-      router14.strict = opts.strict;
-      router14.stack = [];
-      return router14;
+      setPrototypeOf(router17, proto);
+      router17.params = {};
+      router17._params = [];
+      router17.caseSensitive = opts.caseSensitive;
+      router17.mergeParams = opts.mergeParams;
+      router17.strict = opts.strict;
+      router17.stack = [];
+      return router17;
     };
     proto.param = function param(name, fn) {
       if (typeof name === "function") {
@@ -20627,7 +20627,7 @@ var require_send = __commonJS({
     var deprecate = require_depd()("send");
     var destroy = require_destroy();
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
     var fs4 = __require("fs");
@@ -20641,7 +20641,7 @@ var require_send = __commonJS({
     var util2 = __require("util");
     var extname = path7.extname;
     var join = path7.join;
-    var normalize = path7.normalize;
+    var normalize2 = path7.normalize;
     var resolve = path7.resolve;
     var sep = path7.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
@@ -20727,7 +20727,7 @@ var require_send = __commonJS({
       }
       var res = this.res;
       var msg = statuses.message[status] || String(status);
-      var doc = createHtmlDocument("Error", escapeHtml(msg));
+      var doc = createHtmlDocument("Error", escapeHtml2(msg));
       clearHeaders(res);
       if (err && err.headers) {
         setHeaders(res, err.headers);
@@ -20827,7 +20827,7 @@ var require_send = __commonJS({
         return;
       }
       var loc = encodeUrl(collapseLeadingSlashes(this.path + "/"));
-      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml(loc));
+      var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
       res.statusCode = 301;
       res.setHeader("Content-Type", "text/html; charset=UTF-8");
       res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -20851,7 +20851,7 @@ var require_send = __commonJS({
       var parts;
       if (root !== null) {
         if (path8) {
-          path8 = normalize("." + sep + path8);
+          path8 = normalize2("." + sep + path8);
         }
         if (UP_PATH_REGEXP.test(path8)) {
           debug('malicious path "%s"', path8);
@@ -20859,14 +20859,14 @@ var require_send = __commonJS({
           return res;
         }
         parts = path8.split(sep);
-        path8 = normalize(join(root, path8));
+        path8 = normalize2(join(root, path8));
       } else {
         if (UP_PATH_REGEXP.test(path8)) {
           debug('malicious path "%s"', path8);
           this.error(403);
           return res;
         }
-        parts = normalize(path8).split(sep);
+        parts = normalize2(path8).split(sep);
         path8 = resolve(path8);
       }
       if (containsDotFile(parts)) {
@@ -22150,7 +22150,7 @@ var require_application = __commonJS({
   "node_modules/express/lib/application.js"(exports, module) {
     "use strict";
     var finalhandler = require_finalhandler();
-    var Router14 = require_router();
+    var Router18 = require_router();
     var methods = require_methods();
     var middleware = require_init();
     var query = require_query();
@@ -22215,7 +22215,7 @@ var require_application = __commonJS({
     };
     app2.lazyrouter = function lazyrouter() {
       if (!this._router) {
-        this._router = new Router14({
+        this._router = new Router18({
           caseSensitive: this.enabled("case sensitive routing"),
           strict: this.enabled("strict routing")
         });
@@ -22224,17 +22224,17 @@ var require_application = __commonJS({
       }
     };
     app2.handle = function handle(req, res, callback) {
-      var router14 = this._router;
+      var router17 = this._router;
       var done = callback || finalhandler(req, res, {
         env: this.get("env"),
         onerror: logerror.bind(this)
       });
-      if (!router14) {
+      if (!router17) {
         debug("no routes defined on app");
         done();
         return;
       }
-      router14.handle(req, res, done);
+      router17.handle(req, res, done);
     };
     app2.use = function use(fn) {
       var offset = 0;
@@ -22254,15 +22254,15 @@ var require_application = __commonJS({
         throw new TypeError("app.use() requires a middleware function");
       }
       this.lazyrouter();
-      var router14 = this._router;
+      var router17 = this._router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router14.use(path7, fn2);
+          return router17.use(path7, fn2);
         }
         debug(".use app under %s", path7);
         fn2.mountpath = path7;
         fn2.parent = this;
-        router14.use(path7, function mounted_app(req, res, next) {
+        router17.use(path7, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             setPrototypeOf(req, orig.request);
@@ -23432,7 +23432,7 @@ var require_response = __commonJS({
     var createError = require_http_errors();
     var deprecate = require_depd()("express");
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var http = __require("http");
     var isAbsolute = require_utils2().isAbsolute;
     var onFinished = require_on_finished();
@@ -23838,7 +23838,7 @@ var require_response = __commonJS({
           body = statuses.message[status] + ". Redirecting to " + address;
         },
         html: function() {
-          var u = escapeHtml(address);
+          var u = escapeHtml2(address);
           body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
         },
         default: function() {
@@ -23970,7 +23970,7 @@ var require_serve_static = __commonJS({
   "node_modules/serve-static/index.js"(exports, module) {
     "use strict";
     var encodeUrl = require_encodeurl();
-    var escapeHtml = require_escape_html();
+    var escapeHtml2 = require_escape_html();
     var parseUrl = require_parseurl();
     var resolve = __require("path").resolve;
     var send = require_send();
@@ -24057,7 +24057,7 @@ var require_serve_static = __commonJS({
         originalUrl.path = null;
         originalUrl.pathname = collapseLeadingSlashes(originalUrl.pathname + "/");
         var loc = encodeUrl(url.format(originalUrl));
-        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml(loc));
+        var doc = createHtmlDocument("Redirecting", "Redirecting to " + escapeHtml2(loc));
         res.statusCode = 301;
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
         res.setHeader("Content-Length", Buffer.byteLength(doc));
@@ -24079,7 +24079,7 @@ var require_express = __commonJS({
     var mixin = require_merge_descriptors();
     var proto = require_application();
     var Route = require_route();
-    var Router14 = require_router();
+    var Router18 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -24102,7 +24102,7 @@ var require_express = __commonJS({
     exports.request = req;
     exports.response = res;
     exports.Route = Route;
-    exports.Router = Router14;
+    exports.Router = Router18;
     exports.json = bodyParser.json;
     exports.query = require_query();
     exports.raw = bodyParser.raw;
@@ -32907,7 +32907,7 @@ var require_multer = __commonJS({
 });
 
 // apps/api/src/app.ts
-var import_express14 = __toESM(require_express2(), 1);
+var import_express18 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 
 // node_modules/helmet/index.mjs
@@ -33504,6 +33504,17 @@ var env = {
   GOOGLE_DRIVE_CLIENT_SECRET: process.env.GOOGLE_DRIVE_CLIENT_SECRET || "",
   GOOGLE_DRIVE_PICKER_API_KEY: process.env.GOOGLE_DRIVE_PICKER_API_KEY || "",
   GOOGLE_DRIVE_PROJECT_NUMBER: process.env.GOOGLE_DRIVE_PROJECT_NUMBER || "",
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
+  GEMINI_MODEL: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || "",
+  RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || "",
+  RESEND_API_KEY: process.env.RESEND_API_KEY || "",
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || "",
+  WHATSAPP_CLOUD_API_TOKEN: process.env.WHATSAPP_CLOUD_API_TOKEN || "",
+  WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID || "",
+  WHATSAPP_API_VERSION: process.env.WHATSAPP_API_VERSION || "v23.0",
+  WHATSAPP_TEMPLATE_NAME: process.env.WHATSAPP_TEMPLATE_NAME || "",
+  WHATSAPP_TEMPLATE_LANGUAGE: process.env.WHATSAPP_TEMPLATE_LANGUAGE || "en",
   isDev: nodeEnv === "development" && !process.env.VERCEL,
   isTest: nodeEnv === "test",
   isProd,
@@ -42270,6 +42281,9 @@ async function enrollInCourse(req, res, next) {
       return next(new AppError("Please log in to enroll.", 401, "UNAUTHORIZED"));
     }
     const { courseId } = req.params;
+    if (!isDatabaseConnected) {
+      return next(new AppError("Course enrollment requires the connected MySQL database. Please try again later.", 503, "DATABASE_REQUIRED"));
+    }
     if (isDatabaseConnected) {
       const course = await prisma.course.findFirst({
         where: {
@@ -42278,6 +42292,13 @@ async function enrollInCourse(req, res, next) {
       });
       if (!course) {
         return next(new AppError("Course not found.", 404, "NOT_FOUND"));
+      }
+      if (course.pricePaise > 0) {
+        const paidOrder = await prisma.paymentOrder.findFirst({
+          where: { userId: req.user.id, courseId: course.id, status: "PAID" },
+          select: { id: true }
+        });
+        if (!paidOrder) return next(new AppError("Complete course payment before enrolling.", 402, "PAYMENT_REQUIRED"));
       }
       const enrollment = await prisma.enrollment.upsert({
         where: {
@@ -42459,8 +42480,15 @@ async function markLessonComplete(req, res, next) {
       return next(new AppError("Unauthorized", 401));
     }
     const { lessonId } = req.params;
-    const { timeSpentSeconds = 600 } = req.body;
+    const requestedTime = Number(req.body?.timeSpentSeconds ?? 600);
+    const timeSpentSeconds = Number.isFinite(requestedTime) ? Math.max(0, Math.min(14400, Math.floor(requestedTime))) : 600;
     if (isDatabaseConnected) {
+      const lesson = await prisma.lesson.findUnique({ where: { id: lessonId }, include: { unit: { select: { courseId: true } } } });
+      if (!lesson) return next(new AppError("Lesson not found.", 404));
+      const enrollment = await prisma.enrollment.findUnique({ where: { userId_courseId: { userId: req.user.id, courseId: lesson.unit.courseId } } });
+      if (!enrollment || !["ACTIVE", "COMPLETED"].includes(enrollment.status)) {
+        return next(new AppError("Enroll in this course to save lesson progress.", 403));
+      }
       const progress = await prisma.lessonProgress.upsert({
         where: {
           userId_lessonId: {
@@ -42481,7 +42509,16 @@ async function markLessonComplete(req, res, next) {
           timeSpentSeconds
         }
       });
-      return res.json({ success: true, message: "Lesson marked as completed!", progress });
+      const [totalLessons, completedLessons] = await Promise.all([
+        prisma.lesson.count({ where: { unit: { courseId: lesson.unit.courseId }, status: "PUBLISHED" } }),
+        prisma.lessonProgress.count({ where: { userId: req.user.id, isCompleted: true, lesson: { unit: { courseId: lesson.unit.courseId } } } })
+      ]);
+      const progressPercentage = totalLessons ? Math.round(completedLessons / totalLessons * 100) : 0;
+      await prisma.enrollment.update({
+        where: { id: enrollment.id },
+        data: { progressPercentage, status: progressPercentage >= 100 ? "COMPLETED" : "ACTIVE", completedAt: progressPercentage >= 100 ? /* @__PURE__ */ new Date() : null }
+      });
+      return res.json({ success: true, message: "Lesson marked as completed!", progress, progressPercentage });
     } else {
       let progress = store.lessonProgress.find((lp) => lp.userId === req.user?.id && lp.lessonId === lessonId);
       if (progress) {
@@ -42585,7 +42622,7 @@ function evaluateQuestionAnswer(question, userAnswer) {
     explanation: question.explanation
   };
 }
-function evaluateFullExercise(questions, submissions, passingScorePercentage = 70) {
+function evaluateFullExercise(questions2, submissions, passingScorePercentage = 70) {
   let totalPoints = 0;
   let earnedPoints = 0;
   const breakdown = [];
@@ -42593,7 +42630,7 @@ function evaluateFullExercise(questions, submissions, passingScorePercentage = 7
   for (const s of submissions) {
     submissionMap.set(s.questionId, s.answer);
   }
-  for (const q of questions) {
+  for (const q of questions2) {
     totalPoints += q.points;
     const userAnswer = submissionMap.get(q.id);
     const result = evaluateQuestionAnswer(q, userAnswer);
@@ -42727,8 +42764,8 @@ async function submitExerciseAttempt(req, res, next) {
       if (!exercise) {
         return next(new AppError("Exercise not found.", 404));
       }
-      const questions = store.questions.filter((q) => q.exerciseId === exercise.id);
-      const questionData = questions.map((q) => ({
+      const questions2 = store.questions.filter((q) => q.exerciseId === exercise.id);
+      const questionData = questions2.map((q) => ({
         id: q.id,
         type: q.type,
         prompt: q.prompt,
@@ -43368,6 +43405,39 @@ async function removeStoredFile(fileUrl) {
 
 // apps/api/src/modules/speaking/speakingController.ts
 import fs2 from "node:fs/promises";
+
+// apps/api/src/services/gemini.ts
+async function generateGeminiText(turns, systemInstruction, jsonResponse = false) {
+  if (!env.GEMINI_API_KEY) throw new Error("AI tutor is not configured. Add GEMINI_API_KEY to the API environment.");
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(env.GEMINI_MODEL)}:generateContent`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": env.GEMINI_API_KEY
+    },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: systemInstruction }] },
+      contents: turns.map((turn) => ({ role: turn.role, parts: [{ text: turn.text }] })),
+      generationConfig: {
+        temperature: 0.35,
+        maxOutputTokens: 700,
+        ...jsonResponse ? { responseMimeType: "application/json" } : {}
+      }
+    }),
+    signal: AbortSignal.timeout(25e3)
+  });
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    console.error("[AI tutor] Gemini request failed:", response.status, detail.slice(0, 400));
+    throw new Error("AI practice is temporarily unavailable. Please try again shortly.");
+  }
+  const payload = await response.json();
+  const text = payload?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim();
+  if (!text) throw new Error("The AI tutor returned an empty response. Please try again.");
+  return text;
+}
+
+// apps/api/src/modules/speaking/speakingController.ts
 async function getSpeakingPrompts(req, res, next) {
   try {
     const { level } = req.query;
@@ -43504,45 +43574,35 @@ async function analyzeSpeakingAudio(req, res, next) {
     const { promptId, durationSeconds, transcriptText } = req.body;
     const file = req.file;
     if (file?.path) await fs2.unlink(file.path).catch(() => void 0);
-    const prompt = store.speakingPrompts.find((p) => p.id === promptId);
-    const targetText = prompt?.sampleAnswerDe || "Guten Tag! Ich lerne Deutsch.";
-    const audioDuration = durationSeconds ? parseInt(durationSeconds, 10) : 15;
-    const targetWords = targetText.replace(/[.,!?;:]/g, "").split(/\s+/).slice(0, 12);
-    const wordFeedback = targetWords.map((word, idx) => {
-      const lower = word.toLowerCase();
-      const hasUmlautOrSpecial = /[äöüß]|ch|sch|sp|st|ei|ie|eu/.test(lower);
-      const isDifficult = hasUmlautOrSpecial && idx % 3 === 0;
-      return {
-        word,
-        status: isDifficult ? "needs_practice" : idx % 2 === 0 ? "mastered" : "acceptable",
-        score: isDifficult ? 78 : idx % 2 === 0 ? 98 : 91,
-        phoneticTip: isDifficult ? lower.includes("ch") ? "Pay attention to the soft ich-Laut [\xE7] \u2014 tongue pressed lightly against palate." : lower.includes("\xF6") || lower.includes("\xFC") ? 'Round your lips tightly into an O-shape while voicing "ee" for clean umlauts.' : "Articulate the consonants crisply at the end of the syllable." : "Clean and natural pronunciation."
-      };
-    });
-    const masteredCount = wordFeedback.filter((w) => w.status === "mastered").length;
-    const pronunciationScore = Math.min(98, Math.max(82, Math.round(85 + masteredCount / wordFeedback.length * 12)));
-    const fluencyScore = Math.min(96, Math.max(80, Math.round(82 + Math.min(audioDuration, 30) / 30 * 12)));
-    const grammarScore = 94;
-    const overallScore = Math.round(pronunciationScore * 0.5 + fluencyScore * 0.3 + grammarScore * 0.2);
-    const insights = [
-      `CEFR Oral Proficiency: ${prompt?.level || "A1"} Standard (${overallScore}% accuracy).`,
-      "Excellent articulation of vowels and initial consonants.",
-      "Sentence melody (Satzmelodie) is clear with natural German cadences.",
-      'Key Tip: Keep practicing the distinction between "ie" (long /i:/) and "ei" (diphthong /a\u026A/).'
-    ];
+    if (!req.user) return next(new AppError("Unauthorized", 401));
+    if (!env.GEMINI_API_KEY) return next(new AppError("AI speaking feedback is not configured yet. You can still submit your response to your teacher.", 503, "AI_NOT_CONFIGURED"));
+    const transcript = typeof transcriptText === "string" ? transcriptText.trim().slice(0, 1200) : "";
+    if (!transcript) return next(new AppError("Enter the words you spoke so the tutor can give accurate transcript feedback. Audio alone is not scored.", 400));
+    const prompt = isDatabaseConnected ? await prisma.speakingPrompt.findUnique({ where: { id: promptId } }) : store.speakingPrompts.find((item) => item.id === promptId);
+    const targetText = prompt?.sampleAnswerDe || prompt?.scenario || "";
+    if (!targetText) return next(new AppError("Speaking prompt not found.", 404));
+    const raw = await generateGeminiText([{ role: "user", text: `Target phrase: ${targetText}
+Learner transcript: ${transcript}` }], "You are a patient German tutor. You cannot hear audio. Do not claim to score pronunciation, accent or fluency. Return JSON only with overallScore integer 0-100 for transcript match and language accuracy, correctedTranscript string, strengths array of short strings, practiceTips array of short strings, nextPhrase string.", true);
+    let feedback;
+    try {
+      feedback = JSON.parse(raw);
+    } catch {
+      throw new Error("AI feedback could not be formatted. Please try again.");
+    }
+    const overallScore = Number(feedback.overallScore);
     return res.json({
       success: true,
       analysis: {
-        overallScore,
-        pronunciationScore,
-        fluencyScore,
-        grammarScore,
+        overallScore: Number.isFinite(overallScore) ? Math.max(0, Math.min(100, Math.round(overallScore))) : null,
         targetPhrase: targetText,
-        detectedSpeech: transcriptText || "Recognized high-fidelity German audio input",
-        wordFeedback,
-        insights,
+        detectedSpeech: transcript,
+        correctedTranscript: String(feedback.correctedTranscript || transcript).slice(0, 1200),
+        strengths: Array.isArray(feedback.strengths) ? feedback.strengths.slice(0, 4) : [],
+        practiceTips: Array.isArray(feedback.practiceTips) ? feedback.practiceTips.slice(0, 4) : [],
+        nextPhrase: String(feedback.nextPhrase || "").slice(0, 300),
+        evaluationType: "Transcript feedback only; acoustic pronunciation was not measured.",
         audioUrl: null,
-        durationSeconds: audioDuration,
+        durationSeconds: durationSeconds ? Math.max(0, parseInt(durationSeconds, 10)) : null,
         evaluatedAt: (/* @__PURE__ */ new Date()).toISOString()
       }
     });
@@ -43714,7 +43774,7 @@ var router6 = (0, import_express6.Router)();
 router6.get("/prompts", getSpeakingPrompts);
 router6.get("/prompts/:promptId", getSpeakingPromptById);
 router6.post("/prompts/:promptId/attempts", requireAuth, uploadAudio.single("audio"), submitSpeakingAttempt);
-router6.post("/analyze", requireAuth, uploadAudio.single("audio"), analyzeSpeakingAudio);
+router6.post("/analyze", requireAuth, authRateLimiter, uploadAudio.single("audio"), analyzeSpeakingAudio);
 router6.get("/my-attempts", requireAuth, getUserSpeakingAttempts);
 var speakingRoutes_default = router6;
 
@@ -43871,6 +43931,7 @@ var assignmentRoutes_default = router7;
 var import_express8 = __toESM(require_express2(), 1);
 
 // apps/api/src/modules/student/studentController.ts
+import { randomBytes as randomBytes4 } from "node:crypto";
 async function getStudentDashboard(req, res, next) {
   try {
     if (!req.user) {
@@ -43884,7 +43945,8 @@ async function getStudentDashboard(req, res, next) {
         completedLessons,
         vocabStats,
         exerciseAttempts,
-        assignments
+        assignments,
+        upcomingClasses
       ] = await Promise.all([
         prisma.studentProfile.findUnique({ where: { userId } }),
         prisma.enrollment.findMany({
@@ -43901,7 +43963,7 @@ async function getStudentDashboard(req, res, next) {
             }
           }
         }),
-        prisma.lessonProgress.findMany({ where: { userId, isCompleted: true } }),
+        prisma.lessonProgress.findMany({ where: { userId } }),
         prisma.studentVocabularyProgress.findMany({ where: { userId } }),
         prisma.exerciseAttempt.findMany({ where: { userId }, orderBy: { startedAt: "desc" } }),
         prisma.assignment.findMany({
@@ -43910,15 +43972,25 @@ async function getStudentDashboard(req, res, next) {
           include: {
             submissions: { where: { userId } }
           }
+        }),
+        prisma.liveClass.findMany({
+          where: { startsAt: { gte: /* @__PURE__ */ new Date() }, batch: { memberships: { some: { userId, status: "ACTIVE" } } } },
+          orderBy: { startsAt: "asc" },
+          take: 5,
+          include: { batch: { select: { name: true } } }
         })
       ]);
       const wordsLearned = vocabStats.length;
       const wordsMastered = vocabStats.filter((v) => v.box === 5 || v.status === "MASTERED").length;
-      const avgAccuracy = exerciseAttempts.length > 0 ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length) : 100;
+      const avgAccuracy = exerciseAttempts.length > 0 ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length) : 0;
+      const startOfDay = /* @__PURE__ */ new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const minutesSpentToday = Math.round(completedLessons.reduce((sum, lesson) => sum + (lesson.updatedAt >= startOfDay ? lesson.timeSpentSeconds : 0), 0) / 60);
+      const completedLessonCount = completedLessons.filter((lesson) => lesson.isCompleted).length;
       const activeEnrollment = enrollments[0];
       let continueLesson = null;
       if (activeEnrollment && activeEnrollment.course.units.length > 0) {
-        const completedIds = new Set(completedLessons.map((cl) => cl.lessonId));
+        const completedIds = new Set(completedLessons.filter((cl) => cl.isCompleted).map((cl) => cl.lessonId));
         for (const unit of activeEnrollment.course.units) {
           for (const lesson of unit.lessons) {
             if (!completedIds.has(lesson.id)) {
@@ -43939,16 +44011,17 @@ async function getStudentDashboard(req, res, next) {
         success: true,
         stats: {
           currentLevel: profile?.currentLevel || "A1",
-          streakDays: profile?.streakCount || 1,
+          streakDays: profile?.streakCount || 0,
           dailyGoalMinutes: profile?.dailyGoalMinutes || 20,
-          minutesSpentToday: 15,
+          minutesSpentToday,
           wordsLearned,
           wordsMastered,
           exerciseAccuracy: avgAccuracy,
-          completedLessonsCount: completedLessons.length,
+          completedLessonsCount: completedLessonCount,
           enrolledCoursesCount: enrollments.length,
           upcomingAssignmentsCount: assignments.filter((a) => a.submissions.length === 0).length,
           continueLesson,
+          upcomingClasses: upcomingClasses.map((item) => ({ id: item.id, title: item.title, startsAt: item.startsAt, durationMinutes: item.durationMinutes, meetingUrl: item.meetingUrl, batchName: item.batch.name })),
           enrollments: enrollments.map((e) => ({
             id: e.id,
             courseId: e.courseId,
@@ -43988,7 +44061,7 @@ async function getStudentDashboard(req, res, next) {
       const wordsLearned = vocabStats.length;
       const wordsMastered = vocabStats.filter((vp) => vp.box === 5 || vp.status === VocabMasteryStatus.MASTERED).length;
       const exerciseAttempts = store.attempts.filter((a) => a.userId === userId);
-      const avgAccuracy = exerciseAttempts.length > 0 ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length) : 95;
+      const avgAccuracy = exerciseAttempts.length > 0 ? Math.round(exerciseAttempts.reduce((acc, curr) => acc + curr.percentage, 0) / exerciseAttempts.length) : 0;
       const completedIds = new Set(completedLessons.map((cl) => cl.lessonId));
       const targetLevel = profile?.currentLevel || "A1";
       const activeCourse = store.courses.find((c) => c.level === targetLevel) || store.courses[0];
@@ -44010,57 +44083,30 @@ async function getStudentDashboard(req, res, next) {
           if (continueLesson) break;
         }
       }
-      if (!continueLesson) {
-        continueLesson = {
-          id: "lesson-a1-1-1",
-          title: "Lektion 1.1: Sich vorstellen (Introducing Yourself)",
-          unitTitle: "Einheit 1: Hallo und Willkommen",
-          courseSlug: "deutsch-a1-beginner-intensiv",
-          courseTitle: "Deutsch A1: Complete Beginner to Breakthrough"
-        };
-      }
+      const startOfDay = /* @__PURE__ */ new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const minutesSpentToday = Math.round(completedLessons.filter((lesson) => new Date(lesson.completedAt || lesson.updatedAt || 0) >= startOfDay).reduce((sum, lesson) => sum + (lesson.timeSpentSeconds || 0), 0) / 60);
       return res.json({
         success: true,
         stats: {
           currentLevel: profile?.currentLevel || "A1",
           currentLevelName: "A1 - Beginner",
-          streakDays: profile?.streakCount || 7,
+          streakDays: profile?.streakCount || 0,
           dailyGoalMinutes: profile?.dailyGoalMinutes || 25,
-          minutesSpentToday: 180,
-          studyTimeMinutes: 180,
-          wordsLearned: wordsLearned || 25,
-          wordsMastered: wordsMastered || 18,
-          exerciseAccuracy: avgAccuracy || 95,
-          exercisesDone: exerciseAttempts.length || 12,
-          levelProgressPercentage: 20,
-          completedLessonsCount: completedLessons.length || 3,
-          enrolledCoursesCount: enrollments.length || 1,
-          upcomingAssignmentsCount: 1,
+          minutesSpentToday,
+          studyTimeMinutes: minutesSpentToday,
+          wordsLearned,
+          wordsMastered,
+          exerciseAccuracy: avgAccuracy,
+          exercisesDone: exerciseAttempts.length,
+          levelProgressPercentage: 0,
+          completedLessonsCount: completedLessons.length,
+          enrolledCoursesCount: enrollments.length,
+          upcomingAssignmentsCount: 0,
           continueLesson,
-          enrollments: enrollments.length > 0 ? enrollments : [{
-            id: "enr-1",
-            courseId: "course-a1",
-            courseTitle: "Deutsch A1: Complete Beginner to Breakthrough",
-            courseSlug: "deutsch-a1-beginner-intensiv",
-            level: "A1",
-            progressPercentage: 35,
-            status: "ACTIVE"
-          }],
-          recentActivity: [
-            {
-              id: "act-1",
-              type: "LESSON_COMPLETED",
-              title: "Completed: Lektion 1.1: Sich vorstellen",
-              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-              score: 100
-            },
-            {
-              id: "act-2",
-              type: "VOCAB_PRACTICED",
-              title: "Practiced 5 vocabulary words",
-              timestamp: new Date(Date.now() - 36e5).toISOString()
-            }
-          ]
+          enrollments,
+          upcomingClasses: [],
+          recentActivity: []
         }
       });
     }
@@ -44307,6 +44353,23 @@ async function getStudentBatchLectures(req, res, next) {
 async function getStudentCertificates(req, res, next) {
   try {
     if (!req.user) return next(new AppError("Unauthorized", 401));
+    if (isDatabaseConnected) {
+      const certificates2 = await prisma.courseCertificate.findMany({
+        where: { userId: req.user.id },
+        include: { course: true, user: { select: { firstName: true, lastName: true } } },
+        orderBy: { issuedAt: "desc" }
+      });
+      return res.json({ success: true, certificates: certificates2.map((certificate) => ({
+        ...certificate,
+        userFullName: `${certificate.user.firstName} ${certificate.user.lastName}`,
+        courseTitle: certificate.course.title,
+        level: certificate.course.level,
+        gradeClassification: certificate.gradeScore >= 90 ? "With Distinction" : certificate.gradeScore >= 75 ? "Pass" : "Completed",
+        instructorName: "DeutschWelt Academic Team",
+        directorName: "DeutschWelt Academic Team",
+        directorTitle: "Academic Director"
+      })) });
+    }
     const certificates = store.certificates.filter((c) => c.userId === req.user.id);
     return res.json({ success: true, certificates });
   } catch (error) {
@@ -44317,6 +44380,37 @@ async function claimCourseCertificate(req, res, next) {
   try {
     if (!req.user) return next(new AppError("Unauthorized", 401));
     const { courseId } = req.params;
+    if (isDatabaseConnected) {
+      const course2 = await prisma.course.findFirst({ where: { OR: [{ id: courseId }, { slug: courseId }] } });
+      if (!course2) return next(new AppError("Course not found.", 404));
+      const enrollment = await prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId: req.user.id, courseId: course2.id } }
+      });
+      if (!enrollment) return next(new AppError("Enroll in this course before claiming a certificate.", 403));
+      const [totalLessons, completedLessons] = await Promise.all([
+        prisma.lesson.count({ where: { unit: { courseId: course2.id }, status: "PUBLISHED" } }),
+        prisma.lessonProgress.count({ where: { userId: req.user.id, isCompleted: true, lesson: { unit: { courseId: course2.id } } } })
+      ]);
+      if (totalLessons === 0 || completedLessons < totalLessons) {
+        return next(new AppError("Complete every published lesson in this course before claiming its certificate.", 409, "COURSE_NOT_COMPLETE"));
+      }
+      const existing2 = await prisma.courseCertificate.findUnique({ where: { userId_courseId: { userId: req.user.id, courseId: course2.id } } });
+      if (existing2) return res.json({ success: true, certificate: { ...existing2, userFullName: `${req.user.firstName} ${req.user.lastName}`, courseTitle: course2.title, level: course2.level, gradeClassification: "Completed" }, message: "Certificate already issued." });
+      const certificateNumber = `DW-${(/* @__PURE__ */ new Date()).getFullYear()}-${course2.level}-${randomBytes4(4).toString("hex").toUpperCase()}`;
+      const verificationCode = `DWV-${randomBytes4(8).toString("hex").toUpperCase()}`;
+      const certificate = await prisma.courseCertificate.create({
+        data: { certificateNumber, verificationCode, userId: req.user.id, courseId: course2.id, gradeScore: 100 },
+        include: { course: true }
+      });
+      await prisma.notification.create({
+        data: { userId: req.user.id, title: "Course certificate issued", message: `Your certificate for ${course2.title} is ready.`, type: "CERTIFICATE", linkUrl: "/student/courses" }
+      });
+      return res.status(201).json({
+        success: true,
+        message: "Certificate of Completion generated successfully!",
+        certificate: { ...certificate, userFullName: `${req.user.firstName} ${req.user.lastName}`, courseTitle: course2.title, level: course2.level, gradeClassification: "Completed", instructorName: "DeutschWelt Academic Team", directorName: "DeutschWelt Academic Team", directorTitle: "Academic Director" }
+      });
+    }
     const course = store.courses.find((c) => c.id === courseId);
     if (!course) {
       return next(new AppError("Course not found.", 404));
@@ -44366,6 +44460,22 @@ async function claimCourseCertificate(req, res, next) {
 async function verifyCertificate(req, res, next) {
   try {
     const { certificateNumber } = req.params;
+    if (isDatabaseConnected) {
+      const cert2 = await prisma.courseCertificate.findFirst({
+        where: { OR: [{ certificateNumber }, { verificationCode: certificateNumber }] },
+        include: { user: { select: { firstName: true, lastName: true } }, course: true }
+      });
+      if (!cert2) return res.status(404).json({ success: false, message: "No active DeutschWelt certificate found with this verification number." });
+      return res.json({ success: true, certificate: {
+        certificateNumber: cert2.certificateNumber,
+        recipient: `${cert2.user.firstName} ${cert2.user.lastName}`,
+        courseTitle: cert2.course.title,
+        level: cert2.course.level,
+        gradeScore: cert2.gradeScore,
+        issuedAt: cert2.issuedAt,
+        isValid: true
+      } });
+    }
     const cert = store.certificates.find(
       (c) => c.certificateNumber.toLowerCase() === certificateNumber.toLowerCase() || c.verificationCode?.toLowerCase() === certificateNumber.toLowerCase()
     );
@@ -44393,6 +44503,148 @@ async function verifyCertificate(req, res, next) {
   }
 }
 
+// apps/api/src/modules/student/placementController.ts
+var questions = [
+  { id: "a1-1", level: GermanLevel.A1, prompt: "Ich ___ Maya.", options: ["hei\xDFe", "hei\xDFt", "hei\xDFen"], answer: "hei\xDFe" },
+  { id: "a1-2", level: GermanLevel.A1, prompt: "___ du aus Indien?", options: ["Komme", "Kommst", "Kommt"], answer: "Kommst" },
+  { id: "a1-3", level: GermanLevel.A1, prompt: "Choose the correct article: ___ Buch", options: ["Der", "Die", "Das"], answer: "Das" },
+  { id: "a2-1", level: GermanLevel.A2, prompt: "Gestern ___ ich meine Freundin besucht.", options: ["habe", "bin", "hat"], answer: "habe" },
+  { id: "a2-2", level: GermanLevel.A2, prompt: "Ich fahre ___ dem Bus zur Arbeit.", options: ["mit", "bei", "nach"], answer: "mit" },
+  { id: "a2-3", level: GermanLevel.A2, prompt: "Choose the correct sentence.", options: ["Ich muss heute lernen.", "Ich muss lerne heute.", "Ich heute muss lernen."], answer: "Ich muss heute lernen." },
+  { id: "b1-1", level: GermanLevel.B1, prompt: "Ich bleibe zu Hause, ___ es regnet.", options: ["weil", "denn ich", "trotzdem"], answer: "weil" },
+  { id: "b1-2", level: GermanLevel.B1, prompt: "Wenn ich mehr Zeit ___, w\xFCrde ich \xF6fter lesen.", options: ["habe", "h\xE4tte", "hatte"], answer: "h\xE4tte" },
+  { id: "b1-3", level: GermanLevel.B1, prompt: "Der Brief ___ gestern geschrieben.", options: ["wurde", "hat", "war"], answer: "wurde" },
+  { id: "b2-1", level: GermanLevel.B2, prompt: "Choose the best connector: ___ er krank war, nahm er am Unterricht teil.", options: ["Obwohl", "Weil", "Damit"], answer: "Obwohl" },
+  { id: "b2-2", level: GermanLevel.B2, prompt: "Die Unterlagen, ___ ich gestern erhalten habe, sind vollst\xE4ndig.", options: ["die", "denen", "deren"], answer: "die" },
+  { id: "b2-3", level: GermanLevel.B2, prompt: "Er behauptet, die E-Mail schon ___ .", options: ["beantwortet zu haben", "zu beantworten gehabt", "beantworten haben"], answer: "beantwortet zu haben" }
+];
+var normalize = (value) => String(value || "").trim().toLocaleLowerCase("de-DE").replace(/[.!?]+$/g, "");
+async function getPlacementTest(_req, res) {
+  return res.json({ success: true, questions: questions.map(({ answer: _answer, ...question }) => question) });
+}
+async function submitPlacementTest(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    const answers = req.body?.answers;
+    if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+      return next(new AppError("Submit one answer for each placement question.", 400));
+    }
+    const levelStats = [GermanLevel.A1, GermanLevel.A2, GermanLevel.B1, GermanLevel.B2].map((level) => {
+      const levelQuestions = questions.filter((question) => question.level === level);
+      const correct = levelQuestions.filter((question) => normalize(answers[question.id]) === normalize(question.answer)).length;
+      return { level, correct, total: levelQuestions.length, percentage: Math.round(correct / levelQuestions.length * 100) };
+    });
+    let recommendedLevel = GermanLevel.A1;
+    for (const stat of levelStats) {
+      if (stat.percentage >= 50) recommendedLevel = stat.level;
+      else break;
+    }
+    const score = levelStats.reduce((sum, stat) => sum + stat.correct, 0);
+    const maxScore = questions.length;
+    const summary = levelStats.map(({ level, correct, total, percentage }) => ({ level, correct, total, percentage }));
+    let attemptId = null;
+    if (isDatabaseConnected) {
+      const attempt = await prisma.placementAttempt.create({
+        data: { userId: req.user.id, recommendedLevel, score, maxScore, answerSummary: summary }
+      });
+      attemptId = attempt.id;
+      await prisma.studentProfile.updateMany({
+        where: { userId: req.user.id },
+        data: { currentLevel: recommendedLevel }
+      });
+    }
+    const focusAreas = summary.filter((item) => item.percentage < 70).map((item) => item.level);
+    return res.json({
+      success: true,
+      result: {
+        attemptId,
+        recommendedLevel,
+        score,
+        maxScore,
+        percentage: Math.round(score / maxScore * 100),
+        levelBreakdown: summary,
+        focusAreas,
+        persisted: isDatabaseConnected
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getPersonalLearningPlan(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    const [profile, latestAttempt, enrollments] = isDatabaseConnected ? await Promise.all([
+      prisma.studentProfile.findUnique({ where: { userId: req.user.id } }),
+      prisma.placementAttempt.findFirst({ where: { userId: req.user.id }, orderBy: { createdAt: "desc" } }),
+      prisma.enrollment.findMany({ where: { userId: req.user.id }, include: { course: true } })
+    ]) : [null, null, []];
+    const level = latestAttempt?.recommendedLevel || profile?.currentLevel || GermanLevel.A1;
+    const plan = [
+      { day: "Mon", focus: "Grammar foundations", activity: "Complete one lesson and its short exercise", minutes: 25 },
+      { day: "Tue", focus: "Vocabulary", activity: "Review due words and add 10 useful phrases", minutes: 20 },
+      { day: "Wed", focus: "Listening", activity: "Listen to a course dialogue and note 5 new expressions", minutes: 25 },
+      { day: "Thu", focus: "Speaking", activity: "Record a short answer in the Speaking Lab", minutes: 20 },
+      { day: "Fri", focus: "Writing", activity: "Submit a short paragraph for teacher feedback", minutes: 25 },
+      { day: "Sat", focus: "Review", activity: "Retry a quiz and revisit lessons needing practice", minutes: 30 }
+    ];
+    return res.json({
+      success: true,
+      plan: {
+        level,
+        needsPlacementTest: !latestAttempt,
+        latestAssessmentAt: latestAttempt?.createdAt || null,
+        weeklyGoalMinutes: profile?.dailyGoalMinutes ? profile.dailyGoalMinutes * 5 : 100,
+        enrolledCourses: enrollments.map((enrollment) => ({ title: enrollment.course.title, progressPercentage: enrollment.progressPercentage })),
+        focusAreas: latestAttempt?.answerSummary?.filter((area) => area.percentage < 70).map((area) => area.level) || [],
+        days: plan
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// apps/api/src/modules/student/notificationPreferenceController.ts
+async function getNotificationPreferences(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return res.json({ success: true, preferences: { emailReminders: false, whatsappReminders: false, reminderPhone: "" } });
+    const preferences = await prisma.notificationPreference.findUnique({ where: { userId: req.user.id } });
+    return res.json({ success: true, preferences: preferences || { emailReminders: false, whatsappReminders: false, reminderPhone: "" } });
+  } catch (error) {
+    next(error);
+  }
+}
+async function updateNotificationPreferences(req, res, next) {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return next(new AppError("Notification preferences require the connected database.", 503));
+    const whatsappReminders = Boolean(req.body?.whatsappReminders);
+    const reminderPhone = typeof req.body?.reminderPhone === "string" ? req.body.reminderPhone.trim().slice(0, 30) : "";
+    if (whatsappReminders && reminderPhone.replace(/\D/g, "").length < 8) {
+      return next(new AppError("Add a valid phone number before enabling WhatsApp reminders.", 400));
+    }
+    const preferences = await prisma.notificationPreference.upsert({
+      where: { userId: req.user.id },
+      create: {
+        userId: req.user.id,
+        emailReminders: Boolean(req.body?.emailReminders),
+        whatsappReminders,
+        reminderPhone: whatsappReminders ? reminderPhone : null
+      },
+      update: {
+        emailReminders: Boolean(req.body?.emailReminders),
+        whatsappReminders,
+        reminderPhone: whatsappReminders ? reminderPhone : null
+      }
+    });
+    return res.json({ success: true, preferences });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // apps/api/src/modules/student/studentRoutes.ts
 var router8 = (0, import_express8.Router)();
 router8.get("/dashboard", requireAuth, getStudentDashboard);
@@ -44404,6 +44656,11 @@ router8.get("/lectures", requireAuth, getStudentBatchLectures);
 router8.get("/certificates", requireAuth, getStudentCertificates);
 router8.post("/courses/:courseId/claim-certificate", requireAuth, claimCourseCertificate);
 router8.get("/certificates/verify/:certificateNumber", verifyCertificate);
+router8.get("/placement-test", getPlacementTest);
+router8.post("/placement-test", requireAuth, submitPlacementTest);
+router8.get("/learning-plan", requireAuth, getPersonalLearningPlan);
+router8.get("/notification-preferences", requireAuth, getNotificationPreferences);
+router8.patch("/notification-preferences", requireAuth, updateNotificationPreferences);
 var studentRoutes_default = router8;
 
 // apps/api/src/modules/teacher/teacherRoutes.ts
@@ -44515,7 +44772,13 @@ async function getTeacherDashboard(req, res, next) {
           select: { score: true }
         })
       ]);
-      const avgScore = evaluatedSubmissions.length > 0 ? Math.round(evaluatedSubmissions.reduce((acc, s) => acc + (s.score || 0), 0) / evaluatedSubmissions.length) : 88;
+      const upcomingClasses = await prisma.liveClass.findMany({
+        where: { teacherProfileId: teacherProfileId2, startsAt: { gte: /* @__PURE__ */ new Date() } },
+        orderBy: { startsAt: "asc" },
+        take: 5,
+        include: { batch: { select: { name: true } } }
+      });
+      const avgScore = evaluatedSubmissions.length > 0 ? Math.round(evaluatedSubmissions.reduce((acc, s) => acc + (s.score || 0), 0) / evaluatedSubmissions.length) : 0;
       return res.json({
         success: true,
         stats: {
@@ -44524,6 +44787,7 @@ async function getTeacherDashboard(req, res, next) {
           pendingSubmissionsCount: pendingSubmissions.length + pendingSpeaking.length,
           reviewedThisWeek: evaluatedSubmissions.length,
           averageScorePercentage: avgScore,
+          upcomingClasses,
           recentSubmissions: [
             ...pendingSubmissions.map((s) => ({
               id: s.id,
@@ -44558,8 +44822,9 @@ async function getTeacherDashboard(req, res, next) {
           totalBatches: myBatches.length,
           totalStudents: studentUserIds.length,
           pendingSubmissionsCount: pendingWriting.length + pendingSpeaking.length,
-          reviewedThisWeek: 4,
-          averageScorePercentage: 91,
+          reviewedThisWeek: store.submissions.filter((s) => studentUserIds.includes(s.userId) && s.status === SubmissionStatus.GRADED).length,
+          averageScorePercentage: 0,
+          upcomingClasses: [],
           recentSubmissions: [
             ...pendingWriting.map((s) => {
               const u = store.users.find((usr) => usr.id === s.userId);
@@ -45254,44 +45519,15 @@ async function enrollStudentInBatch(req, res, next) {
 }
 async function getTeacherSchedule(req, res, next) {
   try {
-    return res.json({
-      success: true,
-      upcomingSessions: [
-        {
-          id: "sess-1",
-          studentName: "Jason K",
-          topic: "A1 Phonetics & Pronunciation Coaching",
-          time: "9:30 AM",
-          date: "Today",
-          status: "ACTIVE",
-          meetingUrl: "https://meet.google.com/dw-a1-live"
-        },
-        {
-          id: "sess-2",
-          studentName: "Enoch",
-          topic: "B1 Dativ vs Akkusativ Mastery",
-          time: "4:50 PM",
-          date: "Today",
-          status: "ACTIVE",
-          meetingUrl: "https://meet.google.com/dw-b1-live"
-        },
-        {
-          id: "sess-3",
-          studentName: "Mia G",
-          topic: "A2 Goethe Sprechen Preparation",
-          time: "7:00 PM",
-          date: "Today",
-          status: "ACTIVE",
-          meetingUrl: "https://meet.google.com/dw-a2-live"
-        }
-      ],
-      cancelledSessions: [],
-      stats: {
-        activeStudents: 4,
-        upcomingCount: 4,
-        taughtHoursMonth: 5
-      }
-    });
+    const teacherProfileId2 = resolveTeacherProfileId(req);
+    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (!isDatabaseConnected) return res.json({ success: true, upcomingSessions: [], cancelledSessions: [], stats: { activeStudents: 0, upcomingCount: 0, taughtHoursMonth: 0 } });
+    const [upcomingSessions, activeStudents, taught] = await Promise.all([
+      prisma.liveClass.findMany({ where: { teacherProfileId: teacherProfileId2, startsAt: { gte: /* @__PURE__ */ new Date() } }, orderBy: { startsAt: "asc" }, include: { batch: { select: { name: true } } } }),
+      prisma.batchMembership.count({ where: { batchId: { in: assignedBatchIds }, status: "ACTIVE" } }),
+      prisma.liveClass.aggregate({ where: { teacherProfileId: teacherProfileId2, startsAt: { gte: new Date((/* @__PURE__ */ new Date()).getFullYear(), (/* @__PURE__ */ new Date()).getMonth(), 1) } }, _sum: { durationMinutes: true } })
+    ]);
+    return res.json({ success: true, upcomingSessions, cancelledSessions: [], stats: { activeStudents, upcomingCount: upcomingSessions.length, taughtHoursMonth: Math.round((taught._sum.durationMinutes || 0) / 60) } });
   } catch (error) {
     next(error);
   }
@@ -45415,7 +45651,10 @@ async function getAdminAnalytics(req, res, next) {
         totalCompletedLessons,
         exerciseAttempts,
         enquiriesCount,
-        recentUsers
+        recentUsers,
+        activeStudentsLast30Days,
+        levelGroups,
+        enrollmentGroups
       ] = await Promise.all([
         prisma.user.count({ where: { role: UserRole.STUDENT } }),
         prisma.user.count({ where: { role: UserRole.TEACHER } }),
@@ -45427,9 +45666,12 @@ async function getAdminAnalytics(req, res, next) {
         prisma.user.findMany({
           where: { createdAt: { gte: thirtyDaysAgo } },
           select: { createdAt: true }
-        })
+        }),
+        prisma.user.count({ where: { role: UserRole.STUDENT, OR: [{ lessonProgresses: { some: { updatedAt: { gte: thirtyDaysAgo } } } }, { exerciseAttempts: { some: { startedAt: { gte: thirtyDaysAgo } } } }] } }),
+        prisma.studentProfile.groupBy({ by: ["currentLevel"], _count: { _all: true } }),
+        prisma.enrollment.groupBy({ by: ["courseId"], _count: { _all: true } })
       ]);
-      const avgScore = exerciseAttempts.length > 0 ? Math.round(exerciseAttempts.reduce((acc, c) => acc + c.percentage, 0) / exerciseAttempts.length) : 85;
+      const avgScore = exerciseAttempts.length > 0 ? Math.round(exerciseAttempts.reduce((acc, c) => acc + c.percentage, 0) / exerciseAttempts.length) : 0;
       const dateMap = {};
       for (let i = 6; i >= 0; i--) {
         const d = /* @__PURE__ */ new Date();
@@ -45442,17 +45684,15 @@ async function getAdminAnalytics(req, res, next) {
         if (dateMap[key] !== void 0) dateMap[key]++;
       }
       const registrationTrend = Object.entries(dateMap).map(([date, count]) => ({ date, count }));
-      const levelDistribution = [
-        { level: "A1 Beginner", count: Math.max(1, Math.round(totalStudents * 0.45)) },
-        { level: "A2 Elementary", count: Math.max(1, Math.round(totalStudents * 0.3)) },
-        { level: "B1 Intermediate", count: Math.max(0, Math.round(totalStudents * 0.18)) },
-        { level: "B2 Advanced", count: Math.max(0, Math.round(totalStudents * 0.07)) }
-      ];
+      const levelLabel = { A1: "A1 Beginner", A2: "A2 Elementary", B1: "B1 Intermediate", B2: "B2 Upper Intermediate" };
+      const [enrolledCourses] = await Promise.all([prisma.course.findMany({ where: { id: { in: enrollmentGroups.map((group) => group.courseId) } }, select: { id: true, title: true } })]);
+      const courseTitles = new Map(enrolledCourses.map((course) => [course.id, course.title]));
+      const levelDistribution = levelGroups.map((group) => ({ level: levelLabel[group.currentLevel] || group.currentLevel, count: group._count._all }));
       return res.json({
         success: true,
         analytics: {
           totalStudents,
-          activeStudentsLast30Days: totalStudents,
+          activeStudentsLast30Days,
           totalTeachers,
           totalCourses,
           totalEnrollments,
@@ -45461,11 +45701,7 @@ async function getAdminAnalytics(req, res, next) {
           enquiriesCount,
           registrationTrend,
           levelDistribution,
-          courseEnrollmentBreakdown: [
-            { courseTitle: "Deutsch A1: Beginner Intensiv", enrollments: Math.max(1, Math.round(totalEnrollments * 0.55)) },
-            { courseTitle: "Deutsch A2: Elementary Fluency", enrollments: Math.max(1, Math.round(totalEnrollments * 0.3)) },
-            { courseTitle: "Deutsch B1: Intermediate", enrollments: Math.max(0, Math.round(totalEnrollments * 0.15)) }
-          ]
+          courseEnrollmentBreakdown: enrollmentGroups.map((group) => ({ courseTitle: courseTitles.get(group.courseId) || "Course", enrollments: group._count._all }))
         }
       });
     } else {
@@ -45474,34 +45710,17 @@ async function getAdminAnalytics(req, res, next) {
       return res.json({
         success: true,
         analytics: {
-          totalStudents: students.length || 18,
-          activeStudentsLast30Days: students.length || 15,
-          totalTeachers: teachers.length || 3,
-          totalCourses: store.courses.length || 4,
-          totalEnrollments: store.enrollments.length || 24,
-          totalCompletedLessons: store.lessonProgress.length || 42,
-          averageExerciseScore: 89,
+          totalStudents: students.length,
+          activeStudentsLast30Days: (/* @__PURE__ */ new Set([...store.lessonProgress.filter((p) => new Date(p.updatedAt || p.completedAt || 0).getTime() >= Date.now() - 30 * 864e5).map((p) => p.userId), ...store.attempts.filter((a) => new Date(a.startedAt).getTime() >= Date.now() - 30 * 864e5).map((a) => a.userId)])).size,
+          totalTeachers: teachers.length,
+          totalCourses: store.courses.length,
+          totalEnrollments: store.enrollments.length,
+          totalCompletedLessons: store.lessonProgress.filter((progress) => progress.isCompleted).length,
+          averageExerciseScore: store.attempts.length ? Math.round(store.attempts.reduce((sum, attempt) => sum + attempt.percentage, 0) / store.attempts.length) : 0,
           enquiriesCount: store.enquiries.length,
-          registrationTrend: [
-            { date: "Oct 13", count: 2 },
-            { date: "Oct 14", count: 4 },
-            { date: "Oct 15", count: 3 },
-            { date: "Oct 16", count: 6 },
-            { date: "Oct 17", count: 5 },
-            { date: "Oct 18", count: 8 },
-            { date: "Oct 19", count: 4 }
-          ],
-          levelDistribution: [
-            { level: "A1 Beginner", count: 12 },
-            { level: "A2 Elementary", count: 6 },
-            { level: "B1 Intermediate", count: 4 },
-            { level: "B2 Advanced", count: 2 }
-          ],
-          courseEnrollmentBreakdown: [
-            { courseTitle: "Deutsch A1: Complete Beginner to Breakthrough", enrollments: 14 },
-            { courseTitle: "Deutsch A2: Elementary Fluency & Real-World Dialogues", enrollments: 7 },
-            { courseTitle: "Deutsch B1: Independent Communication", enrollments: 3 }
-          ]
+          registrationTrend: [],
+          levelDistribution: [],
+          courseEnrollmentBreakdown: []
         }
       });
     }
@@ -46010,6 +46229,7 @@ async function getAdminCourses(req, res, next) {
 async function createCourse(req, res, next) {
   try {
     const { slug, title, description, level, learningObjectives, estimatedHours, thumbnailUrl, status, order } = req.body;
+    const pricePaise = Number.isInteger(Number(req.body?.pricePaise)) ? Math.max(0, Math.min(1e8, Number(req.body.pricePaise))) : 0;
     if (isDatabaseConnected) {
       const course = await prisma.course.create({
         data: {
@@ -46021,7 +46241,8 @@ async function createCourse(req, res, next) {
           estimatedHours: Number(estimatedHours) || 40,
           thumbnailUrl,
           status: status || PublicationStatus.PUBLISHED,
-          order: Number(order) || 0
+          order: Number(order) || 0,
+          pricePaise
         }
       });
       await recordAuditLog({
@@ -46044,6 +46265,7 @@ async function createCourse(req, res, next) {
         thumbnailUrl,
         status: status || PublicationStatus.PUBLISHED,
         order: Number(order) || 0,
+        pricePaise,
         createdAt: (/* @__PURE__ */ new Date()).toISOString(),
         updatedAt: (/* @__PURE__ */ new Date()).toISOString()
       };
@@ -46058,6 +46280,7 @@ async function updateCourse(req, res, next) {
   try {
     const { courseId } = req.params;
     const { title, slug, description, level, estimatedHours, status, order } = req.body;
+    const pricePaise = req.body?.pricePaise !== void 0 ? Math.max(0, Math.min(1e8, Math.round(Number(req.body.pricePaise) || 0))) : void 0;
     if (isDatabaseConnected) {
       const course = await prisma.course.update({
         where: { id: courseId },
@@ -46068,7 +46291,8 @@ async function updateCourse(req, res, next) {
           level,
           estimatedHours: estimatedHours !== void 0 ? Number(estimatedHours) : void 0,
           status,
-          order: order !== void 0 ? Number(order) : void 0
+          order: order !== void 0 ? Number(order) : void 0,
+          pricePaise
         }
       });
       return res.json({ success: true, message: "Course updated successfully.", course });
@@ -46082,6 +46306,7 @@ async function updateCourse(req, res, next) {
       if (estimatedHours !== void 0) course.estimatedHours = Number(estimatedHours);
       if (status !== void 0) course.status = status;
       if (order !== void 0) course.order = Number(order);
+      if (pricePaise !== void 0) course.pricePaise = pricePaise;
       course.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
       return res.json({ success: true, message: "Course updated successfully.", course });
     }
@@ -46175,13 +46400,15 @@ async function getAdminEnquiries(req, res, next) {
 async function updateEnquiryStatus(req, res, next) {
   try {
     const { enquiryId } = req.params;
-    const { status, adminNotes } = req.body;
+    const { status, adminNotes, followUpAt, priority } = req.body;
     if (isDatabaseConnected) {
       const enquiry = await prisma.contactEnquiry.update({
         where: { id: enquiryId },
         data: {
           status,
-          adminNotes: adminNotes !== void 0 ? adminNotes : void 0
+          adminNotes: adminNotes !== void 0 ? adminNotes : void 0,
+          followUpAt: followUpAt !== void 0 ? followUpAt ? new Date(followUpAt) : null : void 0,
+          priority: priority !== void 0 && ["LOW", "NORMAL", "HIGH"].includes(priority) ? priority : void 0
         }
       });
       return res.json({ success: true, enquiry });
@@ -46190,6 +46417,8 @@ async function updateEnquiryStatus(req, res, next) {
       if (!enquiry) return next(new AppError("Enquiry not found.", 404));
       enquiry.status = status;
       if (adminNotes !== void 0) enquiry.adminNotes = adminNotes;
+      if (followUpAt !== void 0) enquiry.followUpAt = followUpAt ? new Date(followUpAt).toISOString() : null;
+      if (priority !== void 0) enquiry.priority = ["LOW", "NORMAL", "HIGH"].includes(priority) ? priority : "NORMAL";
       enquiry.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
       return res.json({ success: true, enquiry });
     }
@@ -46304,12 +46533,32 @@ async function createAdminBatch(req, res, next) {
 }
 async function getAdminPayments(req, res, next) {
   try {
+    if (isDatabaseConnected) {
+      const [payments, feePlans] = await Promise.all([
+        prisma.paymentOrder.findMany({
+          take: 100,
+          orderBy: { createdAt: "desc" },
+          include: {
+            user: { select: { firstName: true, lastName: true, email: true } },
+            course: { select: { title: true, level: true } }
+          }
+        }),
+        prisma.course.findMany({ where: { pricePaise: { gt: 0 } }, select: { id: true, title: true, level: true, pricePaise: true, status: true } })
+      ]);
+      const captured = payments.filter((payment) => payment.status === "PAID");
+      const totalVolume = captured.reduce((sum, payment) => sum + payment.amountPaise, 0);
+      const monthStart = /* @__PURE__ */ new Date();
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+      const monthlyVolume = captured.filter((payment) => payment.createdAt >= monthStart).reduce((sum, payment) => sum + payment.amountPaise, 0);
+      return res.json({ success: true, payments, feePlans, totalVolume, monthlyVolume, currency: "INR" });
+    }
     return res.json({
       success: true,
       payments: store.payments || [],
       feePlans: store.feePlans || [],
-      totalVolume: 75e4,
-      monthlyVolume: 48500
+      totalVolume: 0,
+      monthlyVolume: 0
     });
   } catch (error) {
     next(error);
@@ -46317,6 +46566,13 @@ async function getAdminPayments(req, res, next) {
 }
 async function createAdminFeePlan(req, res, next) {
   try {
+    if (isDatabaseConnected) {
+      const courseId = typeof req.body?.courseId === "string" ? req.body.courseId : "";
+      const pricePaise = Math.round(Number(req.body?.pricePaise) || 0);
+      if (!courseId || pricePaise < 0 || pricePaise > 1e8) return next(new AppError("Choose a course and enter a valid price in paise.", 400));
+      const course = await prisma.course.update({ where: { id: courseId }, data: { pricePaise } });
+      return res.json({ success: true, feePlan: { id: course.id, name: course.title, pricePaise: course.pricePaise, currency: "INR" } });
+    }
     const { name, price, currency, billingCycle, features } = req.body;
     const newPlan = {
       id: `fee-${Date.now()}`,
@@ -46335,10 +46591,25 @@ async function createAdminFeePlan(req, res, next) {
 }
 async function getAdminAttendance(req, res, next) {
   try {
+    if (isDatabaseConnected) {
+      const sessions = await prisma.liveClass.findMany({
+        take: 100,
+        orderBy: { startsAt: "desc" },
+        include: { batch: { select: { id: true, name: true, _count: { select: { memberships: { where: { status: "ACTIVE" } } } } } }, attendance: true }
+      });
+      const attendance = sessions.map((session) => {
+        const presentCount = session.attendance.filter((record) => ["PRESENT", "LATE"].includes(record.status)).length;
+        const totalEnrolled = session.batch._count.memberships;
+        return { id: session.id, title: session.title, date: session.startsAt, batchName: session.batch.name, totalEnrolled, presentCount, attendanceRate: totalEnrolled ? Math.round(presentCount / totalEnrolled * 100) : 0 };
+      });
+      const records = attendance.reduce((sum, item) => sum + item.totalEnrolled, 0);
+      const present = attendance.reduce((sum, item) => sum + item.presentCount, 0);
+      return res.json({ success: true, attendance, overallRate: records ? Math.round(present / records * 100) : 0 });
+    }
     return res.json({
       success: true,
       attendance: store.attendance || [],
-      overallRate: 95
+      overallRate: 0
     });
   } catch (error) {
     next(error);
@@ -46724,8 +46995,488 @@ var router13 = (0, import_express13.Router)();
 router13.get("/:fileId", requireAuth, streamAuthorizedDriveFile);
 var fileRoutes_default = router13;
 
+// apps/api/src/modules/ai/aiRoutes.ts
+var import_express14 = __toESM(require_express2(), 1);
+var router14 = (0, import_express14.Router)();
+router14.get("/status", requireAuth, (_req, res) => {
+  res.json({ success: true, configured: Boolean(env.GEMINI_API_KEY) });
+});
+router14.post("/chat", requireAuth, authRateLimiter, async (req, res, next) => {
+  try {
+    if (!env.GEMINI_API_KEY) return next(new AppError("The AI tutor is not configured yet. Please ask the academy administrator.", 503, "AI_NOT_CONFIGURED"));
+    const rawTurns = Array.isArray(req.body?.messages) ? req.body.messages.slice(-12) : [];
+    const messages = rawTurns.filter((turn) => ["user", "model"].includes(turn?.role) && typeof turn?.text === "string").map((turn) => ({ role: turn.role, text: turn.text.trim().slice(0, 700) })).filter((turn) => turn.text.length > 0);
+    if (!messages.length || messages[messages.length - 1].role !== "user") {
+      return next(new AppError("Send a German question or sentence to start practicing.", 400));
+    }
+    const reply = await generateGeminiText(messages, [
+      "You are DeutschWelt, a patient German language tutor for learners from CEFR A1 to B2.",
+      "Answer primarily in simple German at the learner level, then give a concise English or Hindi explanation when useful.",
+      "Correct the learner gently: show the corrected German sentence and explain one key grammar or vocabulary point.",
+      "Ask one short follow-up question to keep conversation practice going. Keep replies under 130 words.",
+      "Do not claim to be a certified human teacher and do not invent learner grades or progress."
+    ].join(" "));
+    return res.json({ success: true, reply });
+  } catch (error) {
+    next(error);
+  }
+});
+router14.post("/speaking-feedback", requireAuth, authRateLimiter, async (req, res, next) => {
+  try {
+    if (!env.GEMINI_API_KEY) return next(new AppError("AI pronunciation feedback is not configured yet.", 503, "AI_NOT_CONFIGURED"));
+    const transcript = typeof req.body?.transcript === "string" ? req.body.transcript.trim().slice(0, 1200) : "";
+    const target = typeof req.body?.target === "string" ? req.body.target.trim().slice(0, 500) : "";
+    if (!transcript || !target) return next(new AppError("Include your spoken transcript and the target phrase.", 400));
+    const raw = await generateGeminiText([{ role: "user", text: `Target phrase: ${target}
+Learner transcript: ${transcript}` }], [
+      "Assess German speaking practice from a target phrase and speech-to-text transcript.",
+      "You cannot hear the audio; do not claim to measure actual pronunciation or accent acoustically.",
+      "Return JSON only with keys: overallScore (0-100 integer for transcript match and language accuracy),",
+      "correctedTranscript (string), strengths (array of short strings), practiceTips (array of short strings),",
+      "nextPhrase (string). Be kind and keep feedback suitable for A1-B2 students."
+    ].join(" "), true);
+    let feedback;
+    try {
+      feedback = JSON.parse(raw);
+    } catch {
+      throw new Error("The AI feedback could not be formatted. Please try again.");
+    }
+    const overallScore = Number(feedback.overallScore);
+    return res.json({
+      success: true,
+      analysis: {
+        overallScore: Number.isFinite(overallScore) ? Math.max(0, Math.min(100, Math.round(overallScore))) : null,
+        targetPhrase: target,
+        detectedSpeech: transcript,
+        correctedTranscript: String(feedback.correctedTranscript || transcript).slice(0, 1200),
+        strengths: Array.isArray(feedback.strengths) ? feedback.strengths.slice(0, 4) : [],
+        practiceTips: Array.isArray(feedback.practiceTips) ? feedback.practiceTips.slice(0, 4) : [],
+        nextPhrase: String(feedback.nextPhrase || "").slice(0, 300),
+        evaluationType: "transcript-based; acoustic pronunciation was not measured",
+        evaluatedAt: (/* @__PURE__ */ new Date()).toISOString()
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+var aiRoutes_default = router14;
+
+// apps/api/src/modules/community/communityRoutes.ts
+var import_express15 = __toESM(require_express2(), 1);
+var router15 = (0, import_express15.Router)();
+router15.use(requireAuth);
+router15.get("/posts", async (req, res, next) => {
+  try {
+    if (!isDatabaseConnected) return res.json({ success: true, posts: [], databaseAvailable: false });
+    const posts = await prisma.discussionPost.findMany({
+      take: 40,
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
+      include: {
+        author: { select: { id: true, firstName: true, lastName: true, role: true } },
+        replies: {
+          orderBy: { createdAt: "asc" },
+          include: { author: { select: { id: true, firstName: true, lastName: true, role: true } } }
+        }
+      }
+    });
+    return res.json({ success: true, posts, databaseAvailable: true });
+  } catch (error) {
+    next(error);
+  }
+});
+router15.post("/posts", async (req, res, next) => {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return next(new AppError("Community discussions require the connected MySQL database.", 503));
+    const title = typeof req.body?.title === "string" ? req.body.title.trim().slice(0, 180) : "";
+    const body = typeof req.body?.body === "string" ? req.body.body.trim().slice(0, 6e3) : "";
+    const category = ["GRAMMAR", "VOCABULARY", "EXAMS", "COURSES", "GENERAL"].includes(req.body?.category) ? req.body.category : "GENERAL";
+    if (title.length < 6 || body.length < 10) return next(new AppError("Add a title (at least 6 characters) and a question (at least 10 characters).", 400));
+    const post = await prisma.discussionPost.create({
+      data: { authorId: req.user.id, title, body, category },
+      include: { author: { select: { id: true, firstName: true, lastName: true, role: true } }, replies: true }
+    });
+    return res.status(201).json({ success: true, post });
+  } catch (error) {
+    next(error);
+  }
+});
+router15.post("/posts/:postId/replies", async (req, res, next) => {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return next(new AppError("Community discussions require the connected MySQL database.", 503));
+    const body = typeof req.body?.body === "string" ? req.body.body.trim().slice(0, 4e3) : "";
+    if (body.length < 2) return next(new AppError("Write a reply before submitting.", 400));
+    const post = await prisma.discussionPost.findUnique({ where: { id: req.params.postId }, select: { id: true } });
+    if (!post) return next(new AppError("Discussion not found.", 404));
+    const reply = await prisma.discussionReply.create({
+      data: { postId: post.id, authorId: req.user.id, body, instructorAnswer: [UserRole.TEACHER, UserRole.ADMIN].includes(req.user.role) },
+      include: { author: { select: { id: true, firstName: true, lastName: true, role: true } } }
+    });
+    return res.status(201).json({ success: true, reply });
+  } catch (error) {
+    next(error);
+  }
+});
+router15.delete("/posts/:postId", async (req, res, next) => {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return next(new AppError("Community discussions require the connected MySQL database.", 503));
+    const post = await prisma.discussionPost.findUnique({ where: { id: req.params.postId }, select: { id: true, authorId: true } });
+    if (!post) return next(new AppError("Discussion not found.", 404));
+    if (post.authorId !== req.user.id && ![UserRole.TEACHER, UserRole.ADMIN].includes(req.user.role)) {
+      return next(new AppError("You can remove only your own discussion.", 403));
+    }
+    await prisma.discussionPost.delete({ where: { id: post.id } });
+    return res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+router15.patch("/posts/:postId/pin", requireRole(UserRole.ADMIN), async (req, res, next) => {
+  try {
+    if (!isDatabaseConnected) return next(new AppError("Community discussions require the connected MySQL database.", 503));
+    const post = await prisma.discussionPost.update({ where: { id: req.params.postId }, data: { isPinned: Boolean(req.body?.isPinned) } });
+    return res.json({ success: true, post });
+  } catch (error) {
+    next(error);
+  }
+});
+var communityRoutes_default = router15;
+
+// apps/api/src/modules/payments/paymentRoutes.ts
+var import_express16 = __toESM(require_express2(), 1);
+import { createHmac as createHmac2, timingSafeEqual as timingSafeEqual2 } from "node:crypto";
+var router16 = (0, import_express16.Router)();
+var razorpayConfigured = () => Boolean(env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET);
+async function razorpayRequest(path7, init = {}) {
+  const auth = Buffer.from(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`).toString("base64");
+  const response = await fetch(`https://api.razorpay.com/v1${path7}`, {
+    ...init,
+    headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/json", ...init.headers || {} },
+    signal: AbortSignal.timeout(2e4)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    console.error("[Payments] Razorpay request failed:", response.status, data?.error?.code || "provider_error");
+    throw new Error("Payment provider could not process the request. Please try again.");
+  }
+  return data;
+}
+router16.get("/config", requireAuth, (_req, res) => {
+  res.json({ success: true, configured: razorpayConfigured(), keyId: razorpayConfigured() ? env.RAZORPAY_KEY_ID : null, currency: "INR" });
+});
+router16.post("/orders", requireAuth, async (req, res, next) => {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return next(new AppError("Payments require the connected MySQL database.", 503));
+    if (!razorpayConfigured()) return next(new AppError("Online payments are not configured yet. Please contact the academy.", 503, "PAYMENTS_NOT_CONFIGURED"));
+    const courseId = typeof req.body?.courseId === "string" ? req.body.courseId.trim() : "";
+    if (!courseId) return next(new AppError("Choose a course before checkout.", 400));
+    const course = await prisma.course.findFirst({ where: { OR: [{ id: courseId }, { slug: courseId }], status: "PUBLISHED" } });
+    if (!course) return next(new AppError("Course not found.", 404));
+    if (!Number.isInteger(course.pricePaise) || course.pricePaise <= 0) return next(new AppError("This course does not have a paid price.", 400));
+    const existing = await prisma.enrollment.findUnique({ where: { userId_courseId: { userId: req.user.id, courseId: course.id } } });
+    if (existing?.status === "ACTIVE" || existing?.status === "COMPLETED") {
+      return res.json({ success: true, alreadyEnrolled: true, enrollment: existing });
+    }
+    const providerOrder = await razorpayRequest("/orders", {
+      method: "POST",
+      body: JSON.stringify({ amount: course.pricePaise, currency: "INR", receipt: `dw-${req.user.id.slice(0, 12)}-${Date.now()}` })
+    });
+    const order = await prisma.paymentOrder.create({
+      data: {
+        userId: req.user.id,
+        courseId: course.id,
+        amountPaise: course.pricePaise,
+        currency: "INR",
+        providerOrderId: providerOrder.id,
+        status: "CREATED"
+      }
+    });
+    return res.status(201).json({
+      success: true,
+      order: { id: providerOrder.id, amount: providerOrder.amount, currency: providerOrder.currency, keyId: env.RAZORPAY_KEY_ID, courseTitle: course.title, localOrderId: order.id }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+router16.post("/verify", requireAuth, async (req, res, next) => {
+  try {
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    if (!isDatabaseConnected) return next(new AppError("Payments require the connected MySQL database.", 503));
+    if (!razorpayConfigured()) return next(new AppError("Online payments are not configured yet.", 503));
+    const orderId = String(req.body?.razorpay_order_id || "");
+    const paymentId = String(req.body?.razorpay_payment_id || "");
+    const signature = String(req.body?.razorpay_signature || "");
+    if (!orderId || !paymentId || !signature || signature.length > 256) return next(new AppError("Payment verification details are incomplete.", 400));
+    const order = await prisma.paymentOrder.findFirst({ where: { providerOrderId: orderId, userId: req.user.id } });
+    if (!order) return next(new AppError("Payment order not found.", 404));
+    const expected = createHmac2("sha256", env.RAZORPAY_KEY_SECRET).update(`${orderId}|${paymentId}`).digest("hex");
+    const receivedBytes = Buffer.from(signature, "hex");
+    const expectedBytes = Buffer.from(expected, "hex");
+    if (receivedBytes.length !== expectedBytes.length || !timingSafeEqual2(receivedBytes, expectedBytes)) {
+      return next(new AppError("Payment signature could not be verified.", 400, "INVALID_PAYMENT_SIGNATURE"));
+    }
+    const payment = await razorpayRequest(`/payments/${encodeURIComponent(paymentId)}`, { method: "GET" });
+    if (payment.order_id !== orderId || payment.amount !== order.amountPaise || payment.currency !== order.currency || payment.status !== "captured") {
+      await prisma.paymentOrder.update({ where: { id: order.id }, data: { status: "FAILED" } });
+      return next(new AppError("Payment has not been captured for this course order.", 400, "PAYMENT_NOT_CAPTURED"));
+    }
+    const enrollment = await prisma.$transaction(async (tx) => {
+      await tx.paymentOrder.update({ where: { id: order.id }, data: { providerPaymentId: paymentId, status: "PAID" } });
+      return tx.enrollment.upsert({
+        where: { userId_courseId: { userId: req.user.id, courseId: order.courseId } },
+        update: { status: "ACTIVE" },
+        create: { userId: req.user.id, courseId: order.courseId, status: "ACTIVE", progressPercentage: 0 }
+      });
+    });
+    return res.json({ success: true, message: "Payment verified and course access is active.", enrollment });
+  } catch (error) {
+    next(error);
+  }
+});
+var paymentRoutes_default = router16;
+
+// apps/api/src/modules/classes/classRoutes.ts
+var import_express17 = __toESM(require_express2(), 1);
+
+// apps/api/src/services/notifications.ts
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
+}
+async function sendEmail(to, subject, message, linkUrl) {
+  if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) return;
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+  const safeLink = linkUrl && linkUrl.startsWith("/") ? `${env.FRONTEND_URL}${linkUrl}` : "";
+  const html = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#17243a"><h2>DeutschWelt update</h2><p>${safeMessage}</p>${safeLink ? `<p><a href="${safeLink}">Open DeutschWelt</a></p>` : ""}<p style="color:#687487;font-size:12px">You received this class reminder because you enabled email notifications in your account.</p></div>`;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from: env.RESEND_FROM_EMAIL, to: [to], subject, html }),
+    signal: AbortSignal.timeout(12e3)
+  });
+  if (!response.ok) throw new Error(`Email provider returned ${response.status}`);
+}
+async function sendWhatsApp(to, title, message) {
+  if (!env.WHATSAPP_CLOUD_API_TOKEN || !env.WHATSAPP_PHONE_NUMBER_ID || !env.WHATSAPP_TEMPLATE_NAME) return;
+  const endpoint = `https://graph.facebook.com/${env.WHATSAPP_API_VERSION}/${env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.WHATSAPP_CLOUD_API_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      messaging_product: "whatsapp",
+      to: to.replace(/[^\d]/g, ""),
+      type: "template",
+      template: {
+        name: env.WHATSAPP_TEMPLATE_NAME,
+        language: { code: env.WHATSAPP_TEMPLATE_LANGUAGE },
+        components: [{ type: "body", parameters: [{ type: "text", text: title.slice(0, 120) }, { type: "text", text: message.slice(0, 800) }] }]
+      }
+    }),
+    signal: AbortSignal.timeout(12e3)
+  });
+  if (!response.ok) throw new Error(`WhatsApp provider returned ${response.status}`);
+}
+async function notifyBatchStudents(batchId, title, message, linkUrl) {
+  if (!isDatabaseConnected) return;
+  const members = await prisma.batchMembership.findMany({
+    where: { batchId, status: "ACTIVE" },
+    include: { user: { include: { notificationPreference: true } } }
+  });
+  await Promise.all(members.map(async (membership) => {
+    const user = membership.user;
+    await prisma.notification.create({ data: { userId: user.id, title, message, type: "CLASS", linkUrl } });
+    const preference = user.notificationPreference;
+    const sends = [];
+    if (preference?.emailReminders && user.isEmailVerified) sends.push(sendEmail(user.email, title, message, linkUrl));
+    if (preference?.whatsappReminders && preference.reminderPhone) sends.push(sendWhatsApp(preference.reminderPhone, title, message));
+    await Promise.allSettled(sends);
+  }));
+}
+
+// apps/api/src/modules/classes/classController.ts
+var attendanceStatuses = ["PRESENT", "ABSENT", "LATE", "EXCUSED"];
+function requireDb(next) {
+  if (!isDatabaseConnected) return next(new AppError("Class scheduling requires the connected MySQL database.", 503));
+  return null;
+}
+async function teacherProfileIdFor(req) {
+  if (req.user?.role === UserRole.ADMIN) return null;
+  if (req.user?.teacherProfile?.id) return req.user.teacherProfile.id;
+  if (!req.user) return null;
+  const profile = await prisma.teacherProfile.findUnique({ where: { userId: req.user.id }, select: { id: true } });
+  return profile?.id || null;
+}
+async function getStudentSchedule(req, res, next) {
+  try {
+    if (requireDb(next)) return;
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    const memberships = await prisma.batchMembership.findMany({ where: { userId: req.user.id, status: "ACTIVE" }, select: { batchId: true } });
+    const classes = await prisma.liveClass.findMany({
+      where: { batchId: { in: memberships.map((membership) => membership.batchId) }, startsAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1e3) } },
+      orderBy: { startsAt: "asc" },
+      take: 80,
+      include: {
+        batch: { select: { id: true, name: true, level: true } },
+        teacher: { include: { user: { select: { firstName: true, lastName: true } } } },
+        attendance: { where: { studentId: req.user.id }, select: { status: true, markedAt: true } }
+      }
+    });
+    return res.json({ success: true, classes: classes.map((item) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      startsAt: item.startsAt,
+      durationMinutes: item.durationMinutes,
+      meetingUrl: item.meetingUrl,
+      batch: item.batch,
+      teacherName: `${item.teacher.user.firstName} ${item.teacher.user.lastName}`,
+      attendanceStatus: item.attendance[0]?.status || null,
+      canCheckIn: Date.now() >= item.startsAt.getTime() - 15 * 60 * 1e3 && Date.now() <= item.startsAt.getTime() + (item.durationMinutes + 15) * 60 * 1e3
+    })) });
+  } catch (error) {
+    next(error);
+  }
+}
+async function studentCheckIn(req, res, next) {
+  try {
+    if (requireDb(next)) return;
+    if (!req.user || req.user.role !== UserRole.STUDENT) return next(new AppError("Only students can check in to their own classes.", 403));
+    const liveClass = await prisma.liveClass.findUnique({ where: { id: req.params.classId } });
+    if (!liveClass) return next(new AppError("Class not found.", 404));
+    const member = await prisma.batchMembership.findUnique({ where: { batchId_userId: { batchId: liveClass.batchId, userId: req.user.id } } });
+    if (!member || member.status !== "ACTIVE") return next(new AppError("You are not enrolled in this class batch.", 403));
+    const now = Date.now();
+    if (now < liveClass.startsAt.getTime() - 15 * 60 * 1e3 || now > liveClass.startsAt.getTime() + (liveClass.durationMinutes + 15) * 60 * 1e3) {
+      return next(new AppError("Check-in opens 15 minutes before class and closes 15 minutes after it ends.", 409));
+    }
+    const attendance = await prisma.liveClassAttendance.upsert({
+      where: { sessionId_studentId: { sessionId: liveClass.id, studentId: req.user.id } },
+      create: { sessionId: liveClass.id, studentId: req.user.id, markedById: req.user.id, status: "PRESENT" },
+      update: { markedById: req.user.id, status: "PRESENT", markedAt: /* @__PURE__ */ new Date() }
+    });
+    return res.json({ success: true, attendance });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getTeacherClasses(req, res, next) {
+  try {
+    if (requireDb(next)) return;
+    const teacherProfileId2 = await teacherProfileIdFor(req);
+    if (req.user?.role !== UserRole.ADMIN && !teacherProfileId2) return next(new AppError("Teacher profile not found.", 403));
+    const classes = await prisma.liveClass.findMany({
+      where: teacherProfileId2 ? { teacherProfileId: teacherProfileId2 } : {},
+      orderBy: { startsAt: "asc" },
+      take: 100,
+      include: { batch: { select: { id: true, name: true, level: true } }, _count: { select: { attendance: true } } }
+    });
+    return res.json({ success: true, classes });
+  } catch (error) {
+    next(error);
+  }
+}
+async function createLiveClass(req, res, next) {
+  try {
+    if (requireDb(next)) return;
+    if (!req.user) return next(new AppError("Authentication required.", 401));
+    const teacherProfileId2 = await teacherProfileIdFor(req);
+    if (!teacherProfileId2) return next(new AppError("Teacher profile not found.", 403));
+    const batchId = typeof req.body?.batchId === "string" ? req.body.batchId : "";
+    const title = typeof req.body?.title === "string" ? req.body.title.trim().slice(0, 180) : "";
+    const startsAt = new Date(req.body?.startsAt);
+    const durationMinutes = Math.max(15, Math.min(240, Math.round(Number(req.body?.durationMinutes) || 45)));
+    const meetingUrl = typeof req.body?.meetingUrl === "string" ? req.body.meetingUrl.trim() : "";
+    let validMeetingUrl = false;
+    try {
+      validMeetingUrl = new URL(meetingUrl).protocol === "https:";
+    } catch {
+    }
+    if (!batchId || title.length < 4 || !Number.isFinite(startsAt.getTime()) || startsAt.getTime() < Date.now() || startsAt.getTime() > Date.now() + 365 * 864e5 || !validMeetingUrl) {
+      return next(new AppError("Add a title, future date, duration and valid HTTPS meeting link.", 400));
+    }
+    const assigned = req.user.role === UserRole.ADMIN || await prisma.teacherBatchAssignment.findUnique({ where: { batchId_teacherId: { batchId, teacherId: teacherProfileId2 } }, select: { id: true } });
+    if (!assigned) return next(new AppError("You can schedule classes only for your assigned batches.", 403));
+    const batch = await prisma.teacherBatch.findUnique({ where: { id: batchId }, select: { id: true, name: true } });
+    if (!batch) return next(new AppError("Batch not found.", 404));
+    const liveClass = await prisma.liveClass.create({
+      data: { batchId, teacherProfileId: teacherProfileId2, title, description: String(req.body?.description || "").trim().slice(0, 2e3) || null, startsAt, durationMinutes, meetingUrl },
+      include: { batch: { select: { id: true, name: true, level: true } } }
+    });
+    await notifyBatchStudents(batchId, "Live class scheduled", `${liveClass.title} for ${batch.name} is scheduled for ${startsAt.toLocaleString()}.`, "/student/schedule").catch((error) => console.warn("[Class notification] Could not notify every batch member:", error?.message));
+    return res.status(201).json({ success: true, liveClass });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getAuthorizedClass(req, next) {
+  const teacherProfileId2 = await teacherProfileIdFor(req);
+  if (req.user?.role !== UserRole.ADMIN && !teacherProfileId2) {
+    next(new AppError("Teacher profile not found.", 403));
+    return null;
+  }
+  const liveClass = await prisma.liveClass.findFirst({ where: { id: req.params.classId, ...teacherProfileId2 ? { teacherProfileId: teacherProfileId2 } : {} } });
+  if (!liveClass) {
+    next(new AppError("Class not found or unauthorized.", 404));
+    return null;
+  }
+  return liveClass;
+}
+async function getClassRoster(req, res, next) {
+  try {
+    if (requireDb(next)) return;
+    const liveClass = await getAuthorizedClass(req, next);
+    if (!liveClass) return;
+    const members = await prisma.batchMembership.findMany({
+      where: { batchId: liveClass.batchId, status: "ACTIVE" },
+      include: { user: { select: { id: true, firstName: true, lastName: true, email: true } } },
+      orderBy: { joinedAt: "asc" }
+    });
+    const attendance = await prisma.liveClassAttendance.findMany({ where: { sessionId: liveClass.id } });
+    const byStudent = new Map(attendance.map((record) => [record.studentId, record]));
+    return res.json({ success: true, liveClass, students: members.map((membership) => ({ ...membership.user, attendance: byStudent.get(membership.user.id) || null })) });
+  } catch (error) {
+    next(error);
+  }
+}
+async function saveClassAttendance(req, res, next) {
+  try {
+    if (requireDb(next)) return;
+    const liveClass = await getAuthorizedClass(req, next);
+    if (!liveClass) return;
+    const records = Array.isArray(req.body?.records) ? req.body.records.slice(0, 250) : [];
+    if (!records.length) return next(new AppError("Choose attendance for at least one student.", 400));
+    const memberships = await prisma.batchMembership.findMany({ where: { batchId: liveClass.batchId, status: "ACTIVE", userId: { in: records.map((record) => String(record.userId)) } }, select: { userId: true } });
+    const validIds = new Set(memberships.map((membership) => membership.userId));
+    const normalized = records.filter((record) => validIds.has(String(record.userId)) && attendanceStatuses.includes(record.status));
+    if (normalized.length !== records.length) return next(new AppError("Attendance includes an invalid student or status.", 400));
+    await prisma.$transaction(normalized.map((record) => prisma.liveClassAttendance.upsert({
+      where: { sessionId_studentId: { sessionId: liveClass.id, studentId: String(record.userId) } },
+      create: { sessionId: liveClass.id, studentId: String(record.userId), status: record.status, markedById: req.user.id },
+      update: { status: record.status, markedById: req.user.id, markedAt: /* @__PURE__ */ new Date() }
+    })));
+    return res.json({ success: true, saved: normalized.length });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// apps/api/src/modules/classes/classRoutes.ts
+var studentClassRoutes = (0, import_express17.Router)();
+studentClassRoutes.get("/schedule", requireAuth, getStudentSchedule);
+studentClassRoutes.post("/live-classes/:classId/check-in", requireAuth, authRateLimiter, studentCheckIn);
+var teacherClassRoutes = (0, import_express17.Router)();
+teacherClassRoutes.use(requireAuth, requireRole(UserRole.TEACHER, UserRole.ADMIN));
+teacherClassRoutes.get("/live-classes", getTeacherClasses);
+teacherClassRoutes.post("/live-classes", createLiveClass);
+teacherClassRoutes.get("/live-classes/:classId/attendance", getClassRoster);
+teacherClassRoutes.put("/live-classes/:classId/attendance", saveClassAttendance);
+
 // apps/api/src/app.ts
-var app = (0, import_express14.default)();
+var app = (0, import_express18.default)();
 app.set("trust proxy", 1);
 app.use((req, res, next) => {
   const matchedPath = req.headers["x-matched-path"] || req.headers["x-original-url"] || req.originalUrl || req.url;
@@ -46761,13 +47512,13 @@ app.use((0, import_cors.default)({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 app.use((0, import_cookie_parser.default)(env.COOKIE_SECRET));
-app.use(import_express14.default.json({ limit: "2mb" }));
-app.use(import_express14.default.urlencoded({ extended: true, limit: "2mb" }));
+app.use(import_express18.default.json({ limit: "2mb" }));
+app.use(import_express18.default.urlencoded({ extended: true, limit: "2mb" }));
 app.use(sanitizeInputs);
 if (!env.isTest) {
   app.use((0, import_morgan.default)("dev"));
 }
-app.use("/uploads", import_express14.default.static(env.UPLOAD_DIR, {
+app.use("/uploads", import_express18.default.static(env.UPLOAD_DIR, {
   setHeaders: (res, filePath) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     if (filePath.endsWith(".html") || filePath.endsWith(".htm") || filePath.endsWith(".svg") || filePath.endsWith(".js")) {
@@ -46808,12 +47559,17 @@ app.use("/api/v1/vocabulary", vocabularyRoutes_default);
 app.use("/api/v1/speaking", speakingRoutes_default);
 app.use("/api/v1/assignments", assignmentRoutes_default);
 app.use("/api/v1/student", studentRoutes_default);
+app.use("/api/v1/student", studentClassRoutes);
 app.use("/api/v1/teacher", teacherRoutes_default);
+app.use("/api/v1/teacher", teacherClassRoutes);
 app.get("/api/v1/admin/drive/callback", googleDriveOAuthCallback);
 app.use("/api/v1/admin", adminRoutes_default);
 app.use("/api/v1/files", fileRoutes_default);
 app.use("/api/v1/enquiries", enquiryRoutes_default);
 app.use("/api/v1/system", systemRoutes_default);
+app.use("/api/v1/ai", aiRoutes_default);
+app.use("/api/v1/community", communityRoutes_default);
+app.use("/api/v1/payments", paymentRoutes_default);
 app.all("/api/*", (req, res) => {
   res.status(404).json({
     success: false,

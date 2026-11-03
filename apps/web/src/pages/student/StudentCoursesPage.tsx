@@ -54,6 +54,7 @@ interface Course {
   units: Unit[];
   progressPercentage?: number;
   isEnrolled?: boolean;
+  pricePaise?: number;
 }
 
 export function StudentCoursesPage() {
@@ -105,12 +106,6 @@ export function StudentCoursesPage() {
         });
       }
 
-      // If user has no enrollments yet, auto-enroll in A1 by default so student always has active courses
-      if (enrolledIds.size === 0 && allCourses.length > 0) {
-        enrolledIds.add(allCourses[0].id);
-        enrolledIds.add(allCourses[0].slug);
-      }
-
       setEnrolledCourseIds(enrolledIds);
 
       // Map progress percentage into courses
@@ -118,7 +113,7 @@ export function StudentCoursesPage() {
         const enrollment = dashStats?.enrollments?.find(
           (e: any) => e.courseId === c.id || e.courseSlug === c.slug
         );
-        const progressPercentage = enrollment ? Math.round(enrollment.progressPercentage) : (enrolledIds.has(c.id) ? 35 : 0);
+        const progressPercentage = enrollment ? Math.round(enrollment.progressPercentage) : 0;
         return {
           ...c,
           progressPercentage,
@@ -155,9 +150,36 @@ export function StudentCoursesPage() {
   const handleEnroll = async (course: Course) => {
     setEnrollingCourseId(course.id);
     try {
-      const res: any = await api.post(`/courses/${course.id}/enroll`);
+      if ((course.pricePaise || 0) > 0) {
+        const config: any = await api.get('/payments/config');
+        if (!config.configured || !config.keyId) throw new Error('Online payments are not configured yet. Please contact the academy.');
+        const order: any = await api.post('/payments/orders', { courseId: course.id });
+        if (order.alreadyEnrolled) { await loadCourseData(); return; }
+        await new Promise<void>((resolve, reject) => {
+          const w = window as any;
+          const openCheckout = () => {
+            if (!w.Razorpay) return reject(new Error('Payment checkout could not be loaded. Check your connection and try again.'));
+            const checkout = new w.Razorpay({
+              key: order.order.keyId, amount: order.order.amount, currency: order.order.currency,
+              name: 'DeutschWelt', description: order.order.courseTitle, order_id: order.order.id,
+              handler: async (response: any) => {
+                try { await api.post('/payments/verify', response); resolve(); } catch (error) { reject(error); }
+              },
+              modal: { ondismiss: () => reject(new Error('Payment was cancelled.')) },
+              theme: { color: '#14243a' }
+            });
+            checkout.open();
+          };
+          if (w.Razorpay) return openCheckout();
+          const script = document.createElement('script'); script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.onload = openCheckout; script.onerror = () => reject(new Error('Could not load the secure payment checkout.'));
+          document.body.appendChild(script);
+        });
+        setToastMessage(`Payment verified. You are enrolled in “${course.title}”.`);
+      } else {
+        const res: any = await api.post(`/courses/${course.id}/enroll`);
       if (res.success) {
-        setToastMessage(`💳 Testing Provision Active: Complimentary enrollment processed for "${course.title}"! (Payment Sandbox Mode)`);
+        setToastMessage(`You are enrolled in “${course.title}”.`);
         setTimeout(() => setToastMessage(null), 5000);
 
         setEnrolledCourseIds(prev => new Set(prev).add(course.id).add(course.slug));
@@ -171,6 +193,8 @@ export function StudentCoursesPage() {
         setExpandedCourseIds(prev => new Set(prev).add(course.id));
         setActiveTab('enrolled');
       }
+      }
+      await loadCourseData();
     } catch (e: any) {
       console.error('Enrollment error:', e);
       setToastMessage(e?.message || 'Enrollment failed. Please try again.');
@@ -272,22 +296,6 @@ export function StudentCoursesPage() {
         </div>
       </div>
 
-      {/* Testing Provision Alert */}
-      <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 text-amber-700">
-            <Info className="w-4 h-4" />
-          </div>
-          <div>
-            <span className="font-bold">Test-Bereitstellung (Payment Sandbox Active): </span>
-            <span>All course enrollments and completions are currently complimentary for testing provision without payment charges.</span>
-          </div>
-        </div>
-        <Badge variant="warning" className="text-[10px] uppercase font-bold shrink-0 self-start sm:self-auto">
-          Testing Mode
-        </Badge>
-      </div>
-
       {/* 2. Quick Overview Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <Card className="p-5 border-gray-200 flex items-center gap-4">
@@ -319,7 +327,7 @@ export function StudentCoursesPage() {
           <div>
             <p className="text-xs uppercase font-bold text-dark-muted tracking-wider">Learning Streak</p>
             <p className="text-2xl font-black text-navy">{user?.studentProfile?.streakCount || 7} Days</p>
-            <p className="text-[11px] text-amber-600 font-semibold mt-0.5">Consistent learner</p>
+            <p className="text-[11px] text-amber-600 font-semibold mt-0.5">Based on your saved activity</p>
           </div>
         </Card>
       </div>
@@ -410,7 +418,7 @@ export function StudentCoursesPage() {
             const isEnrolled = course.isEnrolled || enrolledCourseIds.has(course.id);
 
             // Find first lesson for 1-click continue
-            const firstLessonId = course.units?.[0]?.lessons?.[0]?.id || 'lesson-a1-1-1';
+            const firstLessonId = course.units?.[0]?.lessons?.[0]?.id;
             const courseCert = certificates.find(c => c.courseId === course.id);
 
             return (
@@ -436,6 +444,7 @@ export function StudentCoursesPage() {
                     </div>
 
                     <h2 className="text-xl font-bold text-navy">{course.title}</h2>
+                    <p className="text-sm font-bold text-forest-800">{(course.pricePaise || 0) > 0 ? `₹${(course.pricePaise! / 100).toLocaleString('en-IN')}` : 'Free'}</p>
                     <p className="text-xs text-dark-muted line-clamp-2 max-w-3xl">
                       {course.description}
                     </p>
@@ -460,12 +469,12 @@ export function StudentCoursesPage() {
                     <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                       {isEnrolled ? (
                         <>
-                          <Link to={`/lessons/${firstLessonId}`}>
+                          {firstLessonId && <Link to={`/lessons/${firstLessonId}`}>
                             <Button variant="default" size="sm" className="font-bold">
                               <PlayCircle className="w-4 h-4 mr-1.5" />
                               {progress > 0 ? 'Weiterlernen' : 'Start Lesson'}
                             </Button>
-                          </Link>
+                          </Link>}
                           {courseCert ? (
                             <Button
                               variant="outline"
@@ -478,7 +487,7 @@ export function StudentCoursesPage() {
                             >
                               <Award className="w-4 h-4 mr-1 text-amber-600" /> Abschlusszertifikat
                             </Button>
-                          ) : progress >= 30 ? (
+                          ) : progress >= 100 ? (
                             <Button
                               variant="outline"
                               size="sm"

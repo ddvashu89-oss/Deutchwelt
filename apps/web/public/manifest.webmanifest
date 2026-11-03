@@ -1,0 +1,10 @@
+{
+  "name": "DeutschWelt German Coaching",
+  "short_name": "DeutschWelt",
+  "description": "German learning and coaching from A1 to B2",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#14243a",
+  "icons": [{ "src": "/pwa-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
