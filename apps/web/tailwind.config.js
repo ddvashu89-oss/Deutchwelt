@@ -75,14 +75,14 @@ export default {
           900: '#691D1D',
         },
         canvas: {
-          DEFAULT: '#F3F4F6',
-          dark: '#EAEBEF',
+          DEFAULT: '#F7F6F2',
+          dark: '#EEECE6',
         },
         ivory: {
           DEFAULT: '#F4F5F7',
           50: '#FCFAF7',
-          100: '#F4F5F7',
-          200: '#EAEBEF',
+          100: '#F7F6F2',
+          200: '#EEECE6',
         },
         dark: {
           DEFAULT: '#111827',

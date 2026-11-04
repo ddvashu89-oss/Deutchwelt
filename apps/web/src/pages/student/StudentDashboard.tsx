@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import { CertificateModal } from '../../components/ui/CertificateModal.js';
+import { StudentIdCard } from '../../components/student/StudentIdCard.js';
 import {
   Flame,
   Clock,
@@ -137,6 +138,8 @@ export function StudentDashboard() {
           </Link>
         </div>
       </div>
+
+      <StudentIdCard userId={user?.id} />
 
       {/* ============================================================== */}
       {/* 2. STATS ROW: 4 Cards (Card 1 Dark Forest Green, 3 White Cards)*/}

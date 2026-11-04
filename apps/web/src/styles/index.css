@@ -2,10 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+  --dw-canvas: #f7f6f2;
+  --dw-surface: #fffefa;
+  --dw-ink: #17243a;
+  --dw-muted: #687487;
+  --dw-border: #e8e3d8;
+  --dw-forest: #144e3d;
+  --dw-mint: #34d399;
+  --dw-red: #c54346;
+}
+
 @layer base {
+  html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    background: var(--dw-canvas);
+  }
+
   body {
-    background-color: #F3F4F6;
-    color: #111827;
+    background-color: var(--dw-canvas);
+    color: var(--dw-ink);
     @apply font-sans antialiased min-h-screen;
   }
 
@@ -16,6 +35,52 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;
+  }
+
+  button, [role="button"], a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled), [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--dw-mint);
+    outline-offset: 3px;
+  }
+
+  input, select, textarea {
+    color: var(--dw-ink);
+    font: inherit;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #9299a2;
+    opacity: 1;
+  }
+
+  img, video, canvas, svg {
+    max-width: 100%;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--dw-canvas);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 2px solid var(--dw-canvas);
+    border-radius: 999px;
+    background: #c7c9c4;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a6aaa4;
   }
 }
 
@@ -79,4 +144,17 @@
 
 .rotate-y-180 {
   transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

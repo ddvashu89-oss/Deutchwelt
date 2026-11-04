@@ -37929,9 +37929,18 @@ var contactEnquirySchema = external_exports.object({
   phone: external_exports.string().trim().max(30).optional().nullable(),
   level: external_exports.nativeEnum(GermanLevel).default(GermanLevel.A1),
   message: external_exports.string().trim().min(10, "Message must be at least 10 characters long").max(2e3),
+  requestDemo: external_exports.boolean().optional().default(false),
+  preferredDemoAt: external_exports.string().datetime().optional(),
   consentToContact: external_exports.boolean().refine((val) => val === true, {
     message: "You must consent to being contacted regarding your enquiry"
   })
+}).superRefine((enquiry, context) => {
+  if (enquiry.requestDemo && !enquiry.preferredDemoAt) {
+    context.addIssue({ code: external_exports.ZodIssueCode.custom, path: ["preferredDemoAt"], message: "Choose a preferred date and time for your demo class." });
+  }
+  if (enquiry.preferredDemoAt && new Date(enquiry.preferredDemoAt).getTime() <= Date.now()) {
+    context.addIssue({ code: external_exports.ZodIssueCode.custom, path: ["preferredDemoAt"], message: "Choose a future date and time." });
+  }
 });
 var updateEnquiryStatusSchema = external_exports.object({
   status: external_exports.nativeEnum(EnquiryStatus),
@@ -47093,7 +47102,12 @@ var import_express11 = __toESM(require_express2(), 1);
 // apps/api/src/modules/enquiries/enquiryController.ts
 async function submitEnquiry(req, res, next) {
   try {
-    const { name, email, phone, level, message } = req.body;
+    const { name, email, phone, level, message, requestDemo, preferredDemoAt } = req.body;
+    const normalizedMessage = requestDemo ? `[FREE DEMO CLASS REQUEST]
+Preferred date and time (ISO 8601): ${preferredDemoAt}
+
+${message}` : message;
+    const priority = requestDemo ? "HIGH" : "NORMAL";
     if (isDatabaseConnected) {
       const enquiry = await prisma.contactEnquiry.create({
         data: {
@@ -47101,8 +47115,9 @@ async function submitEnquiry(req, res, next) {
           email: email.toLowerCase().trim(),
           phone: phone || null,
           level: level || GermanLevel.A1,
-          message,
-          status: EnquiryStatus.NEW
+          message: normalizedMessage,
+          status: EnquiryStatus.NEW,
+          priority
         }
       });
       return res.status(201).json({
@@ -47117,8 +47132,9 @@ async function submitEnquiry(req, res, next) {
         email: email.toLowerCase().trim(),
         phone: phone || null,
         level: level || GermanLevel.A1,
-        message,
+        message: normalizedMessage,
         status: EnquiryStatus.NEW,
+        priority,
         createdAt: (/* @__PURE__ */ new Date()).toISOString(),
         updatedAt: (/* @__PURE__ */ new Date()).toISOString()
       };

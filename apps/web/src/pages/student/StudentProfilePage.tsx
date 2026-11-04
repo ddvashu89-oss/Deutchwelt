@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card.js';
+import { StudentIdCard } from '../../components/student/StudentIdCard.js';
 import { GermanLevel } from '@deutschwelt/shared';
 import { User, CheckCircle2, ShieldCheck, Target, Globe } from 'lucide-react';
 
@@ -59,6 +60,7 @@ export function StudentProfilePage() {
       </div>
 
       <div className="bg-white rounded-3xl p-8 border border-gray-200/90 shadow-card space-y-6">
+        <StudentIdCard userId={user?.id} compact />
         {success && (
           <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />

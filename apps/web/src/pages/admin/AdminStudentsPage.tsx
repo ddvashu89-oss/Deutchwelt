@@ -5,6 +5,7 @@ import { Badge } from '../../components/ui/Badge.js';
 import { Input } from '../../components/ui/Input.js';
 import { Modal } from '../../components/ui/Modal.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
+import { getStudentCode } from '../../lib/studentId.js';
 import { GermanLevel } from '@deutschwelt/shared';
 import {
   Search,
@@ -206,9 +207,9 @@ export function AdminStudentsPage() {
   };
 
   const exportCSV = () => {
-    const headers = ['ID,First Name,Last Name,Email,Phone,Address,Level,Streak,Joined Date,Status'];
+    const headers = ['Student ID,First Name,Last Name,Email,Phone,Address,Level,Streak,Joined Date,Status'];
     const rows = students.map(s =>
-      `"${s.id}","${s.firstName}","${s.lastName}","${s.email}","${s.phone || ''}","${s.address || ''}","${s.studentProfile?.currentLevel || 'A1'}","${s.studentProfile?.streakCount || 0}","${new Date(s.createdAt).toLocaleDateString()}","${s.isActive ? 'Active' : 'Suspended'}"`
+      `"${getStudentCode(s.id)}","${s.firstName}","${s.lastName}","${s.email}","${s.phone || ''}","${s.address || ''}","${s.studentProfile?.currentLevel || 'A1'}","${s.studentProfile?.streakCount || 0}","${new Date(s.createdAt).toLocaleDateString()}","${s.isActive ? 'Active' : 'Suspended'}"`
     );
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
     const encodedUri = encodeURI(csvContent);
@@ -327,12 +328,13 @@ export function AdminStudentsPage() {
                   })
                   .map(s => (
                   <tr key={s.id} className={`hover:bg-gray-50/80 transition-colors ${!s.isActive ? 'bg-rose-50/30' : ''}`}>
-                    <td className="p-4 font-bold text-navy flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs shrink-0 ${
-                        s.isActive ? 'bg-navy-100 text-navy' : 'bg-rose-100 text-rose-700'
-                      }`}>
-                        {s.firstName?.[0]}
-                      </div>
+                    <td className="p-4 font-bold text-navy">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                          s.isActive ? 'bg-navy-100 text-navy' : 'bg-rose-100 text-rose-700'
+                        }`}>
+                          {s.firstName?.[0]}
+                        </div>
                       <div>
                         <div className="flex items-center gap-1.5">
                           <span>{s.firstName} {s.lastName}</span>
@@ -347,11 +349,15 @@ export function AdminStudentsPage() {
                             </span>
                           )}
                         </div>
+                        <div className="mt-1 font-mono text-[10px] font-semibold tracking-wide text-forest-800">
+                          {getStudentCode(s.id)}
+                        </div>
                         {s.studentProfile?.learningGoal && (
                           <div className="text-[10px] text-gray-400 font-normal truncate max-w-[180px]">
                             {s.studentProfile.learningGoal}
                           </div>
                         )}
+                      </div>
                       </div>
                     </td>
                     <td className="p-4 text-dark-muted space-y-0.5">
