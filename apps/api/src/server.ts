@@ -1,8 +1,11 @@
 import app from './app.js';
-import { env } from './config/env.js';
+import { env, productionConfigProblems } from './config/env.js';
 import { checkDatabaseConnection } from './services/prisma.js';
 
 async function bootstrap() {
+  if (productionConfigProblems.length) {
+    throw new Error(`Invalid production configuration:\n- ${productionConfigProblems.join('\n- ')}`);
+  }
   await checkDatabaseConnection();
 
   const server = app.listen(env.PORT, () => {

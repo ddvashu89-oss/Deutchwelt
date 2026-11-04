@@ -33520,32 +33520,31 @@ var env = {
   isProd,
   isSandbox: !isProd && appEnv === "sandbox"
 };
+var productionConfigProblems = [];
 if (isProd) {
-  const problems = [];
   if (!env.DATABASE_URL || !/^mysql:\/\//.test(env.DATABASE_URL)) {
-    problems.push("DATABASE_URL must be a MySQL connection URL used by the API.");
+    productionConfigProblems.push("DATABASE_URL must be a MySQL connection URL used by the API.");
   } else {
     try {
       const databaseHost = new URL(env.DATABASE_URL).hostname;
       if (!databaseHost || ["localhost", "127.0.0.1", "::1", "[::1]"].includes(databaseHost)) {
-        problems.push("DATABASE_URL must use the remote MySQL host in production.");
+        productionConfigProblems.push("DATABASE_URL must use the remote MySQL host in production.");
       }
     } catch {
-      problems.push("DATABASE_URL must be a valid MySQL connection URL.");
+      productionConfigProblems.push("DATABASE_URL must be a valid MySQL connection URL.");
     }
   }
   if (env.SESSION_SECRET.length < 32 || env.SESSION_SECRET.startsWith("deutschwelt-insecure-") || env.SESSION_SECRET.startsWith("super-secret-")) {
-    problems.push("SESSION_SECRET must be a unique secret of at least 32 characters.");
+    productionConfigProblems.push("SESSION_SECRET must be a unique secret of at least 32 characters.");
   }
   if (env.COOKIE_SECRET.length < 32 || env.COOKIE_SECRET.startsWith("deutschwelt-insecure-") || env.COOKIE_SECRET.startsWith("super-secret-")) {
-    problems.push("COOKIE_SECRET must be a unique secret of at least 32 characters.");
+    productionConfigProblems.push("COOKIE_SECRET must be a unique secret of at least 32 characters.");
   }
   if (!env.FRONTEND_URL.startsWith("https://")) {
-    problems.push("FRONTEND_URL must use HTTPS in production.");
+    productionConfigProblems.push("FRONTEND_URL must use HTTPS in production.");
   }
-  if (problems.length) {
-    throw new Error(`Invalid production configuration:
-- ${problems.join("\n- ")}`);
+  if (productionConfigProblems.length) {
+    console.error(`[Production configuration] ${productionConfigProblems.join(" ")}`);
   }
 }
 
@@ -47855,6 +47854,15 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use((req, res, next) => {
+  if (productionConfigProblems.length === 0) return next();
+  return res.status(503).json({
+    success: false,
+    error: "Production configuration is incomplete. Check the API environment variables.",
+    code: "PRODUCTION_CONFIG_INVALID",
+    details: productionConfigProblems
+  });
+});
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -47959,10 +47967,30 @@ var app_default = app;
 
 // apps/api/src/serverless.ts
 var databaseCheck = null;
+async function waitForDatabaseCheck(check) {
+  let timer;
+  try {
+    await Promise.race([
+      check,
+      new Promise((resolve) => {
+        timer = setTimeout(() => resolve(false), 3e3);
+      })
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
 async function handler(req, res) {
   try {
-    if (!databaseCheck) databaseCheck = checkDatabaseConnection();
-    if (!await databaseCheck) databaseCheck = null;
+    if (productionConfigProblems.length === 0) {
+      if (!databaseCheck) {
+        databaseCheck = checkDatabaseConnection().then((connected) => {
+          if (!connected) databaseCheck = null;
+          return connected;
+        });
+      }
+      await waitForDatabaseCheck(databaseCheck);
+    }
     return app_default(req, res);
   } catch (err) {
     console.error("[Serverless Handler Error]", err);

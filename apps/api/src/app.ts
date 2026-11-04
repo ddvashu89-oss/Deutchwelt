@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
 
-import { env } from './config/env.js';
+import { env, productionConfigProblems } from './config/env.js';
 import { authenticate } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiRateLimiter } from './middleware/rateLimiter.js';
@@ -55,6 +55,18 @@ app.use((req, res, next) => {
     req.url = `/api${req.url.startsWith('/') ? '' : '/'}${req.url}`;
   }
   next();
+});
+
+// Keep the function alive long enough to report a safe, actionable deployment error.
+// No application route may run with development secrets or without a production DB.
+app.use((req, res, next) => {
+  if (productionConfigProblems.length === 0) return next();
+  return res.status(503).json({
+    success: false,
+    error: 'Production configuration is incomplete. Check the API environment variables.',
+    code: 'PRODUCTION_CONFIG_INVALID',
+    details: productionConfigProblems
+  });
 });
 
 // Security Headers Hardening

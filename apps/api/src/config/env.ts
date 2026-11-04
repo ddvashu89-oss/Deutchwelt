@@ -41,30 +41,31 @@ export const env = {
   isSandbox: !isProd && appEnv === 'sandbox'
 };
 
+export const productionConfigProblems: string[] = [];
+
 if (isProd) {
-  const problems: string[] = [];
   if (!env.DATABASE_URL || !/^mysql:\/\//.test(env.DATABASE_URL)) {
-    problems.push('DATABASE_URL must be a MySQL connection URL used by the API.');
+    productionConfigProblems.push('DATABASE_URL must be a MySQL connection URL used by the API.');
   } else {
     try {
       const databaseHost = new URL(env.DATABASE_URL).hostname;
       if (!databaseHost || ['localhost', '127.0.0.1', '::1', '[::1]'].includes(databaseHost)) {
-        problems.push('DATABASE_URL must use the remote MySQL host in production.');
+        productionConfigProblems.push('DATABASE_URL must use the remote MySQL host in production.');
       }
     } catch {
-      problems.push('DATABASE_URL must be a valid MySQL connection URL.');
+      productionConfigProblems.push('DATABASE_URL must be a valid MySQL connection URL.');
     }
   }
   if (env.SESSION_SECRET.length < 32 || env.SESSION_SECRET.startsWith('deutschwelt-insecure-') || env.SESSION_SECRET.startsWith('super-secret-')) {
-    problems.push('SESSION_SECRET must be a unique secret of at least 32 characters.');
+    productionConfigProblems.push('SESSION_SECRET must be a unique secret of at least 32 characters.');
   }
   if (env.COOKIE_SECRET.length < 32 || env.COOKIE_SECRET.startsWith('deutschwelt-insecure-') || env.COOKIE_SECRET.startsWith('super-secret-')) {
-    problems.push('COOKIE_SECRET must be a unique secret of at least 32 characters.');
+    productionConfigProblems.push('COOKIE_SECRET must be a unique secret of at least 32 characters.');
   }
   if (!env.FRONTEND_URL.startsWith('https://')) {
-    problems.push('FRONTEND_URL must use HTTPS in production.');
+    productionConfigProblems.push('FRONTEND_URL must use HTTPS in production.');
   }
-  if (problems.length) {
-    throw new Error(`Invalid production configuration:\n- ${problems.join('\n- ')}`);
+  if (productionConfigProblems.length) {
+    console.error(`[Production configuration] ${productionConfigProblems.join(' ')}`);
   }
 }

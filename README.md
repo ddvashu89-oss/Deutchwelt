@@ -455,7 +455,7 @@ This produces:
 
    Remove the `BOOTSTRAP_ADMIN_*` values after the command succeeds. It refuses to run if an administrator already exists. Do not run the development `db:seed` command in production; it contains sample course activity and is intentionally blocked there.
 4. Configure `GOOGLE_DRIVE_CLIENT_ID`, `GOOGLE_DRIVE_CLIENT_SECRET`, `GOOGLE_DRIVE_PICKER_API_KEY`, and `GOOGLE_DRIVE_PROJECT_NUMBER` in the server environment if using Drive storage. Register the exact deployed origin and `/api/v1/admin/drive/callback` redirect URI in Google Cloud.
-5. Build and deploy. Confirm the API health endpoint reports `healthy` with `database: connected`, then sign in with the bootstrap administrator, connect Drive, and select the private storage folder.
+5. Build and deploy. Check `/api/v1/health` and confirm it reports `healthy` with `database: connected`. The separate `/api/health` endpoint checks only whether a lightweight Vercel function can run; it does not check the application or database. If `/api/v1/health` reports `PRODUCTION_CONFIG_INVALID`, fix the listed Vercel environment variables and redeploy. Then sign in with the bootstrap administrator, connect Drive, and select the private storage folder.
 
 ### cPanel MySQL with a Vercel deployment
 
