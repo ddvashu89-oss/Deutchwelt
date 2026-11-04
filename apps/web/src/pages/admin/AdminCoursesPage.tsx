@@ -158,9 +158,14 @@ export function AdminCoursesPage() {
           </p>
         </div>
 
-        <Button variant="secondary" size="md" onClick={() => setIsModalOpen(true)} className="font-bold shadow-md self-start sm:self-auto">
-          <Plus className="w-4 h-4 mr-1" /> Add New Course
-        </Button>
+        <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+          <Link to="/teacher/materials" className="inline-flex min-h-10 items-center rounded-xl border border-gray-200 bg-white px-4 text-sm font-bold text-navy hover:bg-gray-50">
+            <Layers className="mr-2 h-4 w-4" /> Manage lessons & materials
+          </Link>
+          <Button variant="secondary" size="md" onClick={() => setIsModalOpen(true)} className="font-bold shadow-md">
+            <Plus className="w-4 h-4 mr-1" /> Add New Course
+          </Button>
+        </div>
       </div>
 
       {loading ? (

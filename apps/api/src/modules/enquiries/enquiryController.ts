@@ -5,7 +5,11 @@ import { store } from '../../services/store.js';
 
 export async function submitEnquiry(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, email, phone, level, message } = req.body;
+    const { name, email, phone, level, message, requestDemo, preferredDemoAt } = req.body;
+    const normalizedMessage = requestDemo
+      ? `[FREE DEMO CLASS REQUEST]\nPreferred date and time (ISO 8601): ${preferredDemoAt}\n\n${message}`
+      : message;
+    const priority = requestDemo ? 'HIGH' : 'NORMAL';
 
     if (isDatabaseConnected) {
       const enquiry = await prisma.contactEnquiry.create({
@@ -14,8 +18,9 @@ export async function submitEnquiry(req: Request, res: Response, next: NextFunct
           email: email.toLowerCase().trim(),
           phone: phone || null,
           level: level || GermanLevel.A1,
-          message,
-          status: EnquiryStatus.NEW
+          message: normalizedMessage,
+          status: EnquiryStatus.NEW,
+          priority
         }
       });
 
@@ -31,8 +36,9 @@ export async function submitEnquiry(req: Request, res: Response, next: NextFunct
         email: email.toLowerCase().trim(),
         phone: phone || null,
         level: level || GermanLevel.A1,
-        message,
+        message: normalizedMessage,
         status: EnquiryStatus.NEW,
+        priority,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };

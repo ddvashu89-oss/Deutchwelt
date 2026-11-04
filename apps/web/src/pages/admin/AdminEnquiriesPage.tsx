@@ -65,8 +65,11 @@ export function AdminEnquiriesPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {enquiries.map(enq => (
-            <div key={enq.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle space-y-4">
+          {enquiries.map(enq => {
+            const demoRequested = typeof enq.message === 'string' && enq.message.startsWith('[FREE DEMO CLASS REQUEST]');
+            const requestedAt = demoRequested ? enq.message.match(/Preferred date and time \(ISO 8601\): ([^\n]+)/)?.[1] : null;
+            return <div key={enq.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle space-y-4">
+              {demoRequested && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900"><span className="font-bold">Free demo class request</span>{requestedAt && <span className="ml-2">Preferred time: {new Date(requestedAt).toLocaleString()}</span>}</div>}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -115,8 +118,8 @@ export function AdminEnquiriesPage() {
                 <label className="text-xs font-semibold text-dark sm:col-span-2">Staff notes<textarea name="adminNotes" rows={2} defaultValue={enq.adminNotes || ''} maxLength={4000} className="mt-1 block w-full rounded-lg border border-gray-300 bg-white p-2" placeholder="Call outcome or next step"/></label>
                 <Button type="submit" size="sm" className="sm:col-span-2">Save follow-up</Button>
               </form>
-            </div>
-          ))}
+            </div>;
+          })}
         </div>
       )}
     </div>

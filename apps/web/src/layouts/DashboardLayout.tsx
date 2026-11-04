@@ -51,6 +51,7 @@ export function DashboardLayout() {
     { label: t('dash.menu.dashboard'), href: '/student/dashboard', icon: LayoutDashboard },
     { label: 'My courses', href: '/student/courses', icon: BookOpen },
     { label: 'Live schedule', href: '/student/schedule', icon: Calendar },
+    { label: 'Progress report', href: '/student/progress', icon: BarChart2 },
     { label: 'Placement & plan', href: '/student/placement-test', icon: GraduationCap },
     { label: 'AI tutor', href: '/student/ai-tutor', icon: Sparkles },
     { label: 'Community Q&A', href: '/student/community', icon: Users },
@@ -68,7 +69,8 @@ export function DashboardLayout() {
 
   const adminMenu = [
     { label: t('dash.menu.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/admin/courses', icon: CheckSquare },
+    { label: 'Course content', href: '/admin/courses', icon: CheckSquare },
+    { label: 'Learning materials & notices', href: '/teacher/materials', icon: FileCheck },
     { label: t('dash.menu.calendar'), href: '/admin/enquiries', icon: Calendar },
     { label: t('dash.menu.analytics'), href: '/admin/audit-logs', icon: BarChart2 },
     { label: t('dash.menu.team'), href: '/admin/students', icon: Users },

@@ -34,6 +34,7 @@ import { StudentMaterialsPage } from './pages/student/StudentMaterialsPage.js';
 import { StudentCoursesPage } from './pages/student/StudentCoursesPage.js';
 import { StudentSchedulePage } from './pages/student/StudentSchedulePage.js';
 import { PlacementTestPage } from './pages/student/PlacementTestPage.js';
+import { StudentProgressPage } from './pages/student/StudentProgressPage.js';
 import { AiTutorPage } from './pages/student/AiTutorPage.js';
 import { CommunityPage } from './pages/community/CommunityPage.js';
 
@@ -148,6 +149,7 @@ export function App() {
               <Route path="profile" element={<StudentProfilePage />} />
               <Route path="schedule" element={<StudentSchedulePage />} />
               <Route path="placement-test" element={<PlacementTestPage />} />
+              <Route path="progress" element={<StudentProgressPage />} />
               <Route path="ai-tutor" element={<AiTutorPage />} />
               <Route path="community" element={<CommunityPage />} />
             </Route>

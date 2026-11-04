@@ -13,7 +13,6 @@ import {
   MapPin,
   CheckCircle2,
   MessageSquare,
-  Sparkles,
   ArrowRight
 } from 'lucide-react';
 
@@ -22,7 +21,17 @@ const contactSchema = z.object({
   email: z.string().email('Bitte geben Sie eine gültige E-Mail-Adresse ein'),
   phone: z.string().optional(),
   targetLevel: z.string().optional(),
-  message: z.string().min(10, 'Nachricht muss mindestens 10 Zeichen lang sein')
+  message: z.string().min(10, 'Nachricht muss mindestens 10 Zeichen lang sein'),
+  requestDemo: z.boolean().default(false),
+  preferredDemoAt: z.string().optional(),
+  consentToContact: z.boolean().refine(value => value, 'Please agree that the academy may contact you.')
+}).superRefine((data, context) => {
+  if (data.requestDemo && !data.preferredDemoAt) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['preferredDemoAt'], message: 'Choose a preferred date and time for your demo class.' });
+  }
+  if (data.preferredDemoAt && new Date(data.preferredDemoAt).getTime() <= Date.now()) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['preferredDemoAt'], message: 'Choose a future date and time.' });
+  }
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
@@ -30,21 +39,36 @@ type ContactFormData = z.infer<typeof contactSchema>;
 export function ContactPage() {
   const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
+  const [submittedDemo, setSubmittedDemo] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting }
   } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema)
+    resolver: zodResolver(contactSchema),
+    defaultValues: { requestDemo: false, consentToContact: false }
   });
+  const requestDemo = watch('requestDemo');
 
   const onSubmit = async (data: ContactFormData) => {
     try {
       setServerError(null);
-      await api.post('/contact', data);
+      const demoAt = data.preferredDemoAt ? new Date(data.preferredDemoAt).toISOString() : undefined;
+      await api.post('/enquiries', {
+        name: data.fullName,
+        email: data.email,
+        phone: data.phone || undefined,
+        level: data.targetLevel === 'OTHER' ? 'UNSURE' : data.targetLevel || 'A1',
+        message: data.message,
+        requestDemo: data.requestDemo,
+        preferredDemoAt: data.requestDemo ? demoAt : undefined,
+        consentToContact: data.consentToContact
+      });
+      setSubmittedDemo(Boolean(data.requestDemo));
       setSubmitted(true);
       reset();
     } catch (err: any) {
@@ -117,11 +141,11 @@ export function ContactPage() {
                   {t('contact.successTitle')}
                 </h3>
                 <p className="text-sm text-gray-600 max-w-md mx-auto">
-                  {t('contact.successDesc')}
+                  {submittedDemo ? 'Your free demo class request has been sent. The academy will contact you to confirm the time.' : t('contact.successDesc')}
                 </p>
                 <button
                   type="button"
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => { setSubmitted(false); setSubmittedDemo(false); }}
                   className="px-6 py-2.5 rounded-full border border-gray-300 text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors"
                 >
                   {t('contact.submit')}
@@ -191,6 +215,32 @@ export function ContactPage() {
                   error={errors.message?.message}
                   {...register('message')}
                 />
+
+                <div className="space-y-3 rounded-2xl border border-forest-100 bg-forest-50/60 p-4">
+                  <label className="flex cursor-pointer items-start gap-3 text-sm font-semibold text-gray-800">
+                    <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-gray-300 text-forest-800 focus:ring-forest-700" {...register('requestDemo')} />
+                    <span>Request a free demo class. Choose a time that works for you; our team will confirm it by email.</span>
+                  </label>
+                  {requestDemo && (
+                    <div>
+                      <label htmlFor="preferredDemoAt" className="mb-1.5 block text-xs font-bold text-gray-700">Preferred date and time</label>
+                      <input
+                        id="preferredDemoAt"
+                        type="datetime-local"
+                        min={new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 16)}
+                        className="flex h-11 w-full rounded-2xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-forest-800/15 focus:border-forest-800"
+                        {...register('preferredDemoAt')}
+                      />
+                      {errors.preferredDemoAt && <p className="mt-1 text-xs font-semibold text-rose-600">{errors.preferredDemoAt.message}</p>}
+                    </div>
+                  )}
+                </div>
+
+                <label className="flex items-start gap-3 text-xs leading-relaxed text-gray-600">
+                  <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-gray-300 text-forest-800 focus:ring-forest-700" {...register('consentToContact')} />
+                  <span>DeutschWelt may contact me about this enquiry or demo class request.</span>
+                </label>
+                {errors.consentToContact && <p className="text-xs font-semibold text-rose-600">{errors.consentToContact.message}</p>}
 
                 <div className="pt-2">
                   <button
