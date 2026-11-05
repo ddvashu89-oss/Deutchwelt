@@ -221,36 +221,43 @@ export function AdminStudentsPage() {
     document.body.removeChild(link);
   };
 
+  const filteredStudents = students.filter(s => {
+    if (statusFilter === 'active') return s.isActive;
+    if (statusFilter === 'blocked') return !s.isActive;
+    if (statusFilter === 'pending') return s.studentProfile?.registrationStatus === 'PENDING_APPROVAL';
+    return true;
+  });
+
   return (
-    <div className="space-y-8 pb-16">
+    <div className="min-w-0 space-y-6 pb-16 sm:space-y-8">
       {/* Header with Title and Action Buttons */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-3xl font-extrabold text-navy tracking-tight">Student Directory</h1>
-            <Badge variant="outline" className="text-[10px] font-bold text-navy border-navy-300">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <div className="mb-1 flex flex-wrap items-center gap-2">
+            <h1 className="text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">Student Directory</h1>
+            <Badge variant="outline" className="border-navy-300 text-[10px] font-bold text-navy">
               Admin Full Control
             </Badge>
           </div>
-          <p className="text-xs text-dark-muted">
+          <p className="max-w-2xl text-xs leading-relaxed text-dark-muted sm:text-sm">
             Add new learners, edit student profiles and CEFR milestones, suspend accounts, or delete records.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={exportCSV} className="font-bold">
+        <div className="grid w-full grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:flex sm:w-auto sm:items-center sm:gap-3">
+          <Button variant="outline" size="sm" onClick={exportCSV} className="w-full whitespace-nowrap font-bold sm:w-auto">
             <Download className="w-4 h-4 mr-1" /> Export CSV
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => setIsAddOpen(true)} className="font-bold shadow-md">
+          <Button variant="secondary" size="sm" onClick={() => setIsAddOpen(true)} className="w-full whitespace-nowrap font-bold shadow-md sm:w-auto">
             <Plus className="w-4 h-4 mr-1" /> Add New Student
           </Button>
         </div>
       </div>
 
       {/* Search Bar & Status Filter Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <form onSubmit={handleSearch} className="max-w-md w-full relative">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
+      <div className="flex min-w-0 flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <form onSubmit={handleSearch} className="relative w-full xl:max-w-md">
+          <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search by name, email, or phone..."
@@ -260,11 +267,11 @@ export function AdminStudentsPage() {
           />
         </form>
 
-        <div className="flex items-center gap-1.5 p-1 bg-gray-100 rounded-xl border border-gray-200 text-xs font-bold self-start sm:self-auto">
+        <div className="grid w-full grid-cols-2 gap-1 rounded-xl border border-gray-200 bg-gray-100 p-1 text-xs font-bold sm:flex sm:flex-wrap xl:w-auto">
           <button
             type="button"
             onClick={() => setStatusFilter('all')}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
+            className={`min-h-10 rounded-lg px-2 py-2 transition-colors sm:px-3 sm:py-1.5 ${
               statusFilter === 'all' ? 'bg-white text-navy shadow-xs' : 'text-gray-500 hover:text-dark'
             }`}
           >
@@ -273,7 +280,7 @@ export function AdminStudentsPage() {
           <button
             type="button"
             onClick={() => setStatusFilter('active')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+            className={`flex min-h-10 items-center justify-center gap-1 rounded-lg px-2 py-2 transition-colors sm:px-3 sm:py-1.5 ${
               statusFilter === 'active' ? 'bg-white text-emerald-700 shadow-xs' : 'text-gray-500 hover:text-dark'
             }`}
           >
@@ -283,7 +290,7 @@ export function AdminStudentsPage() {
           <button
             type="button"
             onClick={() => setStatusFilter('blocked')}
-            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+            className={`flex min-h-10 items-center justify-center gap-1 rounded-lg px-2 py-2 transition-colors sm:px-3 sm:py-1.5 ${
               statusFilter === 'blocked' ? 'bg-white text-rose-700 shadow-xs' : 'text-gray-500 hover:text-dark'
             }`}
           >
@@ -293,7 +300,7 @@ export function AdminStudentsPage() {
           <button
             type="button"
             onClick={() => setStatusFilter('pending')}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${statusFilter === 'pending' ? 'bg-white text-amber-700 shadow-xs' : 'text-gray-500 hover:text-dark'}`}
+            className={`min-h-10 rounded-lg px-2 py-2 transition-colors sm:px-3 sm:py-1.5 ${statusFilter === 'pending' ? 'bg-white text-amber-700 shadow-xs' : 'text-gray-500 hover:text-dark'}`}
           >
             Needs approval ({students.filter(s => s.studentProfile?.registrationStatus === 'PENDING_APPROVAL').length})
           </button>
@@ -304,7 +311,67 @@ export function AdminStudentsPage() {
       {loading ? (
         <Skeleton className="h-64 w-full rounded-2xl" />
       ) : (
-        <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-subtle">
+        <>
+          {/* Compact cards keep the main student details and actions usable on phones and tablets. */}
+          <div className="space-y-3 lg:hidden">
+            {filteredStudents.length === 0 ? (
+              <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-sm text-dark-muted shadow-subtle">
+                No students match this filter.
+              </div>
+            ) : filteredStudents.map(s => (
+              <article key={s.id} className={`min-w-0 rounded-2xl border bg-white p-4 shadow-subtle ${!s.isActive ? 'border-rose-200 bg-rose-50/30' : 'border-gray-200'}`}>
+                <div className="flex min-w-0 items-start gap-3">
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${s.isActive ? 'bg-navy-100 text-navy' : 'bg-rose-100 text-rose-700'}`}>
+                    {s.firstName?.[0]}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                      <h2 className="break-words font-bold text-navy">{s.firstName} {s.lastName}</h2>
+                      {!s.isActive && <span className="rounded-md bg-rose-100 px-1.5 py-0.5 text-[9px] font-black uppercase text-rose-800">Blocked</span>}
+                      {s.studentProfile?.registrationStatus && s.studentProfile.registrationStatus !== 'APPROVED' && (
+                        <span className="rounded-md bg-amber-100 px-1.5 py-0.5 text-[9px] font-black uppercase text-amber-800">{s.studentProfile.registrationStatus.replace('_', ' ')}</span>
+                      )}
+                    </div>
+                    <p className="mt-1 font-mono text-[10px] font-semibold tracking-wide text-forest-800">{getStudentCode(s.id)}</p>
+                    {s.studentProfile?.learningGoal && <p className="mt-1 break-words text-xs text-gray-500">{s.studentProfile.learningGoal}</p>}
+                  </div>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-3 border-t border-gray-100 pt-3 text-xs">
+                  <div className="col-span-2 flex min-w-0 items-start gap-2 text-dark">
+                    <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+                    <span className="min-w-0 break-all">{s.email}</span>
+                  </div>
+                  {s.phone && <div className="flex min-w-0 items-start gap-2 text-dark-muted"><Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" /><span className="break-words">{s.phone}</span></div>}
+                  {s.address && <div className="col-span-2 flex min-w-0 items-start gap-2 text-dark-muted"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" /><span className="break-words">{s.address}</span></div>}
+                  <div className="flex items-center gap-2 text-dark-muted"><span className="text-gray-400">Level</span><Badge variant="outline" className="font-bold">{s.studentProfile?.currentLevel || 'A1'}</Badge></div>
+                  <div className="text-right font-semibold text-amber-600">{s.studentProfile?.streakCount || 1} day streak</div>
+                  <div className="col-span-2 text-[11px] text-dark-muted">Joined {new Date(s.createdAt).toLocaleDateString()}</div>
+                </div>
+
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-3">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleBlock(s.id, `${s.firstName} ${s.lastName}`, s.isActive)}
+                    className={`inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-bold transition-colors ${s.isActive ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100'}`}
+                    title={s.isActive ? 'Click to Block Student Access' : 'Click to Restore Student Access'}
+                  >
+                    {s.isActive ? <><CheckCircle2 className="h-3.5 w-3.5" /> Active</> : <><XCircle className="h-3.5 w-3.5" /> Blocked</>}
+                  </button>
+                  <div className="flex items-center gap-2">
+                    {s.studentProfile?.registrationStatus === 'PENDING_APPROVAL' && <>
+                      <button type="button" onClick={() => handleReviewRegistration(s, 'APPROVE')} disabled={reviewingId === s.id} aria-label={`Approve ${s.firstName} ${s.lastName}`} className="flex h-10 w-10 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white disabled:opacity-50"><CheckCircle2 className="h-4 w-4" /></button>
+                      <button type="button" onClick={() => handleReviewRegistration(s, 'REJECT')} disabled={reviewingId === s.id} aria-label={`Request changes for ${s.firstName} ${s.lastName}`} className="flex h-10 w-10 items-center justify-center rounded-lg border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white disabled:opacity-50"><XCircle className="h-4 w-4" /></button>
+                    </>}
+                    <button type="button" onClick={() => openEditModal(s)} aria-label={`Edit ${s.firstName} ${s.lastName}`} className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-navy transition-colors hover:bg-navy hover:text-white"><Edit2 className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => handleDeleteStudent(s.id, `${s.firstName} ${s.lastName}`)} disabled={deletingId === s.id} aria-label={`Delete ${s.firstName} ${s.lastName}`} className="flex h-10 w-10 items-center justify-center rounded-lg border border-red-200 text-red-600 transition-colors hover:bg-red-600 hover:text-white disabled:opacity-50"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="hidden overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-subtle lg:block">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs min-w-[650px]">
               <thead className="bg-navy text-white uppercase font-bold tracking-wider">
@@ -319,14 +386,7 @@ export function AdminStudentsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-dark">
-                {students
-                  .filter(s => {
-                    if (statusFilter === 'active') return s.isActive;
-                    if (statusFilter === 'blocked') return !s.isActive;
-                    if (statusFilter === 'pending') return s.studentProfile?.registrationStatus === 'PENDING_APPROVAL';
-                    return true;
-                  })
-                  .map(s => (
+                {filteredStudents.map(s => (
                   <tr key={s.id} className={`hover:bg-gray-50/80 transition-colors ${!s.isActive ? 'bg-rose-50/30' : ''}`}>
                     <td className="p-4 font-bold text-navy">
                       <div className="flex min-w-0 items-center gap-2">
@@ -453,7 +513,8 @@ export function AdminStudentsPage() {
               </tbody>
             </table>
           </div>
-        </div>
+          </div>
+        </>
       )}
 
       {/* 1. ADD STUDENT MODAL */}
@@ -540,11 +601,11 @@ export function AdminStudentsPage() {
             onChange={(e) => setNewGoal(e.target.value)}
           />
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <Button type="button" variant="outline" onClick={() => setIsAddOpen(false)}>
+          <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end sm:gap-3">
+            <Button type="button" variant="outline" onClick={() => setIsAddOpen(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button type="submit" variant="secondary" className="font-bold shadow-md" isLoading={creating}>
+            <Button type="submit" variant="secondary" className="w-full font-bold shadow-md sm:w-auto" isLoading={creating}>
               Create Student Account
             </Button>
           </div>
@@ -634,11 +695,11 @@ export function AdminStudentsPage() {
             onChange={(e) => setEditGoal(e.target.value)}
           />
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <Button type="button" variant="outline" onClick={() => setEditingStudent(null)}>
+          <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end sm:gap-3">
+            <Button type="button" variant="outline" onClick={() => setEditingStudent(null)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button type="submit" variant="primary" className="font-bold shadow-md" isLoading={savingEdit}>
+            <Button type="submit" variant="primary" className="w-full font-bold shadow-md sm:w-auto" isLoading={savingEdit}>
               Save Student Changes
             </Button>
           </div>
