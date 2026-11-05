@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { UiTextLocalizer } from '../i18n/UiTextLocalizer.js';
 
 export type Language = 'en' | 'de';
 
@@ -370,7 +371,7 @@ const translations: Record<Language, Record<string, string>> = {
     'login.hidePassword': 'Passwort verbergen',
     'login.capsLock': 'Die Feststelltaste ist aktiviert.',
     'login.privacy': 'Datenschutz',
-    'login.support': 'Support kontaktieren',
+    'login.support': 'Hilfe kontaktieren',
     'login.invalidEmail': 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
     'login.passwordRequired': 'Bitte geben Sie Ihr Passwort ein.',
 
@@ -460,7 +461,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.units': 'Einheiten',
     'courses.lessons': 'Lektionen',
     'courses.level': 'Stufe',
-    'courses.priceFree': 'Kostenlos mit Account',
+    'courses.priceFree': 'Kostenlos mit Konto',
 
     // About Page
     'about.badge': 'Unsere Mission',
@@ -536,16 +537,16 @@ const translations: Record<Language, Record<string, string>> = {
     'sdash.analyticsWeek': 'Diese Woche',
     'sdash.activeLearningDay': 'Aktiver Lerntag',
     'sdash.restDay': 'Ruhetag',
-    'sdash.remindersTitle': 'Reminders & Live Class',
+    'sdash.remindersTitle': 'Erinnerungen & Live-Unterricht',
     'sdash.today': 'Heute',
-    'sdash.liveCoach': 'Goethe B1 Live Coaching',
-    'sdash.joinSession': '🎥 Live Session beitreten',
-    'sdash.timerLabel': 'Live Time Tracker',
+    'sdash.liveCoach': 'Goethe B1 Live-Betreuung',
+    'sdash.joinSession': '🎥 Live-Sitzung beitreten',
+    'sdash.timerLabel': 'Lernzeitmesser',
     'sdash.timerRunning': 'Läuft',
     'sdash.timerPaused': 'Pausiert',
     'sdash.timerSession': 'Sitzung: Deutsch B1 • Grammatik & Konversation',
     'sdash.pauseTimer': 'Pause Timer',
-    'sdash.startTimer': 'Start Timer',
+    'sdash.startTimer': 'Zeitmesser starten',
     'sdash.lessonsTitle': 'Nächste Lektionen',
     'sdash.viewAll': 'Alle ansehen →',
     'sdash.noSubmissions': 'Alle Lektionen abgeschlossen!',
@@ -612,7 +613,7 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.colCourses': 'Kursstufen',
     'footer.colTools': 'Lernwerkzeuge',
     'footer.colAcademy': 'Akademie',
-    'footer.a1': 'A1 Anfänger (Start from Zero)',
+    'footer.a1': 'A1 Anfänger (Von Anfang an)',
     'footer.a2': 'A2 Grundstufe (Konversation)',
     'footer.b1': 'B1 Mittelstufe (Beruf & Alltag)',
     'footer.b2': 'B2 Fortgeschritten (Goethe-Zertifikat)',
@@ -644,6 +645,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  useEffect(() => {
+    const syncLanguage = (event: StorageEvent) => {
+      if (event.key === 'dw_language' && (event.newValue === 'en' || event.newValue === 'de')) {
+        setLanguageState(event.newValue);
+      }
+    };
+    window.addEventListener('storage', syncLanguage);
+    return () => window.removeEventListener('storage', syncLanguage);
+  }, []);
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     try {
@@ -664,6 +675,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   return (
     <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t }}>
       {children}
+      <UiTextLocalizer language={language} />
     </LanguageContext.Provider>
   );
 }

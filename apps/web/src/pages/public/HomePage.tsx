@@ -449,7 +449,7 @@ export function HomePage() {
                               <Volume2 className="w-3.5 h-3.5 text-mint" />
                               <span>Muster-Sprachprobe (Native Audio)</span>
                             </div>
-                            <p className="text-sm font-heading font-bold text-white italic">
+                            <p data-no-translate className="text-sm font-heading font-bold text-white italic">
                               „{phase.sampleAudio}“
                             </p>
                           </div>

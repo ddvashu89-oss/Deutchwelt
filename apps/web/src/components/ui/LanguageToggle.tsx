@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext.js';
-import { Globe } from 'lucide-react';
 
 export function LanguageToggle({ className = '' }: { className?: string }) {
   const { language, setLanguage } = useLanguage();
@@ -15,7 +14,9 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
             ? 'bg-navy text-white shadow-xs'
             : 'text-dark-muted hover:text-dark'
         }`}
-        title="Switch to English"
+        aria-label={language === 'en' ? 'Use English' : 'Englisch verwenden'}
+        aria-pressed={language === 'en'}
+        title={language === 'en' ? 'Use English' : 'Englisch verwenden'}
       >
         <span>EN</span>
       </button>
@@ -28,7 +29,9 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
             ? 'bg-germanRed text-white shadow-xs'
             : 'text-dark-muted hover:text-dark'
         }`}
-        title="Auf Deutsch wechseln"
+        aria-label={language === 'en' ? 'Use German' : 'Deutsch verwenden'}
+        aria-pressed={language === 'de'}
+        title={language === 'en' ? 'Use German' : 'Deutsch verwenden'}
       >
         <span>DE</span>
       </button>
