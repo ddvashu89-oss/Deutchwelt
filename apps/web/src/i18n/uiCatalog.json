@@ -25,15 +25,15 @@
   },
   "\"? This will delete all course progress and records.": {
     "en": "\"? This will delete all course progress and records.",
-    "de": "„? Dadurch werden alle Kursfortschritte und Aufzeichnungen gelöscht."
+    "de": "“ wirklich dauerhaft löschen? Alle Lernfortschritte und Einträge werden entfernt."
   },
   "\"? This will delete all units and lessons.": {
     "en": "\"? This will delete all units and lessons.",
-    "de": "„? Dadurch werden alle Einheiten und Lektionen gelöscht."
+    "de": "“ wirklich dauerhaft löschen? Alle Einheiten und Lektionen werden entfernt."
   },
   "\"? This will unassign all batches.": {
     "en": "\"? This will unassign all batches.",
-    "de": "„? Dadurch wird die Zuweisung aller Chargen aufgehoben."
+    "de": "“ wirklich dauerhaft entfernen? Alle Gruppenzuordnungen werden aufgehoben."
   },
   "„Aus einzelnen Wörtern werden echte Geschichten.“": {
     "en": "“Single words become real stories.”",
@@ -513,15 +513,15 @@
   },
   "Are you sure you want to permanently delete course \"": {
     "en": "Are you sure you want to permanently delete course \"",
-    "de": "Sind Sie sicher, dass Sie den Kurs dauerhaft löschen möchten?"
+    "de": "Möchten Sie den Kurs „"
   },
   "Are you sure you want to permanently delete student \"": {
     "en": "Are you sure you want to permanently delete student \"",
-    "de": "Sind Sie sicher, dass Sie den Schüler dauerhaft löschen möchten?"
+    "de": "Möchten Sie die lernende Person „"
   },
   "Are you sure you want to permanently remove instructor \"": {
     "en": "Are you sure you want to permanently remove instructor \"",
-    "de": "Sind Sie sicher, dass Sie den Kursleiter dauerhaft entfernen möchten?"
+    "de": "Möchten Sie die Lehrkraft „"
   },
   "Article": {
     "en": "Article",

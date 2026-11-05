@@ -18,7 +18,7 @@ function translated(value: string, language: Language): string {
 function translatedDialog(value: string, language: Language): string {
   const quoted = value.match(/^(.*?)"([^"]+)"(.*)$/);
   if (!quoted) return translated(value, language);
-  return `${translated(quoted[1], language)}"${quoted[2]}"${translated(quoted[3], language)}`;
+  return `${translated(`${quoted[1]}"`, language)}${quoted[2]}${translated(`"${quoted[3]}`, language)}`;
 }
 
 function localizeText(node: Text, language: Language) {
