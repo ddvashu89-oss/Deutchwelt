@@ -267,7 +267,7 @@ The integration uses OAuth with the `drive.file` scope and an administrator-sele
 
    ```env
    GOOGLE_DRIVE_CLIENT_ID="your-oauth-client-id"
-   GOOGLE_DRIVE_CLIENT_SECRET="your-oauth-client-secret"
+   # GOOGLE_DRIVE_CLIENT_SECRET is optional for Google web clients using PKCE.
    GOOGLE_DRIVE_PICKER_API_KEY="your-restricted-picker-api-key"
    GOOGLE_DRIVE_PROJECT_NUMBER="your-google-cloud-project-number"
    ```

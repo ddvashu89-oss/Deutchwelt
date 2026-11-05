@@ -26,7 +26,7 @@ export function connectGoogleDrive(req: Request, res: Response, next: NextFuncti
     if (!isDatabaseConnected) {
       return next(new AppError('Connect the MySQL database before enabling Drive so the encrypted authorization and file access records can be saved durably.', 503));
     }
-    const state = createDriveOAuthState(req.user!.id);
+    const { state, codeVerifier } = createDriveOAuthState(req.user!.id);
     res.cookie('dw_drive_oauth_state', state, {
       httpOnly: true,
       secure: env.isProd,
@@ -34,7 +34,14 @@ export function connectGoogleDrive(req: Request, res: Response, next: NextFuncti
       path: '/api/v1/admin/drive/callback',
       maxAge: 10 * 60 * 1000
     });
-    return res.redirect(buildDriveAuthorizationUrl(state));
+    res.cookie('dw_drive_oauth_pkce', codeVerifier, {
+      httpOnly: true,
+      secure: env.isProd,
+      sameSite: 'lax',
+      path: '/api/v1/admin/drive/callback',
+      maxAge: 10 * 60 * 1000
+    });
+    return res.redirect(buildDriveAuthorizationUrl(state, codeVerifier));
   } catch (error) {
     next(error);
   }
@@ -45,7 +52,14 @@ export async function googleDriveOAuthCallback(req: Request, res: Response, next
     const state = String(req.query.state || '');
     const code = String(req.query.code || '');
     const stateCookie = req.cookies?.dw_drive_oauth_state;
+    const codeVerifier = req.cookies?.dw_drive_oauth_pkce;
     res.clearCookie('dw_drive_oauth_state', {
+      httpOnly: true,
+      secure: env.isProd,
+      sameSite: 'lax',
+      path: '/api/v1/admin/drive/callback'
+    });
+    res.clearCookie('dw_drive_oauth_pkce', {
       httpOnly: true,
       secure: env.isProd,
       sameSite: 'lax',
@@ -61,11 +75,11 @@ export async function googleDriveOAuthCallback(req: Request, res: Response, next
       ? Boolean(await prisma.user.findFirst({ where: { id: adminId, role: UserRole.ADMIN, isActive: true }, select: { id: true } }))
       : store.users.some(user => user.id === adminId && user.role === UserRole.ADMIN && user.isActive);
     if (!isCurrentAdmin) return next(new AppError('An active administrator must connect Google Drive.', 403));
-    if (!verifyDriveOAuthState(state, adminId)) return next(new AppError('Google Drive authorization state is invalid.', 400));
+    if (!verifyDriveOAuthState(state, adminId, String(codeVerifier || ''))) return next(new AppError('Google Drive authorization state is invalid.', 400));
     if (!code) return next(new AppError('Google did not return an authorization code.', 400));
     if (!isDatabaseConnected) return res.redirect(settingsUrl('database-required'));
 
-    await completeDriveOAuth(code);
+    await completeDriveOAuth(code, String(codeVerifier));
     return res.redirect(settingsUrl('connected'));
   } catch (error) {
     next(error);

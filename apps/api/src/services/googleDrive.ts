@@ -26,7 +26,8 @@ export class GoogleDriveError extends AppError {
 }
 
 function hasOAuthConfiguration() {
-  return Boolean(env.GOOGLE_DRIVE_CLIENT_ID && env.GOOGLE_DRIVE_CLIENT_SECRET);
+  // Google web OAuth clients use PKCE and do not require a client secret.
+  return Boolean(env.GOOGLE_DRIVE_CLIENT_ID);
 }
 
 export function isGoogleDriveConfigured() {
@@ -104,8 +105,15 @@ function signState(payload: string) {
 }
 
 export function createDriveOAuthState(userId: string) {
-  const payload = Buffer.from(JSON.stringify({ userId, expiresAt: Date.now() + 10 * 60 * 1000, nonce: randomBytes(16).toString('base64url') })).toString('base64url');
-  return `${payload}.${signState(payload)}`;
+  const codeVerifier = randomBytes(32).toString('base64url');
+  const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url');
+  const payload = Buffer.from(JSON.stringify({
+    userId,
+    expiresAt: Date.now() + 10 * 60 * 1000,
+    nonce: randomBytes(16).toString('base64url'),
+    codeChallenge
+  })).toString('base64url');
+  return { state: `${payload}.${signState(payload)}`, codeVerifier };
 }
 
 export function driveOAuthStateUserId(state: string) {
@@ -122,12 +130,23 @@ export function driveOAuthStateUserId(state: string) {
   }
 }
 
-export function verifyDriveOAuthState(state: string, userId: string) {
-  return driveOAuthStateUserId(state) === userId;
+export function verifyDriveOAuthState(state: string, userId: string, codeVerifier: string) {
+  if (driveOAuthStateUserId(state) !== userId || !codeVerifier) return false;
+  const [payload] = state.split('.');
+  if (!payload) return false;
+  try {
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as { codeChallenge?: string };
+    const expected = data.codeChallenge;
+    const actual = createHash('sha256').update(codeVerifier).digest('base64url');
+    return typeof expected === 'string' && expected === actual;
+  } catch {
+    return false;
+  }
 }
 
-export function buildDriveAuthorizationUrl(state: string) {
+export function buildDriveAuthorizationUrl(state: string, codeVerifier: string) {
   if (!hasOAuthConfiguration()) throw new GoogleDriveError('Google Drive OAuth credentials are not configured on the API.', 503);
+  const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url');
   const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
   url.searchParams.set('client_id', env.GOOGLE_DRIVE_CLIENT_ID);
   url.searchParams.set('redirect_uri', getDriveCallbackUrl());
@@ -137,15 +156,17 @@ export function buildDriveAuthorizationUrl(state: string) {
   url.searchParams.set('include_granted_scopes', 'true');
   url.searchParams.set('prompt', 'consent');
   url.searchParams.set('state', state);
+  url.searchParams.set('code_challenge', codeChallenge);
+  url.searchParams.set('code_challenge_method', 'S256');
   return url.toString();
 }
 
 async function tokenRequest(params: Record<string, string>) {
   const body = new URLSearchParams({
     client_id: env.GOOGLE_DRIVE_CLIENT_ID,
-    client_secret: env.GOOGLE_DRIVE_CLIENT_SECRET,
     ...params
   });
+  if (env.GOOGLE_DRIVE_CLIENT_SECRET) body.set('client_secret', env.GOOGLE_DRIVE_CLIENT_SECRET);
   const response = await fetch(TOKEN_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -158,11 +179,12 @@ async function tokenRequest(params: Record<string, string>) {
   return data;
 }
 
-export async function completeDriveOAuth(code: string) {
+export async function completeDriveOAuth(code: string, codeVerifier: string) {
   const tokenData = await tokenRequest({
     code,
     grant_type: 'authorization_code',
-    redirect_uri: getDriveCallbackUrl()
+    redirect_uri: getDriveCallbackUrl(),
+    code_verifier: codeVerifier
   });
 
   const previous = await getConnection();

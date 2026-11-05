@@ -43218,7 +43218,7 @@ var GoogleDriveError = class extends AppError {
   }
 };
 function hasOAuthConfiguration() {
-  return Boolean(env.GOOGLE_DRIVE_CLIENT_ID && env.GOOGLE_DRIVE_CLIENT_SECRET);
+  return Boolean(env.GOOGLE_DRIVE_CLIENT_ID);
 }
 function isGoogleDriveConfigured() {
   return hasOAuthConfiguration();
@@ -43285,8 +43285,15 @@ function signState(payload) {
   return createHmac("sha256", env.SESSION_SECRET).update(payload).digest("base64url");
 }
 function createDriveOAuthState(userId) {
-  const payload = Buffer.from(JSON.stringify({ userId, expiresAt: Date.now() + 10 * 60 * 1e3, nonce: randomBytes3(16).toString("base64url") })).toString("base64url");
-  return `${payload}.${signState(payload)}`;
+  const codeVerifier = randomBytes3(32).toString("base64url");
+  const codeChallenge = createHash2("sha256").update(codeVerifier).digest("base64url");
+  const payload = Buffer.from(JSON.stringify({
+    userId,
+    expiresAt: Date.now() + 10 * 60 * 1e3,
+    nonce: randomBytes3(16).toString("base64url"),
+    codeChallenge
+  })).toString("base64url");
+  return { state: `${payload}.${signState(payload)}`, codeVerifier };
 }
 function driveOAuthStateUserId(state) {
   const [payload, signature] = state.split(".");
@@ -43301,11 +43308,22 @@ function driveOAuthStateUserId(state) {
     return null;
   }
 }
-function verifyDriveOAuthState(state, userId) {
-  return driveOAuthStateUserId(state) === userId;
+function verifyDriveOAuthState(state, userId, codeVerifier) {
+  if (driveOAuthStateUserId(state) !== userId || !codeVerifier) return false;
+  const [payload] = state.split(".");
+  if (!payload) return false;
+  try {
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    const expected = data.codeChallenge;
+    const actual = createHash2("sha256").update(codeVerifier).digest("base64url");
+    return typeof expected === "string" && expected === actual;
+  } catch {
+    return false;
+  }
 }
-function buildDriveAuthorizationUrl(state) {
+function buildDriveAuthorizationUrl(state, codeVerifier) {
   if (!hasOAuthConfiguration()) throw new GoogleDriveError("Google Drive OAuth credentials are not configured on the API.", 503);
+  const codeChallenge = createHash2("sha256").update(codeVerifier).digest("base64url");
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   url.searchParams.set("client_id", env.GOOGLE_DRIVE_CLIENT_ID);
   url.searchParams.set("redirect_uri", getDriveCallbackUrl());
@@ -43315,14 +43333,16 @@ function buildDriveAuthorizationUrl(state) {
   url.searchParams.set("include_granted_scopes", "true");
   url.searchParams.set("prompt", "consent");
   url.searchParams.set("state", state);
+  url.searchParams.set("code_challenge", codeChallenge);
+  url.searchParams.set("code_challenge_method", "S256");
   return url.toString();
 }
 async function tokenRequest(params) {
   const body = new URLSearchParams({
     client_id: env.GOOGLE_DRIVE_CLIENT_ID,
-    client_secret: env.GOOGLE_DRIVE_CLIENT_SECRET,
     ...params
   });
+  if (env.GOOGLE_DRIVE_CLIENT_SECRET) body.set("client_secret", env.GOOGLE_DRIVE_CLIENT_SECRET);
   const response = await fetch(TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -43334,11 +43354,12 @@ async function tokenRequest(params) {
   }
   return data;
 }
-async function completeDriveOAuth(code) {
+async function completeDriveOAuth(code, codeVerifier) {
   const tokenData = await tokenRequest({
     code,
     grant_type: "authorization_code",
-    redirect_uri: getDriveCallbackUrl()
+    redirect_uri: getDriveCallbackUrl(),
+    code_verifier: codeVerifier
   });
   const previous = await getConnection();
   const refreshToken = tokenData.refresh_token || previous?.refreshToken;
@@ -46263,7 +46284,7 @@ async function getTeachers(req, res, next) {
         include: {
           teacherProfile: {
             include: {
-              batchAssignments: { include: { batch: true } },
+              batchAssignments: { include: { batch: { include: { memberships: true } } } },
               assignmentsCreated: true
             }
           }
@@ -46271,7 +46292,15 @@ async function getTeachers(req, res, next) {
       });
       const safeTeachers = teachers.map((u) => {
         const { passwordHash, ...safe } = u;
-        return safe;
+        const assignments = u.teacherProfile?.batchAssignments || [];
+        const batches = assignments.map((assignment) => {
+          const { memberships, ...batch } = assignment.batch;
+          return { ...batch, enrolledCount: memberships.length };
+        });
+        const studentIds = assignments.flatMap(
+          (assignment) => assignment.batch.memberships.map((membership) => membership.userId)
+        );
+        return { ...safe, batches, totalStudents: new Set(studentIds).size };
       });
       return res.json({ success: true, teachers: safeTeachers });
     } else {
@@ -46394,7 +46423,18 @@ async function assignTeacherToBatch(req, res, next) {
   try {
     const { teacherId } = req.params;
     const { batchId } = req.body;
-    const teacher = store.users.find((u) => u.id === teacherId);
+    if (isDatabaseConnected) {
+      const teacher = await prisma.user.findFirst({ where: { id: teacherId, role: UserRole.TEACHER }, include: { teacherProfile: true } });
+      if (!teacher?.teacherProfile) return next(new AppError("Teacher profile not found.", 404));
+      const batch = await prisma.teacherBatch.findUnique({ where: { id: batchId } });
+      if (!batch) return next(new AppError("Batch not found.", 404));
+      await prisma.teacherBatchAssignment.upsert({
+        where: { batchId_teacherId: { batchId, teacherId: teacher.teacherProfile.id } },
+        create: { batchId, teacherId: teacher.teacherProfile.id, isPrimary: true },
+        update: {}
+      });
+      return res.json({ success: true, message: "Teacher assigned to batch successfully." });
+    }
     const tp = store.teacherProfiles.find((p) => p.userId === teacherId || p.id === teacherId);
     if (!tp) return next(new AppError("Teacher profile not found.", 404));
     const existing = store.teacherBatchAssignments.find((tba) => tba.teacherId === tp.id && tba.batchId === batchId);
@@ -46415,6 +46455,12 @@ async function assignTeacherToBatch(req, res, next) {
 async function unassignTeacherFromBatch(req, res, next) {
   try {
     const { teacherId, batchId } = req.params;
+    if (isDatabaseConnected) {
+      const teacher = await prisma.user.findFirst({ where: { id: teacherId, role: UserRole.TEACHER }, include: { teacherProfile: true } });
+      if (!teacher?.teacherProfile) return next(new AppError("Teacher profile not found.", 404));
+      await prisma.teacherBatchAssignment.deleteMany({ where: { batchId, teacherId: teacher.teacherProfile.id } });
+      return res.json({ success: true, message: "Teacher unassigned from batch." });
+    }
     const tp = store.teacherProfiles.find((p) => p.userId === teacherId || p.id === teacherId);
     if (!tp) return next(new AppError("Teacher profile not found.", 404));
     const idx = store.teacherBatchAssignments.findIndex((tba) => tba.teacherId === tp.id && tba.batchId === batchId);
@@ -46817,6 +46863,20 @@ async function updatePlatformSetting(req, res, next) {
 }
 async function getAdminBatches(req, res, next) {
   try {
+    if (isDatabaseConnected) {
+      const batches2 = await prisma.teacherBatch.findMany({
+        orderBy: { startDate: "desc" },
+        include: {
+          _count: { select: { memberships: true } },
+          teachers: { include: { teacher: { include: { user: { select: { firstName: true, lastName: true, email: true } } } } } }
+        }
+      });
+      return res.json({ success: true, batches: batches2.map(({ _count, teachers, ...batch }) => ({
+        ...batch,
+        enrolledCount: _count.memberships,
+        assignedTeachers: teachers.map(({ teacher }) => ({ id: teacher.id, name: `${teacher.user.firstName} ${teacher.user.lastName}`, email: teacher.user.email }))
+      })) });
+    }
     const batches = store.batches.map((b) => {
       const assignedTeachers = store.teacherBatchAssignments.filter((t) => t.batchId === b.id).map((tba) => {
         const tp = store.teacherProfiles.find((p) => p.id === tba.teacherId);
@@ -46986,7 +47046,7 @@ function connectGoogleDrive(req, res, next) {
     if (!isDatabaseConnected) {
       return next(new AppError("Connect the MySQL database before enabling Drive so the encrypted authorization and file access records can be saved durably.", 503));
     }
-    const state = createDriveOAuthState(req.user.id);
+    const { state, codeVerifier } = createDriveOAuthState(req.user.id);
     res.cookie("dw_drive_oauth_state", state, {
       httpOnly: true,
       secure: env.isProd,
@@ -46994,7 +47054,14 @@ function connectGoogleDrive(req, res, next) {
       path: "/api/v1/admin/drive/callback",
       maxAge: 10 * 60 * 1e3
     });
-    return res.redirect(buildDriveAuthorizationUrl(state));
+    res.cookie("dw_drive_oauth_pkce", codeVerifier, {
+      httpOnly: true,
+      secure: env.isProd,
+      sameSite: "lax",
+      path: "/api/v1/admin/drive/callback",
+      maxAge: 10 * 60 * 1e3
+    });
+    return res.redirect(buildDriveAuthorizationUrl(state, codeVerifier));
   } catch (error) {
     next(error);
   }
@@ -47004,7 +47071,14 @@ async function googleDriveOAuthCallback(req, res, next) {
     const state = String(req.query.state || "");
     const code = String(req.query.code || "");
     const stateCookie = req.cookies?.dw_drive_oauth_state;
+    const codeVerifier = req.cookies?.dw_drive_oauth_pkce;
     res.clearCookie("dw_drive_oauth_state", {
+      httpOnly: true,
+      secure: env.isProd,
+      sameSite: "lax",
+      path: "/api/v1/admin/drive/callback"
+    });
+    res.clearCookie("dw_drive_oauth_pkce", {
       httpOnly: true,
       secure: env.isProd,
       sameSite: "lax",
@@ -47018,10 +47092,10 @@ async function googleDriveOAuthCallback(req, res, next) {
     if (!adminId) return next(new AppError("Google Drive authorization expired. Please reconnect.", 400));
     const isCurrentAdmin = isDatabaseConnected ? Boolean(await prisma.user.findFirst({ where: { id: adminId, role: UserRole.ADMIN, isActive: true }, select: { id: true } })) : store.users.some((user) => user.id === adminId && user.role === UserRole.ADMIN && user.isActive);
     if (!isCurrentAdmin) return next(new AppError("An active administrator must connect Google Drive.", 403));
-    if (!verifyDriveOAuthState(state, adminId)) return next(new AppError("Google Drive authorization state is invalid.", 400));
+    if (!verifyDriveOAuthState(state, adminId, String(codeVerifier || ""))) return next(new AppError("Google Drive authorization state is invalid.", 400));
     if (!code) return next(new AppError("Google did not return an authorization code.", 400));
     if (!isDatabaseConnected) return res.redirect(settingsUrl("database-required"));
-    await completeDriveOAuth(code);
+    await completeDriveOAuth(code, String(codeVerifier));
     return res.redirect(settingsUrl("connected"));
   } catch (error) {
     next(error);
