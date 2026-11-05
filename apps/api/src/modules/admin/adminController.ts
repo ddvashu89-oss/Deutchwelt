@@ -429,7 +429,7 @@ export async function getTeachers(req: Request, res: Response, next: NextFunctio
         include: {
           teacherProfile: {
             include: {
-              batchAssignments: { include: { batch: true } },
+              batchAssignments: { include: { batch: { include: { memberships: true } } } },
               assignmentsCreated: true
             }
           }
@@ -437,7 +437,15 @@ export async function getTeachers(req: Request, res: Response, next: NextFunctio
       });
       const safeTeachers = teachers.map((u: any) => {
         const { passwordHash, ...safe } = u;
-        return safe;
+        const assignments = u.teacherProfile?.batchAssignments || [];
+        const batches = assignments.map((assignment: any) => {
+          const { memberships, ...batch } = assignment.batch;
+          return { ...batch, enrolledCount: memberships.length };
+        });
+        const studentIds = assignments.flatMap((assignment: any) =>
+          assignment.batch.memberships.map((membership: any) => membership.userId)
+        );
+        return { ...safe, batches, totalStudents: new Set(studentIds).size };
       });
       return res.json({ success: true, teachers: safeTeachers });
     } else {
@@ -573,7 +581,19 @@ export async function assignTeacherToBatch(req: Request, res: Response, next: Ne
     const { teacherId } = req.params;
     const { batchId } = req.body;
 
-    const teacher = store.users.find(u => u.id === teacherId);
+    if (isDatabaseConnected) {
+      const teacher = await prisma.user.findFirst({ where: { id: teacherId, role: UserRole.TEACHER }, include: { teacherProfile: true } });
+      if (!teacher?.teacherProfile) return next(new AppError('Teacher profile not found.', 404));
+      const batch = await prisma.teacherBatch.findUnique({ where: { id: batchId } });
+      if (!batch) return next(new AppError('Batch not found.', 404));
+      await prisma.teacherBatchAssignment.upsert({
+        where: { batchId_teacherId: { batchId, teacherId: teacher.teacherProfile.id } },
+        create: { batchId, teacherId: teacher.teacherProfile.id, isPrimary: true },
+        update: {}
+      });
+      return res.json({ success: true, message: 'Teacher assigned to batch successfully.' });
+    }
+
     const tp = store.teacherProfiles.find(p => p.userId === teacherId || p.id === teacherId);
     if (!tp) return next(new AppError('Teacher profile not found.', 404));
 
@@ -597,6 +617,12 @@ export async function assignTeacherToBatch(req: Request, res: Response, next: Ne
 export async function unassignTeacherFromBatch(req: Request, res: Response, next: NextFunction) {
   try {
     const { teacherId, batchId } = req.params;
+    if (isDatabaseConnected) {
+      const teacher = await prisma.user.findFirst({ where: { id: teacherId, role: UserRole.TEACHER }, include: { teacherProfile: true } });
+      if (!teacher?.teacherProfile) return next(new AppError('Teacher profile not found.', 404));
+      await prisma.teacherBatchAssignment.deleteMany({ where: { batchId, teacherId: teacher.teacherProfile.id } });
+      return res.json({ success: true, message: 'Teacher unassigned from batch.' });
+    }
     const tp = store.teacherProfiles.find(p => p.userId === teacherId || p.id === teacherId);
     if (!tp) return next(new AppError('Teacher profile not found.', 404));
 
@@ -1040,6 +1066,20 @@ export async function updatePlatformSetting(req: Request, res: Response, next: N
 
 export async function getAdminBatches(req: Request, res: Response, next: NextFunction) {
   try {
+    if (isDatabaseConnected) {
+      const batches = await prisma.teacherBatch.findMany({
+        orderBy: { startDate: 'desc' },
+        include: {
+          _count: { select: { memberships: true } },
+          teachers: { include: { teacher: { include: { user: { select: { firstName: true, lastName: true, email: true } } } } } }
+        }
+      });
+      return res.json({ success: true, batches: batches.map(({ _count, teachers, ...batch }) => ({
+        ...batch,
+        enrolledCount: _count.memberships,
+        assignedTeachers: teachers.map(({ teacher }) => ({ id: teacher.id, name: `${teacher.user.firstName} ${teacher.user.lastName}`, email: teacher.user.email }))
+      })) });
+    }
     const batches = store.batches.map(b => {
       const assignedTeachers = store.teacherBatchAssignments
         .filter(t => t.batchId === b.id)

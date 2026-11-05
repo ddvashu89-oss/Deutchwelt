@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../lib/api.js';
 import { Button } from '../../components/ui/Button.js';
-import { Badge } from '../../components/ui/Badge.js';
 import { Input } from '../../components/ui/Input.js';
 import { Modal } from '../../components/ui/Modal.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import {
-  GraduationCap,
   Plus,
   Mail,
   Users,
   BookOpen,
-  ShieldCheck,
-  CheckCircle2,
-  Lock,
   Trash2,
   Edit2,
   Phone,
-  Power
+  Search,
+  X,
+  UserRoundCheck,
+  UserRoundX
 } from 'lucide-react';
 
 export function AdminTeachersPage() {
   const [teachers, setTeachers] = useState<any[]>([]);
   const [batches, setBatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended'>('all');
 
   // Add Teacher Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,9 +61,10 @@ export function AdminTeachersPage() {
   const fetchTeachersAndBatches = async () => {
     try {
       setLoading(true);
+      setLoadError('');
       const [tRes, bRes]: any[] = await Promise.all([
         api.get('/admin/teachers'),
-        api.get('/teacher/batches')
+        api.get('/admin/batches')
       ]);
 
       if (tRes.success) setTeachers(tRes.teachers);
@@ -72,6 +74,7 @@ export function AdminTeachersPage() {
       }
     } catch (e) {
       console.error('Error fetching admin faculty data:', e);
+      setLoadError('Unable to load mentors right now. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -227,146 +230,89 @@ export function AdminTeachersPage() {
     );
   };
 
-  return (
-    <div className="space-y-8 pb-16">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-3xl font-extrabold text-navy tracking-tight">Faculty & Instructor Management</h1>
-            <Badge variant="outline" className="text-[10px] font-bold text-navy border-navy-300">
-              Admin Exclusive Privilege
-            </Badge>
-          </div>
-          <p className="text-xs text-dark-muted">
-            Authorize new instructors, edit qualifications, assign cohorts, suspend access, or delete records.
-          </p>
-        </div>
+  const filteredTeachers = teachers.filter((teacher) => {
+    const matchesSearch = `${teacher.firstName} ${teacher.lastName} ${teacher.email} ${teacher.teacherProfile?.specialization || ''}`
+      .toLowerCase().includes(search.trim().toLowerCase());
+    const matchesStatus = statusFilter === 'all' || (statusFilter === 'active' ? teacher.isActive : !teacher.isActive);
+    return matchesSearch && matchesStatus;
+  });
+  const activeCount = teachers.filter((teacher) => teacher.isActive).length;
+  const assignedCount = teachers.filter((teacher) => teacher.batches?.length > 0).length;
+  const availableBatches = batches.filter((batch) => !manageTeacher?.batches?.some((assigned: any) => assigned.id === batch.id));
 
-        <Button variant="secondary" size="md" onClick={() => setIsModalOpen(true)} className="font-bold shadow-md self-start sm:self-auto">
-          <Plus className="w-4 h-4 mr-1" /> Add New Teacher
+  return (
+    <div className="space-y-6 pb-16 font-sans">
+      {/* Page Header */}
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-forest-700">People / Mentors</p>
+          <h1 className="font-heading text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">Manage mentors</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">Manage instructor profiles, access, and teaching cohorts in one place.</p>
+        </div>
+        <Button onClick={() => setIsModalOpen(true)} className="w-full shrink-0 sm:w-auto">
+          <Plus className="h-4 w-4" /> Add mentor
         </Button>
       </div>
 
-      {loading ? (
-        <Skeleton className="h-64 w-full rounded-2xl" />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {teachers.map(t => (
-            <div key={t.id} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-subtle flex flex-col justify-between space-y-4">
-              <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-navy text-white font-bold flex items-center justify-center text-base">
-                      {t.firstName?.[0]}{t.lastName?.[0]}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-navy">{t.firstName} {t.lastName}</h3>
-                      <p className="text-xs text-dark-muted flex items-center gap-1">
-                        <Mail className="w-3.5 h-3.5" /> {t.email}
-                      </p>
-                      {t.phone && (
-                        <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-                          <Phone className="w-3.5 h-3.5" /> {t.phone}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleToggleStatus(t.id)}
-                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${
-                      t.isActive
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                        : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
-                    }`}
-                    title="Click to toggle teacher access"
-                  >
-                    {t.isActive ? 'Active Faculty' : 'Suspended'}
-                  </button>
-                </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {[
+          { label: 'Total mentors', value: teachers.length, icon: Users },
+          { label: 'Active mentors', value: activeCount, icon: UserRoundCheck },
+          { label: 'Mentors with cohorts', value: assignedCount, icon: BookOpen }
+        ].map(({ label, value, icon: Icon }) => (
+          <div key={label} className="flex items-center gap-4 rounded-2xl border border-[#e8e3d8] bg-white p-4 shadow-sm sm:p-5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forest-50 text-forest-800"><Icon className="h-5 w-5" /></div>
+            <div><p className="text-xs font-semibold text-gray-500">{label}</p><p className="mt-0.5 text-2xl font-black text-gray-950">{loading ? '—' : value}</p></div>
+          </div>
+        ))}
+      </div>
 
-                <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 text-xs space-y-1">
-                  <p className="font-bold text-navy">Credentials & Focus:</p>
-                  <p className="text-dark font-medium">{t.teacherProfile?.qualifications || 'MA Germanistik'}</p>
-                  <p className="text-dark-muted italic">{t.teacherProfile?.specialization || 'Goethe Exam Preparation'}</p>
-                </div>
-
-                <p className="text-xs text-dark-muted leading-relaxed line-clamp-2">
-                  {t.teacherProfile?.bio || 'Certified DaF instructor guiding students through CEFR levels.'}
-                </p>
-
-                {/* Assigned Batches */}
-                <div className="pt-2 border-t border-gray-100 space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-navy">Assigned Cohorts ({t.batches?.length || 0}):</span>
-                    <span className="text-dark-muted font-semibold">{t.totalStudents || 0} Total Students</span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {t.batches && t.batches.length > 0 ? (
-                      t.batches.map((b: any) => (
-                        <span
-                          key={b.id}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-bold"
-                        >
-                          {b.name} ({b.level})
-                          <button
-                            type="button"
-                            onClick={() => handleUnassignBatch(t.id, b.id)}
-                            className="text-blue-500 hover:text-red-600 transition-colors ml-1"
-                            title="Remove from batch"
-                          >
-                            ×
-                          </button>
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-[11px] text-gray-400 italic">No batches currently allocated</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons: Edit, Delete, Allocate */}
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => openEditModal(t)}
-                    className="p-2 rounded-xl border border-gray-200 text-navy hover:bg-navy hover:text-white transition-colors"
-                    title="Edit Teacher Profile"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteTeacher(t.id, `${t.firstName} ${t.lastName}`)}
-                    disabled={deletingId === t.id}
-                    className="p-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-600 hover:text-white transition-colors"
-                    title="Delete Teacher"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setManageTeacher(t)}
-                  className="text-xs font-bold"
-                >
-                  <Users className="w-3.5 h-3.5 mr-1" /> Allocate to Batch
-                </Button>
-              </div>
-            </div>
-          ))}
+      <section className="overflow-hidden rounded-3xl border border-[#e8e3d8] bg-white shadow-sm" aria-label="Mentor directory">
+        <div className="flex flex-col gap-4 border-b border-gray-100 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+          <div><h2 className="text-lg font-bold text-gray-950">Mentor directory</h2><p className="mt-0.5 text-xs text-gray-500">{filteredTeachers.length} of {teachers.length} mentors</p></div>
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            <label className="relative min-w-0 flex-1 lg:w-72">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <span className="sr-only">Search mentors</span>
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search name, email or subject" className="h-10 w-full rounded-xl border border-gray-200 bg-gray-50 pl-10 pr-3 text-sm focus:border-forest-700 focus:bg-white focus:outline-none" />
+            </label>
+            <label><span className="sr-only">Filter by access</span><select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'suspended')} className="h-10 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 sm:w-36"><option value="all">All statuses</option><option value="active">Active</option><option value="suspended">Suspended</option></select></label>
+          </div>
         </div>
-      )}
+
+        {loading ? (
+          <div className="grid gap-4 p-4 sm:p-6 xl:grid-cols-2"><Skeleton className="h-80 rounded-2xl" /><Skeleton className="h-80 rounded-2xl" /></div>
+        ) : loadError ? (
+          <div className="p-12 text-center"><p className="text-sm text-red-700">{loadError}</p><Button variant="outline" size="sm" onClick={fetchTeachersAndBatches} className="mt-4">Try again</Button></div>
+        ) : filteredTeachers.length === 0 ? (
+          <div className="p-12 text-center"><Users className="mx-auto h-9 w-9 text-gray-300" /><h3 className="mt-3 font-bold text-gray-900">No mentors found</h3><p className="mt-1 text-sm text-gray-500">Try another search or filter.</p></div>
+        ) : (
+          <div className="grid gap-4 p-4 sm:p-6 xl:grid-cols-2">
+            {filteredTeachers.map((teacher) => (
+              <article key={teacher.id} className="flex min-w-0 flex-col rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-forest-900 text-sm font-bold text-white">{teacher.firstName?.[0]}{teacher.lastName?.[0]}</div>
+                    <div className="min-w-0"><h3 className="truncate text-base font-bold text-gray-950">{teacher.firstName} {teacher.lastName}</h3><p className="mt-1 flex items-center gap-1.5 break-all text-xs text-gray-600"><Mail className="h-3.5 w-3.5 shrink-0" />{teacher.email}</p>{teacher.phone && <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-600"><Phone className="h-3.5 w-3.5" />{teacher.phone}</p>}</div>
+                  </div>
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${teacher.isActive ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{teacher.isActive ? <UserRoundCheck className="h-3.5 w-3.5" /> : <UserRoundX className="h-3.5 w-3.5" />}{teacher.isActive ? 'Active' : 'Suspended'}</span>
+                </div>
+                <div className="mt-5 grid gap-3 rounded-xl bg-[#f7f8f5] p-4 sm:grid-cols-2"><div><p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Qualifications</p><p className="mt-1 text-sm font-medium leading-5 text-gray-900">{teacher.teacherProfile?.qualifications || 'Not added'}</p></div><div><p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Specialization</p><p className="mt-1 text-sm font-medium leading-5 text-gray-900">{teacher.teacherProfile?.specialization || 'Not added'}</p></div></div>
+                {teacher.teacherProfile?.bio && <p className="mt-4 line-clamp-2 text-sm leading-6 text-gray-600">{teacher.teacherProfile.bio}</p>}
+                <div className="mt-5 flex-1 border-t border-gray-100 pt-4"><div className="mb-3 flex flex-wrap items-center justify-between gap-2"><h4 className="text-xs font-bold uppercase tracking-wide text-gray-600">Assigned cohorts <span className="text-forest-800">({teacher.batches?.length || 0})</span></h4><span className="text-xs text-gray-500">{teacher.totalStudents || 0} students</span></div><div className="flex flex-wrap gap-2">{teacher.batches?.length ? teacher.batches.map((batch: any) => <span key={batch.id} className="inline-flex max-w-full items-center gap-1 rounded-lg border border-forest-100 bg-forest-50 py-1 pl-2.5 pr-1 text-xs font-semibold text-forest-900"><span className="truncate">{batch.name} · {batch.level}</span><button type="button" onClick={() => handleUnassignBatch(teacher.id, batch.id)} aria-label={`Remove ${batch.name} from ${teacher.firstName}`} className="rounded-md p-1 text-forest-700 hover:bg-red-50 hover:text-red-700"><X className="h-3.5 w-3.5" /></button></span>) : <p className="text-xs text-gray-400">No cohorts assigned yet.</p>}</div></div>
+                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4"><Button variant="outline" size="sm" onClick={() => openEditModal(teacher)}><Edit2 className="h-3.5 w-3.5" /> Edit profile</Button><Button variant="outline" size="sm" onClick={() => { setManageTeacher(teacher); setBatchToAssign(batches.find((batch) => !teacher.batches?.some((assigned: any) => assigned.id === batch.id))?.id || ''); }} disabled={!batches.length}><Plus className="h-3.5 w-3.5" /> Assign cohort</Button><div className="hidden flex-1 sm:block" /><button type="button" onClick={() => handleToggleStatus(teacher.id)} className="rounded-full px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100">{teacher.isActive ? 'Suspend access' : 'Restore access'}</button><button type="button" onClick={() => handleDeleteTeacher(teacher.id, `${teacher.firstName} ${teacher.lastName}`)} disabled={deletingId === teacher.id} aria-label={`Delete ${teacher.firstName} ${teacher.lastName}`} className="rounded-full p-2 text-red-600 hover:bg-red-50 disabled:opacity-50"><Trash2 className="h-4 w-4" /></button></div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* CREATE TEACHER MODAL (ADMIN ONLY) */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Add New Faculty Instructor"
-        description="Only platform administrators can create teacher accounts and provision login credentials."
+        title="Add mentor"
+        description="Create a mentor profile and choose any initial teaching cohorts."
         maxWidth="lg"
       >
         <form onSubmit={handleCreate} className="space-y-4 pt-2">
@@ -467,12 +413,12 @@ export function AdminTeachersPage() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
             <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="secondary" className="font-bold shadow-md" isLoading={saving}>
-              Authorize & Create Teacher
+            <Button type="submit" className="font-bold" isLoading={saving}>
+              Create mentor
             </Button>
           </div>
         </form>
@@ -482,8 +428,8 @@ export function AdminTeachersPage() {
       <Modal
         isOpen={Boolean(editingTeacher)}
         onClose={() => setEditingTeacher(null)}
-        title="Edit Faculty Instructor"
-        description="Update instructor credentials, bio, and authorization status."
+        title="Edit mentor profile"
+        description="Update contact details, qualifications, and access status."
         maxWidth="lg"
       >
         <form onSubmit={handleSaveEdit} className="space-y-4 pt-2">
@@ -556,12 +502,12 @@ export function AdminTeachersPage() {
             </select>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
             <Button type="button" variant="outline" onClick={() => setEditingTeacher(null)}>
               Cancel
             </Button>
             <Button type="submit" variant="primary" className="font-bold shadow-md" isLoading={savingEdit}>
-              Save Teacher Changes
+              Save changes
             </Button>
           </div>
         </form>
@@ -571,34 +517,37 @@ export function AdminTeachersPage() {
       <Modal
         isOpen={Boolean(manageTeacher)}
         onClose={() => setManageTeacher(null)}
-        title={`Allocate Batch to ${manageTeacher?.firstName} ${manageTeacher?.lastName}`}
-        description="Select an active cohort to assign to this instructor."
+        title={`Assign cohort to ${manageTeacher?.firstName || ''} ${manageTeacher?.lastName || ''}`}
+        description="Choose a cohort that is not already assigned to this mentor."
         maxWidth="md"
       >
         <form onSubmit={handleAssignBatch} className="space-y-4 pt-2">
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-dark uppercase tracking-wider">
-              Select Batch / Cohort
+            <label htmlFor="mentor-batch" className="block text-xs font-semibold text-dark uppercase tracking-wider">
+              Cohort
             </label>
             <select
+              id="mentor-batch"
               value={batchToAssign}
               onChange={(e) => setBatchToAssign(e.target.value)}
-              className="flex h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-navy"
+              disabled={!availableBatches.length}
+              className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-dark focus:outline-none focus:ring-2 focus:ring-forest-700"
             >
-              {batches.map(b => (
+              {availableBatches.map(b => (
                 <option key={b.id} value={b.id}>
                   {b.name} ({b.level}) — Max {b.maxStudents} Students
                 </option>
               ))}
             </select>
+            {!availableBatches.length && <p className="text-xs text-gray-500">All available cohorts are already assigned.</p>}
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
             <Button type="button" variant="outline" onClick={() => setManageTeacher(null)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" className="font-bold" isLoading={assigning}>
-              Confirm Allocation
+            <Button type="submit" variant="primary" className="font-bold" isLoading={assigning} disabled={!batchToAssign}>
+              Assign cohort
             </Button>
           </div>
         </form>
