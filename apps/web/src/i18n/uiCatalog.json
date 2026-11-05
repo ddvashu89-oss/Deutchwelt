@@ -429,7 +429,7 @@
   },
   "All statuses": {
     "en": "All statuses",
-    "de": "Alle Status"
+    "de": "Alle Statusarten"
   },
   "Alle ansehen →": {
     "en": "View all →",
@@ -453,7 +453,7 @@
   },
   "Allocate Initial Student Batches (Multi-Teacher Access)": {
     "en": "Allocate Initial Student Batches (Multi-Teacher Access)",
-    "de": "Zuweisen erster Schülergruppen (Zugriff für mehrere Lehrer)"
+    "de": "Erste Lerngruppen zuordnen (mehrere Lehrkräfte möglich)"
   },
   "Allow notifications in your browser settings to receive reminders.": {
     "en": "Allow notifications in your browser settings to receive reminders.",
@@ -473,11 +473,11 @@
   },
   "Announcement Message": {
     "en": "Announcement message",
-    "de": "Announcement Message"
+    "de": "Mitteilung"
   },
   "Announcement Title": {
     "en": "Announcement title",
-    "de": "Announcement Title"
+    "de": "Titel der Mitteilung"
   },
   "Answer the questions you know. Your recommended CEFR level will be saved to your profile.": {
     "en": "Answer the questions you know. Your recommended CEFR level will be saved to your profile.",
@@ -673,7 +673,7 @@
   },
   "Back": {
     "en": "Bake",
-    "de": "Back"
+    "de": "Zurück"
   },
   "Back to Sign In": {
     "en": "Back to Sign In",
@@ -689,7 +689,7 @@
   },
   "Batch Noticeboard (": {
     "en": "Batch Notice Board (",
-    "de": "Batch Noticeboard ("
+    "de": "Gruppenmitteilungen ("
   },
   "Beginner (no German yet)": {
     "en": "Beginner (no German yet)",
@@ -957,7 +957,7 @@
   },
   "Class scheduled. Batch members have an in-app notification.": {
     "en": "Class scheduled. Batch members have an in-app notification.",
-    "de": "Unterricht geplant. Batch-Mitglieder erhalten eine In-App-Benachrichtigung."
+    "de": "Unterricht geplant. Die Mitglieder der Lerngruppe wurden in der App benachrichtigt."
   },
   "Class title": {
     "en": "Class title",
@@ -1053,7 +1053,7 @@
   },
   "Connect the academy Google account and choose a private folder. Uploaded class files stay in Drive; students access them through their DeutschWelt batch permissions.": {
     "en": "Connect the academy Google account and choose a private folder. Uploaded class files stay in Drive; students access them through their DeutschWelt batch permissions.",
-    "de": "Verbinden Sie das Google-Konto der Akademie und wählen Sie einen privaten Ordner. Hochgeladene Kursdateien bleiben in Drive; Studierende greifen über ihre DeutschWelt-Batch-Berechtigungen darauf zu."
+    "de": "Verbinden Sie das Google-Konto der Akademie und wählen Sie einen privaten Ordner. Hochgeladene Unterrichtsdateien bleiben in Drive. Lernende greifen über die Berechtigungen ihrer Lerngruppe darauf zu."
   },
   "Contact Info": {
     "en": "Contact Info",
@@ -1309,7 +1309,7 @@
   },
   "Delete Course": {
     "en": "DeleteCourse",
-    "de": "Delete Course"
+    "de": "Kurs löschen"
   },
   "Delete Lecture": {
     "en": "Delete Lecture",
@@ -1317,11 +1317,11 @@
   },
   "Delete Material": {
     "en": "Delete material",
-    "de": "Delete Material"
+    "de": "Material löschen"
   },
   "Delete Student": {
     "en": "Delete student",
-    "de": "Delete Student"
+    "de": "Lernende löschen"
   },
   "der (Masculine)": {
     "en": "the (masculine)",
@@ -1356,7 +1356,7 @@
     "de": "Details"
   },
   "Deutsch": {
-    "en": "German",
+    "en": "Deutsch",
     "de": "Deutsch"
   },
   "Deutsch immersiv (All German)": {
@@ -1593,11 +1593,11 @@
   },
   "Edit Student Account": {
     "en": "Edit student account",
-    "de": "Edit Student Account"
+    "de": "Lernkonto bearbeiten"
   },
   "Edit Student Profile": {
     "en": "Edit Student Profiles",
-    "de": "Edit Student Profile"
+    "de": "Lernprofil bearbeiten"
   },
   "Einfache Meinungsäußerung": {
     "en": "Easy expression of opinion",
@@ -1985,7 +1985,7 @@
   },
   "Faculty Biography": {
     "en": "Faculty Biography",
-    "de": "Fakultätsbiographie"
+    "de": "Kurzbiografie"
   },
   "Faculty Grading Suite": {
     "en": "Faculty Grading Suite",
@@ -2369,7 +2369,7 @@
   },
   "Initial Password": {
     "en": "Initial Password",
-    "de": "Ursprüngliches Passwort"
+    "de": "Startpasswort"
   },
   "Input": {
     "en": "Input",
@@ -2517,11 +2517,11 @@
   },
   "Last Name": {
     "en": "Last name",
-    "de": "Last Name"
+    "de": "Nachname"
   },
   "Last Updated: October 2026": {
     "en": "Last updated: October 2026",
-    "de": "Last Updated: October 2026"
+    "de": "Zuletzt aktualisiert: Oktober 2026"
   },
   "Late": {
     "en": "Late",
@@ -2553,7 +2553,7 @@
   },
   "Lecture Title": {
     "en": "Lecture title",
-    "de": "Lecture Title"
+    "de": "Titel der Unterrichtseinheit"
   },
   "Lectures & Video Classes (": {
     "en": "Lectures & Video Classes (",
@@ -2617,7 +2617,7 @@
   },
   "Lesson Unit": {
     "en": "Lesson unit",
-    "de": "Lesson Unit"
+    "de": "Lerneinheit"
   },
   "Lessons": {
     "en": "Lessons",
@@ -2629,7 +2629,7 @@
   },
   "Level": {
     "en": "level",
-    "de": "Level"
+    "de": "Niveau"
   },
   "Level A1": {
     "en": "Level A1",
@@ -2717,7 +2717,7 @@
   },
   "Manage instructor profiles, access, and teaching cohorts in one place.": {
     "en": "Manage instructor profiles, access, and teaching cohorts in one place.",
-    "de": "Verwalten Sie Dozentenprofile, Zugriffe und Lehrkohorten an einem Ort."
+    "de": "Verwalten Sie Lehrkräfte, Zugriffsrechte und Kursgruppen an einem Ort."
   },
   "Manage lessons & materials": {
     "en": "Manage lessons & materials",
@@ -2785,11 +2785,11 @@
   },
   "Material Description": {
     "en": "Material description",
-    "de": "Material Description"
+    "de": "Materialbeschreibung"
   },
   "Material Title": {
     "en": "Material title",
-    "de": "Material Title"
+    "de": "Materialtitel"
   },
   "Max Mustermann": {
     "en": "Max Doe",
@@ -3269,7 +3269,7 @@
   },
   "People / Mentors": {
     "en": "People / Mentors",
-    "de": "Menschen / Mentoren"
+    "de": "Personen / Mentoren"
   },
   "Perfekt & Präteritum": {
     "en": "Perfect & past tense",
@@ -3837,7 +3837,7 @@
   },
   "See your batch sessions, join the meeting and mark attendance.": {
     "en": "See your batch sessions, join the meeting and mark attendance.",
-    "de": "Sehen Sie sich Ihre Batch-Sitzungen an, nehmen Sie an der Besprechung teil und markieren Sie die Anwesenheit."
+    "de": "Sehen Sie die Termine Ihrer Lerngruppe, nehmen Sie am Treffen teil und erfassen Sie die Anwesenheit."
   },
   "Sehr geehrte Damen und Herren, ich schreibe Ihnen bezüglich...": {
     "en": "Dear Sir or Madam, I am writing to you regarding...",
@@ -4021,7 +4021,7 @@
   },
   "Student Name": {
     "en": "Student Name",
-    "de": "Name des Studenten"
+    "de": "Name der lernenden Person"
   },
   "Student Note / Transcript:": {
     "en": "Student Note / Transcript:",
@@ -4133,7 +4133,7 @@
   },
   "Suspended": {
     "en": "Suspended",
-    "de": "Suspendiert"
+    "de": "Gesperrt"
   },
   "Suspended (Access Blocked)": {
     "en": "Suspended (Access Blocked)",
@@ -4269,7 +4269,7 @@
   },
   "Total mentors": {
     "en": "Total mentors",
-    "de": "Insgesamt Mentoren"
+    "de": "Mentoren insgesamt"
   },
   "Total Score (0 – 100)": {
     "en": "Total Score (0 – 100)",
@@ -4477,7 +4477,7 @@
   },
   "Video Lesson": {
     "en": "Video lesson",
-    "de": "Video Lesson"
+    "de": "Videolektion"
   },
   "Video Source": {
     "en": "Video Source",
@@ -4569,7 +4569,7 @@
   },
   "Welt": {
     "en": "Welt",
-    "de": "Quaddel"
+    "de": "Welt"
   },
   "Wenn ich mehr Zeit hätte, würde ich gerne ein Auslandspraktikum in Frankfurt absolvieren.": {
     "en": "If I had more time, I would like to do an internship abroad in Frankfurt.",
@@ -4701,7 +4701,7 @@
   },
   "Your batch instructor has not published any lectures yet. Check back soon!": {
     "en": "Your batch instructor has not published any lectures yet. Check back soon!",
-    "de": "Ihr Batch-Dozent hat noch keine Vorlesungen veröffentlicht. Schauen Sie bald wieder vorbei!"
+    "de": "Ihre Lehrkraft hat noch keine Unterrichtseinheiten veröffentlicht. Schauen Sie bald wieder vorbei!"
   },
   "Your browser does not support the video tag.": {
     "en": "Your browser does not support the video tag.",
@@ -5129,7 +5129,7 @@
   },
   "Batch Announcement": {
     "en": "Batch announcement",
-    "de": "Batch Announcement"
+    "de": "Gruppenmitteilung"
   },
   "Batch not found.": {
     "en": "Batch not found.",
@@ -5617,7 +5617,7 @@
   },
   "German Course": {
     "en": "German course",
-    "de": "German Course"
+    "de": "Deutschkurs"
   },
   "Gestern ___ ich meine Freundin besucht.": {
     "en": "Yesterday I ___ visited my girlfriend.",
@@ -6729,7 +6729,7 @@
   },
   "Welcome to your German learning journey! Start with Einheit 1: Sich vorstellen.": {
     "en": "Welcome to your German learning journey! Start with Unit 1: Introduce yourself.",
-    "de": "Welcome to your German learning journey! Start with Einheit 1: Sich vorstellen."
+    "de": "Willkommen bei DeutschWelt! Beginnen Sie mit Einheit 1: Sich vorstellen."
   },
   "Wenn ich mehr Zeit ___, würde ich öfter lesen.": {
     "en": "If I ___ more time, I would read more often.",
@@ -7250,5 +7250,9 @@
   "FAILED": {
     "en": "FAILED",
     "de": "FEHLGESCHLAGEN"
+  },
+  "PEOPLE / MENTORS": {
+    "en": "PEOPLE / MENTORS",
+    "de": "PERSONEN / MENTOREN"
   }
 }

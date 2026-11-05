@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Button } from '../../components/ui/Button.js';
 import { Award, BookOpen, CalendarDays, Clock3, Flame, Printer, Target, TrendingUp } from 'lucide-react';
 
 export function StudentProgressPage() {
+  const { language } = useLanguage();
   const [stats, setStats] = useState<any>(null);
   const [plan, setPlan] = useState<any>(null);
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -65,7 +67,7 @@ export function StudentProgressPage() {
           const percent = Math.max(0, Math.min(100, Number(course.progressPercentage) || 0));
           return <article key={course.id} className="rounded-2xl border border-gray-100 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-bold text-navy">{course.courseTitle}</h3><p className="mt-0.5 text-xs text-dark-muted">{course.level} · {course.status}</p></div><span className="text-sm font-extrabold text-forest-800">{percent}%</span></div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100" role="progressbar" aria-label={`${course.courseTitle} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}><div className="h-full rounded-full bg-forest-800" style={{ width: `${percent}%` }} /></div>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100" role="progressbar" aria-label={language === 'de' ? `${course.courseTitle} Fortschritt` : `${course.courseTitle} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}><div className="h-full rounded-full bg-forest-800" style={{ width: `${percent}%` }} /></div>
             <Link to={`/courses/${course.courseSlug}`} className="mt-3 inline-block text-xs font-bold text-forest-800 hover:underline">Continue course →</Link>
           </article>;
         }) : <div className="rounded-2xl border border-dashed border-gray-300 p-5 text-sm text-dark-muted">You haven’t enrolled in a course yet. <Link to="/courses" className="font-bold text-forest-800 underline">Explore courses</Link></div>}

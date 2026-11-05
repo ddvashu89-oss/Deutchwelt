@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Badge } from '../../components/ui/Badge.js';
 import { Button } from '../../components/ui/Button.js';
 import { Card } from '../../components/ui/Card.js';
@@ -9,6 +10,7 @@ import { Skeleton } from '../../components/ui/Skeleton.js';
 import { Users, Calendar, Clock, GraduationCap, Plus, Flame, CheckCircle2, Mail, ShieldAlert } from 'lucide-react';
 
 export function TeacherBatchesPage() {
+  const { language } = useLanguage();
   const [batches, setBatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -180,7 +182,7 @@ export function TeacherBatchesPage() {
       <Modal
         isOpen={isEnrollModalOpen}
         onClose={() => setIsEnrollModalOpen(false)}
-        title={`Add Student to ${targetBatchName}`}
+        title={language === 'de' ? `Lernende zu ${targetBatchName} hinzufügen` : `Add student to ${targetBatchName}`}
         description="Enroll an existing student into your cohort using their registered email address."
         maxWidth="md"
       >

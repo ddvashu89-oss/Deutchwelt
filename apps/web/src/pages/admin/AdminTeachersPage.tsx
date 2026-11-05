@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../lib/api.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { Modal } from '../../components/ui/Modal.js';
@@ -19,6 +20,7 @@ import {
 } from 'lucide-react';
 
 export function AdminTeachersPage() {
+  const { language } = useLanguage();
   const [teachers, setTeachers] = useState<any[]>([]);
   const [batches, setBatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -299,8 +301,8 @@ export function AdminTeachersPage() {
                 </div>
                 <div className="mt-5 grid gap-3 rounded-xl bg-[#f7f8f5] p-4 sm:grid-cols-2"><div><p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Qualifications</p><p className="mt-1 text-sm font-medium leading-5 text-gray-900">{teacher.teacherProfile?.qualifications || 'Not added'}</p></div><div><p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Specialization</p><p className="mt-1 text-sm font-medium leading-5 text-gray-900">{teacher.teacherProfile?.specialization || 'Not added'}</p></div></div>
                 {teacher.teacherProfile?.bio && <p className="mt-4 line-clamp-2 text-sm leading-6 text-gray-600">{teacher.teacherProfile.bio}</p>}
-                <div className="mt-5 flex-1 border-t border-gray-100 pt-4"><div className="mb-3 flex flex-wrap items-center justify-between gap-2"><h4 className="text-xs font-bold uppercase tracking-wide text-gray-600">Assigned cohorts <span className="text-forest-800">({teacher.batches?.length || 0})</span></h4><span className="text-xs text-gray-500">{teacher.totalStudents || 0} students</span></div><div className="flex flex-wrap gap-2">{teacher.batches?.length ? teacher.batches.map((batch: any) => <span key={batch.id} className="inline-flex max-w-full items-center gap-1 rounded-lg border border-forest-100 bg-forest-50 py-1 pl-2.5 pr-1 text-xs font-semibold text-forest-900"><span className="truncate">{batch.name} · {batch.level}</span><button type="button" onClick={() => handleUnassignBatch(teacher.id, batch.id)} aria-label={`Remove ${batch.name} from ${teacher.firstName}`} className="rounded-md p-1 text-forest-700 hover:bg-red-50 hover:text-red-700"><X className="h-3.5 w-3.5" /></button></span>) : <p className="text-xs text-gray-400">No cohorts assigned yet.</p>}</div></div>
-                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4"><Button variant="outline" size="sm" onClick={() => openEditModal(teacher)}><Edit2 className="h-3.5 w-3.5" /> Edit profile</Button><Button variant="outline" size="sm" onClick={() => { setManageTeacher(teacher); setBatchToAssign(batches.find((batch) => !teacher.batches?.some((assigned: any) => assigned.id === batch.id))?.id || ''); }} disabled={!batches.length}><Plus className="h-3.5 w-3.5" /> Assign cohort</Button><div className="hidden flex-1 sm:block" /><button type="button" onClick={() => handleToggleStatus(teacher.id)} className="rounded-full px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100">{teacher.isActive ? 'Suspend access' : 'Restore access'}</button><button type="button" onClick={() => handleDeleteTeacher(teacher.id, `${teacher.firstName} ${teacher.lastName}`)} disabled={deletingId === teacher.id} aria-label={`Delete ${teacher.firstName} ${teacher.lastName}`} className="rounded-full p-2 text-red-600 hover:bg-red-50 disabled:opacity-50"><Trash2 className="h-4 w-4" /></button></div>
+                <div className="mt-5 flex-1 border-t border-gray-100 pt-4"><div className="mb-3 flex flex-wrap items-center justify-between gap-2"><h4 className="text-xs font-bold uppercase tracking-wide text-gray-600">Assigned cohorts <span className="text-forest-800">({teacher.batches?.length || 0})</span></h4><span className="text-xs text-gray-500">{teacher.totalStudents || 0} students</span></div><div className="flex flex-wrap gap-2">{teacher.batches?.length ? teacher.batches.map((batch: any) => <span key={batch.id} className="inline-flex max-w-full items-center gap-1 rounded-lg border border-forest-100 bg-forest-50 py-1 pl-2.5 pr-1 text-xs font-semibold text-forest-900"><span className="truncate">{batch.name} · {batch.level}</span><button type="button" onClick={() => handleUnassignBatch(teacher.id, batch.id)} aria-label={language === 'de' ? `${batch.name} von ${teacher.firstName} entfernen` : `Remove ${batch.name} from ${teacher.firstName}`} className="rounded-md p-1 text-forest-700 hover:bg-red-50 hover:text-red-700"><X className="h-3.5 w-3.5" /></button></span>) : <p className="text-xs text-gray-400">No cohorts assigned yet.</p>}</div></div>
+                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4"><Button variant="outline" size="sm" onClick={() => openEditModal(teacher)}><Edit2 className="h-3.5 w-3.5" /> Edit profile</Button><Button variant="outline" size="sm" onClick={() => { setManageTeacher(teacher); setBatchToAssign(batches.find((batch) => !teacher.batches?.some((assigned: any) => assigned.id === batch.id))?.id || ''); }} disabled={!batches.length}><Plus className="h-3.5 w-3.5" /> Assign cohort</Button><div className="hidden flex-1 sm:block" /><button type="button" onClick={() => handleToggleStatus(teacher.id)} className="rounded-full px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100">{teacher.isActive ? 'Suspend access' : 'Restore access'}</button><button type="button" onClick={() => handleDeleteTeacher(teacher.id, `${teacher.firstName} ${teacher.lastName}`)} disabled={deletingId === teacher.id} aria-label={language === 'de' ? `${teacher.firstName} ${teacher.lastName} löschen` : `Delete ${teacher.firstName} ${teacher.lastName}`} className="rounded-full p-2 text-red-600 hover:bg-red-50 disabled:opacity-50"><Trash2 className="h-4 w-4" /></button></div>
               </article>
             ))}
           </div>
@@ -517,7 +519,7 @@ export function AdminTeachersPage() {
       <Modal
         isOpen={Boolean(manageTeacher)}
         onClose={() => setManageTeacher(null)}
-        title={`Assign cohort to ${manageTeacher?.firstName || ''} ${manageTeacher?.lastName || ''}`}
+        title={language === 'de' ? `Kohorte ${manageTeacher?.firstName || ''} ${manageTeacher?.lastName || ''} zuordnen` : `Assign cohort to ${manageTeacher?.firstName || ''} ${manageTeacher?.lastName || ''}`}
         description="Choose a cohort that is not already assigned to this mentor."
         maxWidth="md"
       >
