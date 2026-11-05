@@ -13,6 +13,13 @@ export function CoursesPage() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState<string>('ALL');
+  const [isSandbox, setIsSandbox] = useState(false);
+
+  useEffect(() => {
+    api.get('/system/environment')
+      .then((res: any) => setIsSandbox(res?.isSandbox === true))
+      .catch(() => setIsSandbox(false));
+  }, []);
 
   useEffect(() => {
     async function loadCourses() {
@@ -46,18 +53,19 @@ export function CoursesPage() {
         </p>
       </div>
 
-      {/* Testing Sandbox Alert */}
-      <div className="p-4 rounded-3xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0" />
-          <span>
-            <strong>Testbetrieb aktiv:</strong> Alle Kurseinschreibungen können im Testmodus kostenfrei ohne Zahlungsdaten freigeschaltet werden.
+      {isSandbox && (
+        <div className="p-4 rounded-3xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0" />
+            <span>
+              <strong>Testbetrieb aktiv:</strong> Alle Kurseinschreibungen können im Testmodus kostenfrei ohne Zahlungsdaten freigeschaltet werden.
+            </span>
+          </div>
+          <span className="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0 self-start sm:self-auto border border-amber-200">
+            Sandbox Modus
           </span>
         </div>
-        <span className="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0 self-start sm:self-auto border border-amber-200">
-          Sandbox Modus
-        </span>
-      </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-gray-200/80">
