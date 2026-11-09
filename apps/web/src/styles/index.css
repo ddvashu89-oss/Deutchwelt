@@ -89,6 +89,32 @@
   text-wrap: balance;
 }
 
+/* Shared safeguards for content inside every protected role workspace. */
+.dashboard-content {
+  min-width: 0;
+}
+
+.dashboard-content :is(input, select, textarea) {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.dashboard-content :is(.overflow-x-auto, [data-horizontal-scroll]) {
+  max-width: 100%;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+.dashboard-content table {
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  .dashboard-content :is(button, a) {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 /* Diagonal hatched stripes pattern matching Donezo inactive pill bar chart */
 .bg-stripes-pattern {
   background-color: #F9FAFB;

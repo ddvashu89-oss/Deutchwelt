@@ -61,7 +61,7 @@ export function TeacherDashboard() {
       <div className="flex flex-col gap-4 rounded-2xl border border-[#e8e3d8] bg-[#fffefa] p-4 shadow-subtle sm:rounded-3xl sm:p-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#c54346]">Teacher workspace</p>
-          <h1 className="mt-1 font-serif text-[2rem] font-medium leading-tight tracking-tight text-[#14243a] sm:text-4xl">
+          <h1 className="mt-1 font-heading text-3xl font-extrabold leading-tight tracking-tight text-[#14243a] sm:text-4xl">
             {t('tdash.title')}
           </h1>
           <p className="mt-1 max-w-2xl text-xs leading-relaxed text-[#687487] sm:text-sm">
@@ -95,7 +95,7 @@ export function TeacherDashboard() {
             </div>
           </div>
           <div className="mb-1 mt-3 sm:mb-2 sm:mt-4">
-            <div className="font-serif text-3xl font-medium tracking-tight text-white sm:text-4xl">
+            <div className="font-heading text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
               {data?.totalBatches ?? 0}
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-1.5">

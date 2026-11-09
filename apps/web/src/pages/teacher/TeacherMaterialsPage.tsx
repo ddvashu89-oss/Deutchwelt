@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/Input.js';
 import { Modal } from '../../components/ui/Modal.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import { VideoPlayer } from '../../components/ui/VideoPlayer.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 import {
   Video,
   FileText,
@@ -28,6 +29,7 @@ import {
 } from 'lucide-react';
 
 export function TeacherMaterialsPage() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'lectures' | 'materials' | 'announcements'>('lectures');
   const [loading, setLoading] = useState(true);
 
@@ -282,7 +284,7 @@ export function TeacherMaterialsPage() {
   return (
     <div className="space-y-8 pb-16">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-extrabold text-navy tracking-tight">Class Lectures & Study Materials</h1>
           <p className="text-xs text-dark-muted">Upload video lessons, practice worksheets, and broadcast announcements to your assigned cohorts.</p>
@@ -308,10 +310,11 @@ export function TeacherMaterialsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-gray-200">
+      <div role="group" aria-label="Class resources" className="-mx-4 flex items-center gap-1 overflow-x-auto border-b border-gray-200 px-4 sm:mx-0 sm:gap-2 sm:px-0">
         <button
+          aria-pressed={activeTab === 'lectures'}
           onClick={() => setActiveTab('lectures')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
+          className={`flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-xs font-bold transition-colors sm:px-5 sm:text-sm ${
             activeTab === 'lectures'
               ? 'border-germanRed text-germanRed'
               : 'border-transparent text-dark-muted hover:text-dark'
@@ -320,8 +323,9 @@ export function TeacherMaterialsPage() {
           <Video className="w-4 h-4" /> Lectures & Video Classes ({lectures.length})
         </button>
         <button
+          aria-pressed={activeTab === 'materials'}
           onClick={() => setActiveTab('materials')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
+          className={`flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-xs font-bold transition-colors sm:px-5 sm:text-sm ${
             activeTab === 'materials'
               ? 'border-germanRed text-germanRed'
               : 'border-transparent text-dark-muted hover:text-dark'
@@ -330,8 +334,9 @@ export function TeacherMaterialsPage() {
           <FileText className="w-4 h-4" /> Worksheets & Cheat Sheets ({materials.length})
         </button>
         <button
+          aria-pressed={activeTab === 'announcements'}
           onClick={() => setActiveTab('announcements')}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-colors ${
+          className={`flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-xs font-bold transition-colors sm:px-5 sm:text-sm ${
             activeTab === 'announcements'
               ? 'border-germanRed text-germanRed'
               : 'border-transparent text-dark-muted hover:text-dark'
@@ -342,7 +347,29 @@ export function TeacherMaterialsPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="h-64 w-full rounded-2xl" />
+        <section role="status" aria-live="polite" aria-busy="true" className="rounded-3xl border border-gray-200 bg-white p-6 shadow-subtle sm:p-8">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-50 text-germanRed">
+              <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-navy">{t('materials.loadingTitle')}</p>
+              <p className="mt-1 text-xs text-dark-muted">{t('materials.loadingDescription')}</p>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-3" aria-hidden="true">
+            {[0, 1, 2].map((item) => (
+              <div key={item} className="rounded-2xl border border-gray-100 p-4">
+                <Skeleton className="h-28 w-full rounded-xl" />
+                <Skeleton className="mt-4 h-4 w-3/4" />
+                <Skeleton className="mt-2 h-3 w-1/2" />
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-gray-100" aria-hidden="true">
+            <div className="h-full w-1/3 animate-pulse rounded-full bg-germanRed" />
+          </div>
+        </section>
       ) : (
         <>
           {/* TAB 1: LECTURES */}
@@ -886,6 +913,7 @@ export function TeacherMaterialsPage() {
               <input
                 type="file"
                 accept=".pdf,.docx,.doc,.txt,.zip,.mp3,.mp4"
+                disabled={materialSaving}
                 onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
                     setMaterialFile(e.target.files[0]);
@@ -906,6 +934,19 @@ export function TeacherMaterialsPage() {
               )}
             </div>
           </div>
+
+          {materialSaving && materialFile && (
+            <div role="status" aria-live="polite" aria-busy="true" className="flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-3 text-blue-900">
+              <Loader2 className="mt-0.5 h-5 w-5 shrink-0 animate-spin text-blue-700" aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold">{t('materials.uploadingTitle')}</p>
+                <p className="mt-1 break-all text-[11px] text-blue-800">{materialFile.name} · {t('materials.uploadingDescription')}</p>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-blue-100" aria-hidden="true">
+                  <div className="h-full w-1/3 animate-pulse rounded-full bg-blue-600" />
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input

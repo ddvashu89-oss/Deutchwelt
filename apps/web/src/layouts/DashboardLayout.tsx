@@ -50,6 +50,9 @@ export function DashboardLayout() {
   const studentMenu = [
     { label: t('dash.menu.dashboard'), href: '/student/dashboard', icon: LayoutDashboard },
     { label: 'My courses', href: '/student/courses', icon: BookOpen },
+    { label: 'Learning materials', href: '/student/materials', icon: FileCheck },
+    { label: 'Assignments', href: '/student/assignments', icon: CheckSquare },
+    { label: 'Vocabulary trainer', href: '/student/vocabulary', icon: BookOpen },
     { label: 'Live schedule', href: '/student/schedule', icon: Calendar },
     { label: 'Progress report', href: '/student/progress', icon: BarChart2 },
     { label: 'Placement & plan', href: '/student/placement-test', icon: GraduationCap },
@@ -61,10 +64,11 @@ export function DashboardLayout() {
 
   const teacherMenu = [
     { label: t('dash.menu.dashboard'), href: '/teacher/dashboard', icon: LayoutDashboard },
-    { label: t('dash.menu.tasks'), href: '/teacher/submissions', icon: CheckSquare },
+    { label: 'Submissions', href: '/teacher/submissions', icon: CheckSquare },
     { label: 'Class schedule', href: '/teacher/schedule', icon: Calendar },
-    { label: t('dash.menu.analytics'), href: '/teacher/assignments/new', icon: BarChart2 },
-    { label: t('dash.menu.team'), href: '/teacher/batches', icon: Users },
+    { label: 'Create assignment', href: '/teacher/assignments/new', icon: PenTool },
+    { label: 'My batches', href: '/teacher/batches', icon: Users },
+    { label: 'Learning materials', href: '/teacher/materials', icon: FileCheck },
     { label: 'Community Q&A', href: '/teacher/community', icon: Users },
     { label: t('dash.menu.exams'), href: '/teacher/exams', icon: GraduationCap },
   ];
@@ -73,9 +77,10 @@ export function DashboardLayout() {
     { label: t('dash.menu.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
     { label: 'Course content', href: '/admin/courses', icon: CheckSquare },
     { label: 'Learning materials & notices', href: '/teacher/materials', icon: FileCheck },
-    { label: t('dash.menu.calendar'), href: '/admin/enquiries', icon: Calendar },
-    { label: t('dash.menu.analytics'), href: '/admin/audit-logs', icon: BarChart2 },
-    { label: t('dash.menu.team'), href: '/admin/students', icon: Users },
+    { label: 'Admissions enquiries', href: '/admin/enquiries', icon: Mail },
+    { label: 'Audit logs', href: '/admin/audit-logs', icon: ShieldCheck },
+    { label: 'Students', href: '/admin/students', icon: Users },
+    { label: 'Teachers', href: '/admin/teachers', icon: GraduationCap },
   ];
 
   const generalMenu = [
@@ -126,7 +131,7 @@ export function DashboardLayout() {
               <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9299a2]">
                 MENU
               </p>
-              <nav className="space-y-1">
+              <nav aria-label={isAdmin ? 'Admin navigation' : isTeacher ? 'Teacher navigation' : 'Student navigation'} className="space-y-1">
                 {currentMenu.map((item) => {
                   const Icon = item.icon;
                   const isActive = isActivePath(item.href);
@@ -172,7 +177,7 @@ export function DashboardLayout() {
               <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9299a2]">
                 GENERAL
               </p>
-              <nav className="space-y-1">
+              <nav aria-label="General navigation" className="space-y-1">
                 {generalMenu.map((item) => {
                   const Icon = item.icon;
                   const isActive = isActivePath(item.href);
@@ -330,8 +335,8 @@ export function DashboardLayout() {
         </header>
 
         {/* Dynamic Nested Route Content */}
-        <main className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto w-full max-w-screen-2xl">
+        <main className="dashboard-main min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="dashboard-content mx-auto w-full min-w-0 max-w-screen-2xl">
             <Outlet />
           </div>
         </main>

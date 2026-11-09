@@ -294,6 +294,10 @@ const translations: Record<Language, Record<string, string>> = {
     'exam.cancelStart': 'Back to exams',
     'exam.attemptsComplete': 'All attempts used',
     'exam.rulesDetails': 'Your answers save automatically. You can move between questions. The exam submits when time expires.',
+    'materials.loadingTitle': 'Loading your class materials',
+    'materials.loadingDescription': 'Getting your lectures, worksheets, and batch notices ready…',
+    'materials.uploadingTitle': 'Uploading material to your class',
+    'materials.uploadingDescription': 'Please keep this window open while the file uploads.',
 
     // Student Dashboard
     'sdash.title': 'Dashboard',
@@ -692,6 +696,10 @@ const translations: Record<Language, Record<string, string>> = {
     'exam.cancelStart': 'Zurück zu den Prüfungen',
     'exam.attemptsComplete': 'Alle Versuche genutzt',
     'exam.rulesDetails': 'Ihre Antworten werden automatisch gespeichert. Sie können zwischen Aufgaben wechseln. Bei Zeitablauf wird die Prüfung abgegeben.',
+    'materials.loadingTitle': 'Kursmaterialien werden geladen',
+    'materials.loadingDescription': 'Lektionen, Arbeitsblätter und Gruppennachrichten werden vorbereitet…',
+    'materials.uploadingTitle': 'Material wird für Ihren Kurs hochgeladen',
+    'materials.uploadingDescription': 'Bitte lassen Sie dieses Fenster geöffnet, bis der Upload abgeschlossen ist.',
 
     // Student Dashboard
     'sdash.title': 'Dashboard',
