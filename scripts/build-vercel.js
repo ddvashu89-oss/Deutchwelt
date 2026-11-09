@@ -17,11 +17,6 @@ try {
   console.warn('[Build Warning] Prisma generate skipped or warning:', e?.message);
 }
 
-// Temporary read-only diagnostics for the live database's legacy table mappings.
-if (process.env.VERCEL_ENV === 'production' && process.env.DW_REPORT_DB_SCHEMA === '1') {
-  execSync('node scripts/inspect-production-schema.js', { stdio: 'inherit' });
-}
-
 execSync('npm --prefix apps/api run build', { stdio: 'inherit' });
 
 // 3. Build Web frontend
