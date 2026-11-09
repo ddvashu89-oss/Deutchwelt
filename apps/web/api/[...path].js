@@ -19107,17 +19107,17 @@ var require_router = __commonJS({
     var toString = Object.prototype.toString;
     var proto = module.exports = function(options) {
       var opts = options || {};
-      function router17(req, res, next) {
-        router17.handle(req, res, next);
+      function router18(req, res, next) {
+        router18.handle(req, res, next);
       }
-      setPrototypeOf(router17, proto);
-      router17.params = {};
-      router17._params = [];
-      router17.caseSensitive = opts.caseSensitive;
-      router17.mergeParams = opts.mergeParams;
-      router17.strict = opts.strict;
-      router17.stack = [];
-      return router17;
+      setPrototypeOf(router18, proto);
+      router18.params = {};
+      router18._params = [];
+      router18.caseSensitive = opts.caseSensitive;
+      router18.mergeParams = opts.mergeParams;
+      router18.strict = opts.strict;
+      router18.stack = [];
+      return router18;
     };
     proto.param = function param(name, fn) {
       if (typeof name === "function") {
@@ -22150,7 +22150,7 @@ var require_application = __commonJS({
   "node_modules/express/lib/application.js"(exports, module) {
     "use strict";
     var finalhandler = require_finalhandler();
-    var Router18 = require_router();
+    var Router19 = require_router();
     var methods = require_methods();
     var middleware = require_init();
     var query = require_query();
@@ -22215,7 +22215,7 @@ var require_application = __commonJS({
     };
     app2.lazyrouter = function lazyrouter() {
       if (!this._router) {
-        this._router = new Router18({
+        this._router = new Router19({
           caseSensitive: this.enabled("case sensitive routing"),
           strict: this.enabled("strict routing")
         });
@@ -22224,17 +22224,17 @@ var require_application = __commonJS({
       }
     };
     app2.handle = function handle(req, res, callback) {
-      var router17 = this._router;
+      var router18 = this._router;
       var done = callback || finalhandler(req, res, {
         env: this.get("env"),
         onerror: logerror.bind(this)
       });
-      if (!router17) {
+      if (!router18) {
         debug("no routes defined on app");
         done();
         return;
       }
-      router17.handle(req, res, done);
+      router18.handle(req, res, done);
     };
     app2.use = function use(fn) {
       var offset = 0;
@@ -22254,15 +22254,15 @@ var require_application = __commonJS({
         throw new TypeError("app.use() requires a middleware function");
       }
       this.lazyrouter();
-      var router17 = this._router;
+      var router18 = this._router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router17.use(path7, fn2);
+          return router18.use(path7, fn2);
         }
         debug(".use app under %s", path7);
         fn2.mountpath = path7;
         fn2.parent = this;
-        router17.use(path7, function mounted_app(req, res, next) {
+        router18.use(path7, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             setPrototypeOf(req, orig.request);
@@ -24079,7 +24079,7 @@ var require_express = __commonJS({
     var mixin = require_merge_descriptors();
     var proto = require_application();
     var Route = require_route();
-    var Router18 = require_router();
+    var Router19 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -24102,7 +24102,7 @@ var require_express = __commonJS({
     exports.request = req;
     exports.response = res;
     exports.Route = Route;
-    exports.Router = Router18;
+    exports.Router = Router19;
     exports.json = bodyParser.json;
     exports.query = require_query();
     exports.raw = bodyParser.raw;
@@ -32907,7 +32907,7 @@ var require_multer = __commonJS({
 });
 
 // apps/api/src/app.ts
-var import_express18 = __toESM(require_express2(), 1);
+var import_express19 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
 
 // node_modules/helmet/index.mjs
@@ -40903,7 +40903,7 @@ async function authenticate(req, res, next) {
             req.isAccountBlocked = true;
           } else {
             const studentProfile = store.studentProfiles.find((sp) => sp.userId === user.id);
-            const teacherProfile = store.teacherProfiles.find((tp) => tp.userId === user.id);
+            const teacherProfile2 = store.teacherProfiles.find((tp) => tp.userId === user.id);
             req.user = {
               id: user.id,
               email: user.email,
@@ -40914,7 +40914,7 @@ async function authenticate(req, res, next) {
               isActive: user.isActive,
               isEmailVerified: user.isEmailVerified,
               studentProfile,
-              teacherProfile
+              teacherProfile: teacherProfile2
             };
           }
         }
@@ -42159,7 +42159,7 @@ async function login(req, res, next) {
         return next(new AppError("Invalid email or password.", 401, "INVALID_CREDENTIALS"));
       }
       const studentProfile = store.studentProfiles.find((sp) => sp.userId === user.id);
-      const teacherProfile = store.teacherProfiles.find((tp) => tp.userId === user.id);
+      const teacherProfile2 = store.teacherProfiles.find((tp) => tp.userId === user.id);
       const token = crypto2.randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1e3).toISOString();
       const clientIp = req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() || req.socket.remoteAddress || req.ip || "127.0.0.1";
@@ -42186,7 +42186,7 @@ async function login(req, res, next) {
           lastName: user.lastName,
           role: user.role,
           studentProfile,
-          teacherProfile
+          teacherProfile: teacherProfile2
         },
         token
       });
@@ -43208,6 +43208,7 @@ import path2 from "node:path";
 var DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
 var TOKEN_URL = "https://oauth2.googleapis.com/token";
 var DRIVE_API = "https://www.googleapis.com/drive/v3";
+var DRIVE_UPLOAD_API = "https://www.googleapis.com/upload/drive/v3";
 var CONNECTION_KEY = "google_drive_connection_v1";
 var FOLDER_KEY = "google_drive_folder_v1";
 var accessTokenCache;
@@ -43444,7 +43445,7 @@ async function uploadDriveFile(localPath, originalName, mimeType) {
   const safeName = path2.basename(originalName.replace(/\\/g, "/")).replace(/[\u0000-\u001f]/g, "_");
   const stat = await import("node:fs/promises").then((fs4) => fs4.stat(localPath));
   const token = await getDriveAccessToken();
-  const start = await fetch(`${DRIVE_API}/files?uploadType=resumable&supportsAllDrives=true&fields=id,name,mimeType,size`, {
+  const start = await fetch(`${DRIVE_UPLOAD_API}/files?uploadType=resumable&supportsAllDrives=true&fields=id,name,mimeType,size`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -44423,8 +44424,8 @@ async function getStudentBatchMaterials(req, res, next) {
     const effectiveBatchIds = myBatchIds.length > 0 ? myBatchIds : ["batch-1"];
     const materials = store.teacherMaterials.filter((m) => effectiveBatchIds.includes(m.batchId)).map((m) => {
       const batch = store.batches.find((b) => b.id === m.batchId);
-      const teacherProfile = store.teacherProfiles.find((tp) => tp.id === m.teacherId);
-      const teacherUser = teacherProfile ? store.users.find((u) => u.id === teacherProfile.userId) : null;
+      const teacherProfile2 = store.teacherProfiles.find((tp) => tp.id === m.teacherId);
+      const teacherUser = teacherProfile2 ? store.users.find((u) => u.id === teacherProfile2.userId) : null;
       return {
         ...m,
         batchName: batch?.name || "Class Materials",
@@ -44433,8 +44434,8 @@ async function getStudentBatchMaterials(req, res, next) {
     });
     const announcements = store.batchAnnouncements.filter((a) => effectiveBatchIds.includes(a.batchId)).map((a) => {
       const batch = store.batches.find((b) => b.id === a.batchId);
-      const teacherProfile = store.teacherProfiles.find((tp) => tp.id === a.teacherId);
-      const teacherUser = teacherProfile ? store.users.find((u) => u.id === teacherProfile.userId) : null;
+      const teacherProfile2 = store.teacherProfiles.find((tp) => tp.id === a.teacherId);
+      const teacherUser = teacherProfile2 ? store.users.find((u) => u.id === teacherProfile2.userId) : null;
       return {
         ...a,
         batchName: batch?.name || "Batch Announcement",
@@ -44501,8 +44502,8 @@ async function getStudentBatchLectures(req, res, next) {
     const effectiveBatchIds = myBatchIds.length > 0 ? myBatchIds : ["batch-1"];
     const lectures = store.teacherLectures.filter((l) => effectiveBatchIds.includes(l.batchId)).map((l) => {
       const batch = store.batches.find((b) => b.id === l.batchId);
-      const teacherProfile = store.teacherProfiles.find((tp) => tp.id === l.teacherId);
-      const teacherUser = teacherProfile ? store.users.find((u) => u.id === teacherProfile.userId) : null;
+      const teacherProfile2 = store.teacherProfiles.find((tp) => tp.id === l.teacherId);
+      const teacherUser = teacherProfile2 ? store.users.find((u) => u.id === teacherProfile2.userId) : null;
       return {
         ...l,
         batchName: batch?.name || "Class Lecture",
@@ -44984,10 +44985,10 @@ async function getTeacherDashboard(req, res, next) {
       return next(new AppError("Unauthorized", 401));
     }
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const batches = await prisma.teacherBatch.findMany({
-        where: { id: { in: assignedBatchIds } },
+        where: { id: { in: assignedBatchIds2 } },
         include: {
           memberships: { include: { user: true } }
         }
@@ -45059,8 +45060,8 @@ async function getTeacherDashboard(req, res, next) {
         }
       });
     } else {
-      const myBatches = store.batches.filter((b) => assignedBatchIds.includes(b.id));
-      const myMemberships = store.batchMemberships.filter((bm) => assignedBatchIds.includes(bm.batchId));
+      const myBatches = store.batches.filter((b) => assignedBatchIds2.includes(b.id));
+      const myMemberships = store.batchMemberships.filter((bm) => assignedBatchIds2.includes(bm.batchId));
       const studentUserIds = Array.from(new Set(myMemberships.map((bm) => bm.userId)));
       const pendingWriting = store.submissions.filter(
         (s) => studentUserIds.includes(s.userId) && s.status === SubmissionStatus.SUBMITTED
@@ -45100,10 +45101,10 @@ async function getTeacherDashboard(req, res, next) {
 async function getTeacherBatches(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const batches = await prisma.teacherBatch.findMany({
-        where: { id: { in: assignedBatchIds } },
+        where: { id: { in: assignedBatchIds2 } },
         include: {
           memberships: {
             include: {
@@ -45116,7 +45117,7 @@ async function getTeacherBatches(req, res, next) {
       });
       return res.json({ success: true, batches });
     } else {
-      const batches = store.batches.filter((b) => assignedBatchIds.includes(b.id)).map((b) => ({
+      const batches = store.batches.filter((b) => assignedBatchIds2.includes(b.id)).map((b) => ({
         ...b,
         memberships: store.batchMemberships.filter((bm) => bm.batchId === b.id).map((bm) => ({
           ...bm,
@@ -45132,10 +45133,10 @@ async function getTeacherBatches(req, res, next) {
 async function getTeacherStudents(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const memberships = await prisma.batchMembership.findMany({
-        where: { batchId: { in: assignedBatchIds } },
+        where: { batchId: { in: assignedBatchIds2 } },
         include: {
           batch: true,
           user: {
@@ -45163,7 +45164,7 @@ async function getTeacherStudents(req, res, next) {
       }));
       return res.json({ success: true, students });
     } else {
-      const myMemberships = store.batchMemberships.filter((bm) => assignedBatchIds.includes(bm.batchId));
+      const myMemberships = store.batchMemberships.filter((bm) => assignedBatchIds2.includes(bm.batchId));
       const students = myMemberships.map((bm) => {
         const user = store.users.find((u) => u.id === bm.userId);
         const batch = store.batches.find((b) => b.id === bm.batchId);
@@ -45194,10 +45195,10 @@ async function getTeacherStudents(req, res, next) {
 async function getTeacherSubmissions(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const myMemberships = await prisma.batchMembership.findMany({
-        where: { batchId: { in: assignedBatchIds } },
+        where: { batchId: { in: assignedBatchIds2 } },
         select: { userId: true }
       });
       const studentUserIds = myMemberships.map((m) => m.userId);
@@ -45221,7 +45222,7 @@ async function getTeacherSubmissions(req, res, next) {
       ]);
       return res.json({ success: true, writing, speaking });
     } else {
-      const myMemberships = store.batchMemberships.filter((bm) => assignedBatchIds.includes(bm.batchId));
+      const myMemberships = store.batchMemberships.filter((bm) => assignedBatchIds2.includes(bm.batchId));
       const studentUserIds = myMemberships.map((bm) => bm.userId);
       const writing = store.submissions.filter((s) => studentUserIds.includes(s.userId)).map((s) => ({
         ...s,
@@ -45241,7 +45242,7 @@ async function getTeacherSubmissions(req, res, next) {
 }
 async function createAssignment(req, res, next) {
   try {
-    const { title, description, level, dueDate, maxPoints = 100, instructions, rubricCriteria, batchId } = req.body;
+    const { title, description, level, dueDate, maxPoints: maxPoints2 = 100, instructions, rubricCriteria, batchId } = req.body;
     const teacherProfileId2 = resolveTeacherProfileId(req);
     if (isDatabaseConnected) {
       const assignment = await prisma.assignment.create({
@@ -45252,7 +45253,7 @@ async function createAssignment(req, res, next) {
           description,
           level,
           dueDate: new Date(dueDate),
-          maxPoints,
+          maxPoints: maxPoints2,
           instructions,
           rubricCriteria: rubricCriteria || []
         }
@@ -45267,7 +45268,7 @@ async function createAssignment(req, res, next) {
         description,
         level,
         dueDate,
-        maxPoints,
+        maxPoints: maxPoints2,
         instructions,
         rubricCriteria: rubricCriteria || [],
         createdAt: (/* @__PURE__ */ new Date()).toISOString(),
@@ -45384,24 +45385,24 @@ async function gradeSpeakingAttempt(req, res, next) {
 async function getTeacherLectures(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const [stored, local] = await Promise.all([
         prisma.driveAsset.findMany({
           where: {
             type: "TEACHER_LECTURE",
-            OR: [{ batchId: { in: assignedBatchIds } }, { teacherProfileId: teacherProfileId2 }]
+            OR: [{ batchId: { in: assignedBatchIds2 } }, { teacherProfileId: teacherProfileId2 }]
           },
           include: { batch: true },
           orderBy: { createdAt: "desc" }
         }),
         Promise.resolve(store.teacherLectures.filter(
-          (l) => (assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId2) && !l.videoUrl?.startsWith("/api/v1/files/")
+          (l) => (assignedBatchIds2.includes(l.batchId) || l.teacherId === teacherProfileId2) && !l.videoUrl?.startsWith("/api/v1/files/")
         ).map((l) => ({ ...l, batch: store.batches.find((b) => b.id === l.batchId) })))
       ]);
       return res.json({ success: true, lectures: [...stored.map(driveAssetToLecture), ...local] });
     }
-    const lectures = store.teacherLectures.filter((l) => assignedBatchIds.includes(l.batchId) || l.teacherId === teacherProfileId2).map((l) => ({
+    const lectures = store.teacherLectures.filter((l) => assignedBatchIds2.includes(l.batchId) || l.teacherId === teacherProfileId2).map((l) => ({
       ...l,
       batch: store.batches.find((b) => b.id === l.batchId)
     }));
@@ -45444,8 +45445,8 @@ async function createTeacherLecture(req, res, next) {
       await discardTemporaryUpload(req.file);
       return next(new AppError("Lecture title and target batch are required.", 400));
     }
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
-    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds.includes(batchId)) {
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds2.includes(batchId)) {
       await discardTemporaryUpload(req.file);
       return next(new AppError("You can only publish lectures to your assigned batches.", 403));
     }
@@ -45557,24 +45558,24 @@ async function deleteTeacherLecture(req, res, next) {
 async function getTeacherMaterials(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (isDatabaseConnected) {
       const [stored, local] = await Promise.all([
         prisma.driveAsset.findMany({
           where: {
             type: "TEACHER_MATERIAL",
-            OR: [{ batchId: { in: assignedBatchIds } }, { teacherProfileId: teacherProfileId2 }]
+            OR: [{ batchId: { in: assignedBatchIds2 } }, { teacherProfileId: teacherProfileId2 }]
           },
           include: { batch: true },
           orderBy: { createdAt: "desc" }
         }),
         Promise.resolve(store.teacherMaterials.filter(
-          (m) => (assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId2) && !m.fileUrl?.startsWith("/api/v1/files/")
+          (m) => (assignedBatchIds2.includes(m.batchId) || m.teacherId === teacherProfileId2) && !m.fileUrl?.startsWith("/api/v1/files/")
         ).map((m) => ({ ...m, batch: store.batches.find((b) => b.id === m.batchId) })))
       ]);
       return res.json({ success: true, materials: [...stored.map(driveAssetToMaterial), ...local] });
     }
-    const materials = store.teacherMaterials.filter((m) => assignedBatchIds.includes(m.batchId) || m.teacherId === teacherProfileId2).map((m) => ({
+    const materials = store.teacherMaterials.filter((m) => assignedBatchIds2.includes(m.batchId) || m.teacherId === teacherProfileId2).map((m) => ({
       ...m,
       batch: store.batches.find((b) => b.id === m.batchId)
     }));
@@ -45594,8 +45595,8 @@ async function createTeacherMaterial(req, res, next) {
       await discardTemporaryUpload(req.file);
       return next(new AppError("Material title and target batch are required.", 400));
     }
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
-    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds.includes(batchId)) {
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    if (req.user?.role !== UserRole.ADMIN && !assignedBatchIds2.includes(batchId)) {
       await discardTemporaryUpload(req.file);
       return next(new AppError("You can only publish materials to your assigned batches.", 403));
     }
@@ -45700,8 +45701,8 @@ async function deleteTeacherMaterial(req, res, next) {
 async function getTeacherAnnouncements(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
-    const announcements = store.batchAnnouncements.filter((a) => assignedBatchIds.includes(a.batchId) || a.teacherId === teacherProfileId2).map((a) => ({
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const announcements = store.batchAnnouncements.filter((a) => assignedBatchIds2.includes(a.batchId) || a.teacherId === teacherProfileId2).map((a) => ({
       ...a,
       batch: store.batches.find((b) => b.id === a.batchId)
     }));
@@ -45772,11 +45773,11 @@ async function enrollStudentInBatch(req, res, next) {
 async function getTeacherSchedule(req, res, next) {
   try {
     const teacherProfileId2 = resolveTeacherProfileId(req);
-    const assignedBatchIds = await getAssignedBatchIds(teacherProfileId2, req.user.id);
+    const assignedBatchIds2 = await getAssignedBatchIds(teacherProfileId2, req.user.id);
     if (!isDatabaseConnected) return res.json({ success: true, upcomingSessions: [], cancelledSessions: [], stats: { activeStudents: 0, upcomingCount: 0, taughtHoursMonth: 0 } });
     const [upcomingSessions, activeStudents, taught] = await Promise.all([
       prisma.liveClass.findMany({ where: { teacherProfileId: teacherProfileId2, startsAt: { gte: /* @__PURE__ */ new Date() } }, orderBy: { startsAt: "asc" }, include: { batch: { select: { name: true } } } }),
-      prisma.batchMembership.count({ where: { batchId: { in: assignedBatchIds }, status: "ACTIVE" } }),
+      prisma.batchMembership.count({ where: { batchId: { in: assignedBatchIds2 }, status: "ACTIVE" } }),
       prisma.liveClass.aggregate({ where: { teacherProfileId: teacherProfileId2, startsAt: { gte: new Date((/* @__PURE__ */ new Date()).getFullYear(), (/* @__PURE__ */ new Date()).getMonth(), 1) } }, _sum: { durationMinutes: true } })
     ]);
     return res.json({ success: true, upcomingSessions, cancelledSessions: [], stats: { activeStudents, upcomingCount: upcomingSessions.length, taughtHoursMonth: Math.round((taught._sum.durationMinutes || 0) / 60) } });
@@ -47678,8 +47679,336 @@ router16.post("/verify", requireAuth, async (req, res, next) => {
 });
 var paymentRoutes_default = router16;
 
-// apps/api/src/modules/classes/classRoutes.ts
+// apps/api/src/modules/exams/examRoutes.ts
 var import_express17 = __toESM(require_express2(), 1);
+
+// apps/api/src/modules/exams/examController.ts
+import { randomUUID as randomUUID2 } from "node:crypto";
+import { ExamAttemptStatus } from "@prisma/client";
+var SECTIONS = ["LISTENING", "READING", "WRITING", "SPEAKING", "LANGUAGE_USE"];
+var QUESTION_TYPES = ["MULTIPLE_CHOICE", "SHORT_ANSWER", "WRITING", "SPEAKING"];
+function requireDatabase() {
+  if (!isDatabaseConnected) throw new AppError("The exam system is unavailable while the database is disconnected.", 503);
+}
+function requestUser(req) {
+  if (!req.user) throw new AppError("Please sign in to access exams.", 401);
+  return req.user;
+}
+async function teacherProfile(req) {
+  requireDatabase();
+  const user = requestUser(req);
+  const profile = await prisma.teacherProfile.findUnique({ where: { userId: user.id }, select: { id: true } });
+  if (!profile) throw new AppError("A teacher profile is required to manage exams.", 403);
+  return profile.id;
+}
+async function assignedBatchIds(profileId) {
+  const assignments = await prisma.teacherBatchAssignment.findMany({ where: { teacherId: profileId }, select: { batchId: true } });
+  return assignments.map((item) => item.batchId);
+}
+function asQuestions(value, strict = false) {
+  if (!Array.isArray(value) || value.length === 0 || value.length > 200) throw new AppError("Add between 1 and 200 exam questions.", 400);
+  return value.map((raw, index) => {
+    const section = String(raw.section || "").toUpperCase();
+    const type = String(raw.type || "").toUpperCase();
+    const prompt = typeof raw.prompt === "string" ? raw.prompt.trim() : "";
+    const points = Number(raw.points);
+    const options = Array.isArray(raw.options) ? raw.options.map((option) => String(option).trim()).filter(Boolean) : [];
+    const answerKey = Array.isArray(raw.answerKey) ? raw.answerKey.map((answer) => String(answer).trim()).filter(Boolean) : typeof raw.answerKey === "string" && raw.answerKey.trim() ? [raw.answerKey.trim()] : [];
+    if (!SECTIONS.includes(section)) throw new AppError(`Question ${index + 1}: choose a valid exam section.`, 400);
+    if (!QUESTION_TYPES.includes(type)) throw new AppError(`Question ${index + 1}: choose a supported question type.`, 400);
+    if (prompt.length < 2 || prompt.length > 4e3) throw new AppError(`Question ${index + 1}: add a prompt (max 4,000 characters).`, 400);
+    if (!Number.isInteger(points) || points < 1 || points > 100) throw new AppError(`Question ${index + 1}: points must be between 1 and 100.`, 400);
+    if (type === "MULTIPLE_CHOICE" && (options.length < 2 || options.length > 8)) throw new AppError(`Question ${index + 1}: multiple choice needs 2\u20138 options.`, 400);
+    if (strict && ["MULTIPLE_CHOICE", "SHORT_ANSWER"].includes(type) && answerKey.length === 0) throw new AppError(`Question ${index + 1}: add the correct answer before publishing.`, 400);
+    return {
+      id: typeof raw.id === "string" && raw.id ? raw.id : randomUUID2(),
+      section,
+      type,
+      prompt,
+      instructions: typeof raw.instructions === "string" ? raw.instructions.slice(0, 2e3) : void 0,
+      passage: typeof raw.passage === "string" ? raw.passage.slice(0, 12e3) : void 0,
+      audioUrl: typeof raw.audioUrl === "string" ? raw.audioUrl.slice(0, 2e3) : void 0,
+      options: type === "MULTIPLE_CHOICE" ? options : void 0,
+      answerKey: ["MULTIPLE_CHOICE", "SHORT_ANSWER"].includes(type) ? answerKey : void 0,
+      points,
+      rubric: typeof raw.rubric === "string" ? raw.rubric.slice(0, 2e3) : void 0
+    };
+  });
+}
+function safeQuestions(questions2) {
+  return questions2.map(({ answerKey: _answerKey, rubric: _rubric, ...question }) => question);
+}
+function maxPoints(questions2) {
+  return questions2.reduce((sum, question) => sum + Number(question.points || 0), 0);
+}
+function comparable(value) {
+  return String(value ?? "").trim().normalize("NFKC").replace(/\s+/g, " ").toLocaleLowerCase();
+}
+function gradeObjective(questions2, answers) {
+  return questions2.reduce((sum, question) => {
+    if (!["MULTIPLE_CHOICE", "SHORT_ANSWER"].includes(question.type)) return sum;
+    const submitted = comparable(answers[question.id]);
+    const correct = (question.answerKey || []).some((answer) => comparable(answer) === submitted);
+    return sum + (correct ? question.points : 0);
+  }, 0);
+}
+async function finishAttempt(attemptId, exam) {
+  const attempt = await prisma.examAttempt.findUnique({ where: { id: attemptId } });
+  if (!attempt || attempt.status !== ExamAttemptStatus.IN_PROGRESS) return attempt;
+  const questions2 = asQuestions(exam.questions);
+  const answers = attempt.answers || {};
+  const score = gradeObjective(questions2, answers);
+  const subjectiveAnswered = questions2.some((question) => ["WRITING", "SPEAKING"].includes(question.type) && String(answers[question.id] || "").trim());
+  const total = maxPoints(questions2);
+  const percent = total ? score / total * 100 : 0;
+  return prisma.examAttempt.update({
+    where: { id: attemptId },
+    data: {
+      status: subjectiveAnswered ? ExamAttemptStatus.NEEDS_REVIEW : ExamAttemptStatus.GRADED,
+      submittedAt: /* @__PURE__ */ new Date(),
+      score,
+      maxScore: total,
+      percentage: percent,
+      passed: subjectiveAnswered ? null : percent >= exam.passPercent
+    }
+  });
+}
+function availability(exam, now = /* @__PURE__ */ new Date()) {
+  return (!exam.opensAt || new Date(exam.opensAt) <= now) && (!exam.closesAt || new Date(exam.closesAt) > now);
+}
+async function studentCanAccessExam(examId, userId) {
+  const exam = await prisma.exam.findUnique({ where: { id: examId }, include: { batch: { select: { id: true, name: true } } } });
+  if (!exam || exam.status !== PublicationStatus.PUBLISHED) throw new AppError("Exam not found.", 404);
+  const membership = await prisma.batchMembership.findFirst({ where: { batchId: exam.batchId, userId, status: "ACTIVE" }, select: { id: true } });
+  if (!membership) throw new AppError("This exam is only available to students in its assigned batch.", 403);
+  return exam;
+}
+async function getStudentExams(req, res, next) {
+  try {
+    requireDatabase();
+    const user = requestUser(req);
+    if (user.role !== UserRole.STUDENT) throw new AppError("Student access is required.", 403);
+    const memberships = await prisma.batchMembership.findMany({ where: { userId: user.id, status: "ACTIVE" }, select: { batchId: true } });
+    const exams = await prisma.exam.findMany({
+      where: { status: PublicationStatus.PUBLISHED, batchId: { in: memberships.map((item) => item.batchId) } },
+      orderBy: [{ opensAt: "asc" }, { createdAt: "desc" }],
+      include: { batch: { select: { id: true, name: true } }, attempts: { where: { userId: user.id }, orderBy: { attemptNumber: "desc" }, select: { id: true, attemptNumber: true, status: true, startedAt: true, expiresAt: true, submittedAt: true, percentage: true, passed: true } } }
+    });
+    const now = /* @__PURE__ */ new Date();
+    return res.json({ success: true, exams: exams.map(({ questions: questions2, ...exam }) => ({
+      ...exam,
+      questionCount: Array.isArray(questions2) ? questions2.length : 0,
+      available: availability(exam, now),
+      latestAttempt: exam.attempts[0] || null,
+      attemptsUsed: exam.attempts.length,
+      attempts: void 0
+    })) });
+  } catch (error) {
+    next(error);
+  }
+}
+async function startExam(req, res, next) {
+  try {
+    requireDatabase();
+    const user = requestUser(req);
+    const exam = await studentCanAccessExam(req.params.examId, user.id);
+    const now = /* @__PURE__ */ new Date();
+    if (!availability(exam, now)) throw new AppError("This exam is outside its scheduled availability window.", 403);
+    const existing = await prisma.examAttempt.findFirst({ where: { examId: exam.id, userId: user.id, status: ExamAttemptStatus.IN_PROGRESS }, orderBy: { attemptNumber: "desc" } });
+    if (existing && existing.expiresAt > now) return res.json({ success: true, attempt: existing, resumed: true });
+    if (existing) await finishAttempt(existing.id, exam);
+    const attempts = await prisma.examAttempt.count({ where: { examId: exam.id, userId: user.id } });
+    if (attempts >= exam.maxAttempts) throw new AppError("You have used all attempts for this exam.", 409);
+    const expiresAt = new Date(now.getTime() + exam.durationMinutes * 6e4);
+    if (exam.closesAt && expiresAt > exam.closesAt) expiresAt.setTime(new Date(exam.closesAt).getTime());
+    const attempt = await prisma.examAttempt.create({ data: { examId: exam.id, userId: user.id, attemptNumber: attempts + 1, expiresAt, maxScore: maxPoints(asQuestions(exam.questions)), answers: {} } });
+    return res.status(201).json({ success: true, attempt, resumed: false });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getExamAttempt(req, res, next) {
+  try {
+    requireDatabase();
+    const user = requestUser(req);
+    let attempt = await prisma.examAttempt.findUnique({ where: { id: req.params.attemptId }, include: { exam: { include: { batch: { select: { id: true, name: true } } } } } });
+    if (!attempt || attempt.userId !== user.id) throw new AppError("Exam attempt not found.", 404);
+    if (attempt.status === ExamAttemptStatus.IN_PROGRESS && attempt.expiresAt <= /* @__PURE__ */ new Date()) {
+      await finishAttempt(attempt.id, attempt.exam);
+      attempt = await prisma.examAttempt.findUnique({ where: { id: attempt.id }, include: { exam: { include: { batch: { select: { id: true, name: true } } } } } });
+    }
+    const { answerKey: _hidden, ...exam } = attempt.exam;
+    return res.json({ success: true, attempt, exam: { ...exam, questions: safeQuestions(asQuestions(exam.questions)) } });
+  } catch (error) {
+    next(error);
+  }
+}
+async function saveExamAnswers(req, res, next) {
+  try {
+    requireDatabase();
+    const user = requestUser(req);
+    const attempt = await prisma.examAttempt.findUnique({ where: { id: req.params.attemptId }, include: { exam: true } });
+    if (!attempt || attempt.userId !== user.id) throw new AppError("Exam attempt not found.", 404);
+    if (attempt.status !== ExamAttemptStatus.IN_PROGRESS) throw new AppError("This exam has already been submitted.", 409);
+    if (attempt.expiresAt <= /* @__PURE__ */ new Date()) {
+      await finishAttempt(attempt.id, attempt.exam);
+      throw new AppError("The exam time has ended. Your saved answers have been submitted.", 409);
+    }
+    const payload = req.body?.answers;
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new AppError("Answers must be provided as a question-to-response map.", 400);
+    const questions2 = asQuestions(attempt.exam.questions);
+    const ids = new Set(questions2.map((question) => question.id));
+    const previous = attempt.answers || {};
+    const next2 = { ...previous };
+    for (const [id, raw] of Object.entries(payload)) {
+      if (!ids.has(id)) throw new AppError("An answer references a question outside this exam.", 400);
+      if (typeof raw !== "string" || raw.length > 12e3) throw new AppError("Each answer must be text under 12,000 characters.", 400);
+      next2[id] = raw;
+    }
+    const updated = await prisma.examAttempt.update({ where: { id: attempt.id }, data: { answers: next2 } });
+    return res.json({ success: true, savedAt: /* @__PURE__ */ new Date(), attempt: updated });
+  } catch (error) {
+    next(error);
+  }
+}
+async function submitExam(req, res, next) {
+  try {
+    requireDatabase();
+    const user = requestUser(req);
+    const attempt = await prisma.examAttempt.findUnique({ where: { id: req.params.attemptId }, include: { exam: true } });
+    if (!attempt || attempt.userId !== user.id) throw new AppError("Exam attempt not found.", 404);
+    if (attempt.status !== ExamAttemptStatus.IN_PROGRESS) return res.json({ success: true, attempt });
+    const updated = await finishAttempt(attempt.id, attempt.exam);
+    return res.json({ success: true, attempt: updated });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getTeacherExams(req, res, next) {
+  try {
+    const profileId = await teacherProfile(req);
+    const exams = await prisma.exam.findMany({ where: { teacherProfileId: profileId }, orderBy: { createdAt: "desc" }, include: { batch: { select: { id: true, name: true } }, _count: { select: { attempts: true } } } });
+    return res.json({ success: true, exams });
+  } catch (error) {
+    next(error);
+  }
+}
+async function createTeacherExam(req, res, next) {
+  try {
+    const profileId = await teacherProfile(req);
+    const { title, description, batchId, format, level, durationMinutes, passPercent, maxAttempts, opensAt, closesAt, status } = req.body || {};
+    const batches = await assignedBatchIds(profileId);
+    if (typeof batchId !== "string" || !batches.includes(batchId)) throw new AppError("Choose one of your assigned batches.", 403);
+    if (typeof title !== "string" || title.trim().length < 3 || title.length > 160) throw new AppError("Add an exam title between 3 and 160 characters.", 400);
+    if (typeof description !== "string" || description.trim().length < 5 || description.length > 4e3) throw new AppError("Add exam instructions (5\u20134,000 characters).", 400);
+    if (!["GOETHE", "TELC"].includes(String(format).toUpperCase())) throw new AppError("Choose Goethe or telc exam style.", 400);
+    if (!Object.values(GermanLevel).includes(level)) throw new AppError("Choose a CEFR exam level.", 400);
+    if (!Number.isInteger(Number(durationMinutes)) || Number(durationMinutes) < 10 || Number(durationMinutes) > 360) throw new AppError("Exam duration must be between 10 and 360 minutes.", 400);
+    if (!Number.isFinite(Number(passPercent)) || Number(passPercent) < 0 || Number(passPercent) > 100) throw new AppError("Pass threshold must be between 0 and 100%.", 400);
+    if (!Number.isInteger(Number(maxAttempts)) || Number(maxAttempts) < 1 || Number(maxAttempts) > 10) throw new AppError("Allow between 1 and 10 attempts.", 400);
+    const questions2 = asQuestions(req.body.questions, status === PublicationStatus.PUBLISHED);
+    const opens = opensAt ? new Date(opensAt) : null;
+    const closes = closesAt ? new Date(closesAt) : null;
+    if (opensAt && Number.isNaN(opens.getTime()) || closesAt && Number.isNaN(closes.getTime()) || opens && closes && closes <= opens) throw new AppError("Check the exam open and close times.", 400);
+    const exam = await prisma.exam.create({ data: {
+      teacherProfileId: profileId,
+      batchId,
+      title: title.trim(),
+      description: description.trim(),
+      format: String(format).toUpperCase(),
+      level,
+      durationMinutes: Number(durationMinutes),
+      passPercent: Number(passPercent),
+      maxAttempts: Number(maxAttempts),
+      opensAt: opens,
+      closesAt: closes,
+      status: status === PublicationStatus.PUBLISHED ? PublicationStatus.PUBLISHED : PublicationStatus.DRAFT,
+      questions: questions2
+    }, include: { batch: { select: { id: true, name: true } } } });
+    return res.status(201).json({ success: true, exam });
+  } catch (error) {
+    next(error);
+  }
+}
+async function updateTeacherExamStatus(req, res, next) {
+  try {
+    const profileId = await teacherProfile(req);
+    const status = req.body?.status;
+    if (![PublicationStatus.PUBLISHED, PublicationStatus.ARCHIVED, PublicationStatus.DRAFT].includes(status)) throw new AppError("Choose Draft, Published, or Archived.", 400);
+    const exam = await prisma.exam.findFirst({ where: { id: req.params.examId, teacherProfileId: profileId } });
+    if (!exam) throw new AppError("Exam not found.", 404);
+    if (status === PublicationStatus.PUBLISHED) asQuestions(exam.questions, true);
+    const updated = await prisma.exam.update({ where: { id: exam.id }, data: { status } });
+    return res.json({ success: true, exam: updated });
+  } catch (error) {
+    next(error);
+  }
+}
+async function getTeacherExamAttempts(req, res, next) {
+  try {
+    const profileId = await teacherProfile(req);
+    const exam = await prisma.exam.findFirst({ where: { id: req.params.examId, teacherProfileId: profileId }, select: { id: true, questions: true } });
+    if (!exam) throw new AppError("Exam not found.", 404);
+    const attempts = await prisma.examAttempt.findMany({ where: { examId: exam.id }, orderBy: { startedAt: "desc" }, include: { user: { select: { firstName: true, lastName: true, email: true } } } });
+    return res.json({ success: true, questions: asQuestions(exam.questions), attempts });
+  } catch (error) {
+    next(error);
+  }
+}
+async function gradeTeacherExamAttempt(req, res, next) {
+  try {
+    const profileId = await teacherProfile(req);
+    const attempt = await prisma.examAttempt.findUnique({ where: { id: req.params.attemptId }, include: { exam: true } });
+    if (!attempt || attempt.exam.teacherProfileId !== profileId) throw new AppError("Exam attempt not found.", 404);
+    if (attempt.status === ExamAttemptStatus.IN_PROGRESS) throw new AppError("The student must submit the exam before grading.", 409);
+    const questions2 = asQuestions(attempt.exam.questions);
+    const subjective = questions2.filter((question) => ["WRITING", "SPEAKING"].includes(question.type) && String(attempt.answers?.[question.id] || "").trim());
+    const submittedScores = Array.isArray(req.body?.scores) ? req.body.scores : [];
+    const scores = {};
+    for (const entry of submittedScores) {
+      const question = subjective.find((item) => item.id === entry.questionId);
+      if (!question) throw new AppError("A grade references a question that is not awaiting manual review.", 400);
+      const points = Number(entry.points);
+      if (!Number.isFinite(points) || points < 0 || points > question.points) throw new AppError(`Score for a question must be between 0 and ${question.points}.`, 400);
+      scores[question.id] = { points, feedback: typeof entry.feedback === "string" ? entry.feedback.slice(0, 2e3) : void 0 };
+    }
+    if (Object.keys(scores).length !== subjective.length) throw new AppError("Grade every written and speaking response before finalizing the result.", 400);
+    const objectiveScore = gradeObjective(questions2, attempt.answers);
+    const score = objectiveScore + Object.values(scores).reduce((sum, result) => sum + result.points, 0);
+    const total = maxPoints(questions2);
+    const percentage = total ? score / total * 100 : 0;
+    const updated = await prisma.examAttempt.update({ where: { id: attempt.id }, data: {
+      status: ExamAttemptStatus.GRADED,
+      manualScores: scores,
+      score,
+      maxScore: total,
+      percentage,
+      passed: percentage >= attempt.exam.passPercent,
+      teacherFeedback: typeof req.body?.teacherFeedback === "string" ? req.body.teacherFeedback.slice(0, 4e3) : null
+    } });
+    return res.json({ success: true, attempt: updated });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// apps/api/src/modules/exams/examRoutes.ts
+var router17 = (0, import_express17.Router)();
+router17.use(requireAuth);
+router17.get("/", getStudentExams);
+router17.post("/:examId/start", startExam);
+router17.get("/attempts/:attemptId", getExamAttempt);
+router17.put("/attempts/:attemptId/answers", saveExamAnswers);
+router17.post("/attempts/:attemptId/submit", submitExam);
+router17.get("/teacher", getTeacherExams);
+router17.post("/teacher", createTeacherExam);
+router17.get("/teacher/:examId/attempts", getTeacherExamAttempts);
+router17.post("/teacher/attempts/:attemptId/grade", gradeTeacherExamAttempt);
+router17.patch("/teacher/:examId/status", updateTeacherExamStatus);
+var examRoutes_default = router17;
+
+// apps/api/src/modules/classes/classRoutes.ts
+var import_express18 = __toESM(require_express2(), 1);
 
 // apps/api/src/services/notifications.ts
 function escapeHtml2(text) {
@@ -47903,10 +48232,10 @@ async function saveClassAttendance(req, res, next) {
 }
 
 // apps/api/src/modules/classes/classRoutes.ts
-var studentClassRoutes = (0, import_express17.Router)();
+var studentClassRoutes = (0, import_express18.Router)();
 studentClassRoutes.get("/schedule", requireAuth, getStudentSchedule);
 studentClassRoutes.post("/live-classes/:classId/check-in", requireAuth, authRateLimiter, studentCheckIn);
-var teacherClassRoutes = (0, import_express17.Router)();
+var teacherClassRoutes = (0, import_express18.Router)();
 teacherClassRoutes.use(requireAuth, requireRole(UserRole.TEACHER, UserRole.ADMIN));
 teacherClassRoutes.get("/live-classes", getTeacherClasses);
 teacherClassRoutes.post("/live-classes", createLiveClass);
@@ -47914,7 +48243,7 @@ teacherClassRoutes.get("/live-classes/:classId/attendance", getClassRoster);
 teacherClassRoutes.put("/live-classes/:classId/attendance", saveClassAttendance);
 
 // apps/api/src/app.ts
-var app = (0, import_express18.default)();
+var app = (0, import_express19.default)();
 app.set("trust proxy", 1);
 app.use((req, res, next) => {
   const matchedPath = req.headers["x-matched-path"] || req.headers["x-original-url"] || req.originalUrl || req.url;
@@ -47959,13 +48288,13 @@ app.use((0, import_cors.default)({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 app.use((0, import_cookie_parser.default)(env.COOKIE_SECRET));
-app.use(import_express18.default.json({ limit: "2mb" }));
-app.use(import_express18.default.urlencoded({ extended: true, limit: "2mb" }));
+app.use(import_express19.default.json({ limit: "2mb" }));
+app.use(import_express19.default.urlencoded({ extended: true, limit: "2mb" }));
 app.use(sanitizeInputs);
 if (!env.isTest) {
   app.use((0, import_morgan.default)("dev"));
 }
-app.use("/uploads", import_express18.default.static(env.UPLOAD_DIR, {
+app.use("/uploads", import_express19.default.static(env.UPLOAD_DIR, {
   setHeaders: (res, filePath) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     if (filePath.endsWith(".html") || filePath.endsWith(".htm") || filePath.endsWith(".svg") || filePath.endsWith(".js")) {
@@ -48030,6 +48359,7 @@ app.use("/api/v1/system", systemRoutes_default);
 app.use("/api/v1/ai", aiRoutes_default);
 app.use("/api/v1/community", communityRoutes_default);
 app.use("/api/v1/payments", paymentRoutes_default);
+app.use("/api/v1/exams", examRoutes_default);
 app.all("/api/*", (req, res) => {
   res.status(404).json({
     success: false,

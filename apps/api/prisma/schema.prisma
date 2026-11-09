@@ -106,6 +106,12 @@ enum StudentRegistrationStatus {
   REJECTED
 }
 
+enum ExamAttemptStatus {
+  IN_PROGRESS
+  NEEDS_REVIEW
+  GRADED
+}
+
 model User {
   id               String    @id @default(uuid())
   email            String    @unique
@@ -146,6 +152,7 @@ model User {
   classAttendance         LiveClassAttendance[] @relation("AttendanceStudent")
   attendanceMarked        LiveClassAttendance[] @relation("AttendanceMarker")
   notificationPreference  NotificationPreference?
+  examAttempts            ExamAttempt[]
 
   @@index([email])
   @@index([role])
@@ -186,6 +193,7 @@ model TeacherProfile {
   batchAssignments      TeacherBatchAssignment[]
   speakingEvaluated     SpeakingAttempt[]        @relation("EvaluatedSpeaking")
   liveClasses           LiveClass[]
+  examsCreated          Exam[]
 }
 
 model Session {
@@ -618,6 +626,59 @@ model TeacherBatch {
   assignments  Assignment[]
   driveAssets  DriveAsset[]
   liveClasses  LiveClass[]
+  exams        Exam[]
+}
+
+model Exam {
+  id               String            @id @default(uuid())
+  teacherProfileId String
+  batchId          String
+  title            String
+  description      String            @db.Text
+  format           String            @default("GOETHE")
+  level            GermanLevel
+  durationMinutes  Int
+  passPercent      Float             @default(60)
+  maxAttempts      Int               @default(1)
+  opensAt          DateTime?
+  closesAt         DateTime?
+  status           PublicationStatus @default(DRAFT)
+  questions        Json
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  teacher  TeacherProfile @relation(fields: [teacherProfileId], references: [id], onDelete: Cascade)
+  batch    TeacherBatch   @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  attempts ExamAttempt[]
+
+  @@index([teacherProfileId])
+  @@index([batchId, status])
+  @@index([opensAt, closesAt])
+}
+
+model ExamAttempt {
+  id              String            @id @default(uuid())
+  examId          String
+  userId          String
+  attemptNumber   Int               @default(1)
+  status          ExamAttemptStatus @default(IN_PROGRESS)
+  startedAt       DateTime          @default(now())
+  expiresAt       DateTime
+  submittedAt     DateTime?
+  answers         Json              @default("{}")
+  manualScores    Json?
+  score           Float?
+  maxScore        Float             @default(0)
+  percentage      Float?
+  passed          Boolean?
+  teacherFeedback String?           @db.Text
+
+  exam Exam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([examId, userId, attemptNumber])
+  @@index([userId, status])
+  @@index([examId, status])
 }
 
 model DriveAsset {

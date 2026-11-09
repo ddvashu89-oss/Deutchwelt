@@ -56,6 +56,7 @@ export function DashboardLayout() {
     { label: 'AI tutor', href: '/student/ai-tutor', icon: Sparkles },
     { label: 'Community Q&A', href: '/student/community', icon: Users },
     { label: 'Speaking lab', href: '/student/speaking', icon: Mic },
+    { label: t('dash.menu.exams'), href: '/student/exams', icon: GraduationCap },
   ];
 
   const teacherMenu = [
@@ -65,6 +66,7 @@ export function DashboardLayout() {
     { label: t('dash.menu.analytics'), href: '/teacher/assignments/new', icon: BarChart2 },
     { label: t('dash.menu.team'), href: '/teacher/batches', icon: Users },
     { label: 'Community Q&A', href: '/teacher/community', icon: Users },
+    { label: t('dash.menu.exams'), href: '/teacher/exams', icon: GraduationCap },
   ];
 
   const adminMenu = [

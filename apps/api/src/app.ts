@@ -30,6 +30,7 @@ import { googleDriveOAuthCallback } from './modules/admin/driveController.js';
 import aiRoutes from './modules/ai/aiRoutes.js';
 import communityRoutes from './modules/community/communityRoutes.js';
 import paymentRoutes from './modules/payments/paymentRoutes.js';
+import examRoutes from './modules/exams/examRoutes.js';
 import { studentClassRoutes, teacherClassRoutes } from './modules/classes/classRoutes.js';
 
 const app = express();
@@ -193,6 +194,7 @@ app.use('/api/v1/system', systemRoutes);
 app.use('/api/v1/ai', aiRoutes);
 app.use('/api/v1/community', communityRoutes);
 app.use('/api/v1/payments', paymentRoutes);
+app.use('/api/v1/exams', examRoutes);
 
 // Catch-all route for unknown API endpoints
 app.all('/api/*', (req, res) => {
