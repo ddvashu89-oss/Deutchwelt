@@ -27,6 +27,15 @@ export function errorHandler(
     return next(err);
   }
 
+  // Keep the known, temporary exam migration gap from surfacing as a generic 500.
+  if (err?.code === 'P2021' && ['Exam', 'ExamAttempt'].includes(err?.meta?.modelName)) {
+    return res.status(503).json({
+      success: false,
+      error: 'The exam service is being set up. Please try again shortly.',
+      code: 'EXAM_SCHEMA_NOT_READY'
+    });
+  }
+
   // Handle Zod validation errors
   if (err instanceof ZodError) {
     return res.status(400).json({

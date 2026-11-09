@@ -16,6 +16,15 @@ try {
 } catch (e) {
   console.warn('[Build Warning] Prisma generate skipped or warning:', e?.message);
 }
+
+// One-time, guarded Production schema sync for changes that only add Prisma models.
+// Leave this disabled by default; do not pass --accept-data-loss.
+if (process.env.VERCEL_ENV === 'production' && process.env.DW_APPLY_EXAM_SCHEMA === '1') {
+  console.log('[Build] Applying the guarded exam schema update to the Production database...');
+  execSync('npx prisma db push --schema apps/api/prisma/schema.prisma', { stdio: 'inherit' });
+  console.log('[Build] Exam schema update completed. Disable DW_APPLY_EXAM_SCHEMA in Vercel.');
+}
+
 execSync('npm --prefix apps/api run build', { stdio: 'inherit' });
 
 // 3. Build Web frontend
