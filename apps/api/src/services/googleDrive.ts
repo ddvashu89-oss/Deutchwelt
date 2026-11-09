@@ -9,6 +9,7 @@ import { AppError } from '../middleware/errorHandler.js';
 const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const DRIVE_API = 'https://www.googleapis.com/drive/v3';
+const DRIVE_UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3';
 const CONNECTION_KEY = 'google_drive_connection_v1';
 const FOLDER_KEY = 'google_drive_folder_v1';
 
@@ -275,7 +276,7 @@ export async function uploadDriveFile(localPath: string, originalName: string, m
   const safeName = path.basename(originalName.replace(/\\/g, '/')).replace(/[\u0000-\u001f]/g, '_');
   const stat = await import('node:fs/promises').then(fs => fs.stat(localPath));
   const token = await getDriveAccessToken();
-  const start = await fetch(`${DRIVE_API}/files?uploadType=resumable&supportsAllDrives=true&fields=id,name,mimeType,size`, {
+  const start = await fetch(`${DRIVE_UPLOAD_API}/files?uploadType=resumable&supportsAllDrives=true&fields=id,name,mimeType,size`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
