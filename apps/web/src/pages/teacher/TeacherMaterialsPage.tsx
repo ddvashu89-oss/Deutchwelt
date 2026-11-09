@@ -22,6 +22,7 @@ import {
   FileCheck,
   UploadCloud,
   FileVideo,
+  Loader2,
   Play,
   X
 } from 'lucide-react';
@@ -552,6 +553,7 @@ export function TeacherMaterialsPage() {
       <Modal
         isOpen={isLectureModalOpen}
         onClose={() => {
+          if (lectureSaving) return;
           resetLectureForm();
           setIsLectureModalOpen(false);
         }}
@@ -695,6 +697,7 @@ export function TeacherMaterialsPage() {
                       </div>
                       <button
                         type="button"
+                        disabled={lectureSaving}
                         onClick={() => {
                           if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
                           setVideoFile(null);
@@ -716,6 +719,18 @@ export function TeacherMaterialsPage() {
                         />
                       </div>
                     )}
+                  </div>
+                )}
+                {lectureSaving && videoFile && (
+                  <div role="status" aria-live="polite" aria-busy="true" className="flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-3 text-blue-900">
+                    <Loader2 className="mt-0.5 h-5 w-5 shrink-0 animate-spin text-blue-700" aria-hidden="true" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold">Uploading lecture to Google Drive…</p>
+                      <p className="mt-1 break-words text-[11px] text-blue-800">{videoFile.name} · This may take a few minutes for large videos. Keep this window open.</p>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-blue-100">
+                        <div className="h-full w-1/3 animate-pulse rounded-full bg-blue-600" />
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -784,6 +799,7 @@ export function TeacherMaterialsPage() {
               variant="outline"
               size="sm"
               type="button"
+              disabled={lectureSaving}
               onClick={() => {
                 resetLectureForm();
                 setIsLectureModalOpen(false);
