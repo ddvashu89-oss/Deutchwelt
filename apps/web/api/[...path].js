@@ -40820,6 +40820,13 @@ function errorHandler(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
   }
+  if (err?.code === "P2021" && ["Exam", "ExamAttempt"].includes(err?.meta?.modelName)) {
+    return res.status(503).json({
+      success: false,
+      error: "The exam service is being set up. Please try again shortly.",
+      code: "EXAM_SCHEMA_NOT_READY"
+    });
+  }
   if (err instanceof ZodError) {
     return res.status(400).json({
       success: false,
