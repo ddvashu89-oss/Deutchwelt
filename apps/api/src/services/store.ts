@@ -10,6 +10,8 @@ export class DataStore {
   teacherProfiles: any[] = [];
   sessions: any[] = [];
   emailVerificationTokens: any[] = [];
+  passwordResetTokens: any[] = [];
+  teacherApplications: any[] = [];
   courses: any[] = [];
   units: any[] = [];
   lessons: any[] = [];

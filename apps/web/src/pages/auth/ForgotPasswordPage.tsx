@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../../lib/api.js';
 import { Logo } from '../../components/brand/Logo.js';
 import { Button } from '../../components/ui/Button.js';
 import { Input } from '../../components/ui/Input.js';
 import { Mail, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext.js';
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -100,12 +101,27 @@ export function ForgotPasswordPage() {
 }
 
 export function ResetPasswordPage() {
+  const { language } = useLanguage();
+  const de = language === 'de';
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || '';
   const [password, setPassword] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(true);
+    setLoading(true);
+    setError('');
+    try {
+      await api.post('/auth/reset-password', { token, password });
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.message || 'Could not update your password. Request a new link.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -115,7 +131,7 @@ export function ResetPasswordPage() {
           <Logo size="lg" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-heading font-black text-gray-950 tracking-tight pt-2">
-          Neues Passwort vergeben
+          {de ? 'Neues Passwort vergeben' : 'Set a new password'}
         </h2>
       </div>
 
@@ -124,29 +140,34 @@ export function ResetPasswordPage() {
           {success ? (
             <div className="text-center space-y-4">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-              <h3 className="text-lg font-bold text-gray-950">Passwort erfolgreich geändert</h3>
-              <p className="text-xs text-gray-500">Sie können sich jetzt mit Ihrem neuen Passwort anmelden.</p>
+              <h3 className="text-lg font-bold text-gray-950">{de ? 'Passwort erfolgreich geändert' : 'Password updated successfully'}</h3>
+              <p className="text-xs text-gray-500">{de ? 'Sie können sich jetzt mit Ihrem neuen Passwort anmelden.' : 'You can now sign in with your new password.'}</p>
               <Link to="/login">
                 <button className="px-6 py-2.5 rounded-full bg-forest-900 text-white text-xs font-bold shadow-md">
-                  Weiter zur Anmeldung
+                  {de ? 'Weiter zur Anmeldung' : 'Continue to sign in'}
                 </button>
               </Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {!token && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{de ? 'Dieser Link fehlt oder ist ungültig. Fordern Sie einen neuen Link an.' : 'This reset link is missing or invalid. Request a new link.'}</p>}
+              {error && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{error}</p>}
               <Input
-                label="Neues Passwort"
+                label={de ? 'Neues Passwort' : 'New password'}
                 type="password"
                 required
-                placeholder="Mindestens 8 Zeichen"
+                minLength={8}
+                autoComplete="new-password"
+                placeholder={de ? 'Mindestens 8 Zeichen' : 'At least 8 characters'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 type="submit"
+                disabled={loading || !token}
                 className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-bold text-sm shadow-md transition-all"
               >
-                Passwort aktualisieren
+                {loading ? (de ? 'Wird aktualisiert…' : 'Updating…') : (de ? 'Passwort aktualisieren' : 'Update password')}
               </button>
             </form>
           )}

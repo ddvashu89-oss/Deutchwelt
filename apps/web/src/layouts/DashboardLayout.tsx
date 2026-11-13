@@ -27,6 +27,7 @@ import {
   Mic,
   PenTool,
   GraduationCap,
+  BriefcaseBusiness,
   FileCheck,
   ShieldCheck,
   Sparkles
@@ -34,7 +35,7 @@ import {
 
 export function DashboardLayout() {
   const { user, logout, isStudent, isTeacher, isAdmin } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,6 +82,7 @@ export function DashboardLayout() {
     { label: 'Audit logs', href: '/admin/audit-logs', icon: ShieldCheck },
     { label: 'Students', href: '/admin/students', icon: Users },
     { label: 'Teachers', href: '/admin/teachers', icon: GraduationCap },
+    { label: language === 'de' ? 'Lehrkraft-Bewerbungen' : 'Teacher applications', href: '/admin/teacher-applications', icon: BriefcaseBusiness },
   ];
 
   const generalMenu = [

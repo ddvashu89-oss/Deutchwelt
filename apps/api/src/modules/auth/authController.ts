@@ -435,14 +435,34 @@ export async function forgotPassword(req: Request, res: Response, next: NextFunc
     // Generic response to prevent account enumeration
     const message = 'If an account exists with this email address, password reset instructions have been issued.';
 
-    if (env.isDev) {
-      console.log(`[Dev Password Reset] Token for ${normalizedEmail}: ${resetToken}`);
+    let user: any;
+    if (isDatabaseConnected) {
+      user = await prisma.user.findUnique({ where: { email: normalizedEmail }, select: { id: true, email: true } });
+      if (user) {
+        await prisma.passwordResetToken.updateMany({ where: { userId: user.id, usedAt: null }, data: { usedAt: new Date() } });
+        await prisma.passwordResetToken.create({ data: { userId: user.id, tokenHash: hashVerificationToken(resetToken), expiresAt } });
+      }
+    } else {
+      user = store.users.find((item: any) => item.email === normalizedEmail);
+      if (user) {
+        store.passwordResetTokens = store.passwordResetTokens.filter((item: any) => item.userId !== user.id || item.usedAt);
+        store.passwordResetTokens.push({ id: `reset-${Date.now()}`, userId: user.id, tokenHash: hashVerificationToken(resetToken), expiresAt, usedAt: null, createdAt: new Date() });
+      }
+    }
+
+    if (user) {
+      try {
+        const resetUrl = `${env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(resetToken)}`;
+        await sendTransactionalEmail(user.email, 'Set or reset your DeutschWelt password', 'Choose a new password', 'Use this secure link within one hour to set your DeutschWelt password.', 'Set password', resetUrl);
+      } catch (error) {
+        console.error('[Password Reset] Delivery failed:', error);
+      }
     }
 
     return res.json({
       success: true,
       message,
-      ...(env.isDev ? { devResetToken: resetToken } : {})
+      ...(env.isDev && user ? { devResetToken: resetToken } : {})
     });
   } catch (error) {
     next(error);
@@ -452,7 +472,34 @@ export async function forgotPassword(req: Request, res: Response, next: NextFunc
 export async function resetPassword(req: Request, res: Response, next: NextFunction) {
   try {
     const { token, password } = req.body;
-    // Password reset processing
+    const tokenHash = hashVerificationToken(token);
+    const now = new Date();
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    if (isDatabaseConnected) {
+      const reset = await prisma.$transaction(async tx => {
+        const record = await tx.passwordResetToken.findUnique({ where: { tokenHash } });
+        if (!record || record.usedAt || record.expiresAt <= now) return null;
+        const consumed = await tx.passwordResetToken.updateMany({
+          where: { id: record.id, usedAt: null, expiresAt: { gt: now } },
+          data: { usedAt: now }
+        });
+        if (!consumed.count) return null;
+        await tx.user.update({ where: { id: record.userId }, data: { passwordHash } });
+        await tx.session.deleteMany({ where: { userId: record.userId } });
+        return true;
+      });
+      if (!reset) return next(new AppError('This password link is invalid or expired. Request a new one.', 400, 'RESET_TOKEN_INVALID'));
+    } else {
+      const record = store.passwordResetTokens.find((item: any) => item.tokenHash === tokenHash && !item.usedAt && new Date(item.expiresAt) > now);
+      if (!record) return next(new AppError('This password link is invalid or expired. Request a new one.', 400, 'RESET_TOKEN_INVALID'));
+      const user = store.users.find((item: any) => item.id === record.userId);
+      if (!user) return next(new AppError('This password link is invalid or expired. Request a new one.', 400, 'RESET_TOKEN_INVALID'));
+      user.passwordHash = passwordHash;
+      user.updatedAt = now.toISOString();
+      record.usedAt = now;
+      store.sessions = store.sessions.filter((session: any) => session.userId !== user.id);
+    }
     return res.json({
       success: true,
       message: 'Your password has been successfully reset. You can now log in with your new credentials.'

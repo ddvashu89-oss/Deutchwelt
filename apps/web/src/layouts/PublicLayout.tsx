@@ -19,7 +19,7 @@ import {
 
 export function PublicLayout() {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -27,7 +27,8 @@ export function PublicLayout() {
     { href: '/courses', label: t('nav.courses') },
     { href: '/vocabulary', label: t('nav.vocabulary') },
     { href: '/about', label: t('nav.about') },
-    { href: '/contact', label: t('nav.contact') }
+    { href: '/contact', label: t('nav.contact') },
+    { href: '/teach/apply', label: language === 'de' ? 'Als Lehrkraft bewerben' : 'Teach with us' }
   ];
 
   const getDashboardLink = () => {

@@ -5,3 +5,4 @@ export * from './speaking.js';
 export * from './assignment.js';
 export * from './enquiry.js';
 export * from './vocabulary.js';
+export * from './teacherApplication.js';

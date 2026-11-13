@@ -32,6 +32,7 @@ import communityRoutes from './modules/community/communityRoutes.js';
 import paymentRoutes from './modules/payments/paymentRoutes.js';
 import examRoutes from './modules/exams/examRoutes.js';
 import { studentClassRoutes, teacherClassRoutes } from './modules/classes/classRoutes.js';
+import teacherApplicationRoutes from './modules/teacherApplications/teacherApplicationRoutes.js';
 
 const app = express();
 
@@ -190,6 +191,7 @@ app.get('/api/v1/admin/drive/callback', googleDriveOAuthCallback);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/files', fileRoutes);
 app.use('/api/v1/enquiries', enquiryRoutes);
+app.use('/api/v1/teacher-applications', teacherApplicationRoutes);
 app.use('/api/v1/system', systemRoutes);
 app.use('/api/v1/ai', aiRoutes);
 app.use('/api/v1/community', communityRoutes);

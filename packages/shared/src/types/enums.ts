@@ -11,6 +11,25 @@ export enum StudentRegistrationStatus {
   REJECTED = 'REJECTED'
 }
 
+export enum TeacherApplicationStatus {
+  SUBMITTED = 'SUBMITTED',
+  IN_REVIEW = 'IN_REVIEW',
+  INTERVIEW_SCHEDULED = 'INTERVIEW_SCHEDULED',
+  INTERVIEWED = 'INTERVIEWED',
+  HIRED = 'HIRED',
+  DECLINED = 'DECLINED'
+}
+
+export enum GermanProficiency {
+  A1 = 'A1',
+  A2 = 'A2',
+  B1 = 'B1',
+  B2 = 'B2',
+  C1 = 'C1',
+  C2 = 'C2',
+  NATIVE = 'NATIVE'
+}
+
 export enum GermanLevel {
   BEGINNER = 'BEGINNER',
   A1 = 'A1',

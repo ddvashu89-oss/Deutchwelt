@@ -40,6 +40,15 @@ import {
   getGoogleDriveStatus,
   saveGoogleDriveFolder
 } from './driveController.js';
+import {
+  decideTeacherApplication,
+  downloadTeacherApplicationDocument,
+  getTeacherApplication,
+  listTeacherApplications,
+  resendTeacherInvitation,
+  scheduleTeacherInterview,
+  updateTeacherApplication
+} from '../teacherApplications/teacherApplicationController.js';
 
 const router = Router();
 
@@ -63,6 +72,13 @@ router.put('/teachers/:teacherId', updateTeacher);
 router.delete('/teachers/:teacherId', deleteTeacher);
 router.post('/teachers/:teacherId/batches', assignTeacherToBatch);
 router.delete('/teachers/:teacherId/batches/:batchId', unassignTeacherFromBatch);
+router.get('/teacher-applications', listTeacherApplications);
+router.get('/teacher-applications/:applicationId/documents/:documentType/:index?', downloadTeacherApplicationDocument);
+router.get('/teacher-applications/:applicationId', getTeacherApplication);
+router.patch('/teacher-applications/:applicationId', updateTeacherApplication);
+router.post('/teacher-applications/:applicationId/interview', scheduleTeacherInterview);
+router.post('/teacher-applications/:applicationId/decision', decideTeacherApplication);
+router.post('/teacher-applications/:applicationId/invite', resendTeacherInvitation);
 
 // Courses CRUD
 router.get('/courses', getAdminCourses);

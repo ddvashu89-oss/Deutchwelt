@@ -106,6 +106,25 @@ enum StudentRegistrationStatus {
   REJECTED
 }
 
+enum TeacherApplicationStatus {
+  SUBMITTED
+  IN_REVIEW
+  INTERVIEW_SCHEDULED
+  INTERVIEWED
+  HIRED
+  DECLINED
+}
+
+enum GermanProficiency {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+  NATIVE
+}
+
 enum ExamAttemptStatus {
   IN_PROGRESS
   NEEDS_REVIEW
@@ -153,6 +172,7 @@ model User {
   attendanceMarked        LiveClassAttendance[] @relation("AttendanceMarker")
   notificationPreference  NotificationPreference?
   examAttempts            ExamAttempt[]
+  hiredTeacherApplication TeacherApplication? @relation("HiredTeacherApplication")
 
   @@index([email])
   @@index([role])
@@ -194,6 +214,40 @@ model TeacherProfile {
   speakingEvaluated     SpeakingAttempt[]        @relation("EvaluatedSpeaking")
   liveClasses           LiveClass[]
   examsCreated          Exam[]
+}
+
+model TeacherApplication {
+  id                    String                   @id @default(uuid())
+  firstName             String
+  lastName              String
+  email                 String
+  phone                 String?
+  germanProficiency     GermanProficiency
+  teachingExperienceYears Int
+  qualifications        String                   @db.Text
+  specialization        String                   @db.Text
+  availability          String                   @db.Text
+  motivation            String                   @db.Text
+  preferredLanguage     String                   @default("en")
+  privacyConsentAt      DateTime?
+  documents             Json
+  status                TeacherApplicationStatus @default(SUBMITTED)
+  adminNotes            String?                  @db.Text
+  interviewAt           DateTime?
+  interviewTimezone     String?
+  interviewLocation     String?                  @db.Text
+  interviewNotes        String?                  @db.Text
+  decisionNote          String?                  @db.Text
+  reviewedById          String?
+  teacherUserId         String?                  @unique
+  invitationSentAt      DateTime?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+
+  teacherUser User? @relation("HiredTeacherApplication", fields: [teacherUserId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([email, status])
 }
 
 model Session {

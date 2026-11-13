@@ -56,6 +56,8 @@ import { AdminCoursesPage } from './pages/admin/AdminCoursesPage.js';
 import { AdminEnquiriesPage } from './pages/admin/AdminEnquiriesPage.js';
 import { AdminSettingsPage, AdminAuditLogsPage } from './pages/admin/AdminSettingsPage.js';
 import { StudentRegistrationPage, VerifyEmailPage } from './pages/auth/StudentRegistrationPage.js';
+import { TeacherApplicationPage } from './pages/public/TeacherApplicationPage.js';
+import { AdminTeacherApplicationsPage } from './pages/admin/AdminTeacherApplicationsPage.js';
 
 const queryClient = new QueryClient();
 
@@ -118,6 +120,7 @@ export function App() {
                   <Route path="/vocabulary" element={<VocabularyTrainerPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/teach/apply" element={<TeacherApplicationPage />} />
                   <Route path="/faq" element={<FAQPage />} />
                   <Route path="/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/terms" element={<TermsOfServicePage />} />
@@ -200,6 +203,7 @@ export function App() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="students" element={<AdminStudentsPage />} />
               <Route path="teachers" element={<AdminTeachersPage />} />
+              <Route path="teacher-applications" element={<AdminTeacherApplicationsPage />} />
               <Route path="courses" element={<AdminCoursesPage />} />
               <Route path="enquiries" element={<AdminEnquiriesPage />} />
               <Route path="settings" element={<AdminSettingsPage />} />

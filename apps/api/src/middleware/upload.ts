@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'node:os';
 import { env } from '../config/env.js';
 import { AppError } from './errorHandler.js';
 
@@ -143,3 +144,33 @@ export const uploadMaterial = multer({
     cb(new AppError(`File format (${ext || file.mimetype}) is not permitted. Please upload a PDF, Word, PowerPoint, Excel, or Text document.`, 400));
   }
 });
+
+// Candidate CVs/certificates are written to a private temporary directory and
+// immediately moved to Drive after submission; this directory is never served
+// by the public /uploads static route.
+const applicationTempDir = path.join(os.tmpdir(), 'deutschwelt-teacher-applications');
+try { fs.mkdirSync(applicationTempDir, { recursive: true }); } catch (error) {
+  console.warn('[Application Upload] Could not prepare temporary directory:', error);
+}
+const applicationStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, applicationTempDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `application-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`);
+  }
+});
+const applicationExtensions = new Set(['.pdf', '.doc', '.docx', '.odt', '.jpg', '.jpeg', '.png']);
+export const uploadApplicationDocuments = multer({
+  storage: applicationStorage,
+  limits: { fileSize: 5 * 1024 * 1024, files: 4 },
+  fileFilter: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const allowedMime = file.mimetype === 'application/pdf' ||
+      file.mimetype === 'application/msword' ||
+      file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      file.mimetype === 'application/vnd.oasis.opendocument.text' ||
+      ['image/jpeg', 'image/png'].includes(file.mimetype);
+    if (applicationExtensions.has(ext) && allowedMime) return cb(null, true);
+    cb(new AppError('Upload a PDF, Word document, ODT, JPG, or PNG file.', 400));
+  }
+}).fields([{ name: 'cv', maxCount: 1 }, { name: 'certificates', maxCount: 3 }]);
