@@ -4,7 +4,7 @@ import { Badge } from '../../components/ui/Badge.js';
 import { Button } from '../../components/ui/Button.js';
 import { Skeleton } from '../../components/ui/Skeleton.js';
 import { useLanguage } from '../../context/LanguageContext.js';
-import { AlarmClock, ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, Clock3, GraduationCap, Headphones, Play, Send } from 'lucide-react';
+import { AlarmClock, ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, Clock3, GraduationCap, Headphones, Play, Send, ShieldCheck } from 'lucide-react';
 
 function remainingTime(expiresAt: string) {
   return Math.max(0, Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 1000));
@@ -28,7 +28,10 @@ export function StudentExamsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<any | null>(null);
   const [readyExam, setReadyExam] = useState<any | null>(null);
+  const [confirmSubmit, setConfirmSubmit] = useState(false);
+  const [timeExpiredNotice, setTimeExpiredNotice] = useState(false);
   const submittingRef = useRef(false);
+  const expiredRef = useRef(false);
 
   const loadExams = useCallback(async () => {
     try { setLoading(true); const response: any = await api.get('/exams'); setExams(response.exams || []); }
@@ -39,8 +42,21 @@ export function StudentExamsPage() {
   useEffect(() => { loadExams(); }, [loadExams]);
 
   const questions: any[] = activeExam?.questions || [];
-  const sections = useMemo(() => [...new Set(questions.map(question => question.section))], [questions]);
+  const sections = useMemo(() => {
+    const grouped = new Map<string, number[]>();
+    questions.forEach((item, index) => {
+      const indexes = grouped.get(item.section) || [];
+      indexes.push(index);
+      grouped.set(item.section, indexes);
+    });
+    return [...grouped.entries()].map(([key, indexes]) => ({ key, indexes }));
+  }, [questions]);
   const question = questions[currentQuestion];
+  const currentSectionIndex = Math.max(0, sections.findIndex(section => section.key === question?.section));
+  const currentSection = sections[currentSectionIndex];
+  const isAnswered = (questionId: string) => String(answers[questionId] ?? '').trim().length > 0;
+  const answeredCount = questions.filter(item => isAnswered(item.id)).length;
+  const unansweredCount = questions.length - answeredCount;
   const questionLabel = (key: string) => t(({ LISTENING: 'exam.listening', READING: 'exam.reading', WRITING: 'exam.writing', SPEAKING: 'exam.speaking', LANGUAGE_USE: 'exam.languageUse', MULTIPLE_CHOICE: 'exam.multipleChoice', SHORT_ANSWER: 'exam.shortAnswer' } as Record<string, string>)[key] || key);
 
   const openAttempt = async (attemptId: string) => {
@@ -48,7 +64,11 @@ export function StudentExamsPage() {
       setError('');
       const data: any = await api.get(`/exams/attempts/${attemptId}`);
       setAttempt(data.attempt); setActiveExam(data.attempt.status === 'IN_PROGRESS' ? data.exam : null); setAnswers(data.attempt.answers || {});
-      setCurrentQuestion(0); setSecondsLeft(remainingTime(data.attempt.expiresAt)); setResult(data.attempt.status === 'IN_PROGRESS' ? null : data.attempt);
+      const restoredQuestions: any[] = data.exam?.questions || [];
+      const restoredAnswers: Record<string, string> = data.attempt.answers || {};
+      const firstUnanswered = restoredQuestions.findIndex(item => !String(restoredAnswers[item.id] ?? '').trim());
+      setCurrentQuestion(firstUnanswered >= 0 ? firstUnanswered : 0); setSecondsLeft(remainingTime(data.attempt.expiresAt)); setResult(data.attempt.status === 'IN_PROGRESS' ? null : data.attempt);
+      setTimeExpiredNotice(false); expiredRef.current = false;
       if (data.attempt.status !== 'IN_PROGRESS') await loadExams();
     } catch (e: any) { setError(e.message || 'Could not open this exam attempt.'); await loadExams(); }
   };
@@ -63,14 +83,15 @@ export function StudentExamsPage() {
 
   const submitExam = useCallback(async (auto = false) => {
     if (!attempt || submittingRef.current) return;
-    submittingRef.current = true; setSubmitting(true); setError('');
+    submittingRef.current = true; setSubmitting(true); setError(''); setConfirmSubmit(false);
     try {
-      setSaving(true);
-      await api.put(`/exams/attempts/${attempt.id}/answers`, { answers });
-      setSaving(false);
+      if (!auto) {
+        setSaving(true);
+        await api.put(`/exams/attempts/${attempt.id}/answers`, { answers });
+        setSaving(false);
+      }
       const data: any = await api.post(`/exams/attempts/${attempt.id}/submit`);
       setAttempt(data.attempt); setResult(data.attempt); setActiveExam(null);
-      if (auto) setError('');
       await loadExams();
     } catch (e: any) {
       setError(e.message || 'Could not submit the exam.');
@@ -78,14 +99,14 @@ export function StudentExamsPage() {
         try { const latest: any = await api.get(`/exams/attempts/${attempt.id}`); setAttempt(latest.attempt); if (latest.attempt.status !== 'IN_PROGRESS') { setResult(latest.attempt); setActiveExam(null); await loadExams(); return; } } catch { /* Preserve the initial error. */ }
       }
     } finally { setSaving(false); setSubmitting(false); submittingRef.current = false; }
-  }, [attempt, answers, loadExams, t]);
+  }, [attempt, answers, loadExams]);
 
   useEffect(() => {
     if (!attempt || !activeExam) return;
     const timer = window.setInterval(() => {
       const left = remainingTime(attempt.expiresAt);
       setSecondsLeft(left);
-      if (left === 0) void submitExam(true);
+      if (left === 0 && !expiredRef.current) { expiredRef.current = true; setTimeExpiredNotice(true); void submitExam(true); }
     }, 1000);
     return () => window.clearInterval(timer);
   }, [attempt, activeExam, submitExam]);
@@ -106,29 +127,52 @@ export function StudentExamsPage() {
   if (loading && !activeExam && !result) return <Skeleton className="h-96 w-full rounded-3xl" />;
 
   if (activeExam && attempt && attempt.status === 'IN_PROGRESS') {
-    const groupCount = questions.filter(item => item.section === question?.section).length;
-    const groupPosition = questions.slice(0, currentQuestion + 1).filter(item => item.section === question?.section).length;
-    return <main className="mx-auto max-w-5xl space-y-5 pb-16">
-      <header className="sticky top-0 z-20 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 bg-[#f7f6f2]/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:rounded-2xl sm:border sm:bg-white sm:p-4">
-        <div><p className="text-xs font-bold uppercase tracking-wider text-rose-700">{activeExam.format} · {activeExam.level} · {questionLabel(question?.section || '')}</p><h1 className="mt-0.5 text-base font-bold text-navy sm:text-lg">{activeExam.title}</h1></div>
-        <div role="timer" aria-live="off" className={`flex items-center gap-2 rounded-xl px-3 py-2 font-mono text-lg font-black tabular-nums ${secondsLeft <= 300 ? 'bg-red-100 text-red-800' : 'bg-navy text-white'}`}><AlarmClock className="h-4 w-4" />{formatTime(secondsLeft)}</div>
+    const sectionQuestionIndexes = currentSection?.indexes || [];
+    const sectionPosition = sectionQuestionIndexes.indexOf(currentQuestion);
+    const sectionAnswered = sectionQuestionIndexes.filter(index => isAnswered(questions[index].id)).length;
+    const saveLabel = saving ? t('exam.saving') : saved ? t('exam.saved') : t('exam.unsaved');
+    const openQuestion = (index: number) => { setCurrentQuestion(index); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    const requestSubmit = () => setConfirmSubmit(true);
+    return <main className="mx-auto max-w-7xl space-y-4 pb-16 sm:space-y-5">
+      <header className="sticky top-0 z-30 -mx-4 border-b border-white/10 bg-[#10243b] px-4 py-3 text-white shadow-lg sm:mx-0 sm:rounded-2xl sm:border sm:px-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[.18em] text-white/60">{activeExam.format} · {activeExam.level} · {questionLabel(question?.section || '')}</p><h1 className="truncate text-sm font-bold sm:text-base">{activeExam.title}</h1></div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="hidden items-center gap-1.5 text-xs text-white/75 sm:inline-flex"><ShieldCheck className="h-4 w-4" />{saveLabel}</span>
+            <div role="timer" aria-label={`${t('exam.timeRemaining')}: ${formatTime(secondsLeft)}`} aria-live="off" className={`flex items-center gap-2 rounded-xl px-3 py-2 font-mono text-lg font-black tabular-nums ${secondsLeft <= 300 ? 'bg-red-500 text-white animate-pulse' : 'bg-white/10 text-white'}`}><AlarmClock className="h-4 w-4" />{formatTime(secondsLeft)}</div>
+            <Button type="button" size="sm" variant="danger" isLoading={submitting} onClick={requestSubmit}><Send className="mr-1 h-4 w-4" /><span className="hidden sm:inline">{t('exam.submit')}</span><span className="sm:hidden">{t('exam.submitShort')}</span></Button>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center gap-3"><div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/15"><div className="h-full rounded-full bg-emerald-400 transition-all" style={{ width: `${questions.length ? answeredCount / questions.length * 100 : 0}%` }} /></div><span className="shrink-0 text-[11px] font-semibold text-white/75">{answeredCount}/{questions.length} {t('exam.answered')}</span><span className="text-[11px] text-white/60 sm:hidden">{saveLabel}</span></div>
       </header>
-      {error && <p role="alert" className="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">{error}</p>}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-dark-muted"><p>{t('exam.saveStatus')} · {saving ? '…' : saved ? '✓' : '…'}</p><p>{t('exam.section')}: {groupPosition} {t('exam.of')} {groupCount}</p></div>
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px]">
-        <section className="min-w-0 rounded-3xl border border-gray-200 bg-white p-5 shadow-subtle sm:p-8">
+      {(error || timeExpiredNotice) && <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">{timeExpiredNotice ? t('exam.timeExpired') : error}</p>}
+      <nav aria-label={t('exam.examSections')} className="-mx-4 flex gap-2 overflow-x-auto border-b border-gray-200 bg-white px-4 py-2 sm:mx-0 sm:rounded-2xl sm:border sm:p-2">
+        {sections.map((section, index) => {
+          const count = section.indexes.filter(questionIndex => isAnswered(questions[questionIndex].id)).length;
+          const active = index === currentSectionIndex;
+          return <button key={section.key} type="button" aria-current={active ? 'step' : undefined} onClick={() => openQuestion(section.indexes[0])} className={`flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-left transition ${active ? 'bg-[#10243b] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}`}><span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black ${active ? 'bg-white/15' : count === section.indexes.length ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>{index + 1}</span><span className="text-xs font-bold sm:text-sm">{questionLabel(section.key)}</span><span className={`text-[10px] ${active ? 'text-white/70' : 'text-gray-400'}`}>{count}/{section.indexes.length}</span></button>;
+        })}
+      </nav>
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_260px]">
+        <section className="min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-subtle">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 bg-[#fbfaf7] px-5 py-4 sm:px-7"><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-rose-700">{questionLabel(question?.section || '')} · {t('exam.part')} {currentSectionIndex + 1}</p><p className="mt-1 text-xs text-dark-muted">{t('exam.question')} {sectionPosition + 1} {t('exam.of')} {sectionQuestionIndexes.length} · {sectionAnswered} {t('exam.answered')}</p></div><span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-bold text-gray-600">{question?.points} {t('exam.points').toLowerCase()}</span></div>
+          <div className="p-5 sm:p-8">
           {question?.passage && <div className="mb-6 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-2xl bg-amber-50 p-4 text-sm leading-relaxed text-gray-800">{question.passage}</div>}
-          {question?.audioUrl && <div className="mb-6 flex items-center gap-3 rounded-2xl bg-blue-50 p-4"><Headphones className="h-5 w-5 shrink-0 text-blue-800"/><audio controls preload="none" src={question.audioUrl} className="w-full" /></div>}
-          <div className="mb-2 flex flex-wrap items-center gap-2"><Badge variant="outline">{questionLabel(question?.section)}</Badge><Badge variant="secondary">{question?.points} {t('exam.points').toLowerCase()}</Badge><span className="ml-auto text-xs font-semibold text-dark-muted">{t('exam.question')} {currentQuestion + 1} / {questions.length}</span></div>
+          {question?.audioUrl && <div className="mb-6 rounded-2xl border border-blue-100 bg-blue-50 p-4"><div className="mb-3 flex items-center gap-2 text-xs font-bold text-blue-900"><Headphones className="h-4 w-4" />{t('exam.listening')}</div><audio controls preload="none" src={question.audioUrl} className="w-full" /></div>}
           <h2 className="text-xl font-bold leading-snug text-navy sm:text-2xl">{question?.prompt}</h2>
           {question?.instructions && <p className="mt-3 whitespace-pre-wrap text-sm text-dark-muted">{question.instructions}</p>}
           <div className="mt-6">
             {question?.type === 'MULTIPLE_CHOICE' ? <div role="radiogroup" aria-label={question.prompt} className="grid gap-3">{(question.options || []).map((option: string, index: number) => <label key={`${index}-${option}`} className={`flex min-h-14 cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm transition-colors ${answers[question.id] === option ? 'border-navy bg-blue-50 ring-1 ring-navy' : 'border-gray-200 hover:bg-gray-50'}`}><input type="radio" name={question.id} value={option} checked={answers[question.id] === option} onChange={() => changeAnswer(question.id, option)} className="mt-0.5 h-4 w-4 accent-[#14243a]"/><span className="font-semibold">{String.fromCharCode(65 + index)}.</span><span className="min-w-0 flex-1">{option}</span></label>)}</div> : <div className="space-y-2"><label htmlFor="exam-response" className="text-xs font-bold uppercase tracking-wider text-dark-muted">{questionLabel(question?.type)}</label><textarea id="exam-response" value={answers[question?.id] || ''} onChange={event => changeAnswer(question.id, event.target.value)} maxLength={12000} rows={question?.type === 'WRITING' || question?.type === 'SPEAKING' ? 12 : 3} placeholder={question?.type === 'SPEAKING' ? t('exam.speakingTranscript') : ''} className="w-full rounded-2xl border border-gray-300 p-4 text-base leading-relaxed outline-none focus:border-navy focus:ring-2 focus:ring-navy/20"/><p className="text-right text-[11px] text-gray-400">{(answers[question?.id] || '').length}/12000</p></div>}
           </div>
-          <div className="mt-8 flex items-center justify-between gap-3 border-t border-gray-100 pt-5"><Button type="button" variant="outline" disabled={currentQuestion === 0} onClick={() => setCurrentQuestion(index => Math.max(0, index - 1))}><ArrowLeft className="mr-1 h-4 w-4"/>{t('exam.previous')}</Button>{currentQuestion < questions.length - 1 ? <Button type="button" onClick={() => setCurrentQuestion(index => Math.min(questions.length - 1, index + 1))}>{t('exam.next')}<ArrowRight className="ml-1 h-4 w-4"/></Button> : <Button type="button" variant="danger" isLoading={submitting} onClick={() => { if (window.confirm(t('exam.closeConfirm'))) void submitExam(); }}><Send className="mr-1 h-4 w-4"/>{t('exam.submit')}</Button>}</div>
+          <div className="mt-8 flex items-center justify-between gap-3 border-t border-gray-100 pt-5"><Button type="button" variant="outline" disabled={sectionPosition <= 0} onClick={() => openQuestion(sectionQuestionIndexes[Math.max(0, sectionPosition - 1)])}><ArrowLeft className="mr-1 h-4 w-4"/>{t('exam.previous')}</Button>{sectionPosition < sectionQuestionIndexes.length - 1 ? <Button type="button" onClick={() => openQuestion(sectionQuestionIndexes[sectionPosition + 1])}>{t('exam.next')}<ArrowRight className="ml-1 h-4 w-4"/></Button> : currentSectionIndex < sections.length - 1 ? <Button type="button" onClick={() => openQuestion(sections[currentSectionIndex + 1].indexes[0])}>{t('exam.nextSection')}<ArrowRight className="ml-1 h-4 w-4"/></Button> : <Button type="button" variant="danger" isLoading={submitting} onClick={requestSubmit}><Send className="mr-1 h-4 w-4"/>{t('exam.reviewSubmit')}</Button>}</div>
+          </div>
         </section>
-        <aside className="space-y-3"><div className="rounded-2xl border border-gray-200 bg-white p-4"><p className="mb-3 text-xs font-bold uppercase tracking-wider text-dark-muted">{t('exam.question')} {currentQuestion + 1}/{questions.length}</p><div className="grid grid-cols-5 gap-2 sm:grid-cols-6 lg:grid-cols-4">{questions.map((item, index) => <button type="button" key={item.id} onClick={() => setCurrentQuestion(index)} aria-label={`${t('exam.question')} ${index + 1}`} className={`flex h-10 w-10 items-center justify-center rounded-lg text-xs font-bold ${index === currentQuestion ? 'bg-navy text-white' : answers[item.id] ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>{index + 1}</button>)}</div><p className="mt-3 text-[11px] text-dark-muted">{t('exam.saveStatus')}.</p></div><Button type="button" variant="danger" className="w-full" isLoading={submitting} onClick={() => { if (window.confirm(t('exam.closeConfirm'))) void submitExam(); }}>{t('exam.submit')}</Button></aside>
+        <aside className="space-y-3 lg:sticky lg:top-32"><div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"><div className="mb-3 flex items-center justify-between gap-2"><div><p className="text-[10px] font-bold uppercase tracking-wider text-dark-muted">{t('exam.sectionQuestions')}</p><p className="mt-0.5 text-sm font-bold text-navy">{questionLabel(currentSection?.key || '')}</p></div><span className="text-xs font-bold text-dark-muted">{sectionAnswered}/{sectionQuestionIndexes.length}</span></div><div className="grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-5">{sectionQuestionIndexes.map((index, localIndex) => { const item = questions[index]; const answered = isAnswered(item.id); return <button type="button" key={item.id} onClick={() => openQuestion(index)} aria-label={`${t('exam.question')} ${localIndex + 1}${answered ? `, ${t('exam.answered')}` : `, ${t('exam.unanswered')}`}`} aria-current={index === currentQuestion ? 'true' : undefined} className={`flex aspect-square min-h-10 items-center justify-center rounded-xl text-xs font-black transition ${index === currentQuestion ? 'bg-navy text-white ring-2 ring-navy ring-offset-2' : answered ? 'bg-emerald-100 text-emerald-900 hover:bg-emerald-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{localIndex + 1}</button>; })}</div><div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-dark-muted"><span>● {t('exam.answered')}</span><span>○ {t('exam.unanswered')}</span></div></div>
+          <div className="rounded-2xl border border-gray-200 bg-white p-4 text-xs text-dark-muted"><p className="font-bold text-navy">{saveLabel}</p><p className="mt-1">{t('exam.rulesDetails')}</p></div>
+          <Button type="button" variant="danger" className="w-full" isLoading={submitting} onClick={requestSubmit}><Send className="mr-2 h-4 w-4" />{t('exam.submit')}</Button>
+        </aside>
       </div>
+      {confirmSubmit && <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#0b1726]/65 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setConfirmSubmit(false); }}><section role="dialog" aria-modal="true" aria-labelledby="exam-submit-title" className="w-full max-w-lg rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl sm:p-7"><div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-800 sm:mx-0"><ClipboardCheck className="h-6 w-6" /></div><h2 id="exam-submit-title" className="text-xl font-black text-navy">{t('exam.submitConfirmTitle')}</h2><p className="mt-2 text-sm leading-relaxed text-dark-muted">{unansweredCount ? t('exam.submitUnanswered').replace('{count}', String(unansweredCount)) : t('exam.submitConfirmBody')}</p><div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><Button type="button" variant="outline" onClick={() => setConfirmSubmit(false)}>{t('exam.continueExam')}</Button><Button type="button" variant="danger" isLoading={submitting} onClick={() => void submitExam()}><Send className="mr-2 h-4 w-4" />{t('exam.submit')}</Button></div></section></div>}
     </main>;
   }
 
