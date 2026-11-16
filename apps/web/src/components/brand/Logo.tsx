@@ -37,7 +37,7 @@ export function Logo({
     <div className={cn('relative inline-flex items-center justify-center select-none', className)}>
       <img
         src="/logo-icon.png"
-        alt="DeutschWelt Coaching"
+        alt="DeutschWelts"
         className={cn('object-contain transition-transform group-hover:scale-105', iconSizes[size])}
         loading="eager"
       />
@@ -46,7 +46,7 @@ export function Logo({
     <div className={cn('inline-flex flex-col items-start select-none group', className)}>
       <img
         src="/logo-transparent.png"
-        alt="DeutschWelt Coaching Logo"
+        alt="DeutschWelts Logo"
         className={cn('w-auto object-contain transition-transform group-hover:scale-[1.02]', heightClasses[size])}
         loading="eager"
       />
@@ -63,7 +63,7 @@ export function Logo({
   }
 
   return (
-    <Link to="/" className="inline-flex items-center outline-none focus:outline-none" aria-label="DeutschWelt Coaching Home">
+    <Link to="/" className="inline-flex items-center outline-none focus:outline-none" aria-label="DeutschWelts Home">
       {content}
     </Link>
   );
