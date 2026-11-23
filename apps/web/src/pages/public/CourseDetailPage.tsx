@@ -145,7 +145,7 @@ export function CourseDetailPage() {
         )}
 
         {/* Payment Sandbox / Testing Provision Alert */}
-        <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {isSandbox && <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
             <span>
@@ -155,7 +155,7 @@ export function CourseDetailPage() {
           <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0 self-start sm:self-auto border border-amber-200">
             Sandbox Aktiv
           </span>
-        </div>
+        </div>}
 
         {/* Action Button */}
         <div className="pt-4 border-t border-gray-100 flex flex-wrap items-center gap-4">

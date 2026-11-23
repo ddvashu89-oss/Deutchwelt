@@ -70,7 +70,7 @@ export function CoursesPage() {
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-gray-200/80">
         <span className="text-xs font-bold uppercase text-gray-400 mr-2 flex items-center gap-1 shrink-0">
-          <Filter className="w-3.5 h-3.5" /> Filter:
+          <Filter className="w-3.5 h-3.5" /> {t('courses.filter.label')}:
         </span>
         {['ALL', 'A1', 'A2', 'B1', 'B2'].map((lvl) => (
           <button
@@ -82,7 +82,7 @@ export function CoursesPage() {
                 : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:text-gray-950'
             }`}
           >
-            {lvl === 'ALL' ? 'Alle Niveaus (A1–B2)' : `Niveau ${lvl}`}
+            {lvl === 'ALL' ? t('courses.filter.all') : `${t('courses.level')} ${lvl}`}
           </button>
         ))}
       </div>
@@ -102,8 +102,8 @@ export function CoursesPage() {
       ) : courses.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-3xl border border-gray-200/80 shadow-xs">
           <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-gray-950">Keine Kurse gefunden</h3>
-          <p className="text-xs text-gray-500 mt-1">Bitte wählen Sie einen anderen Filter.</p>
+          <h3 className="text-lg font-bold text-gray-950">{t('courses.empty.title')}</h3>
+          <p className="text-xs text-gray-500 mt-1">{t('courses.empty.description')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -118,7 +118,7 @@ export function CoursesPage() {
                     {course.level}
                   </span>
                   <span className="text-xs font-semibold text-gray-500 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-forest-700" /> ca. {course.estimatedHours} Stunden
+                    <Clock className="w-3.5 h-3.5 text-forest-700" /> {t('courses.hoursApprox')} {course.estimatedHours} {t('courses.hours')}
                   </span>
                 </div>
 
@@ -135,7 +135,7 @@ export function CoursesPage() {
                 {course.learningObjectives && course.learningObjectives.length > 0 && (
                   <div className="pt-3 border-t border-gray-100 space-y-2">
                     <p className="text-xs font-bold uppercase tracking-wider text-forest-900">
-                      Lernziele & Kompetenzen:
+                      {t('courses.objectives')}:
                     </p>
                     <ul className="space-y-1.5">
                       {course.learningObjectives.slice(0, 3).map((obj: string, idx: number) => (
@@ -151,14 +151,14 @@ export function CoursesPage() {
 
               <div className="pt-6 mt-6 border-t border-gray-100 flex items-center justify-between">
                 <span className="text-xs font-semibold text-gray-400">
-                  {course.units?.length || 2} Lerneinheiten
+                  {course.units?.length || 2} {t('courses.units')}
                 </span>
 
                 <Link
                   to={`/courses/${course.slug}`}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold transition-all shadow-xs"
                 >
-                  <span>Lehrplan & Einschreiben</span>
+                  <span>{t('courses.viewCourse')}</span>
                   <ArrowUpRight className="w-4 h-4 text-mint" />
                 </Link>
               </div>

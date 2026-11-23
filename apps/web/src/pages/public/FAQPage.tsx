@@ -20,7 +20,7 @@ export function FAQPage() {
     {
       category: 'Examinations',
       q: 'Does DeutschWelt issue official Goethe-Institut certificates?',
-      a: 'Official Goethe-Zertifikat and telc exams must be physically proctored at accredited testing centers. DeutschWelt prepares you to pass these examinations on your first attempt with full mock test modules.'
+      a: 'DeutschWelt offers preparation and practice. Official Goethe-Zertifikat and telc exams and certificates are issued by accredited exam centers. Exam results depend on each learner; we do not guarantee a pass.'
     },
     {
       category: 'Practice Tools',

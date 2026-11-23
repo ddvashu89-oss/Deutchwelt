@@ -36,7 +36,7 @@ const CEFR_JOURNEY = [
     badge: 'Von Null starten',
     skills: ['Umlaute & Phonetik', 'Nominativ & Akkusativ', 'Zahlen & Uhrzeiten', 'Alltägliche Höflichkeit'],
     quote: '„Der wichtigste Schritt ist der erste Laut.“',
-    sampleAudio: 'Guten Tag, wie geht es Ihnen? Ich komme aus Indien und wohne in Berlin.',
+    sampleAudio: 'Guten Tag, wie geht es Ihnen? Ich komme aus Indien und wohne in Saket, Neu-Delhi.',
     color: 'from-emerald-500/20 to-mint/20'
   },
   {
@@ -232,19 +232,19 @@ export function HomePage() {
                 </Link>
               </div>
 
-              {/* Trust Indicators */}
+              {/* Launch details */}
               <div className="pt-8 grid grid-cols-3 gap-6 border-t border-gray-200/80 text-left">
                 <div>
-                  <div className="text-2xl font-heading font-black text-gray-950">100%</div>
-                  <div className="text-xs font-semibold text-gray-500">Goethe-Prüfungskonform</div>
+                  <div className="text-lg font-heading font-black text-gray-950">A1–B2</div>
+                  <div className="text-xs font-semibold text-gray-500">{t('home.launch.levels')}</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-heading font-black text-gray-950">A1–B2</div>
-                  <div className="text-xs font-semibold text-gray-500">Vollständiger CEFR Pfad</div>
+                  <div className="text-lg font-heading font-black text-gray-950">{t('home.launch.locationValue')}</div>
+                  <div className="text-xs font-semibold text-gray-500">{t('home.launch.locationLabel')}</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-heading font-black text-gray-950">4.9/5</div>
-                  <div className="text-xs font-semibold text-gray-500">Dozenten-Bewertung</div>
+                  <div className="text-lg font-heading font-black text-gray-950">{t('home.launch.formatValue')}</div>
+                  <div className="text-xs font-semibold text-gray-500">{t('home.launch.formatLabel')}</div>
                 </div>
               </div>
             </motion.div>
@@ -264,7 +264,7 @@ export function HomePage() {
                 <div className="relative aspect-[16/11] sm:aspect-[4/3] w-full overflow-hidden bg-gray-100">
                   <img
                     src="/german-hero.jpg"
-                    alt="Deutsches Coaching — Brandenburger Tor Berlin"
+                    alt="DeutschWelt German course preview"
                     className="w-full h-full object-cover select-none"
                     loading="eager"
                   />
@@ -289,19 +289,19 @@ export function HomePage() {
                       <span className="text-xs font-extrabold text-forest-900 tracking-wide uppercase">
                         DeutschWelt Akademie
                       </span>
-                      <span className="text-[11px] font-bold text-amber-600 flex items-center gap-1">
-                        ★ 4.9/5 (500+ Alumni)
+                      <span className="text-[11px] font-bold text-forest-800 flex items-center gap-1">
+                        {t('home.launch.badge')}
                       </span>
                     </div>
                     <p className="text-sm font-heading font-black text-gray-950 leading-snug">
-                      Ihr direkter Weg zu Studium, Visum & Karriere-Flüssigkeit in Deutschland
+                      {t('home.launch.cardTitle')}
                     </p>
                     <div className="flex items-center justify-between pt-1.5 text-[11px] text-gray-600 border-t border-gray-200/80">
                       <span className="flex items-center gap-1 font-semibold text-gray-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" /> A1 bis B2 Intensivkurse
+                        <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" /> {t('home.launch.cardLevels')}
                       </span>
                       <span className="flex items-center gap-1 font-semibold text-gray-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" /> Muttersprachliche Dozenten
+                        <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" /> {t('home.launch.cardExamPrep')}
                       </span>
                     </div>
                   </div>
@@ -310,16 +310,16 @@ export function HomePage() {
                 {/* Photo Card Bottom Stats Strip */}
                 <div className="p-4 sm:p-5 bg-forest-50/70 border-t border-forest-100 grid grid-cols-3 gap-3 text-center">
                   <div>
-                    <div className="text-base sm:text-lg font-heading font-black text-forest-950">99.2%</div>
-                    <div className="text-[11px] font-semibold text-gray-600">Bestehensquote</div>
+                    <div className="text-base sm:text-lg font-heading font-black text-forest-950">A1–B2</div>
+                    <div className="text-[11px] font-semibold text-gray-600">{t('home.launch.levels')}</div>
                   </div>
                   <div className="border-x border-forest-200/70">
                     <div className="text-base sm:text-lg font-heading font-black text-forest-800">60–120h</div>
-                    <div className="text-[11px] font-semibold text-gray-600">Pro CEFR-Stufe</div>
+                    <div className="text-[11px] font-semibold text-gray-600">{t('home.launch.hours')}</div>
                   </div>
                   <div>
                     <div className="text-base sm:text-lg font-heading font-black text-forest-950">1-zu-1</div>
-                    <div className="text-[11px] font-semibold text-gray-600">Phonetik-Coaching</div>
+                    <div className="text-[11px] font-semibold text-gray-600">{t('home.launch.coaching')}</div>
                   </div>
                 </div>
               </div>
@@ -593,7 +593,7 @@ export function HomePage() {
           </div>
 
           <div className="z-10 flex flex-col sm:flex-row items-center gap-3 shrink-0">
-            <Link to="/register">
+            <Link to="/contact">
               <button className="px-8 py-4 rounded-full bg-mint hover:bg-emerald-400 text-forest-950 font-black text-sm shadow-xl transition-all transform hover:scale-105">
                 {t('home.cta.btn')}
               </button>
