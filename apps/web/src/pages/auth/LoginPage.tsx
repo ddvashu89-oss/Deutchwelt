@@ -30,15 +30,20 @@ export function LoginPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema)
   });
-  const from = (location.state as any)?.from?.pathname || '/student';
+  const requestedLocation = (location.state as any)?.from;
+  const requestedPath = typeof requestedLocation?.pathname === 'string'
+    ? `${requestedLocation.pathname}${requestedLocation.search || ''}${requestedLocation.hash || ''}`
+    : '';
+  const safeRequestedPath = requestedPath.startsWith('/') && !requestedPath.startsWith('//')
+    ? requestedPath
+    : '';
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       setServerError(null);
       const user = await login({ email: data.email, password: data.password });
-      if (user?.role === 'ADMIN') navigate('/admin', { replace: true });
-      else if (user?.role === 'TEACHER') navigate('/teacher', { replace: true });
-      else navigate(from === '/login' ? '/student' : from, { replace: true });
+      const defaultPath = user?.role === 'ADMIN' ? '/admin' : user?.role === 'TEACHER' ? '/teacher' : '/student';
+      navigate(safeRequestedPath || defaultPath, { replace: true });
     } catch (err: any) {
       setServerError(err.message || 'Invalid email or password. Please try again.');
     }

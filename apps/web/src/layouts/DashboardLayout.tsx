@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useLanguage } from '../context/LanguageContext.js';
@@ -6,6 +6,7 @@ import { Logo } from '../components/brand/Logo.js';
 import { Button } from '../components/ui/Button.js';
 import { LanguageToggle } from '../components/ui/LanguageToggle.js';
 import { HelpChatWidget } from '../components/HelpChatWidget.js';
+import { api } from '../lib/api.js';
 import {
   LayoutDashboard,
   CheckSquare,
@@ -33,14 +34,78 @@ import {
   Sparkles
 } from 'lucide-react';
 
+type InstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+};
+
 export function DashboardLayout() {
   const { user, logout, isStudent, isTeacher, isAdmin } = useAuth();
   const { t, language } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
+  const [installMessage, setInstallMessage] = useState('');
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notificationsError, setNotificationsError] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const captureInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as InstallPromptEvent);
+    };
+    const clearInstallPrompt = () => setInstallPrompt(null);
+    window.addEventListener('beforeinstallprompt', captureInstallPrompt);
+    window.addEventListener('appinstalled', clearInstallPrompt);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', captureInstallPrompt);
+      window.removeEventListener('appinstalled', clearInstallPrompt);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!notificationsOpen || !isStudent) return;
+    let active = true;
+    api.get('/student/notifications')
+      .then((response: any) => {
+        if (active) {
+          setNotifications(response?.notifications || []);
+          setNotificationsError('');
+        }
+      })
+      .catch((error: any) => {
+        if (active) setNotificationsError(error?.message || 'Could not load notifications.');
+      });
+    return () => { active = false; };
+  }, [notificationsOpen, isStudent]);
+
+  const openNotification = async (notification: any) => {
+    if (!notification.isRead) {
+      try {
+        await api.patch(`/student/notifications/${notification.id}/read`);
+        setNotifications(current => current.map(item => item.id === notification.id ? { ...item, isRead: true } : item));
+      } catch {
+        // Continue to the linked item even if marking the notification read fails.
+      }
+    }
+    setNotificationsOpen(false);
+    const link = notification.linkUrl;
+    if (typeof link === 'string' && link.startsWith('/') && !link.startsWith('//')) navigate(link);
+  };
+
+  const handleInstallApp = async () => {
+    if (!installPrompt) {
+      setInstallMessage(t('dash.app.installHelp'));
+      return;
+    }
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    setInstallMessage(choice.outcome === 'accepted' ? t('dash.app.installed') : '');
+    setInstallPrompt(null);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -92,6 +157,10 @@ export function DashboardLayout() {
 
   const currentMenu: Array<{ label: string; href: string; icon: React.ComponentType<any>; badge?: string }> = isAdmin ? adminMenu : isTeacher ? teacherMenu : studentMenu;
   const dashboardRoot = isAdmin ? '/admin' : isTeacher ? '/teacher' : '/student';
+  const messageDestination = isAdmin ? '/admin/enquiries' : isTeacher ? '/teacher/submissions' : '/student/community';
+  const searchMatches = searchQuery.trim()
+    ? currentMenu.filter(item => item.label.toLocaleLowerCase().includes(searchQuery.trim().toLocaleLowerCase()))
+    : [];
   const isActivePath = (href: string) => {
     const currentPath = location.pathname === dashboardRoot ? `${dashboardRoot}/dashboard` : location.pathname;
     return currentPath === href || currentPath.startsWith(`${href}/`);
@@ -231,11 +300,12 @@ export function DashboardLayout() {
 
               <button
                 type="button"
-                onClick={() => alert(t('dash.app.alert'))}
+                onClick={() => void handleInstallApp()}
                 className="w-full rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-bold text-white shadow-xs transition-colors hover:bg-white/15 active:scale-[0.98]"
               >
-                {t('dash.app.btn')}
+                {installPrompt ? t('dash.app.btn') : t('dash.app.installHelpButton')}
               </button>
+              {installMessage && <p role="status" className="text-[10px] leading-relaxed text-white/75">{installMessage}</p>}
             </div>
           </div>
         </div>
@@ -264,8 +334,26 @@ export function DashboardLayout() {
                 placeholder={t('dash.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && searchMatches[0]) {
+                    navigate(searchMatches[0].href);
+                    setSearchQuery('');
+                  }
+                  if (event.key === 'Escape') setSearchQuery('');
+                }}
+                aria-label={t('dash.searchPlaceholder')}
+                aria-expanded={searchMatches.length > 0}
                 className="w-full rounded-full border border-transparent bg-[#f5f2eb] py-2.5 pl-10 pr-12 text-xs text-[#17243a] placeholder:text-[#9299a2] transition-all focus:border-[#c54346]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#c54346]/10"
               />
+              {searchMatches.length > 0 && (
+                <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-[#e8e3d8] bg-white p-1.5 shadow-xl">
+                  {searchMatches.slice(0, 6).map(item => (
+                    <Link key={item.href} to={item.href} onClick={() => setSearchQuery('')} className="flex items-center rounded-xl px-3 py-2.5 text-xs font-semibold text-[#34445a] hover:bg-[#f5f2eb]">
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
               <span className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-md border border-[#e8e3d8] bg-white px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#9299a2] shadow-2xs">
                 ⌘ F
               </span>
@@ -277,16 +365,17 @@ export function DashboardLayout() {
             <LanguageToggle />
 
             {/* Mail Icon Button */}
-            <button
-              type="button"
+            <Link
+              to={messageDestination}
               className="hidden h-10 w-10 items-center justify-center rounded-full border border-[#e8e3d8] bg-white text-[#687487] shadow-2xs transition-colors hover:border-[#d5cfc2] hover:text-[#14243a] sm:flex"
-              aria-label="Messages"
+              aria-label={isAdmin ? 'Open admissions enquiries' : isTeacher ? 'Open student submissions' : 'Open student community'}
+              title={isAdmin ? 'Admissions enquiries' : isTeacher ? 'Student submissions' : 'Student community'}
             >
               <Mail className="w-4 h-4" />
-            </button>
+            </Link>
 
             {/* Bell Icon Button */}
-            <div className="relative">
+            {isStudent && <div className="relative">
               <button
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
@@ -295,30 +384,27 @@ export function DashboardLayout() {
                 className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#e8e3d8] bg-white text-[#687487] shadow-2xs transition-colors hover:border-[#d5cfc2] hover:text-[#14243a]"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-[#c54346] ring-2 ring-white" />
+                {notifications.some(item => !item.isRead) && <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-[#c54346] ring-2 ring-white" />}
               </button>
 
               {notificationsOpen && (
                 <div className="absolute right-0 z-50 mt-2 w-[min(20rem,calc(100vw-1rem))] overflow-hidden rounded-2xl border border-[#e8e3d8] bg-[#fffefa] py-3 shadow-xl">
                   <div className="flex items-center justify-between border-b border-[#eee9df] px-4 pb-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-[#14243a]">Notifications</span>
-                    <span className="rounded-full bg-[#f8ece9] px-2 py-0.5 text-[10px] font-bold text-[#c54346]">2 New</span>
+                    <span className="rounded-full bg-[#f8ece9] px-2 py-0.5 text-[10px] font-bold text-[#c54346]">{notifications.filter(item => !item.isRead).length} New</span>
                   </div>
                   <div className="max-h-[min(15rem,calc(100dvh-7rem))] divide-y divide-[#f2efe8] overflow-y-auto text-xs">
-                    <div className="p-3 transition-colors hover:bg-[#f8f6f0]">
-                      <p className="font-bold text-[#14243a]">Willkommen bei DeutschWelt!</p>
-                      <p className="mt-0.5 text-[#687487]">Welcome! Start with Einheit 1: Sich vorstellen.</p>
-                      <span className="mt-1 block text-[10px] text-[#9299a2]">Just now</span>
-                    </div>
-                    <div className="p-3 transition-colors hover:bg-[#f8f6f0]">
-                      <p className="font-bold text-[#14243a]">Neue Sprechaufgabe bereit</p>
-                      <p className="mt-0.5 text-[#687487]">Instant AI Speech Check is now enabled in Speaking Lab.</p>
-                      <span className="mt-1 block text-[10px] text-[#9299a2]">1 hour ago</span>
-                    </div>
+                    {notificationsError ? <p role="alert" className="p-4 text-rose-700">{notificationsError}</p> : notifications.length === 0 ? <p className="p-4 text-[#687487]">No notifications yet.</p> : notifications.map(notification => (
+                      <button key={notification.id} type="button" onClick={() => void openNotification(notification)} className="block w-full p-3 text-left transition-colors hover:bg-[#f8f6f0]">
+                        <p className="font-bold text-[#14243a]">{notification.title}</p>
+                        <p className="mt-0.5 text-[#687487]">{notification.message}</p>
+                        <span className="mt-1 block text-[10px] text-[#9299a2]">{new Date(notification.createdAt).toLocaleString()}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
 
             {/* User Profile Pill matching screenshot */}
             <div className="flex items-center gap-2 pl-0 sm:pl-1">

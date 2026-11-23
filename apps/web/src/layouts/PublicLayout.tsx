@@ -185,7 +185,7 @@ export function PublicLayout() {
                   <Globe className="w-4 h-4 shrink-0 text-mint" /> <span className="break-words">{t('contact.office')}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 shrink-0 text-mint" /> <span>CEFR Zertifiziert A1–B2</span>
+                  <ShieldCheck className="w-4 h-4 shrink-0 text-mint" /> <span>{t('footer.cefrLevels')}</span>
                 </span>
               </div>
             </div>
@@ -196,10 +196,10 @@ export function PublicLayout() {
                 {t('footer.colCourses')}
               </h4>
               <ul className="space-y-2 text-sm text-emerald-100/70">
-                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.a1')}</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.a2')}</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.b1')}</Link></li>
-                <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.b2')}</Link></li>
+                <li><Link to="/courses?level=A1" className="hover:text-white transition-colors">{t('footer.a1')}</Link></li>
+                <li><Link to="/courses?level=A2" className="hover:text-white transition-colors">{t('footer.a2')}</Link></li>
+                <li><Link to="/courses?level=B1" className="hover:text-white transition-colors">{t('footer.b1')}</Link></li>
+                <li><Link to="/courses?level=B2" className="hover:text-white transition-colors">{t('footer.b2')}</Link></li>
                 <li><Link to="/courses" className="hover:text-white transition-colors">{t('footer.examPrep')}</Link></li>
               </ul>
             </div>
@@ -211,9 +211,9 @@ export function PublicLayout() {
               </h4>
               <ul className="space-y-2 text-sm text-emerald-100/70">
                 <li><Link to="/vocabulary" className="hover:text-white transition-colors">{t('footer.srs')}</Link></li>
-                <li><Link to="/login" className="hover:text-white transition-colors">{t('footer.speakingLab')}</Link></li>
-                <li><Link to="/login" className="hover:text-white transition-colors">{t('footer.liveClasses')}</Link></li>
-                <li><Link to="/about" className="hover:text-white transition-colors">{t('footer.flashcards')}</Link></li>
+                <li><Link to="/login" state={{ from: { pathname: '/student/speaking' } }} className="hover:text-white transition-colors">{t('footer.speakingLab')}</Link></li>
+                <li><Link to="/login" state={{ from: { pathname: '/student/schedule' } }} className="hover:text-white transition-colors">{t('footer.liveClasses')}</Link></li>
+                <li><Link to="/vocabulary" className="hover:text-white transition-colors">{t('footer.flashcards')}</Link></li>
                 <li><Link to="/contact" className="hover:text-white transition-colors">{t('footer.mentorship')}</Link></li>
               </ul>
             </div>

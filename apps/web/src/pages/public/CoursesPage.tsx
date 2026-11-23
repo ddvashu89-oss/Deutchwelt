@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../../lib/api.js';
 import { useLanguage } from '../../context/LanguageContext.js';
 import { Button } from '../../components/ui/Button.js';
@@ -10,10 +10,19 @@ import { BookOpen, Clock, CheckCircle, ArrowRight, ArrowUpRight, Filter, ShieldC
 
 export function CoursesPage() {
   const { t } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLevel, setSelectedLevel] = useState<string>('ALL');
+  const [selectedLevel, setSelectedLevel] = useState<string>(() => {
+    const level = searchParams.get('level')?.toUpperCase();
+    return level && ['A1', 'A2', 'B1', 'B2'].includes(level) ? level : 'ALL';
+  });
   const [isSandbox, setIsSandbox] = useState(false);
+
+  useEffect(() => {
+    const level = searchParams.get('level')?.toUpperCase();
+    setSelectedLevel(level && ['A1', 'A2', 'B1', 'B2'].includes(level) ? level : 'ALL');
+  }, [searchParams]);
 
   useEffect(() => {
     api.get('/system/environment')
@@ -75,7 +84,14 @@ export function CoursesPage() {
         {['ALL', 'A1', 'A2', 'B1', 'B2'].map((lvl) => (
           <button
             key={lvl}
-            onClick={() => { setSelectedLevel(lvl); setLoading(true); }}
+            onClick={() => {
+              setSelectedLevel(lvl);
+              setLoading(true);
+              const nextParams = new URLSearchParams(searchParams);
+              if (lvl === 'ALL') nextParams.delete('level');
+              else nextParams.set('level', lvl);
+              setSearchParams(nextParams, { replace: true });
+            }}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 ${
               selectedLevel === lvl
                 ? 'bg-forest-900 text-white shadow-xs'

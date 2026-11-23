@@ -227,10 +227,12 @@ const translations: Record<Language, Record<string, string>> = {
     'dash.menu.help': 'Help & FAQ',
     'dash.menu.logout': 'Sign Out',
     'dash.searchPlaceholder': 'Search task, course, or lesson...',
-    'dash.app.title': 'Download our Mobile App',
-    'dash.app.subtitle': 'Learn flexibly on the go',
-    'dash.app.btn': 'Download',
-    'dash.app.alert': 'DeutschWelt Mobile App for iOS and Android is in active beta preview!',
+    'dash.app.title': 'Install DeutschWelt',
+    'dash.app.subtitle': 'Add the learning platform to your device for quick access.',
+    'dash.app.btn': 'Install app',
+    'dash.app.installHelpButton': 'Install instructions',
+    'dash.app.installHelp': 'Open your browser menu and choose “Install app” or “Add to Home Screen”.',
+    'dash.app.installed': 'DeutschWelt is ready on your device.',
 
     // Exam system
     'exam.title': 'Mock exams',
@@ -431,6 +433,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Footer
     'footer.tagline': 'DeutschWelt Coaching is your premier academy for German language proficiency under the Common European Framework of Reference (CEFR A1 to B2).',
+    'footer.cefrLevels': 'CEFR levels A1–B2',
     'footer.colCourses': 'Course Levels',
     'footer.colTools': 'Learning Tools',
     'footer.colAcademy': 'Academy',
@@ -668,10 +671,12 @@ const translations: Record<Language, Record<string, string>> = {
     'dash.menu.help': 'Hilfe & FAQ',
     'dash.menu.logout': 'Abmelden',
     'dash.searchPlaceholder': 'Aufgabe oder Lektion suchen...',
-    'dash.app.title': 'Laden Sie unsere App',
-    'dash.app.subtitle': 'Lernen Sie flexibel unterwegs',
-    'dash.app.btn': 'Herunterladen',
-    'dash.app.alert': 'DeutschWelt Mobile App für iOS und Android befindet sich im Beta-Preview!',
+    'dash.app.title': 'DeutschWelt installieren',
+    'dash.app.subtitle': 'Fügen Sie die Lernplattform für schnellen Zugriff zu Ihrem Gerät hinzu.',
+    'dash.app.btn': 'App installieren',
+    'dash.app.installHelpButton': 'Installationshilfe',
+    'dash.app.installHelp': 'Öffnen Sie das Browsermenü und wählen Sie „App installieren“ oder „Zum Home-Bildschirm“.',
+    'dash.app.installed': 'DeutschWelt ist auf Ihrem Gerät verfügbar.',
 
     // Exam system
     'exam.title': 'Probeprüfungen',
@@ -872,6 +877,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Footer
     'footer.tagline': 'DeutschWelt Coaching ist Ihre Akademie für deutsche Sprachkompetenz nach dem Gemeinsamen Europäischen Referenzrahmen (GER A1 bis B2).',
+    'footer.cefrLevels': 'GER-Stufen A1–B2',
     'footer.colCourses': 'Kursstufen',
     'footer.colTools': 'Lernwerkzeuge',
     'footer.colAcademy': 'Akademie',

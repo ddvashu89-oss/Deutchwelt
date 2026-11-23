@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../../lib/api.js';
 import { useAuth } from '../../context/AuthContext.js';
 import { Button } from '../../components/ui/Button.js';
@@ -25,12 +25,20 @@ export function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [course, setCourse] = useState<any>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
+  const [isSandbox, setIsSandbox] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.get('/system/environment')
+      .then((res: any) => setIsSandbox(res?.isSandbox === true))
+      .catch(() => setIsSandbox(false));
+  }, []);
 
   useEffect(() => {
     async function loadCourse() {
@@ -51,7 +59,7 @@ export function CourseDetailPage() {
 
   const handleEnroll = async () => {
     if (!user) {
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
       return;
     }
     setEnrolling(true);
