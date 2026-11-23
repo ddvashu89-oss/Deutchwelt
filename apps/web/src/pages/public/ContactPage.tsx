@@ -99,9 +99,9 @@ export function ContactPage() {
                 <Mail className="w-5 h-5 text-forest-800" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">E-Mail Beratung</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">{t('contact.emailLabel')}</p>
                 <p className="text-sm font-bold text-gray-950">beratung@deutschwelt.de</p>
-                <p className="text-xs text-gray-500 mt-0.5">Antwortzeit: innerhalb von 24 Stunden</p>
+                <p className="text-xs text-gray-500 mt-0.5">{t('contact.responseTime')}</p>
               </div>
             </div>
 
@@ -110,9 +110,9 @@ export function ContactPage() {
                 <Clock className="w-5 h-5 text-forest-800" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Sprechzeiten</p>
-                <p className="text-sm font-bold text-gray-950">Mo – Fr: 09:00 – 18:00 CET</p>
-                <p className="text-xs text-gray-500 mt-0.5">Berlin & Zentraleuropäische Zeit</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">{t('contact.hoursLabel')}</p>
+                <p className="text-sm font-bold text-gray-950">{t('contact.hours')}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{t('contact.timezone')}</p>
               </div>
             </div>
 
@@ -121,9 +121,9 @@ export function ContactPage() {
                 <MapPin className="w-5 h-5 text-emerald-700" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Akademie-Standort</p>
-                <p className="text-sm font-bold text-gray-950">Berlin Campus & Digitale Akademie</p>
-                <p className="text-xs text-gray-500 mt-0.5">Zertifizierte DACH-Sprachausbildung</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">{t('contact.locationLabel')}</p>
+                <p className="text-sm font-bold text-gray-950">{t('contact.office')}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{t('contact.officeNote')}</p>
               </div>
             </div>
           </div>
@@ -187,7 +187,7 @@ export function ContactPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
                     label={t('contact.phone')}
-                    placeholder="+49 170 1234567"
+                    placeholder="+91 98765 43210"
                     error={errors.phone?.message}
                     {...register('phone')}
                   />

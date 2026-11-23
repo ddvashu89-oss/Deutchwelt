@@ -563,7 +563,7 @@ export function AdminStudentsPage() {
 
           <Input
             label="Residential Address"
-            placeholder="e.g. Friedrichstraße 10, 10117 Berlin, Germany"
+            placeholder="e.g. Saket, New Delhi, India"
             value={newAddress}
             onChange={(e) => setNewAddress(e.target.value)}
             required

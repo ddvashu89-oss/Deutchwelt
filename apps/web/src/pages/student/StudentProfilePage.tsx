@@ -95,7 +95,7 @@ export function StudentProfilePage() {
               label="Mobile Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+49 151 12345678"
+              placeholder="+91 98765 43210"
             />
           </div>
 
@@ -103,7 +103,7 @@ export function StudentProfilePage() {
             label="Residential Address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="e.g. Friedrichstraße 10, 10117 Berlin, Germany"
+            placeholder="e.g. Saket, New Delhi, India"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">

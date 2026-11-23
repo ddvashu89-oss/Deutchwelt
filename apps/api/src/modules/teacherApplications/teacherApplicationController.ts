@@ -197,7 +197,7 @@ export async function scheduleTeacherInterview(req: Request, res: Response, next
     const location = typeof req.body?.location === 'string' ? req.body.location.trim().slice(0, 1000) : '';
     const interviewNotes = typeof req.body?.notes === 'string' ? req.body.notes.trim().slice(0, 3000) : '';
     if (!Number.isFinite(interviewAt.getTime()) || interviewAt.getTime() < Date.now() - 60_000) return next(new AppError('Choose an upcoming interview date and time.', 400));
-    if (!timezone || timezone.length > 100 || !validTimezone(timezone)) return next(new AppError('Enter a valid time zone, such as Europe/Berlin.', 400));
+    if (!timezone || timezone.length > 100 || !validTimezone(timezone)) return next(new AppError('Enter a valid time zone, such as Asia/Kolkata.', 400));
     const existing = isDatabaseConnected
       ? await prisma.teacherApplication.findUnique({ where: { id: req.params.applicationId } })
       : store.teacherApplications.find((item: any) => item.id === req.params.applicationId);

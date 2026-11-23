@@ -715,22 +715,6 @@
     "en": "beratung@deutschwelt.de",
     "de": "beratung@deutschwelt.de"
   },
-  "Berlin & Deutschland": {
-    "en": "Berlin & Germany",
-    "de": "Berlin & Deutschland"
-  },
-  "Berlin & Online": {
-    "en": "Berlin & Online",
-    "de": "Berlin & Online"
-  },
-  "Berlin & Zentraleuropäische Zeit": {
-    "en": "Berlin & Central European Time",
-    "de": "Berlin & Zentraleuropäische Zeit"
-  },
-  "Berlin Campus & Digitale Akademie": {
-    "en": "Berlin Campus & Digital Academy",
-    "de": "Berlin Campus & Digitale Akademie"
-  },
   "Bestehensquote": {
     "en": "Pass rate",
     "de": "Bestehensquote"
@@ -2898,10 +2882,6 @@
   "minutes per week.": {
     "en": "minutes per week.",
     "de": "Minuten pro Woche."
-  },
-  "Mo – Fr: 09:00 – 18:00 CET": {
-    "en": "Mo – Fr: 09:00 – 18:00 CET",
-    "de": "Mo – Fr: 09:00 – 18:00 Uhr MEZ"
   },
   "Mobile": {
     "en": "Mobile",
@@ -5507,9 +5487,9 @@
     "en": "Essential phrases: \"Ich heiße...\", \"Ich komme aus...\", \"Wie geht es dir?\"",
     "de": "Wesentliche Sätze: „Ich heiße…“, „Ich komme aus…“, „Wie geht es dir?“"
   },
-  "Evening advanced batch meeting Tue & Thu 19:00-20:30 CET focusing on complex grammar and exam simulations.": {
-    "en": "Evening advanced batch meeting Tue & Thu 19:00-20:30 CET focusing on complex grammar and exam simulations.",
-    "de": "Abendliches Batch-Meeting für Fortgeschrittene Di und Do 19:00–20:30 Uhr MEZ mit Schwerpunkt auf komplexen Grammatik- und Prüfungssimulationen."
+  "Evening advanced batch meeting Tue & Thu 19:00-20:30 IST focusing on complex grammar and exam simulations.": {
+    "en": "Evening advanced batch meeting Tue & Thu 19:00-20:30 IST focusing on complex grammar and exam simulations.",
+    "de": "Abendliches Batch-Meeting für Fortgeschrittene Di und Do 19:00–20:30 Uhr IST mit Schwerpunkt auf komplexen Grammatik- und Prüfungssimulationen."
   },
   "Everyday greetings and phrases": {
     "en": "Everyday greetings and phrases",
@@ -6043,9 +6023,9 @@
     "en": "Tomorrow: Live speaking training at 10:00 a.m",
     "de": "Morgen: Live-Sprechtraining um 10:00 Uhr"
   },
-  "Morning intensive batch meeting Mon-Thu 10:00-11:30 CET for Goethe-Zertifikat A1 candidates.": {
-    "en": "Morning intensive batch meeting Mon-Thu 10:00-11:30 CET for Goethe-Zertifikat A1 candidates.",
-    "de": "Morgendliches Intensiv-Batch-Meeting Mo-Do 10:00-11:30 Uhr MEZ für Goethe-Zertifikat A1-Kandidaten."
+  "Morning intensive batch meeting Mon-Thu 10:00-11:30 IST for Goethe-Zertifikat A1 candidates.": {
+    "en": "Morning intensive batch meeting Mon-Thu 10:00-11:30 IST for Goethe-Zertifikat A1 candidates.",
+    "de": "Morgendliches Intensiv-Batch-Meeting Mo-Do 10:00–11:30 Uhr IST für Goethe-Zertifikat A1-Kandidaten."
   },
   "My apartment has three bright rooms.": {
     "en": "My apartment has three bright rooms.",

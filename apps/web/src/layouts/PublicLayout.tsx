@@ -180,12 +180,12 @@ export function PublicLayout() {
               <p className="text-sm text-emerald-100/70 max-w-sm leading-relaxed">
                 {t('footer.tagline')}
               </p>
-              <div className="flex items-center gap-4 text-xs text-emerald-200/80 pt-2">
-                <span className="flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-mint" /> Berlin & Online
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-emerald-200/80 pt-2">
+                <span className="flex min-w-0 items-center gap-1.5">
+                  <Globe className="w-4 h-4 shrink-0 text-mint" /> <span className="break-words">{t('contact.office')}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-mint" /> CEFR Zertifiziert A1–B2
+                  <ShieldCheck className="w-4 h-4 shrink-0 text-mint" /> <span>CEFR Zertifiziert A1–B2</span>
                 </span>
               </div>
             </div>
