@@ -10,6 +10,7 @@ const QUESTION_TYPES = ['MULTIPLE_CHOICE', 'SHORT_ANSWER', 'WRITING', 'SPEAKING'
 type ExamQuestion = {
   id: string;
   section: typeof SECTIONS[number];
+  part?: string;
   type: typeof QUESTION_TYPES[number];
   prompt: string;
   instructions?: string;
@@ -61,6 +62,7 @@ function asQuestions(value: unknown, strict = false): ExamQuestion[] {
     return {
       id: typeof raw.id === 'string' && raw.id ? raw.id : randomUUID(),
       section: section as ExamQuestion['section'],
+      part: typeof raw.part === 'string' ? raw.part.trim().slice(0, 80) || undefined : undefined,
       type: type as ExamQuestion['type'],
       prompt,
       instructions: typeof raw.instructions === 'string' ? raw.instructions.slice(0, 2000) : undefined,

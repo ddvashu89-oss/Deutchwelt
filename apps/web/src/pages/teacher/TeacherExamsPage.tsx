@@ -10,6 +10,7 @@ import { CalendarClock, CheckCircle2, Clock3, FilePlus2, GraduationCap, Users } 
 type ExamQuestion = {
   id: string;
   section: string;
+  part: string;
   type: string;
   prompt: string;
   instructions: string;
@@ -21,7 +22,7 @@ type ExamQuestion = {
   rubric: string;
 };
 
-const emptyQuestion = (): ExamQuestion => ({ id: crypto.randomUUID(), section: 'READING', type: 'MULTIPLE_CHOICE', prompt: '', instructions: '', passage: '', audioUrl: '', options: '', answerKey: '', points: 1, rubric: '' });
+const emptyQuestion = (): ExamQuestion => ({ id: crypto.randomUUID(), section: 'READING', part: '1', type: 'MULTIPLE_CHOICE', prompt: '', instructions: '', passage: '', audioUrl: '', options: '', answerKey: '', points: 1, rubric: '' });
 const asLines = (value: string) => value.split('\n').map(item => item.trim()).filter(Boolean);
 
 export function TeacherExamsPage() {
@@ -174,9 +175,11 @@ export function TeacherExamsPage() {
                 <div className="grid gap-3 sm:grid-cols-3">
                   <label className="space-y-1"><span className="text-[11px] font-semibold text-dark">{t('exam.section')}</span><select value={question.section} onChange={e => updateQuestion(question.id, { section: e.target.value })} className="h-10 w-full rounded-lg border bg-white px-2 text-sm">{['LISTENING','READING','WRITING','SPEAKING','LANGUAGE_USE'].map(key => <option key={key} value={key}>{questionLabel(key)}</option>)}</select></label>
                   <label className="space-y-1"><span className="text-[11px] font-semibold text-dark">{t('exam.questionType')}</span><select value={question.type} onChange={e => updateQuestion(question.id, { type: e.target.value })} className="h-10 w-full rounded-lg border bg-white px-2 text-sm">{['MULTIPLE_CHOICE','SHORT_ANSWER','WRITING','SPEAKING'].map(key => <option key={key} value={key}>{questionLabel(key)}</option>)}</select></label>
+                  <Input label={t('exam.part')} value={question.part} onChange={e => updateQuestion(question.id, { part: e.target.value })} maxLength={80} />
                   <Input label={t('exam.points')} type="number" min={1} max={100} value={question.points} onChange={e => updateQuestion(question.id, { points: Number(e.target.value) })} required />
                 </div>
                 <label className="block space-y-1"><span className="text-[11px] font-semibold text-dark">{t('exam.prompt')}</span><textarea value={question.prompt} onChange={e => updateQuestion(question.id, { prompt: e.target.value })} required minLength={2} maxLength={4000} rows={2} className="w-full rounded-xl border border-gray-300 bg-white p-3 text-sm" /></label>
+                <label className="block space-y-1"><span className="text-[11px] font-semibold text-dark">{t('exam.instructions')}</span><textarea value={question.instructions} onChange={e => updateQuestion(question.id, { instructions: e.target.value })} maxLength={2000} rows={2} className="w-full rounded-xl border border-gray-300 bg-white p-3 text-sm" /></label>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {question.type === 'MULTIPLE_CHOICE' && <label className="space-y-1"><span className="text-[11px] font-semibold text-dark">{t('exam.options')}</span><textarea value={question.options} onChange={e => updateQuestion(question.id, { options: e.target.value })} rows={4} className="w-full rounded-xl border bg-white p-3 text-sm" required /></label>}
                   {['MULTIPLE_CHOICE','SHORT_ANSWER'].includes(question.type) && <label className="space-y-1"><span className="text-[11px] font-semibold text-dark">{t('exam.answerKey')}</span><textarea value={question.answerKey} onChange={e => updateQuestion(question.id, { answerKey: e.target.value })} rows={4} className="w-full rounded-xl border bg-white p-3 text-sm" required={publication === 'PUBLISHED'} /></label>}
